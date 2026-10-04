@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="Mass &amp; Grass is getting a new website and a new look. Farah’s watercolours as postcards, stickers, calendars and clothes. Coming soon.">
-<meta name="theme-color" content="#EAE6DC">
+<meta name="theme-color" content="#EDE9E0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#463928" media="(prefers-color-scheme: dark)">
 <meta property="og:title" content="Mass &amp; Grass · Coming soon">
 <meta property="og:description" content="A new website and a new look, on its way.">
 <meta property="og:type" content="website">
@@ -85,7 +86,7 @@ body[data-lang=en] .h2{font-family:var(--f-disp);text-transform:uppercase;line-h
 
 /* ---------- footer ---------- */
 .foot{position:relative;--fb:var(--ink);--ff:var(--yellow);background:var(--fb);color:var(--ff);padding:clamp(70px,7vw,100px) clamp(16px,5vw,80px) 30px;margin-top:40px}
-:root[data-theme=dark] .foot{--fb:#110E0B;--ff:#EFE4CF}
+:root[data-theme=dark] .foot{--fb:#2B2218;--ff:#F3EBDD}
 .foot .edge{position:absolute;left:0;right:0;top:-1px;height:26px}.foot .edge svg{display:block;width:100%;height:100%}
 .foot .park{position:absolute;bottom:calc(100% - 26px);inset-inline-end:clamp(20px,8vw,140px);width:clamp(140px,14vw,210px);aspect-ratio:640/473;background:var(--img-truckfull) center/contain no-repeat;
   filter:drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(4px 5px 0 var(--shadow))}
@@ -126,14 +127,11 @@ body[data-lang=en] .tab{font:400 17px/1 var(--f-disp);text-transform:uppercase;l
 .tab::after{content:"";position:absolute;inset:0;background:var(--img-paper) 0 0/240px;mix-blend-mode:multiply;opacity:.6;pointer-events:none}
 
 /* ================= soon page ================= */
-/* ---------- paper theme: the same paper as the launch reel (cream sheet, fibres, soft folds) ---------- */
-:root{--yellow:#EAE6DC;--ink:#262627;--cream:#F8F6EF;--shadow:#262627;--glow:#F1EEE5;--grain-o:.08;
-  --paper-bg:url(assets/paper-creases.png),url(assets/paper-tile.jpg);--paper-sz:2200px 3106px,2200px 3106px;--paper-rp:repeat,repeat}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--yellow:#1B1B1C;--ink:#EBEBE8;--cream:#272728;--shadow:#050505;--glow:#2A2A2B;--grain-o:.12;
-  --paper-bg:linear-gradient(rgba(27,27,28,.86),rgba(27,27,28,.86)),url(assets/paper-tile.jpg);--paper-sz:auto,2200px 3106px;--paper-rp:no-repeat,repeat}}
-:root[data-theme="dark"]{--yellow:#1B1B1C;--ink:#EBEBE8;--cream:#272728;--shadow:#050505;--glow:#2A2A2B;--grain-o:.12;
-  --paper-bg:linear-gradient(rgba(27,27,28,.86),rgba(27,27,28,.86)),url(assets/paper-tile.jpg);--paper-sz:auto,2200px 3106px;--paper-rp:no-repeat,repeat}
-body,.drawer nav{background-color:var(--yellow);background-image:var(--paper-bg);background-size:var(--paper-sz);background-repeat:var(--paper-rp)}
+/* ---------- paper theme: the owner's cream paper as a seamless tile (2x for sharp fibres); dark = the logo's brown with the same paper fibres ---------- */
+:root{--yellow:#EDE9E0;--ink:#262627;--cream:#F8F6EF;--shadow:#262627;--glow:#F1EEE5;--grain-o:0;--paper-blend:normal}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--yellow:#463928;--ink:#F3EBDD;--cream:#54452F;--shadow:#1C150D;--glow:#4E402D;--grain-o:0;--red:#D7704F;--green:#8FA57F;--on-accent:#FBF6EA;color-scheme:dark;--paper-blend:multiply}}
+:root[data-theme="dark"]{--yellow:#463928;--ink:#F3EBDD;--cream:#54452F;--shadow:#1C150D;--glow:#4E402D;--grain-o:0;--red:#D7704F;--green:#8FA57F;--on-accent:#FBF6EA;color-scheme:dark;--paper-blend:multiply}
+body,.drawer nav{background-color:var(--yellow);background-image:url(assets/paper-tile.jpg);background-size:1100px 1553px;background-repeat:repeat;background-blend-mode:var(--paper-blend)}
 .sec.alt{background:color-mix(in srgb,var(--cream) 48%,transparent)}
 :root{--sun:#E2A04A;--road:58px}
 :root[data-theme=dark]{--sun:#D8C9A4}
@@ -204,7 +202,7 @@ body[data-lang=en] .mlab{font:400 clamp(22px,2.1vw,27px)/1.15 var(--f-disp);text
 /* ---------- the scene: road and truck ---------- */
 .scene{position:relative;z-index:4;height:clamp(170px,14.2vw,204px);margin-top:auto;flex:none}
 .road{position:absolute;left:0;right:0;bottom:0;height:var(--road);background:#2A2A2B;border-top:3px solid var(--ink)}
-:root[data-theme=dark] .road{background:#0C0C0D;border-top-color:#EBEBE855}
+:root[data-theme=dark] .road{background:#2B2218;border-top-color:#F3EBDD55}
 .road .dash{position:absolute;left:0;right:0;top:50%;height:5px;margin-top:-2px;background:repeating-linear-gradient(90deg,#E9DCC2 0 38px,transparent 38px 76px);opacity:.85}
 .road.moving .dash{animation:roadmove .5s linear infinite}
 @keyframes roadmove{from{background-position:0 0}to{background-position:var(--rd,76px) 0}}
@@ -353,8 +351,6 @@ body[data-lang=ar] .env-l small{font:400 13px/1 var(--f-ar-disp);letter-spacing:
 
 /* smooth scrolling: grain as a static page background (no fixed full-screen overlay), paused hero animation when off-screen, skip rendering of far sections */
 body::after{display:none}
-body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .15 0 0 0 0 .15 0 0 0 0 .15 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-:root[data-theme="dark"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .9 0 0 0 0 .9 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .hero.off .hp>i,.hero.off .cloud,.hero.off .truck .bd,.hero.off .pet i,.hero.off .fbird i,.hero.off .dk{animation-play-state:paused}
 #peek,#wall,#coming{content-visibility:auto;contain-intrinsic-size:auto 900px}
 .hp,.wc,.dk,.env{backface-visibility:hidden}
