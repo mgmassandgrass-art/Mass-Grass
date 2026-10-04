@@ -8,5 +8,25 @@
 /tools/*            /  301
 /docs/*             /  301
 /studio/*           /  301
-/hoodies            /cloth/  301
-/hoodies/           /cloth/  301
+
+# Coming-soon page: the old sections go home for now (302, so they can come back later)
+/paintings   /  302
+/paintings/* /  302
+/stickers    /  302
+/stickers/*  /  302
+/calendars   /  302
+/calendars/* /  302
+/cloth       /  302
+/cloth/*     /  302
+/postcards   /  302
+/postcards/* /  302
+/story       /  302
+/story/*     /  302
+/hoodies     /  302
+/hoodies/*   /  302
+/designs     /  302
+/designs/*   /  302
+/shop        /  302
+/shop/*      /  302
+/cart        /  302
+/cart/*      /  302
