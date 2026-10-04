@@ -471,9 +471,9 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 /* ---------- settings: edit these ---------- */
 const CFG={
-  endpoint:'',                           /* where the email form posts JSON {email,lang}; empty = demo (kept in this browser only) */
+  endpoint:'https://formspree.io/f/xoejabvg', /* where the email form posts JSON {email,lang}; empty = demo (kept in this browser only) */
   instagram:'',                          /* full link, e.g. https://instagram.com/massandgrass ; empty = hidden */
-  email:'info@massandgrass.com'           /* contact address ; empty = hidden */
+  email:''                               /* contact address ; empty = hidden */
 };
 const T={
  kick:{ar:'الموقع الجديد على الطريق',en:'The new website is on its way'},
