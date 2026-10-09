@@ -1,0 +1,732 @@
+<title>Mass &amp; Grass Product</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@500;600&family=Lalezar&family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: the studio table again. The piece sits big on the left like a sheet laid on kraft paper,
+   the order slip sits beside it; below, the story, what you get, questions, and more from the wall. */
+:root{
+  --yellow:#E9DCC2;--ink:#2E241B;--red:#C4593F;--green:#66805A;--cream:#FAF5E9;--blue:#2F4A6B;
+  --shadow:#2E241B;--on-accent:#FAF5E9;--glow:#F4EAD5;--wall:#EFE6D3;--line:color-mix(in srgb,var(--ink) 22%,transparent);
+  --f-disp:'Anton','Arial Narrow Bold',Impact,sans-serif;--f-ar-disp:'Lalezar','Tahoma',sans-serif;
+  --f-ar:'IBM Plex Sans Arabic',Tahoma,sans-serif;--f-ar-hand:'Aref Ruqaa',serif;--f-script:'Caveat',cursive;--f-mono:'IBM Plex Mono',ui-monospace,monospace;
+  --grain-o:.2;color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--yellow:#463928;--ink:#F3EBDD;--cream:#54452F;--shadow:#1C150D;--glow:#4E402D;--wall:#3B2F21;--red:#D7704F;--green:#8FA57F;--blue:#8FB0D4;--on-accent:#FBF6EA;--grain-o:.12;color-scheme:dark}}
+:root[data-theme="dark"]{--yellow:#463928;--ink:#F3EBDD;--cream:#54452F;--shadow:#1C150D;--glow:#4E402D;--wall:#3B2F21;--red:#D7704F;--green:#8FA57F;--blue:#8FB0D4;--on-accent:#FBF6EA;--grain-o:.12;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{overflow-x:clip;scroll-behavior:smooth}
+body{margin:0;background:var(--yellow);color:var(--ink);font:400 16px/1.7 var(--f-ar);overflow-x:clip;-webkit-tap-highlight-color:transparent}
+body::after{content:"";position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:var(--grain-o);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .15 0 0 0 0 .1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+body[data-lang=ar]{direction:rtl}body[data-lang=en]{direction:ltr}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* ---------- header (same as the other pages) ---------- */
+.hdr{position:fixed;left:0;right:0;top:0;z-index:3000;height:88px;display:flex;align-items:center;justify-content:space-between;padding:env(safe-area-inset-top,0px) clamp(16px,4.4vw,70px) 0;pointer-events:none;direction:ltr}
+.hdr>*{pointer-events:auto}
+.hdr .lt,.hdr .rt{display:flex;gap:12px}
+.hdr button{background:var(--cream);border:3px solid var(--ink);padding:0;width:48px;height:48px;border-radius:8px;display:grid;place-items:center;color:var(--ink);position:relative;box-shadow:4px 5px 0 var(--shadow);transition:.15s}
+.hdr button:hover{transform:translate(-2px,-2px);box-shadow:6px 7px 0 var(--shadow)}
+.hdr button:active{transform:translate(3px,4px);box-shadow:1px 1px 0 var(--shadow)}
+.hdr svg{width:23px;height:23px;display:block}
+.hdr .txt{font:400 19px/1 var(--f-ar-disp);width:auto;min-width:48px;padding:0 12px}
+body[data-lang=ar] .hdr .txt{font:400 19px/1 var(--f-disp);letter-spacing:.04em}
+.hdr .logo{position:absolute;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translateX(-50%) rotate(-2deg);width:clamp(62px,5vw,78px);color:var(--ink);background:var(--cream);border:3px solid var(--ink);padding:9px 11px 8px;box-shadow:5px 6px 0 var(--shadow)}
+.hdr .logo svg{width:100%;height:auto;display:block}
+.hdr .sun{display:none}:root[data-theme=dark] .hdr .sun{display:block}:root[data-theme=dark] .hdr .moon{display:none}
+.badge{position:absolute;top:-9px;inset-inline-end:-9px;min-width:22px;height:22px;border-radius:11px;background:var(--red);color:var(--on-accent);font:600 12px/22px var(--f-mono);padding:0 6px;border:2px solid var(--ink)}
+.bump{animation:bump .4s}@keyframes bump{40%{transform:scale(1.18) rotate(-6deg)}}
+@media (max-width:640px){.hdr{height:70px}.hdr button{width:40px;height:40px;border-width:2.5px;box-shadow:3px 4px 0 var(--shadow)}.hdr .txt{min-width:40px;font-size:16px}.hdr .lt,.hdr .rt{gap:8px}.hdr .logo{top:calc(10px + env(safe-area-inset-top,0px))}.hdr svg{width:20px;height:20px}}
+.drawer{position:fixed;inset:0;z-index:5000;background:rgba(20,17,15,.55);display:flex}
+.drawer nav{width:min(88vw,380px);background:var(--yellow);border-inline-end:4px solid var(--ink);padding:26px 28px;display:flex;flex-direction:column;gap:4px;overflow:auto}
+.drawer nav a{font:400 30px/1.3 var(--f-ar-disp);padding:6px 0;border-bottom:3px solid var(--ink)}
+body[data-lang=en] .drawer nav a{font-family:var(--f-disp);text-transform:uppercase;font-size:28px}
+.xbtn{border:0;background:var(--ink);color:var(--yellow);font:600 13px var(--f-mono);padding:10px 14px;align-self:flex-start;margin-bottom:12px;border-radius:6px}
+
+/* ---------- shared ---------- */
+.wrap{max-width:1320px;margin:0 auto;padding-inline:clamp(16px,4.4vw,70px)}
+.kick{display:inline-block;font:600 12px/1 var(--f-mono);letter-spacing:.22em;text-transform:uppercase;color:var(--on-accent);background:var(--red);padding:7px 10px 6px;border-radius:3px;transform:rotate(-2deg)}
+body[data-lang=ar] .kick{font:400 15px/1 var(--f-ar-disp);letter-spacing:0;padding:6px 10px 8px}
+.h2{margin:14px 0 0;font:400 clamp(36px,4.6vw,66px)/1.05 var(--f-ar-disp);text-wrap:balance}
+body[data-lang=en] .h2{font-family:var(--f-disp);text-transform:uppercase;line-height:.95}
+.sec{padding-block:clamp(64px,8vw,120px)}
+.sec.alt{background:var(--cream)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:3px solid var(--ink);background:var(--cream);color:var(--ink);padding:13px 20px;border-radius:8px;font:400 20px/1 var(--f-ar-disp);box-shadow:4px 5px 0 var(--shadow);transition:.15s}
+body[data-lang=en] .btn{font:400 19px/1 var(--f-disp);text-transform:uppercase;letter-spacing:.03em}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 7px 0 var(--shadow)}
+.btn:active{transform:translate(3px,4px);box-shadow:1px 1px 0 var(--shadow)}
+.btn.pri{background:var(--red);color:var(--on-accent)}
+.btn.ink{background:var(--ink);color:var(--yellow)}
+.btn svg{width:20px;height:20px}
+.cutp{filter:drop-shadow(5px 6px 0 var(--shadow))}
+.cutp>div{background:#fff;padding:3.5%;clip-path:polygon(0 1.2%,6% 0,21% .8%,38% 0,57% 1%,74% 0,91% .9%,100% 0,99.3% 18%,100% 39%,99.2% 61%,100% 82%,99.4% 100%,80% 99.2%,61% 100%,42% 99.1%,24% 100%,7% 99.3%,0 100%,.8% 79%,0 58%,.7% 37%,0 17%)}
+.cutp i{display:block;aspect-ratio:var(--ar,1.3);background:var(--img) center/cover no-repeat}
+.tape{position:absolute;width:90px;height:26px;background:rgba(246,236,200,.82);z-index:3;
+  clip-path:polygon(0 8%,4% 0,12% 6%,22% 0,34% 5%,46% 0,60% 6%,74% 0,88% 5%,100% 0,98% 50%,100% 100%,86% 94%,72% 100%,58% 95%,44% 100%,30% 94%,16% 100%,5% 95%,0 100%,2% 52%)}
+
+/* ---------- breadcrumbs ---------- */
+.crumbs{padding-top:calc(118px + env(safe-area-inset-top,0px));display:flex;flex-wrap:wrap;gap:8px;font:500 14px/1.4 var(--f-ar);opacity:.8}
+.crumbs a:hover{text-decoration:underline;text-underline-offset:4px}
+.crumbs span[aria-hidden]{opacity:.5}
+@media (max-width:640px){.crumbs{padding-top:calc(92px + env(safe-area-inset-top,0px))}}
+
+/* ---------- product ---------- */
+.pdp{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:start;padding-block:26px clamp(60px,7vw,100px)}
+@media (max-width:920px){.pdp{grid-template-columns:minmax(0,1fr)}}
+.stagecol{position:sticky;top:104px;min-width:0}
+@media (max-width:920px){.stagecol{position:static}}
+.stage{position:relative;aspect-ratio:1/1.02;max-width:100%;border:3px solid var(--ink);border-radius:10px;box-shadow:7px 8px 0 var(--shadow);overflow:hidden;background:var(--wall);display:grid;place-items:center;isolation:isolate}
+.stage::before{content:"";position:absolute;inset:0;background:url(img/paper.jpg) 0 0/260px;mix-blend-mode:multiply;opacity:.55;z-index:-1}
+.stage .lbl{position:absolute;top:14px;inset-inline-start:14px;z-index:5;background:var(--ink);color:var(--yellow);font:600 12px/1 var(--f-mono);letter-spacing:.1em;padding:8px 10px;border-radius:4px;rotate:-2deg}
+body[data-lang=ar] .stage .lbl{font:500 14px/1 var(--f-ar);letter-spacing:0}
+.stage .scale{position:absolute;bottom:12px;inset-inline-end:14px;z-index:5;font:600 12px/1.3 var(--f-mono);opacity:.75}
+body[data-lang=ar] .stage .scale{font:500 13px/1.3 var(--f-ar)}
+.vw{position:absolute;inset:0;display:grid;place-items:center;animation:vin .45s cubic-bezier(.2,1.2,.3,1)}
+@keyframes vin{from{opacity:0;transform:translateY(14px) rotate(-1deg)}}
+/* digital file view */
+.file{width:min(66%,var(--fw,66%));position:relative}
+.file .cutp i{aspect-ratio:var(--ar)}
+.chip{position:absolute;inset-inline-start:-6%;bottom:-7%;background:var(--cream);border:2.5px solid var(--ink);border-radius:8px;padding:10px 14px;box-shadow:4px 5px 0 var(--shadow);font:600 12px/1.55 var(--f-mono);direction:ltr;text-align:left;rotate:-3deg;max-width:86%}
+.chip b{display:block;font-size:13px}
+.chip .ok{color:var(--green)}
+.devices{display:flex;align-items:flex-end;gap:5%;width:82%}
+.laptop{flex:1}
+.laptop .scr{border:10px solid #1f1a15;border-bottom-width:14px;border-radius:12px 12px 0 0;aspect-ratio:16/10;background:var(--img) center/cover}
+.laptop .base{height:12px;background:#3a332b;border-radius:0 0 12px 12px;margin-inline:-6%}
+.phone{width:24%;border:7px solid #1f1a15;border-radius:20px;aspect-ratio:9/19.5;background:var(--img) center/cover;box-shadow:5px 6px 0 var(--shadow);position:relative}
+.phone::after{content:"";position:absolute;top:5px;left:50%;translate:-50% 0;width:34%;height:7px;border-radius:5px;background:#1f1a15}
+/* wall + frame */
+.wallv{position:absolute;inset:0}
+.wallv .floor{position:absolute;left:0;right:0;bottom:0;height:16%;background:color-mix(in srgb,var(--ink) 18%,var(--wall));border-top:3px solid var(--ink)}
+.wallv .bench{position:absolute;bottom:16%;inset-inline-start:10%;width:56%;height:9%;background:#8a6a48;border:3px solid var(--ink);border-bottom:0}
+.wallv .plant{position:absolute;bottom:16%;inset-inline-end:12%;width:9%;aspect-ratio:1/3.2}
+.wallv .plant::before{content:"";position:absolute;inset:0 0 30% 0;border-radius:50% 50% 45% 45%;background:var(--green);border:3px solid var(--ink)}
+.wallv .plant::after{content:"";position:absolute;left:12%;right:12%;bottom:0;height:32%;background:var(--red);border:3px solid var(--ink)}
+.frame{position:absolute;left:50%;top:44%;translate:-50% -50%;width:var(--w);box-shadow:6px 9px 14px rgba(0,0,0,.28);transition:width .5s cubic-bezier(.2,1.2,.3,1)}
+.frame .in{background:#fff;padding:var(--mat,6%)}
+.frame.black{border:clamp(5px,1.1vw,10px) solid #1c1712}
+.frame.oak{border:clamp(5px,1.1vw,10px) solid #b98a57;border-image:linear-gradient(135deg,#c79a66,#a77a49 50%,#c99f6c) 1}
+.frame.white{border:clamp(5px,1.1vw,10px) solid #f7f3ea;outline:1px solid #d8cfbf}
+.frame.none{box-shadow:4px 6px 10px rgba(0,0,0,.25)}
+.frame i{display:block;aspect-ratio:var(--ar);background:var(--img) center/cover}
+/* postcard */
+.pc{width:68%;aspect-ratio:1.42;perspective:1400px;cursor:pointer;border:0;background:none;padding:0}
+.pc.port{width:46%;aspect-ratio:.704}
+.pc .f{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,1.3,.4,1)}
+.pc.flip .f{transform:rotateY(180deg)}
+.pc .s{position:absolute;inset:0;backface-visibility:hidden;border-radius:4px;box-shadow:5px 7px 0 var(--shadow);overflow:hidden}
+.pc .fr{background:#fff;padding:5%}.pc .fr i{display:block;width:100%;height:100%;background:var(--img) center/cover}
+.pc .bk{transform:rotateY(180deg);background:#FBF6EA url(img/paper.jpg) 0 0/220px;background-blend-mode:multiply;display:grid;grid-template-columns:1.1fr 1fr;padding:7%;gap:6%;color:#2E241B;direction:ltr}
+.pc .bk .msg{font:500 clamp(14px,2vw,22px)/1.5 var(--f-script);border-right:1.5px solid #8e7d66;padding-right:8%;text-align:left}
+.pc .bk .adr{display:flex;flex-direction:column;justify-content:flex-end;gap:16%}
+.pc .bk .adr span{border-bottom:1.5px solid #8e7d66;height:1px}
+.pc .bk .stamp{position:absolute;top:8%;right:6%;width:20%;aspect-ratio:1;background:url(img/postmark.png) center/contain no-repeat}
+.pc.port .bk{grid-template-columns:1fr;grid-template-rows:1.2fr 1fr}.pc.port .bk .msg{border-right:0;border-bottom:1.5px solid #8e7d66;padding:0 0 8%}
+.hint{position:absolute;bottom:12px;inset-inline-start:14px;font:600 20px/1 var(--f-script);color:var(--red);z-index:5}
+/* sticker */
+.stk{width:52%;aspect-ratio:var(--ar);background:var(--img) center/contain no-repeat;transition:width .4s cubic-bezier(.2,1.2,.3,1),transform .3s;
+  filter:drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(5px 7px 0 rgba(0,0,0,.28))}
+.stk:hover{transform:rotate(-4deg) scale(1.03)}
+.stk.gloss{position:relative}
+.stk.gloss::after{content:"";position:absolute;inset:0;-webkit-mask:var(--img) center/contain no-repeat;mask:var(--img) center/contain no-repeat;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 45%,transparent 60%)}
+.card{position:absolute;bottom:18%;inset-inline-end:10%;width:26%;aspect-ratio:1.586;border-radius:7px;background:#5E7A5C;border:2px solid var(--ink);color:#e9efe3;font:600 10px/1 var(--f-mono);padding:6px 8px;direction:ltr;rotate:6deg;opacity:.9}
+/* garment mockup (from the apparel page) */
+.mk{position:relative;width:88%;aspect-ratio:1;isolation:isolate}
+.mk>i,.mk>span{position:absolute;inset:0;display:block}
+.mk .b{background:var(--base) center/100% 100% no-repeat;filter:brightness(1.16) contrast(1.06)}
+.mk .t,.mk .pw{-webkit-mask:var(--mask) center/100% 100% no-repeat;mask:var(--mask) center/100% 100% no-repeat}
+.mk .t{mix-blend-mode:multiply}
+.mk .pw{mix-blend-mode:multiply}
+.mk.dk .pw{mix-blend-mode:normal;opacity:.94}
+.mk .pw i{position:absolute;background:var(--img) center/cover no-repeat}
+/* zoom (close look) */
+.zoom{position:absolute;inset:0;background:var(--img) no-repeat;background-size:260%;cursor:zoom-in;touch-action:none}
+.thumbs{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.thumbs button{border:2.5px solid var(--ink);background:var(--cream);border-radius:8px;padding:8px 12px;font:500 14px/1 var(--f-ar);display:flex;align-items:center;gap:8px;box-shadow:3px 4px 0 var(--shadow);transition:.15s}
+.thumbs button[aria-pressed=true]{background:var(--ink);color:var(--yellow)}
+.thumbs svg{width:18px;height:18px}
+
+/* buy column */
+.buy{min-width:0}
+.buy h1{margin:12px 0 4px;font:400 clamp(42px,5.4vw,78px)/1 var(--f-ar-disp);text-wrap:balance}
+body[data-lang=en] .buy h1{font-family:var(--f-disp);text-transform:uppercase;line-height:.92}
+.by{font:600 26px/1.2 var(--f-script);color:var(--red);margin:0}
+body[data-lang=ar] .by{font:400 22px/1.4 var(--f-ar-hand)}
+.desc{margin:14px 0 0;max-width:52ch;font-size:16px}
+.priceRow{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;margin-top:22px;padding-top:18px;border-top:2px dashed var(--line)}
+.price{font:400 48px/1 var(--f-disp)}
+.price small{font-size:.5em;opacity:.7}
+.pnote{font-size:14px;opacity:.75}
+.lbl2{display:block;font:600 12px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;margin:24px 0 10px;opacity:.85}
+body[data-lang=ar] .lbl2{font:600 15px/1.2 var(--f-ar);letter-spacing:0}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mode{position:relative;text-align:start;border:3px solid var(--ink);border-radius:10px;background:var(--cream);padding:16px 16px 14px;box-shadow:4px 5px 0 var(--shadow);transition:.15s;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center}
+.mode svg{width:30px;height:30px;grid-row:span 2}
+.mode b{font:400 21px/1.15 var(--f-ar-disp)}
+body[data-lang=en] .mode b{font:400 20px/1.05 var(--f-disp);text-transform:uppercase}
+.mode span{font-size:13.5px;line-height:1.45;opacity:.85}
+.mode[aria-pressed=true]{background:var(--ink);color:var(--yellow);transform:translate(2px,3px);box-shadow:2px 2px 0 var(--shadow)}
+.mode[aria-pressed=true]::after{content:"";position:absolute;top:-10px;inset-inline-end:-10px;width:26px;height:26px;border-radius:50%;background:var(--red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FAF5E9' stroke-width='3.4' stroke-linecap='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center/16px no-repeat;border:2.5px solid var(--ink)}
+@media (max-width:420px){.modes{grid-template-columns:1fr}}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;border:2.5px solid var(--ink);border-radius:9px;background:var(--cream);padding:12px 14px;text-align:start;transition:.15s;width:100%}
+.opt[aria-pressed=true]{outline:3px solid var(--red);outline-offset:-1px;box-shadow:3px 4px 0 var(--shadow)}
+.opt .ic{flex:0 0 auto;width:46px;height:46px;border-radius:6px;border:2px solid var(--ink);background:var(--img) center/cover var(--wall);display:grid;place-items:center}
+.opt .ic svg{width:24px;height:24px}
+.opt .tx{flex:1;min-width:0}
+.opt .tx b{display:block;font:600 16px/1.3 var(--f-ar)}
+.opt .tx small{display:block;font-size:13.5px;line-height:1.45;opacity:.8}
+.opt .pr{font:400 22px/1 var(--f-disp);white-space:nowrap}
+.prods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.prod{border:2.5px solid var(--ink);border-radius:9px;background:var(--cream);padding:10px 6px 9px;display:grid;justify-items:center;gap:6px;font:600 13.5px/1.25 var(--f-ar);text-align:center;transition:.15s}
+.prod .pi{width:54px;height:54px;display:grid;place-items:center}
+.prod .pi svg{width:44px;height:44px}
+.prod small{font:500 12px/1 var(--f-mono);opacity:.75}
+.prod[aria-pressed=true]{background:var(--ink);color:var(--yellow);box-shadow:3px 4px 0 var(--shadow)}
+@media (max-width:420px){.prods{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{border:2.5px solid var(--ink);background:var(--cream);border-radius:7px;padding:9px 14px;font:600 14px/1.1 var(--f-ar);min-width:52px;transition:.12s}
+.seg button small{display:block;font:500 11.5px/1.3 var(--f-mono);opacity:.75;margin-top:2px}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--yellow)}
+.sw{display:flex;flex-wrap:wrap;gap:10px}
+.sw button{width:38px;height:38px;border-radius:50%;border:2.5px solid var(--ink);background:var(--c);box-shadow:2px 3px 0 var(--shadow)}
+.sw button[aria-pressed=true]{outline:3px solid var(--red);outline-offset:3px}
+.cur{font-weight:500;opacity:.8}
+.addrow{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;align-items:stretch}
+.qty{display:flex;align-items:center;border:3px solid var(--ink);border-radius:8px;background:var(--cream);box-shadow:4px 5px 0 var(--shadow)}
+.qty button{border:0;background:none;width:44px;height:100%;font:600 22px/1 var(--f-mono)}
+.qty output{min-width:30px;text-align:center;font:600 18px/1 var(--f-mono)}
+.addrow .btn{flex:1;min-width:180px}
+.facts{list-style:none;margin:24px 0 0;padding:16px 0 0;border-top:2px dashed var(--line);display:grid;gap:12px}
+.facts li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;font-size:14.5px;line-height:1.55}
+.facts svg{width:24px;height:24px;color:var(--red)}
+.facts b{font-weight:600}
+.support{margin-top:18px;display:flex;gap:12px;align-items:center;background:var(--glow);border:2px dashed var(--ink);border-radius:9px;padding:12px 14px;font-size:14px;line-height:1.5}
+.support .sig{flex:0 0 auto;width:86px;aspect-ratio:2.56;background:url(img/signature.png) center/contain no-repeat}
+:root[data-theme=dark] .support .sig{filter:invert(1)}
+
+/* ---------- story ---------- */
+.story{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(30px,5vw,80px);align-items:center}
+@media (max-width:860px){.story{grid-template-columns:minmax(0,1fr)}}
+.story .note{position:relative;background:#FBF6EA url(img/paper.jpg) 0 0/240px;background-blend-mode:multiply;color:#2E241B;border:3px solid var(--ink);padding:clamp(26px,3vw,40px);box-shadow:6px 7px 0 var(--shadow);rotate:1.2deg}
+.story .note .tape{top:-13px;left:50%;translate:-50% 0;rotate:-3deg}
+.story .note p{margin:0;font:400 clamp(19px,1.8vw,24px)/1.75 var(--f-ar-hand)}
+body[data-lang=en] .story .note p{font:500 clamp(22px,2.2vw,28px)/1.45 var(--f-script)}
+.story .note .sig{display:block;width:150px;aspect-ratio:2.56;margin-top:14px;margin-inline-start:auto;background:url(img/signature.png) center/contain no-repeat}
+.story .meta{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px;font:500 14px/1.4 var(--f-ar)}
+.story .meta b{display:block;font:600 11.5px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin-bottom:4px}
+body[data-lang=ar] .story .meta b{font:600 13px/1 var(--f-ar);letter-spacing:0}
+
+/* ---------- what you get ---------- */
+.get{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,36px);margin-top:36px}
+@media (max-width:760px){.get{grid-template-columns:minmax(0,1fr)}}
+.gcard{border:3px solid var(--ink);border-radius:10px;background:var(--yellow);padding:clamp(22px,3vw,34px);box-shadow:6px 7px 0 var(--shadow)}
+.gcard h3{margin:0 0 6px;display:flex;align-items:center;gap:12px;font:400 30px/1.1 var(--f-ar-disp)}
+body[data-lang=en] .gcard h3{font:400 28px/1 var(--f-disp);text-transform:uppercase}
+.gcard h3 svg{width:32px;height:32px;color:var(--red)}
+.gcard>p{margin:0 0 14px;opacity:.85}
+.gcard dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 18px;font-size:14.5px}
+.gcard dt{font:600 11.5px/1.7 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+body[data-lang=ar] .gcard dt{font:600 13.5px/1.7 var(--f-ar);letter-spacing:0}
+.gcard dd{margin:0}
+
+/* ---------- faq ---------- */
+.faq{max-width:860px;margin-top:30px}
+.faq details{border-bottom:2.5px solid var(--ink)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;align-items:center;padding:18px 0;font:600 18px/1.4 var(--f-ar)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:600 26px/1 var(--f-mono);transition:transform .25s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0 0 20px;max-width:70ch;opacity:.9}
+
+/* ---------- more from the wall ---------- */
+.more{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(18px,3vw,40px);margin-top:40px;align-items:start}
+@media (max-width:820px){.more{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.mitem{position:relative;border:0;background:none;padding:0;text-align:start;rotate:var(--r);transition:rotate .25s,transform .25s}
+.mitem:hover{rotate:0deg;transform:translateY(-6px)}
+.mitem .tape{top:-12px;left:50%;translate:-50% 0;width:70px}
+.mitem b{display:block;margin-top:14px;font:400 20px/1.15 var(--f-ar-disp)}
+body[data-lang=en] .mitem b{font:400 19px/1 var(--f-disp);text-transform:uppercase}
+.mitem small{font:500 13px/1.4 var(--f-mono);opacity:.75}
+
+/* ---------- basket ---------- */
+.bag{position:fixed;inset:0;z-index:6000;background:rgba(20,17,15,.55);display:flex;justify-content:flex-end}
+body[data-lang=ar] .bag{justify-content:flex-start}
+.bag aside{width:min(94vw,440px);height:100%;background:var(--yellow);border-inline-start:4px solid var(--ink);display:flex;flex-direction:column;animation:slide .35s cubic-bezier(.2,1.1,.3,1);padding-top:env(safe-area-inset-top,0px)}
+body[data-lang=ar] .bag aside{border-inline-start:0;border-inline-end:4px solid var(--ink)}
+@keyframes slide{from{transform:translateX(30%);opacity:0}}
+body[data-lang=ar] .bag aside{animation-name:slideL}@keyframes slideL{from{transform:translateX(-30%);opacity:0}}
+.bag header{display:flex;justify-content:space-between;align-items:center;padding:22px 22px 14px;border-bottom:3px solid var(--ink)}
+.bag h2{margin:0;font:400 30px/1 var(--f-ar-disp)}
+body[data-lang=en] .bag h2{font-family:var(--f-disp);text-transform:uppercase}
+.bag .xbtn{margin:0}
+.bag ul{list-style:none;margin:0;padding:8px 22px;overflow:auto;flex:1}
+.bag li{display:grid;grid-template-columns:64px 1fr auto;gap:14px;padding:14px 0;border-bottom:2px dashed var(--line);align-items:center}
+.bag li .th{width:64px;aspect-ratio:1;border:2px solid var(--ink);border-radius:6px;background:var(--img) center/cover}
+.bag li b{display:block;font:600 15px/1.35 var(--f-ar)}
+.bag li small{display:block;font-size:13px;line-height:1.45;opacity:.8}
+.bag li .row{display:flex;gap:8px;align-items:center;margin-top:6px}
+.bag li .row button{width:28px;height:28px;border:2px solid var(--ink);border-radius:6px;background:var(--cream);font:600 15px/1 var(--f-mono);padding:0}
+.bag li .rm{border:0!important;background:none!important;width:auto!important;font:500 13px var(--f-ar)!important;text-decoration:underline;opacity:.75;padding:0 4px!important}
+.bag li .lp{font:400 20px/1 var(--f-disp)}
+.bag .empty{padding:40px 22px;text-align:center;opacity:.8}
+.bag footer{border-top:3px solid var(--ink);padding:18px 22px calc(22px + env(safe-area-inset-bottom,0px));display:grid;gap:10px;background:var(--cream)}
+.bag .tot{display:flex;justify-content:space-between;align-items:baseline;font:600 16px/1.4 var(--f-ar)}
+.bag .tot .price{font-size:36px}
+.bag .split{font-size:13.5px;opacity:.8;line-height:1.55}
+.toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));left:50%;translate:-50% 30px;z-index:7000;background:var(--ink);color:var(--yellow);padding:12px 18px;border-radius:8px;font:600 15px/1.3 var(--f-ar);opacity:0;pointer-events:none;transition:.3s;box-shadow:4px 5px 0 var(--red)}
+.toast.on{opacity:1;translate:-50% 0}
+
+/* sticky mobile buy bar */
+.mbar{position:fixed;left:0;right:0;bottom:0;z-index:2500;display:none;gap:12px;align-items:center;justify-content:space-between;background:var(--cream);border-top:3px solid var(--ink);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));transform:translateY(110%);transition:transform .3s}
+.mbar.on{transform:none}
+.mbar .price{font-size:30px}
+.mbar small{display:block;font-size:12.5px;opacity:.8;line-height:1.3}
+@media (max-width:920px){.mbar{display:flex}}
+
+/* ---------- footer ---------- */
+.foot{position:relative;--fb:var(--ink);--ff:var(--yellow);background:var(--fb);color:var(--ff);padding:clamp(70px,7vw,100px) clamp(16px,5vw,80px) calc(30px + env(safe-area-inset-bottom,0px));margin-top:40px}
+:root[data-theme=dark] .foot{--fb:#2B2218;--ff:#F3EBDD}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .foot{--fb:#2B2218;--ff:#F3EBDD}}
+.foot .edge{position:absolute;left:0;right:0;top:-1px;height:26px}.foot .edge svg{display:block;width:100%;height:100%}
+.foot .park{position:absolute;bottom:calc(100% - 26px);inset-inline-end:clamp(20px,8vw,140px);width:clamp(140px,14vw,210px);aspect-ratio:640/473;background:url(img/truckfull.webp) center/contain no-repeat;
+  filter:drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(4px 5px 0 var(--shadow))}
+body[data-lang=en] .foot .park{transform:scaleX(-1)}
+.fgrid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:30px;align-items:flex-end}
+.foot h3{margin:0;font:400 clamp(30px,3vw,44px)/1.1 var(--f-ar-disp)}
+body[data-lang=en] .foot h3{font-family:var(--f-disp);text-transform:uppercase}
+.flinks{display:flex;flex-wrap:wrap;gap:8px 22px}
+.flinks a{font:500 16px/1.5 var(--f-ar);opacity:.85}.flinks a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
+.fbot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:44px;padding-top:20px;border-top:1.5px dashed color-mix(in srgb,var(--ff) 35%,transparent);font:500 13px/1.6 var(--f-ar);opacity:.7}
+</style>
+
+<header class="hdr">
+  <div class="lt"><button id="menuBtn" data-tl="menu"><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M3 7h20M3 13h20M3 19h20"/></svg></button><button class="txt" id="langBtn">EN</button></div>
+  <a class="logo" href="#top" aria-label="Mass &amp; Grass"><svg viewBox="0 0 25.16 19.75" role="img" aria-label="MASS &amp; GRASS"><path fill="currentColor" d="M2.41,9.07s-.14-4.5-1.26-4.35,0,4.35,0,4.35H0V0h1.02l1.83,6.39L4.68,0h1.02v9.07h-1.16s1.08-4.19,0-4.35-1.26,4.35-1.26,4.35h-.87Z"/><path fill="currentColor" d="M11.09,5.92s.95-.2,1.16,0c.1.1,0,.58,0,.58,0,.53.1.91.28,1.15.04.06.11.11.22.17.11.06.27.1.51.1.44,0,.69-.22.84-.49.14-.27.16-.61.16-.86,0-.43-.15-.72-.36-.92-.21-.2-.49-.33-.75-.45l-.22-.1c-.26-.11-.7-.3-1.1-.68-.49-.48-.74-1.08-.74-1.82,0-.78.21-1.43.6-1.89.38-.44.92-.71,1.56-.71.89,0,1.38.38,1.64.71.36.46.53,1.08.53,1.89v.58h-1.17v-.58c0-.7-.16-1.09-.37-1.26-.21-.17-.47-.17-.63-.17-.48,0-.71.26-.85.58-.15.32-.16.69-.16.85,0,.43.15.71.36.94.21.22.49.38.79.49l.2.09c.23.1.68.26,1.07.64.51.47.76,1.07.76,1.81,0,1.39-.78,2.51-2.17,2.51s-2.17-.95-2.17-2.57v-.58Z"/><path fill="currentColor" d="M15.9,5.92s.95-.2,1.16,0c.1.1,0,.58,0,.58,0,.53.1.91.28,1.15.04.06.11.11.22.17.11.06.27.1.51.1.44,0,.69-.22.84-.49.14-.27.16-.61.16-.86,0-.43-.15-.72-.36-.92-.21-.2-.49-.33-.75-.45l-.22-.1c-.26-.11-.7-.3-1.1-.68-.49-.48-.74-1.08-.74-1.82,0-.78.21-1.43.6-1.89C16.88.27,17.42,0,18.06,0c.89,0,1.38.38,1.64.71.36.46.53,1.08.53,1.89v.58s-.96.21-1.17,0c-.1-.1,0-.58,0-.58,0-.7-.16-1.09-.37-1.26-.21-.17-.47-.17-.63-.17-.48,0-.71.26-.85.58-.15.32-.16.69-.16.85,0,.43.15.71.36.94.21.22.49.38.79.49l.2.09c.23.1.68.26,1.07.64.51.47.76,1.07.76,1.81,0,1.39-.78,2.51-2.17,2.51-1.44,0-2.17-.95-2.17-2.57v-.58Z"/><path fill="currentColor" d="M23.31,7.02c0-.09.02-.18.02-.27v-.63h.76v.38c0,.39-.02.96-.22,1.46l.68,1.09h-.9l-.26-.4c-.31.26-.7.4-1.18.4-.44,0-.82-.17-1.09-.48-.25-.3-.38-.66-.38-1.1s.11-.73.28-.97c.16-.24.38-.42.58-.58.04-.03.08-.06.11-.1-.1-.16-.2-.37-.29-.6s-.15-.47-.15-.72c0-.79.24-1.35.94-1.35.38,0,.65.18.8.52.12.26.13.58.13.83,0,.45-.11.88-.33,1.23-.06.09-.1.14-.14.2l.63,1.07ZM22.12,6.48s-.02.02-.02.02c-.18.16-.34.28-.43.42-.1.14-.16.32-.16.55,0,.19.06.4.17.55.11.16.29.27.54.27.34,0,.72-.05.78-.32.08-.43-.44-1.45-.87-1.5ZM22.12,3.96s-.04.1-.06.18c-.02.08-.02.21-.02.38,0,.21-.05.71.21.7.2-.01.14-.41.14-.7v-.11c0-.09,0-.19-.02-.3,0-.05-.02-.09-.04-.13-.02-.05-.03-.06-.1-.06s-.07,0-.1.04Z"/><path fill="currentColor" d="M0,13.25c0-1.62.76-2.57,2.24-2.57s2.25.95,2.25,2.57v.58s-1,.21-1.22,0c-.11-.1,0-.58,0-.58,0-.65-.13-1.01-.32-1.21-.2-.18-.46-.21-.72-.21s-.51.02-.7.21c-.21.2-.33.56-.33,1.21v3.92c0,.73.17,1.07.38,1.25.22.17.46.18.65.18s.45-.01.67-.18c.2-.17.37-.52.37-1.25,0,0,.13-.57,0-.69-.26-.25-1.46,0-1.46,0v-1.17h2.68v1.86c0,.81-.18,1.44-.55,1.87-.27.33-.78.71-1.7.71s-1.42-.38-1.69-.71c-.37-.43-.55-1.06-.55-1.87v-3.92Z"/><path fill="currentColor" d="M10.05,19.74h-1.22v-2.69c0-.8-.4-1.19-1.2-1.19,0,0-.62-.13-.76,0-.71.69,0,3.88,0,3.88h-1.2v-9.07h1.96c1.63,0,2.4.9,2.4,2.58,0,.84-.19,1.48-.56,1.91-.01.01-.04.04-.05.06-.03.02-.05.05-.08.06.46.43.72,1.02.72,1.77v2.69ZM6.87,14.69h.76c.32,0,.55-.04.68-.11.11-.08.19-.14.23-.17.19-.23.28-.61.28-1.16,0-.6-.1-.96-.29-1.17-.2-.2-.5-.25-.9-.25,0,0-.62-.13-.76,0-.52.5,0,2.85,0,2.85Z"/><path fill="currentColor" d="M9.51,6.55c-.31-.25-1.58,0-1.58,0l-.58,2.54h-1.19L8.25.01h.92l2.12,9.07h-1.21s-.07-2.13-.58-2.54ZM8.2,5.39h1.03s.05-2.23-.52-2.23-.52,2.23-.52,2.23Z"/><path fill="currentColor" d="M15.65,16.59s.99-.2,1.2,0c.11.1,0,.58,0,.58,0,.53.1.91.29,1.15.04.06.12.11.23.17.12.06.28.1.53.1.46,0,.72-.22.87-.49.14-.27.17-.61.17-.86,0-.43-.15-.72-.37-.92-.22-.2-.51-.33-.78-.45l-.23-.1c-.27-.11-.73-.3-1.14-.68-.51-.48-.77-1.08-.77-1.82,0-.78.22-1.43.63-1.89.4-.44.96-.71,1.63-.71.92,0,1.43.38,1.7.71.37.46.55,1.08.55,1.89v.58h-1.22v-.58c0-.7-.17-1.09-.38-1.26-.22-.17-.49-.17-.65-.17-.5,0-.74.26-.88.58-.15.32-.17.69-.17.85,0,.43.15.71.37.94.22.22.51.38.82.49l.2.09c.24.1.7.26,1.11.64.53.47.79,1.07.79,1.81,0,1.39-.81,2.51-2.25,2.51s-2.25-.95-2.25-2.57v-.58Z"/><path fill="currentColor" d="M20.65,16.59s.99-.2,1.2,0c.11.1,0,.58,0,.58,0,.53.1.91.29,1.15.04.06.12.11.23.17.12.06.28.1.53.1.46,0,.72-.22.87-.49.14-.27.17-.61.17-.86,0-.43-.15-.72-.37-.92-.22-.2-.51-.33-.78-.45l-.23-.1c-.27-.11-.73-.3-1.14-.68-.51-.48-.77-1.08-.77-1.82,0-.78.22-1.43.63-1.89.4-.44.96-.71,1.63-.71.92,0,1.43.38,1.7.71.37.46.55,1.08.55,1.89v.58s-1,.21-1.22,0c-.11-.1,0-.58,0-.58,0-.7-.17-1.09-.38-1.26-.22-.17-.49-.17-.65-.17-.5,0-.74.26-.88.58-.15.32-.17.69-.17.85,0,.43.15.71.37.94.22.22.51.38.82.49l.2.09c.24.1.7.26,1.11.64.53.47.79,1.07.79,1.81,0,1.39-.81,2.51-2.25,2.51-1.5,0-2.25-.95-2.25-2.57v-.58Z"/><path fill="currentColor" d="M14,17.21c-.32-.25-1.64,0-1.64,0l-.6,2.54h-1.24l2.18-9.07h.96l2.2,9.07h-1.25s-.07-2.13-.6-2.54ZM12.65,16.06h1.08s.06-2.23-.54-2.23-.54,2.23-.54,2.23Z"/></svg></a>
+  <div class="rt"><button id="themeBtn"><svg class="moon" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M20.5 15.5A8.5 8.5 0 0 1 10.5 5.5a8.5 8.5 0 1 0 10 10z"/></svg><svg class="sun" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="13" cy="13" r="4.5"/><path d="M13 2.5v3M13 20.5v3M2.5 13h3M20.5 13h3M5.6 5.6l2.1 2.1M18.3 18.3l2.1 2.1M5.6 20.4l2.1-2.1M18.3 7.7l2.1-2.1"/></svg></button>
+    <button id="bagBtn" data-tl="basket"><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M4.5 8.5h17l-1 14h-15z"/><path d="M9 8.5V7a4 4 0 0 1 8 0v1.5"/></svg><b class="badge" id="badge" hidden>0</b></button></div>
+</header>
+<div class="drawer" id="drawer" hidden><nav id="navList"></nav></div>
+
+<main id="top">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="breadcrumb" id="crumbs"></nav>
+    <section class="pdp">
+      <div class="stagecol">
+        <div class="stage" id="stage" aria-live="polite"></div>
+        <div class="thumbs" id="views" role="group"></div>
+      </div>
+      <div class="buy">
+        <span class="kick" id="pKick"></span>
+        <h1 id="pTitle"></h1>
+        <p class="by" data-t="by"></p>
+        <p class="desc" id="pDesc"></p>
+        <div class="priceRow"><span class="price num" id="price"></span><span class="pnote" id="pnote"></span></div>
+
+        <span class="lbl2" data-t="howT"></span>
+        <div class="modes" role="group" id="modes">
+          <button class="mode" data-m="digital"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4v15M10 13l6 6 6-6"/><path d="M5 21v5h22v-5"/></svg><b data-t="mDig"></b><span data-t="mDigD"></span></button>
+          <button class="mode" data-m="print"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><path d="M4 10l12-6 12 6v13l-12 6-12-6z"/><path d="M4 10l12 6 12-6M16 16v13"/></svg><b data-t="mPrt"></b><span data-t="mPrtD"></span></button>
+        </div>
+
+        <div id="optsDigital">
+          <span class="lbl2" data-t="fileT"></span>
+          <div class="opts" id="dOpts"></div>
+          <span class="lbl2" data-t="licT"></span>
+          <div class="seg" id="lic"></div>
+        </div>
+
+        <div id="optsPrint" hidden>
+          <span class="lbl2" data-t="onWhat"></span>
+          <div class="prods" id="prods"></div>
+          <div id="sub"></div>
+        </div>
+
+        <div class="addrow">
+          <div class="qty"><button id="qMinus" data-tl="less">−</button><output id="qty" class="num">1</output><button id="qPlus" data-tl="more">+</button></div>
+          <button class="btn pri" id="addBtn"><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M4.5 8.5h17l-1 14h-15z"/><path d="M9 8.5V7a4 4 0 0 1 8 0v1.5"/></svg><span data-t="add"></span></button>
+        </div>
+        <ul class="facts" id="facts"></ul>
+        <div class="support"><span class="sig" aria-hidden="true"></span><span data-t="supportLine"></span></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="sec alt" id="story">
+    <div class="wrap story">
+      <div class="cutp" id="storyArt"></div>
+      <div>
+        <span class="kick" data-t="kStory"></span>
+        <h2 class="h2" data-t="storyT"></h2>
+        <div class="note" style="margin-top:28px"><span class="tape"></span><p id="storyP"></p><span class="sig" aria-hidden="true"></span></div>
+        <div class="meta" id="meta"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <span class="kick" data-t="kGet"></span>
+      <h2 class="h2" data-t="getT"></h2>
+      <div class="get">
+        <div class="gcard"><h3><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4v15M10 13l6 6 6-6"/><path d="M5 21v5h22v-5"/></svg><span data-t="mDig"></span></h3><p data-t="gDigP"></p><dl id="dlDig"></dl></div>
+        <div class="gcard"><h3><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"><path d="M4 10l12-6 12 6v13l-12 6-12-6z"/><path d="M4 10l12 6 12-6M16 16v13"/></svg><span data-t="mPrt"></span></h3><p data-t="gPrtP"></p><dl id="dlPrt"></dl></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec alt">
+    <div class="wrap">
+      <span class="kick" data-t="kFaq"></span>
+      <h2 class="h2" data-t="faqT"></h2>
+      <div class="faq" id="faq"></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <span class="kick" data-t="kMore"></span>
+      <h2 class="h2" data-t="moreT"></h2>
+      <div class="more" id="more"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="edge" aria-hidden="true"><svg viewBox="0 0 100 10" preserveAspectRatio="none"><polygon id="footEdge" style="fill:var(--yellow)"/></svg></div>
+  <span class="park" aria-hidden="true"></span>
+  <div class="fgrid"><h3 data-t="handPainted"></h3><div class="flinks" id="flinks"></div></div>
+  <div class="fbot"><span>© 2026 Mass &amp; Grass</span><span data-t="rights"></span></div>
+</footer>
+
+<div class="mbar" id="mbar"><div><span class="price num" id="mPrice"></span><small id="mWhat"></small></div><button class="btn pri" id="mAdd"><span data-t="add"></span></button></div>
+
+<div class="bag" id="bag" hidden><aside role="dialog" aria-modal="true" aria-labelledby="bagT">
+  <header><h2 id="bagT" data-t="basket"></h2><button class="xbtn" id="bagX"></button></header>
+  <ul id="bagList"></ul>
+  <footer id="bagFoot"></footer>
+</aside></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MK={"hoodie_b": {"res": 1300, "print": {"chest": [526, 402, 248, 210], "back": [489, 662, 322, 347], "sleeve": [229, 576, 74, 223]}}, "hoodie_f": {"res": 1300, "print": {"chest": [526, 402, 248, 210], "back": [489, 662, 322, 347], "sleeve": [229, 576, 74, 223]}}, "tee_b": {"res": 1300, "print": {"chest": [491, 287, 317, 408], "pocket": [741, 272, 121, 121], "back": [446, 242, 408, 514]}}, "tee_f": {"res": 1300, "print": {"chest": [491, 287, 317, 408], "pocket": [741, 272, 121, 121], "back": [446, 242, 408, 514]}}, "tote_f": {"res": 1300, "print": {"front": [417, 567, 467, 483], "back": [417, 567, 467, 483]}}};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- copy ---------- */
+const T={
+ home:{ar:'الرئيسية',en:'Home'},paintings:{ar:'اللوحات',en:'Paintings'},
+ by:{ar:'رسم فرح الحلو · ألوان مائية على ورق، غزة',en:'By Farah Al Helou · watercolour on paper, Gaza'},
+ howT:{ar:'كيف بدك ياها؟',en:'How do you want it?'},
+ mDig:{ar:'نسخة رقمية',en:'Digital file'},mDigD:{ar:'ملف بجودة عالية بيوصلك فوراً على إيميلك',en:'A high-resolution file, in your inbox right away'},
+ mPrt:{ar:'مطبوعة على منتج',en:'Printed for you'},mPrtD:{ar:'بنطبعها ونشحنها لباب بيتك',en:'We print it and ship it to your door'},
+ fileT:{ar:'شو الملف اللي بدك ياه؟',en:'Which file?'},licT:{ar:'الاستخدام',en:'Use'},
+ licP:{ar:'شخصي',en:'Personal'},licPD:{ar:'لبيتك وجهازك',en:'Home & devices'},licC:{ar:'تجاري',en:'Commercial'},licCD:{ar:'لمشروع أو منتج',en:'For a business'},
+ onWhat:{ar:'على شو نطبعها؟',en:'Printed on'},
+ size:{ar:'المقاس',en:'Size'},frame:{ar:'البرواز',en:'Frame'},colour:{ar:'اللون',en:'Colour'},place:{ar:'مكان الطبعة',en:'Print placement'},pack:{ar:'العدد بالرزمة',en:'Pack'},finish:{ar:'اللمعة',en:'Finish'},
+ add:{ar:'أضف للسلة',en:'Add to basket'},added:{ar:'انضافت للسلة',en:'Added to your basket'},
+ basket:{ar:'السلة',en:'Basket'},close:{ar:'إغلاق ✕',en:'Close ✕'},menu:{ar:'القائمة',en:'Menu'},less:{ar:'أقل',en:'Less'},more:{ar:'أكثر',en:'More'},
+ empty:{ar:'السلة فاضية. اختار رسمة وارجع.',en:'Your basket is empty. Pick a drawing and come back.'},
+ total:{ar:'المجموع',en:'Total'},checkout:{ar:'كمّل للدفع',en:'Go to checkout'},keep:{ar:'كمّل تسوّق',en:'Keep shopping'},remove:{ar:'شيل',en:'Remove'},
+ splitBoth:{ar:'الملفات الرقمية بتوصلك فوراً بعد الدفع. المطبوعات بتنشحن لحالها، وتكلفة الشحن بتنحسب بالخطوة الجاية حسب بلدك.',en:'Digital files arrive right after payment. Printed items ship on their own; shipping is worked out at the next step for your country.'},
+ splitDig:{ar:'الملفات بتوصلك على إيميلك فوراً بعد الدفع. ما في شحن.',en:'Files reach your inbox right after payment. No shipping.'},
+ splitPrt:{ar:'تكلفة الشحن بتنحسب بالخطوة الجاية حسب بلدك.',en:'Shipping is worked out at the next step for your country.'},
+ demoCheckout:{ar:'(معاينة) صفحة الدفع بتنصمم بعدين',en:'(Preview) the checkout page comes next'},
+ pnoteDig:{ar:'دفعة وحدة · بدون شحن',en:'One payment · no shipping'},pnotePrt:{ar:'الشحن بينحسب عند الدفع',en:'Shipping added at checkout'},
+ commercialAsk:{ar:'اسألنا',en:'Ask us'},
+ supportLine:{ar:'كل قطعة بتشتريها بتساعد فرح تضل ترسم من غزة.',en:'Every piece you buy helps Farah keep painting in Gaza.'},
+ fDigNow:{ar:'<b>فوراً:</b> رابط التحميل بيوصلك على الإيميل بعد الدفع، وبيضل شغال 30 يوم.',en:'<b>Right away:</b> the download link reaches your inbox after payment and works for 30 days.'},
+ fDigFmt:{ar:'<b>الملفات:</b> JPG و PNG، ألوان sRGB، بدون علامة مائية.',en:'<b>Files:</b> JPG and PNG, sRGB colour, no watermark.'},
+ fDigLic:{ar:'<b>شخصي:</b> اطبعها لبيتك أو حطها خلفية. ما بتنباع ولا بتنحط على منتجات.',en:'<b>Personal:</b> print it for your home or use it as a wallpaper. Not for resale or products.'},
+ fPrtMake:{ar:'<b>بتنطبع لما تطلبها:</b> ما في مخزون، كل قطعة بتنطبع إلك بالمطبعة الأقرب لبلدك.',en:'<b>Made when you order:</b> no stock; each piece is printed for you at the print house nearest your country.'},
+ fPrtShip:{ar:'<b>التوصيل:</b> 2–5 أيام للطباعة، وبعدها 3–10 أيام شحن حسب البلد، مع رقم تتبع.',en:'<b>Delivery:</b> 2–5 days to print, then 3–10 days shipping depending on country, with tracking.'},
+ fPrtRet:{ar:'<b>إذا وصلت مضروبة:</b> صوّرها وابعتلنا خلال 30 يوم، وبنطبعلك غيرها.',en:'<b>Arrived damaged?</b> Send us a photo within 30 days and we reprint it.'},
+ vArt:{ar:'الرسمة',en:'The drawing'},vProd:{ar:'المنتج',en:'The product'},vZoom:{ar:'عن قرب',en:'Close up'},
+ zoomHint:{ar:'حرّك عشان تشوف تفاصيل الفرشاة',en:'Move to see the brush strokes'},flipHint:{ar:'اضغط عشان تقلبها ↻',en:'Tap to flip ↻'},
+ wallScale:{ar:'الحيط بالصورة عرضه 1.4 متر',en:'The wall in the picture is 1.4 m wide'},
+ kStory:{ar:'حكاية الرسمة',en:'Behind the drawing'},storyT:{ar:'من دفتر فرح',en:"From Farah's sketchbook"},
+ mWhere:{ar:'المكان',en:'Where'},mMedium:{ar:'الخامة',en:'Medium'},mOrig:{ar:'الأصل',en:'Original'},
+ mediumV:{ar:'ألوان مائية على ورق',en:'Watercolour on paper'},origV:{ar:'محفوظة عند فرح',en:'Kept by Farah'},
+ kGet:{ar:'شو بيوصلك',en:'What you get'},getT:{ar:'رقمية أو مطبوعة',en:'Digital or printed'},
+ gDigP:{ar:'الرسمة نفسها، مصوّرة بسكانر بدقة عالية، جاهزة تطبعها أو تحطها على شاشتك.',en:'The drawing itself, scanned at high resolution, ready to print or put on your screen.'},
+ gPrtP:{ar:'بنطبع الرسمة على المنتج اللي اخترته، وبنبعتها من المطبعة لبيتك مباشرة.',en:'We print the drawing on the product you picked and send it from the print house straight to you.'},
+ dlDig:{ar:[['الوصول','فوراً على الإيميل'],['الصيغ','JPG و PNG'],['الدقة','حتى 300 نقطة بالإنش'],['الاستخدام','شخصي، أو تجاري بإذن'],['الحقوق','الرسمة بتضل ملك فرح']],en:[['Arrives','Instantly by e-mail'],['Formats','JPG and PNG'],['Resolution','Up to 300 dpi'],['Use','Personal, or commercial with permission'],['Rights','The artwork stays Farah’s']]},
+ dlPrt:{ar:[['الطباعة','حبر بيعيش سنين، ورق فني مطفي'],['الملابس','قطن عضوي، طباعة مباشرة على القماش'],['التجهيز','2–5 أيام'],['الشحن','لمعظم دول العالم، مع تتبع'],['الإرجاع','إعادة طباعة إذا وصلت مضروبة']],en:[['Printing','Long-lasting inks, matte fine-art paper'],['Clothing','Organic cotton, direct-to-garment print'],['Making','2–5 days'],['Shipping','To most countries, tracked'],['Returns','Reprint if it arrives damaged']]},
+ kFaq:{ar:'أسئلة',en:'Questions'},faqT:{ar:'قبل ما تطلب',en:'Before you order'},
+ faq:{ar:[
+   ['بقدر أطبع النسخة الرقمية عند مطبعة قريبة مني؟','أكيد. ملف الطباعة بيطلع حلو لحد A3، والملف الكامل لحد 50 × 70 سم. خذه لأي مطبعة واطلب ورق مطفي.'],
+   ['ليش الشحن ما بيطلع من غزة؟','لأنه البريد من غزة مسكّر. فرح بترسم وبنصوّر الرسمة هون، والطباعة والشحن بيصيروا من مطبعة شريكة قريبة منك، فبتوصلك أسرع وبشحن أرخص.'],
+   ['قديش بياخد الطلب ليوصل؟','الرقمي بيوصل فوراً. المطبوع بياخد 2–5 أيام للطباعة، وبعدها 3–10 أيام شحن حسب بلدك، وبيوصلك رقم تتبع على الإيميل.'],
+   ['الألوان رح تطلع زي الشاشة؟','قريبة كثير. بنصوّر الرسمات بسكانر ونضبط ألوانها، بس كل شاشة بتعرض الألوان بطريقتها، فممكن يكون في فرق بسيط.'],
+   ['بدي أستخدم الرسمة لمشروعي أو على منتجات أبيعها','هاد استخدام تجاري. احكي معنا وخبّرنا شو المشروع، ومنتفق على الإذن والسعر مع فرح.']
+ ],en:[
+   ['Can I print the digital file at a shop near me?','Yes. The print file looks good up to A3 and the full file up to 50 × 70 cm. Take it to any print shop and ask for matte paper.'],
+   ['Why doesn’t it ship from Gaza?','Post from Gaza is closed. Farah paints and we scan the drawing here; printing and shipping happen at a partner print house near you, so it arrives faster and costs less to ship.'],
+   ['How long does an order take?','Digital is instant. Printed items take 2–5 days to make, then 3–10 days to ship depending on your country, with tracking by e-mail.'],
+   ['Will the colours look like the screen?','Very close. We scan the drawings and correct their colour, but every screen shows colour its own way, so there can be a small difference.'],
+   ['I want to use the drawing for my business or on products I sell','That is commercial use. Write to us about the project and we agree the permission and price with Farah.']
+ ]},
+ kMore:{ar:'من نفس الحيط',en:'From the same wall'},moreT:{ar:'رسمات ثانية',en:'More drawings'},from:{ar:'من',en:'from'},
+ handPainted:{ar:'رسومات مائية مرسومة باليد',en:'Hand-painted watercolours'},rights:{ar:'جميع الرسومات © فرح الحلو',en:'All artwork © Farah Al Helou'},
+ dark:{ar:'الوضع الليلي',en:'Dark mode'},light:{ar:'الوضع النهاري',en:'Light mode'},
+ nav:{ar:['اللوحات','الملصقات','التقويم السنوي','ملابس وشنط','البطاقات البريدية','تصاميم متنوعة','الحكاية','دعم الحكاية'],en:['Paintings','Stickers','Calendar','Apparel & totes','Postcards','More designs','Our story','Support the story']}
+};
+let LANG='ar';try{LANG=localStorage.getItem('mg-lang')||'ar'}catch(e){}
+const tr=k=>{const v=T[k];return v?(v[LANG]??v.ar):k};
+const L=o=>o[LANG]??o.ar;
+const eur=n=>'€'+(Math.round(n*100)/100).toString().replace(/\.(\d)$/,'.$10');
+
+/* ---------- catalogue (prototype data: names and descriptions from the paintings page; prices are placeholders) ---------- */
+const PT=[
+ {k:'guitar',ar:'تحت الشجر',en:'Under the trees',w:'دير البلح',we:'Deir al-Balah',stk:'s-guitar',d:{ar:'بنت بتعزف على الجيتار تحت شجر أخضر كثيف، قاعدة على بطانية مرقّعة بين الورد.',en:'A girl playing the guitar under dense green trees, sitting on a patchwork blanket among the flowers.'}},
+ {k:'dovegirl',ar:'الحمام',en:'The doves',w:'غزة',we:'Gaza',stk:'s-dovegirl',d:{ar:'بنت بثوب مطرّز، والحمام طاير حواليها وبمناقيره أغصان زيتون.',en:'A girl in an embroidered dress, with doves around her carrying olive branches.'}},
+ {k:'sparklers',ar:'ليلة الشرارات',en:'Sparkler night',w:'غزة',we:'Gaza',stk:'s-sparklers',d:{ar:'إيدين مرفوعة بالشرارات تحت سما مليانة نجوم وهلال.',en:'Hands raising sparklers under a sky full of stars and a crescent moon.'}},
+ {k:'seafish',ar:'الصيد في بحر غزة',en:"Fishing in Gaza's sea",w:'بحر غزة',we:"Gaza's sea",d:{ar:'قارب صيد صغير بنص بحر غزة الأزرق.',en:"A small fishing boat in the middle of Gaza's blue sea."}},
+ {k:'coast',ar:'ساحل غزة',en:'Gaza coast',w:'الساحل',we:'The coast',d:{ar:'خيمة بيضا على الرمل قدام البحر وقت الغروب.',en:'A white tent on the sand facing the sea at sunset.'}},
+ {k:'boattop',ar:'القارب من فوق',en:'Boat from above',w:'بحر غزة',we:"Gaza's sea",d:{ar:'قارب من فوق بين ورق الشجر والسمك، وفيه اثنين بالقبعات.',en:'A boat seen from above among leaves and fish, with two people in hats.'}},
+ {k:'blueflowers',ar:'الزهور الزرقاء',en:'Blue flowers',w:'غزة',we:'Gaza',d:{ar:'حمامة بيضا طايرة فوق زهور زرقاء، وبنت صغيرة بفستان أحمر.',en:'A white dove flying over blue flowers, and a little girl in a red dress.'}},
+ {k:'alley',ar:'الزقاق',en:'The alley',w:'غزة',we:'Gaza',stk:'s-alley',d:{ar:'زقاق ضيق بين البيوت، بشبابيك وأسلاك وظل.',en:'A narrow alley between houses, with windows, wires and shade.'}}
+];
+const AR={guitar:.7811,dovegirl:1.3294,sparklers:.7233,seafish:.6744,coast:1.4151,boattop:.9389,blueflowers:1.391,alley:.8411,'s-guitar':.7758,'s-dovegirl':1.0253,'s-sparklers':1,'s-alley':.7426};
+const img=k=>`url(img/${k}.${k.startsWith('s-')||k.startsWith('m-')?'webp':'jpg'})`;
+
+const DIG=[
+ {id:'wall',ar:'خلفية جوال وكمبيوتر',en:'Phone & desktop wallpaper',dar:'مقاسات جاهزة لكل الشاشات',den:'Ready-cut for every screen',p:3,px:'1290 × 2796 · 3840 × 2160'},
+ {id:'printfile',ar:'ملف للطباعة',en:'Print file',dar:'بيطلع حلو لحد A3',den:'Prints well up to A3',p:8,px:'3508 × 4961 · 300 DPI'},
+ {id:'full',ar:'الملف الكامل',en:'Full-resolution scan',dar:'دقة السكانر كاملة، لحد 50 × 70 سم',den:'The whole scan, up to 50 × 70 cm',p:14,px:'5906 × 8268 · 300 DPI'}
+];
+const COLORS=[{c:'#F1EDE3',ar:'أبيض قطن',en:'Natural white'},{c:'#D8D2C2',ar:'إكرو',en:'Ecru'},{c:'#BBAB8E',ar:'رملي',en:'Sand'},{c:'#8C9A78',ar:'مريمية',en:'Sage'},{c:'#B5654A',ar:'طيني',en:'Clay'},{c:'#2E241B',ar:'بنّي غامق',en:'Dark brown'}];
+const ICON={
+ print:'<svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="8" y="5" width="28" height="34"/><rect x="13" y="10" width="18" height="20" fill="currentColor" opacity=".25"/></svg>',
+ postcard:'<svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="10" width="36" height="25" rx="2"/><path d="M23 15v15M27 18h8M27 23h8"/><rect x="31" y="13" width="5" height="5"/></svg>',
+ sticker:'<svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M8 8h28v18L26 36H8z"/><path d="M26 36V26h10" fill="currentColor" opacity=".3"/></svg>',
+ tee:'<svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M15 6l-10 6 4 7 4-2v21h18V17l4 2 4-7-10-6c-1 3-4 5-7 5s-6-2-7-5z"/></svg>',
+ hoodie:'<svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M16 9c0-4 12-4 12 0l9 5 3 22h-6V20v18H10V20v16H4l3-22z"/><path d="M16 9c1 5 11 5 12 0M18 30h8"/></svg>',
+ tote:'<svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M7 16h30l-2 22H9z"/><path d="M15 16c0-12 14-12 14 0"/></svg>'
+};
+const PRODS={
+ print:{ar:'طبعة فنية',en:'Art print',from:18},
+ postcard:{ar:'بطاقة بريدية',en:'Postcard',from:3},
+ sticker:{ar:'ملصق',en:'Sticker',from:2,need:'stk'},
+ tee:{ar:'تيشيرت',en:'T-shirt',from:28},
+ hoodie:{ar:'هودي',en:'Hoodie',from:48},
+ tote:{ar:'شنطة قماش',en:'Tote bag',from:22}
+};
+const SIZES={A4:[21,29.7,18],A3:[29.7,42,28],'50×70':[50,70,45]};
+const FRAMES={none:{ar:'بدون',en:'None',p:0},black:{ar:'أسود',en:'Black',p:24},oak:{ar:'خشب سنديان',en:'Oak',p:28},white:{ar:'أبيض',en:'White',p:24}};
+const PACKS={1:3,5:12,10:20};
+const STKS={S:[5,2],M:[7.5,3],L:[10,4]};
+const CSZ=['S','M','L','XL','XXL'];
+
+/* ---------- state ---------- */
+const S={k:'guitar',mode:'print',dig:'printfile',lic:'personal',prod:'print',size:'A3',frame:'black',pack:5,ssz:'M',fin:'matte',color:COLORS[0].c,csz:'M',place:'chest',view:'prod',qty:1,flip:false};
+const P=()=>PT.find(p=>p.k===S.k);
+
+function unitPrice(){
+  if(S.mode==='digital')return DIG.find(d=>d.id===S.dig).p;
+  switch(S.prod){
+    case 'print':return SIZES[S.size][2]+FRAMES[S.frame].p;
+    case 'postcard':return PACKS[S.pack];
+    case 'sticker':return STKS[S.ssz][1];
+    case 'tee':return 28+(S.place==='back'?4:0);
+    case 'hoodie':return 48+(S.place==='back'?4:0);
+    case 'tote':return 22;
+  }
+}
+function whatLabel(){
+  if(S.mode==='digital'){const d=DIG.find(x=>x.id===S.dig);return `${L(d)} · ${tr('licP')}`}
+  const pr=L(PRODS[S.prod]),c=COLORS.find(x=>x.c===S.color);
+  switch(S.prod){
+    case 'print':return `${pr} ${S.size} · ${tr('frame')}: ${L(FRAMES[S.frame])}`;
+    case 'postcard':return `${pr} × ${S.pack}`;
+    case 'sticker':return `${pr} ${STKS[S.ssz][0]} cm · ${S.fin==='matte'?(LANG==='ar'?'مطفي':'Matte'):(LANG==='ar'?'لامع':'Gloss')}`;
+    case 'tee':case 'hoodie':return `${pr} ${S.csz} · ${L(c)} · ${placeName(S.place)}`;
+    case 'tote':return `${pr} · ${L(c)}`;
+  }
+}
+const placeName=p=>({chest:{ar:'عالصدر',en:'Front'},back:{ar:'عالظهر',en:'Back'},pocket:{ar:'جنب الجيبة',en:'Pocket'}})[p][LANG];
+
+/* ---------- stage ---------- */
+const isDark=c=>{const n=parseInt(c.slice(1),16);return ((n>>16)*.3+(n>>8&255)*.59+(n&255)*.11)<110};
+function garment(kind){
+  const back=S.place==='back'&&kind!=='tote',v=kind==='tote'?'tote_f':`${kind}_${back?'b':'f'}`,m=MK[v],R=m.res;
+  const area=kind==='tote'?m.print.front:m.print[S.place]||m.print.chest;
+  const ar=AR[S.k];let [x,y,w,h]=area;
+  /* fit the painting inside the print area, keeping its shape */
+  if(w/h>ar){const nw=h*ar;x+=(w-nw)/2;w=nw}else{const nh=w/ar;y+=(h-nh)/2;h=nh}
+  return `<div class="mk${isDark(S.color)?' dk':''}" style="--base:${img('m-'+v)};--mask:${img('m-'+v+'_mask')}"><i class="b"></i><i class="t" style="background:${S.color}"></i><span class="pw"><i style="--img:${img(S.k)};left:${x/R*100}%;top:${y/R*100}%;width:${w/R*100}%;height:${h/R*100}%"></i></span></div>`;
+}
+function stageHTML(){
+  const p=P(),ar=AR[p.k],I=img(p.k);
+  if(S.view==='zoom')return `<div class="vw"><div class="zoom" id="zoom" style="--img:${I};background-image:${I};background-position:50% 50%"></div></div><span class="hint">${esc(tr('zoomHint'))}</span>`;
+  if(S.view==='art'||S.mode==='digital'&&S.dig!=='wall'){
+    const d=DIG.find(x=>x.id===S.dig);
+    const fw=ar>1?'78%':'54%';
+    const chip=S.mode==='digital'?`<div class="chip"><b>MG_${esc(p.en.replace(/[^A-Za-z]+/g,'-'))}.png</b>${esc(d.px)}<br><span class="ok">✓</span> sRGB · no watermark</div>`:'';
+    return `<div class="vw"><div class="file" style="width:${fw}"><div class="cutp"><div><i style="--ar:${ar};--img:${I}"></i></div></div>${chip}</div></div>`;
+  }
+  if(S.mode==='digital')return `<div class="vw"><div class="devices"><div class="laptop"><div class="scr" style="--img:${I}"></div><div class="base"></div></div><div class="phone" style="--img:${I}"></div></div></div>`;
+  switch(S.prod){
+    case 'print':{const [w,h]=SIZES[S.size],pw=(ar>1?h:w)/140*100;
+      return `<div class="vw wallv"><div class="bench"></div><div class="plant"></div><div class="floor"></div><div class="frame ${S.frame}" style="--w:${Math.min(64,pw)}%;--mat:${S.frame==='none'?'4%':'7%'}"><div class="in"><i style="--ar:${ar};--img:${I}"></i></div></div></div><span class="scale">${esc(tr('wallScale'))}</span>`}
+    case 'postcard':return `<div class="vw"><button class="pc${ar<1?' port':''}${S.flip?' flip':''}" id="pc" aria-label="${esc(tr('flipHint'))}"><div class="f"><div class="s fr"><i style="--img:${I}"></i></div><div class="s bk"><div class="msg">Greetings from Gaza,<br>with love — F.</div><div class="adr"><span></span><span></span><span></span></div><i class="stamp"></i></div></div></button></div><span class="hint">${esc(tr('flipHint'))}</span>`;
+    case 'sticker':{const sk=p.stk,w={S:34,M:48,L:62}[S.ssz];
+      return `<div class="vw"><i class="stk${S.fin==='gloss'?' gloss':''}" style="--img:${img(sk)};--ar:${AR[sk]||1};width:${w}%"></i><span class="card">BANK CARD</span></div><span class="scale">${STKS[S.ssz][0]} cm</span>`}
+    default:return `<div class="vw">${garment(S.prod)}</div>`;
+  }
+}
+function viewsHTML(){
+  const vs=[['prod',S.mode==='digital'?(S.dig==='wall'?tr('vProd'):tr('mDig')):tr('vProd'),'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 16l5-5 4 4 3-3 4 4"/></svg>'],['art',tr('vArt'),'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20l4-1 11-11-3-3L5 16z"/></svg>'],['zoom',tr('vZoom'),'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5M10.5 8v5M8 10.5h5"/></svg>']];
+  return vs.map(([v,l,ic])=>`<button data-v="${v}" aria-pressed="${S.view===v}">${ic}${esc(l)}</button>`).join('');
+}
+function stageLabel(){
+  if(S.view==='zoom')return tr('vZoom');
+  if(S.view==='art')return tr('vArt');
+  return S.mode==='digital'?L(DIG.find(d=>d.id===S.dig)):L(PRODS[S.prod]);
+}
+function renderStage(){
+  $('#stage').innerHTML=`<span class="lbl">${esc(stageLabel())}</span>`+stageHTML();
+  $('#views').innerHTML=viewsHTML();
+  const z=$('#zoom');
+  if(z){const mv=e=>{const r=z.getBoundingClientRect(),pt=e.touches?e.touches[0]:e;z.style.backgroundPosition=`${Math.max(0,Math.min(100,(pt.clientX-r.left)/r.width*100))}% ${Math.max(0,Math.min(100,(pt.clientY-r.top)/r.height*100))}%`};z.addEventListener('pointermove',mv);z.addEventListener('touchmove',mv,{passive:true})}
+  const pc=$('#pc');if(pc)pc.onclick=()=>{S.flip=!S.flip;pc.classList.toggle('flip',S.flip)};
+}
+
+/* ---------- options ---------- */
+const btn=(attrs,on,html)=>`<button ${attrs} aria-pressed="${!!on}">${html}</button>`;
+function renderOpts(){
+  const p=P();
+  $$('#modes .mode').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===S.mode));
+  $('#optsDigital').hidden=S.mode!=='digital';$('#optsPrint').hidden=S.mode!=='print';
+  $('#dOpts').innerHTML=DIG.map(d=>`<button class="opt" data-dig="${d.id}" aria-pressed="${S.dig===d.id}"><span class="ic" style="--img:${img(p.k)}"></span><span class="tx"><b>${esc(L(d))}</b><small>${esc(LANG==='ar'?d.dar:d.den)}</small><small class="num" style="opacity:.6">${esc(d.px)}</small></span><span class="pr num">${eur(d.p)}</span></button>`).join('');
+  $('#lic').innerHTML=btn('data-lic="personal"',S.lic==='personal',`${esc(tr('licP'))}<small>${esc(tr('licPD'))}</small>`)+btn('data-lic="commercial"',S.lic==='commercial',`${esc(tr('licC'))}<small>${esc(tr('commercialAsk'))}</small>`);
+  $('#prods').innerHTML=Object.entries(PRODS).filter(([k,v])=>!v.need||p.stk).map(([k,v])=>`<button class="prod" data-prod="${k}" aria-pressed="${S.prod===k}"><span class="pi">${ICON[k]}</span>${esc(L(v))}<small class="num">${esc(tr('from'))} ${eur(v.from)}</small></button>`).join('');
+  let h='';
+  switch(S.prod){
+    case 'print':
+      h+=`<span class="lbl2">${esc(tr('size'))}</span><div class="seg" data-g="size">${Object.entries(SIZES).map(([k,v])=>btn(`data-val="${k}"`,S.size===k,`<span class="num">${k}</span><small>${v[0]} × ${v[1]} cm</small>`)).join('')}</div>`;
+      h+=`<span class="lbl2">${esc(tr('frame'))}</span><div class="seg" data-g="frame">${Object.entries(FRAMES).map(([k,v])=>btn(`data-val="${k}"`,S.frame===k,`${esc(L(v))}<small class="num">${v.p?'+'+eur(v.p):'—'}</small>`)).join('')}</div>`;break;
+    case 'postcard':
+      h+=`<span class="lbl2">${esc(tr('pack'))}</span><div class="seg" data-g="pack">${Object.entries(PACKS).map(([k,v])=>btn(`data-val="${k}"`,S.pack==k,`<span class="num">× ${k}</span><small class="num">${eur(v)}</small>`)).join('')}</div>`;break;
+    case 'sticker':
+      h+=`<span class="lbl2">${esc(tr('size'))}</span><div class="seg" data-g="ssz">${Object.entries(STKS).map(([k,v])=>btn(`data-val="${k}"`,S.ssz===k,`<span class="num">${v[0]} cm</span><small class="num">${eur(v[1])}</small>`)).join('')}</div>`;
+      h+=`<span class="lbl2">${esc(tr('finish'))}</span><div class="seg" data-g="fin">${btn('data-val="matte"',S.fin==='matte',LANG==='ar'?'مطفي':'Matte')}${btn('data-val="gloss"',S.fin==='gloss',LANG==='ar'?'لامع':'Gloss')}</div>`;break;
+    default:{
+      const c=COLORS.find(x=>x.c===S.color);
+      h+=`<span class="lbl2">${esc(tr('colour'))} · <span class="cur">${esc(L(c))}</span></span><div class="sw" data-g="color">${COLORS.map(x=>`<button data-val="${x.c}" style="--c:${x.c}" aria-label="${esc(L(x))}" aria-pressed="${S.color===x.c}"></button>`).join('')}</div>`;
+      if(S.prod!=='tote'){
+        h+=`<span class="lbl2">${esc(tr('size'))}</span><div class="seg" data-g="csz">${CSZ.map(k=>btn(`data-val="${k}"`,S.csz===k,`<span class="num">${k}</span>`)).join('')}</div>`;
+        h+=`<span class="lbl2">${esc(tr('place'))}</span><div class="seg" data-g="place">${['chest','back'].map(k=>btn(`data-val="${k}"`,S.place===k,`${esc(placeName(k))}${k==='back'?'<small class="num">+€4</small>':''}`)).join('')}</div>`;
+      }
+    }
+  }
+  $('#sub').innerHTML=h;
+  /* price + facts */
+  const u=unitPrice();
+  $('#price').innerHTML=eur(u*S.qty)+(S.qty>1?` <small>(${S.qty} × ${eur(u)})</small>`:'');
+  $('#pnote').textContent=tr(S.mode==='digital'?'pnoteDig':'pnotePrt');
+  $('#mPrice').textContent=eur(u*S.qty);$('#mWhat').textContent=whatLabel();
+  $('#qty').textContent=S.qty;
+  $('#facts').innerHTML=(S.mode==='digital'?['fDigNow','fDigFmt','fDigLic']:['fPrtMake','fPrtShip','fPrtRet']).map((k,i)=>`<li>${[
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 7h12v10H3zM15 10h4l2 3v4h-6"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>'][i]}<span>${tr(k)}</span></li>`).join('');
+}
+function renderProduct(){
+  const p=P();
+  $('#crumbs').innerHTML=`<a href="#top">${esc(tr('home'))}</a><span aria-hidden="true">/</span><a href="#top">${esc(tr('paintings'))}</a><span aria-hidden="true">/</span><span aria-current="page">${esc(L(p))}</span>`;
+  $('#pKick').textContent=tr('paintings');$('#pTitle').textContent=L(p);$('#pDesc').textContent=L(p.d);
+  document.title=`${L(p)} · Mass & Grass`;
+  $('#storyArt').innerHTML=`<div><i style="--ar:${AR[p.k]};--img:${img(p.k)}"></i></div>`;
+  $('#storyP').textContent=L(p.d);
+  $('#meta').innerHTML=[[tr('mWhere'),LANG==='ar'?p.w:p.we],[tr('mMedium'),tr('mediumV')],[tr('mOrig'),tr('origV')]].map(([a,b])=>`<div><b>${esc(a)}</b>${esc(b)}</div>`).join('');
+  $('#more').innerHTML=PT.filter(x=>x.k!==p.k).slice(0,4).map((x,i)=>`<button class="mitem" data-k="${x.k}" style="--r:${[-2.5,1.8,-1.2,2.4][i]}deg"><span class="tape"></span><div class="cutp"><div><i style="--ar:${AR[x.k]};--img:${img(x.k)}"></i></div></div><b>${esc(L(x))}</b><small class="num">${esc(tr('from'))} €3</small></button>`).join('');
+  if(!p.stk&&S.prod==='sticker')S.prod='print';
+  renderOpts();renderStage();
+}
+
+/* ---------- events ---------- */
+$('#modes').addEventListener('click',e=>{const b=e.target.closest('.mode');if(!b)return;S.mode=b.dataset.m;S.view='prod';S.qty=1;renderOpts();renderStage()});
+$('#dOpts').addEventListener('click',e=>{const b=e.target.closest('[data-dig]');if(!b)return;S.dig=b.dataset.dig;S.view='prod';renderOpts();renderStage()});
+$('#lic').addEventListener('click',e=>{const b=e.target.closest('[data-lic]');if(!b)return;if(b.dataset.lic==='commercial'){toast(LANG==='ar'?'للاستخدام التجاري احكي معنا عبر صفحة التواصل':'For commercial use, write to us from the contact page');return}S.lic=b.dataset.lic;renderOpts()});
+$('#prods').addEventListener('click',e=>{const b=e.target.closest('[data-prod]');if(!b)return;S.prod=b.dataset.prod;S.view='prod';S.flip=false;if(S.prod==='tote'&&isDark(S.color)===false&&S.color==='#BBAB8E')S.color=COLORS[0].c;renderOpts();renderStage()});
+$('#sub').addEventListener('click',e=>{const b=e.target.closest('button[data-val]');if(!b)return;const g=b.closest('[data-g]').dataset.g;let v=b.dataset.val;if(g==='pack')v=+v;S[g]=v;S.view='prod';renderOpts();renderStage()});
+$('#views').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;S.view=b.dataset.v;renderStage()});
+$('#qMinus').onclick=()=>{S.qty=Math.max(1,S.qty-1);renderOpts()};
+$('#qPlus').onclick=()=>{S.qty=Math.min(20,S.qty+1);renderOpts()};
+$('#more').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;S.k=b.dataset.k;S.view='prod';S.flip=false;renderProduct();window.scrollTo({top:0,behavior:reduce?'auto':'smooth'})});
+
+/* ---------- basket ---------- */
+let BAG=[];try{BAG=JSON.parse(localStorage.getItem('mg-cart-preview')||'[]')}catch(e){BAG=[]}
+const saveBag=()=>{try{localStorage.setItem('mg-cart-preview',JSON.stringify(BAG))}catch(e){}};
+function badge(){const n=BAG.reduce((a,b)=>a+b.q,0);$('#badge').hidden=!n;$('#badge').textContent=n}
+function addToBag(){
+  const p=P(),item={id:Date.now(),k:p.k,ar:p.ar,en:p.en,mode:S.mode,what:{ar:'',en:''},u:unitPrice(),q:S.qty};
+  const keep=LANG;['ar','en'].forEach(l=>{LANG=l;item.what[l]=whatLabel()});LANG=keep;
+  const same=BAG.find(b=>b.k===item.k&&b.what.en===item.what.en);
+  if(same)same.q+=item.q;else BAG.push(item);
+  saveBag();badge();$('#bagBtn').classList.remove('bump');void $('#bagBtn').offsetWidth;$('#bagBtn').classList.add('bump');
+  toast(`${L(p)} · ${tr('added')}`);setTimeout(openBag,reduce?0:650);
+}
+$('#addBtn').onclick=addToBag;$('#mAdd').onclick=addToBag;
+function renderBag(){
+  $('#bagX').textContent=tr('close');
+  if(!BAG.length){$('#bagList').innerHTML=`<li class="empty" style="display:block">${esc(tr('empty'))}</li>`;$('#bagFoot').innerHTML=`<button class="btn" id="bagKeep">${esc(tr('keep'))}</button>`;$('#bagKeep').onclick=closeBag;return}
+  $('#bagList').innerHTML=BAG.map(b=>`<li data-id="${b.id}"><span class="th" style="--img:${img(b.k)}"></span><div><b>${esc(b[LANG]||b.ar)}</b><small>${esc(b.what[LANG])}</small><div class="row"><button data-a="-" aria-label="${esc(tr('less'))}">−</button><span class="num">${b.q}</span><button data-a="+" aria-label="${esc(tr('more'))}">+</button><button class="rm" data-a="x">${esc(tr('remove'))}</button></div></div><span class="lp num">${eur(b.u*b.q)}</span></li>`).join('');
+  const tot=BAG.reduce((a,b)=>a+b.u*b.q,0),hasD=BAG.some(b=>b.mode==='digital'),hasP=BAG.some(b=>b.mode!=='digital');
+  $('#bagFoot').innerHTML=`<div class="tot"><span>${esc(tr('total'))}</span><span class="price num">${eur(tot)}</span></div><p class="split" style="margin:0">${esc(tr(hasD&&hasP?'splitBoth':hasD?'splitDig':'splitPrt'))}</p><button class="btn pri" id="goPay">${esc(tr('checkout'))}</button><button class="btn" id="bagKeep">${esc(tr('keep'))}</button>`;
+  $('#goPay').onclick=()=>toast(tr('demoCheckout'));$('#bagKeep').onclick=closeBag;
+}
+$('#bagList').addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const id=+b.closest('li').dataset.id,it=BAG.find(x=>x.id===id);if(!it)return;
+  if(b.dataset.a==='+')it.q=Math.min(20,it.q+1);else if(b.dataset.a==='-')it.q=Math.max(1,it.q-1);else BAG=BAG.filter(x=>x.id!==id);saveBag();badge();renderBag()});
+let lastFocus=null;
+function openBag(){lastFocus=document.activeElement;renderBag();$('#bag').hidden=false;$('#bagX').focus()}
+function closeBag(){$('#bag').hidden=true;if(lastFocus)lastFocus.focus()}
+$('#bagBtn').onclick=openBag;$('#bagX').onclick=closeBag;
+$('#bag').addEventListener('click',e=>{if(e.target.id==='bag')closeBag()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#bag').hidden)closeBag();$('#drawer').hidden=true}});
+
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
+
+/* mobile buy bar shows once the add button scrolls away */
+if('IntersectionObserver' in window){new IntersectionObserver(es=>es.forEach(en=>$('#mbar').classList.toggle('on',!en.isIntersecting&&en.boundingClientRect.top<0))).observe($('#addBtn'))}
+
+/* ---------- static sections ---------- */
+function renderStatic(){
+  $('#dlDig').innerHTML=T.dlDig[LANG].map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('');
+  $('#dlPrt').innerHTML=T.dlPrt[LANG].map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('');
+  $('#faq').innerHTML=T.faq[LANG].map(([q,a],i)=>`<details${i===0?' open':''}><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');
+}
+
+/* ---------- language / theme / nav ---------- */
+function applyLang(){
+  document.body.dataset.lang=LANG;document.documentElement.lang=LANG;document.documentElement.dir=LANG==='ar'?'rtl':'ltr';
+  $$('[data-t]').forEach(n=>n.textContent=tr(n.dataset.t));$$('[data-tl]').forEach(n=>n.setAttribute('aria-label',tr(n.dataset.tl)));
+  $('#langBtn').textContent=LANG==='ar'?'EN':'ع';$('#langBtn').setAttribute('aria-label',LANG==='ar'?'English':'العربية');
+  const links=`<a href="#top">${esc(tr('home'))}</a>`+T.nav[LANG].map(t=>`<a href="#top">${esc(t)}</a>`).join('');
+  $('#navList').innerHTML=`<button class="xbtn" id="drawerX">${esc(tr('close'))}</button>`+links;$('#drawerX').onclick=()=>$('#drawer').hidden=true;
+  $('#flinks').innerHTML=links;
+  renderStatic();renderProduct();syncTheme();if(!$('#bag').hidden)renderBag();
+}
+$('#langBtn').onclick=()=>{LANG=LANG==='ar'?'en':'ar';try{localStorage.setItem('mg-lang',LANG)}catch(e){}applyLang()};
+const dmq=matchMedia('(prefers-color-scheme: dark)');
+function dark(){const t=document.documentElement.dataset.theme;return t?t==='dark':dmq.matches}
+function syncTheme(){const d=dark();document.documentElement.dataset.theme=d?'dark':'light';$('#themeBtn').setAttribute('aria-label',tr(d?'light':'dark'))}
+try{const t=localStorage.getItem('mg-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}
+$('#themeBtn').onclick=()=>{const n=dark()?'light':'dark';document.documentElement.dataset.theme=n;try{localStorage.setItem('mg-theme',n)}catch(e){}syncTheme()};
+$('#menuBtn').onclick=()=>$('#drawer').hidden=false;
+$('#drawer').addEventListener('click',e=>{if(e.target.id==='drawer'||e.target.tagName==='A')$('#drawer').hidden=true});
+(function(){let s=77;const r=()=>(s=(s*16807)%2147483647)/2147483647;const pts=['0,0'];for(let i=0;i<=90;i++)pts.push((i/90*100).toFixed(2)+','+(i%2?r()*5+4:r()*3+1).toFixed(2));pts.push('100,0');$('#footEdge').setAttribute('points',pts.join(' '))})();
+badge();applyLang();
+})();
+</script>
