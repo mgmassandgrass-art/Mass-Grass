@@ -21,8 +21,7 @@ main .sec.alt{background-color:color-mix(in srgb,var(--cream) 45%,transparent)!i
 .mg-badge{position:absolute;top:-9px;inset-inline-end:-9px;min-width:22px;height:22px;border-radius:11px;background:var(--red);color:var(--on-accent,#fff);font:600 12px/22px ui-monospace,monospace;padding:0 6px;border:2px solid var(--ink);text-align:center}
 .hdr{position:fixed!important}.hdr .logo{transition:opacity .3s,transform .3s}
 .hdr.mg-stuck .logo{opacity:0;pointer-events:none;transform:translate(-50%,-24px) rotate(-2deg)!important}
-@media(min-width:901px){.fgrid{grid-template-columns:1.4fr repeat(4,1fr)!important}}
-#finfo h5:empty{display:none}
+#finfo{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;opacity:.85}#finfo a{text-decoration:none}#finfo a:hover{text-decoration:underline}.fbot{flex-wrap:wrap;gap:10px 24px}
 .toast:not(.on){visibility:hidden}
 #navList small{display:block;font:600 12px/1 ui-monospace,monospace;letter-spacing:.2em;margin:18px 0 4px;opacity:.7}
 .mgq{border:0;padding:0;max-width:min(860px,94vw);width:100%;background:var(--yellow) url(assets/paper-tile.jpg) 0 0/1100px 1553px;background-blend-mode:var(--pb);color:var(--ink);box-shadow:0 20px 60px rgba(30,20,10,.35);border-radius:3px}
@@ -38,7 +37,7 @@ main .sec.alt{background-color:color-mix(in srgb,var(--cream) 45%,transparent)!i
 <script src="catalog.js"></script>
 <script>(function(){var INFO=[['shipping.html','الشحن والإرجاع','Shipping & returns'],['faq.html','الأسئلة الشائعة','FAQ'],['track.html','تتبّع الطلب','Track an order'],['contact.html','تواصل معنا','Contact'],['wholesale.html','البيع بالجملة','Wholesale'],['terms.html','الشروط والرخصة','Terms & licence'],['privacy.html','الخصوصية','Privacy']];
 function en(){return (document.documentElement.lang||document.body.dataset.lang)==='en'}
-function sync(){var f=document.getElementById('flinks')||document.querySelector('.foot .fgrid,footer .fgrid,footer');if(f){var g=document.querySelector('.fgrid')||f,i=document.getElementById('finfo');if(!i){i=document.createElement('div');i.id='finfo';i.className='fcol';g.appendChild(i)}var h='<h5>'+(en()?'Help':'مساعدة')+'</h5>'+INFO.map(function(l){return '<a href="'+l[0]+'">'+(en()?l[2]:l[1])+'</a>'}).join('');if(i.innerHTML!==h)i.innerHTML=h}
+function sync(){var f=document.getElementById('flinks')||document.querySelector('.foot .fgrid,footer .fgrid,footer');if(f){var g=document.querySelector('.fbot')||document.querySelector('.fgrid')||f,i=document.getElementById('finfo');if(!i){i=document.createElement('nav');i.id='finfo';i.className='finfo';g.appendChild(i)}var h=INFO.map(function(l){return '<a href="'+l[0]+'">'+(en()?l[2]:l[1])+'</a>'}).join('');if(i.innerHTML!==h)i.innerHTML=h}
 var NV=[['SHOP'],['shop.html','كل المنتجات','All products'],['paintings.html','اللوحات','Paintings'],['postcards.html','البطاقات البريدية','Postcards'],['stickers.html','الملصقات','Stickers'],['apparel.html','الملابس والحقائب والقبعات','Apparel, totes & caps'],['calendar.html','التقويم السنوي','Calendar'],['books.html','الكتب والقصص المصورة','Books & stories'],['designs.html','تصاميم متنوعة','More designs'],['MASS &amp; GRASS'],['story.html','الحكاية','Our story'],['story.html#support','دعم الحكاية','Support the story'],['contact.html','تواصل معنا','Contact']],here=location.pathname.split('/').pop()||'index.html';
 document.querySelectorAll('.drawer nav').forEach(function(n){var L=en()?'en':'ar';if(n.dataset.mg===L&&n.querySelector('small'))return;n.dataset.mg=L;var x=n.querySelector('button');n.innerHTML='';if(x)n.appendChild(x);n.insertAdjacentHTML('beforeend',NV.map(function(l){return l.length===1?'<small>'+l[0]+'</small>':'<a href="'+l[0]+'"'+(l[0]===here?' aria-current="page"':'')+'>'+(en()?l[2]:l[1])+'</a>'}).join(''))});
 document.querySelectorAll('.mg-allp').forEach(function(a){a.textContent=en()?'All products':'كل المنتجات'});if(window.MGCart)MGCart.badge()}
@@ -131,7 +130,23 @@ def apparel(t):
 .pol .ph img{width:100%;height:100%;object-fit:cover}
 </style>""",1)
     return t
+
+def simple_collage(t):
+    import json as _j
+    a=t.index('const DEFAULT={"d"');a2=t.index('{"d"',a);i=t.index('"s": 21}]};',a2)+len('"s": 21}]}')
+    o=_j.loads(t[a2:i])
+    def pick(lst,spec):
+        out=[];used=set()
+        for sp in spec:
+            for n,it in enumerate(lst):
+                if n in used or it['t']!=sp[0] or (len(sp)>6 and it.get('k')!=sp[6]):continue
+                it=dict(it);it.update(x=sp[1],y=sp[2],w=sp[3],r=sp[4],z=sp[5]);used.add(n);out.append(it);break
+        return out+[it for it in lst if it['t']=='torn']
+    o['d']=pick(o['d'],[('p_guitar', 170, 150, 320, -4, 18), ('p_doves', 620, 110, 300, 3, 16), ('p_waves', 1040, 170, 340, -2, 17), ('p_sparklers', 380, 560, 230, 4, 19), ('p_boattop', 860, 590, 280, -3, 20), ('c_jug', 1270, 610, 200, 6, 26), ('c_bird', 1430, 110, 130, -6, 36), ('c_sig', 1230, 885, 230, -5, 40), ('pill', 560, 90, 120, -3, 35, 'paintings'), ('pill', 1010, 893, 130, -3, 35, 'shop'), ('tape', 240, 135, 90, -10, 45), ('tape', 1110, 155, 90, 8, 45)]);o['m']=pick(o['m'],[('p_guitar', 60, 170, 340, -3, 18), ('p_doves', 430, 200, 300, 4, 16), ('p_waves', 60, 640, 330, 3, 17), ('p_boattop', 430, 720, 290, -4, 20), ('p_sparklers', 150, 1040, 260, 4, 19), ('c_jug', 480, 1120, 200, 6, 26), ('c_bird', 640, 150, 110, -6, 36), ('c_sig', 500, 1392, 170, -5, 40), ('pill', 450, 660, 110, -3, 35, 'paintings'), ('pill', 470, 1300, 120, -3, 35, 'shop'), ('tape', 200, 150, 80, -10, 45)])
+    t=t[:a2]+_j.dumps(o)+t[i:]
+    return t.replace("const STORE='mg-vox-layout-v5'","const STORE='mg-vox-layout-v6'")
 def home(t):
+    t=simple_collage(t)
     def rep(a,b):
         nonlocal t
         if a not in t:print('HOME MISS',a[:60])
