@@ -15,7 +15,7 @@ SHARED='''<style id="mg-shared">
 :root[data-theme="dark"]{--yellow:#463928;--cream:#54452F;--shadow:#1C150D;--glow:#4E402D;--pb:multiply}
 html body{background-color:var(--yellow)!important;background-image:url(assets/paper-tile.jpg)!important;background-size:1100px 1553px!important;background-repeat:repeat!important;background-blend-mode:var(--pb)!important}
 body::after{display:none!important}
-main section,main .sec,.band,.phero,.shero,.pdp{background-color:transparent!important}
+main section,main .sec,.band,.phero,.shero,.pdp,#wrap,section.sec,section.sec.alt{background-color:transparent!important}
 main .sec.alt{background-color:color-mix(in srgb,var(--cream) 45%,transparent)!important}
 #shops,.stp.empty{display:none!important}
 .mg-badge{position:absolute;top:-9px;inset-inline-end:-9px;min-width:22px;height:22px;border-radius:11px;background:var(--red);color:var(--on-accent,#fff);font:600 12px/22px ui-monospace,monospace;padding:0 6px;border:2px solid var(--ink);text-align:center}
@@ -23,6 +23,7 @@ main .sec.alt{background-color:color-mix(in srgb,var(--cream) 45%,transparent)!i
 .hdr.mg-stuck .logo{opacity:0;pointer-events:none;transform:translate(-50%,-24px) rotate(-2deg)!important}
 #finfo{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;opacity:.85}#finfo a{text-decoration:none}#finfo a:hover{text-decoration:underline}.fbot{flex-wrap:wrap;gap:10px 24px}
 .toast:not(.on){visibility:hidden}
+#searchBtn,.hdr [aria-label=Search]{display:none!important}
 #navList small{display:block;font:600 12px/1 ui-monospace,monospace;letter-spacing:.2em;margin:18px 0 4px;opacity:.7}
 .mgq{border:0;padding:0;max-width:min(860px,94vw);width:100%;background:var(--yellow) url(assets/paper-tile.jpg) 0 0/1100px 1553px;background-blend-mode:var(--pb);color:var(--ink);box-shadow:0 20px 60px rgba(30,20,10,.35);border-radius:3px}
 .mgq[open]{display:grid;grid-template-columns:1.1fr 1fr}.mgq::backdrop{background:rgba(30,24,18,.55)}
@@ -142,7 +143,7 @@ def simple_collage(t):
                 if n in used or it['t']!=sp[0] or (len(sp)>6 and it.get('k')!=sp[6]):continue
                 it=dict(it);it.update(x=sp[1],y=sp[2],w=sp[3],r=sp[4],z=sp[5]);used.add(n);out.append(it);break
         return out+[it for it in lst if it['t']=='torn']
-    o['d']=pick(o['d'],[('p_guitar', 170, 150, 320, -4, 18), ('p_doves', 620, 110, 300, 3, 16), ('p_waves', 1040, 170, 340, -2, 17), ('p_sparklers', 380, 560, 230, 4, 19), ('p_boattop', 860, 590, 280, -3, 20), ('c_jug', 1270, 610, 200, 6, 26), ('c_bird', 1430, 110, 130, -6, 36), ('c_sig', 1230, 885, 230, -5, 40), ('pill', 560, 90, 120, -3, 35, 'paintings'), ('pill', 1010, 893, 130, -3, 35, 'shop'), ('tape', 240, 135, 90, -10, 45), ('tape', 1110, 155, 90, 8, 45)]);o['m']=pick(o['m'],[('p_guitar', 60, 170, 340, -3, 18), ('p_doves', 430, 200, 300, 4, 16), ('p_waves', 60, 640, 330, 3, 17), ('p_boattop', 430, 720, 290, -4, 20), ('p_sparklers', 150, 1040, 260, 4, 19), ('c_jug', 480, 1120, 200, 6, 26), ('c_bird', 640, 150, 110, -6, 36), ('c_sig', 500, 1392, 170, -5, 40), ('pill', 450, 660, 110, -3, 35, 'paintings'), ('pill', 470, 1300, 120, -3, 35, 'shop'), ('tape', 200, 150, 80, -10, 45)])
+    o['d']=pick(o['d'],[('p_guitar', 170, 150, 320, -4, 18), ('p_doves', 620, 110, 300, 3, 16), ('p_waves', 1040, 170, 340, -2, 17), ('p_sparklers', 380, 560, 230, 4, 19), ('p_boattop', 860, 590, 280, -3, 20), ('c_jug', 1270, 610, 200, 6, 26), ('c_bird', 1430, 110, 130, -6, 36), ('c_sig', 1230, 885, 230, -5, 40), ('pill', 650, 350, 120, -3, 35, 'paintings'), ('pill', 1010, 893, 130, -3, 35, 'shop'), ('tape', 240, 135, 90, -10, 45), ('tape', 1110, 155, 90, 8, 45)]);o['m']=pick(o['m'],[('p_guitar', 60, 170, 340, -3, 18), ('p_doves', 430, 200, 300, 4, 16), ('p_waves', 60, 640, 330, 3, 17), ('p_boattop', 430, 720, 290, -4, 20), ('p_sparklers', 150, 1040, 260, 4, 19), ('c_jug', 480, 1120, 200, 6, 26), ('c_bird', 640, 150, 110, -6, 36), ('c_sig', 500, 1392, 170, -5, 40), ('pill', 450, 660, 110, -3, 35, 'paintings'), ('pill', 470, 1300, 120, -3, 35, 'shop'), ('tape', 200, 150, 80, -10, 45)])
     t=t[:a2]+_j.dumps(o)+t[i:]
     return t.replace("const STORE='mg-vox-layout-v5'","const STORE='mg-vox-layout-v6'")
 def home(t):
@@ -417,7 +418,7 @@ for g in ['shop','books','designs','wholesale','shipping','faq','terms','privacy
 for f in sorted(os.listdir(O)):
     if f.endswith('.html'):print(f,round(os.path.getsize(O+'/'+f)/1e3),'KB',end=' | ')
 shutil.copytree(S+'/site_extra',O,dirs_exist_ok=True)
-HS='<script>try{if(!localStorage.getItem("mg-theme"))document.documentElement.dataset.theme="light"}catch(e){document.documentElement.dataset.theme="light"}</script>'
+HS='<script>(function(){var d=document.documentElement,w=function(){var t="light";try{t=localStorage.getItem("mg-theme")||"light"}catch(e){}return t};d.dataset.theme=w();new MutationObserver(function(){var t=w();if(d.dataset.theme!==t)d.dataset.theme=t}).observe(d,{attributes:true,attributeFilter:["data-theme"]})})()</script>'
 for f in os.listdir(O):
     if f.endswith('.html'):
         q=open(O+'/'+f).read()
