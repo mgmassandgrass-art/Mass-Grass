@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <!--
+      papercut template — the locked exemplar.
+      Three scenes proving the whole visual system. Copy this scaffold; swap the content.
+        S1  hook card   : torn cutout + shadow stack + halftone + highlighter sweep
+        S2  map / route : strokeDashoffset draw + staggered pins
+        S3  chart       : bars build from baseline, accent on the answer bar only
+      Hard cuts at 4.0s and 8.0s. One shared grain overlay. 1080x1920 @ 30fps.
+    -->
+    <style>
+      * { margin:0; padding:0; box-sizing:border-box; }
+      html, body { margin:0; width:1080px; height:1920px; overflow:hidden; background:#000; }
+
+      @font-face { font-family:'Archivo Black'; src:url('fonts/ArchivoBlack-400.woff2') format('woff2'); font-weight:400; font-display:block; }
+      @font-face { font-family:'Work Sans';    src:url('fonts/WorkSans-var.woff2') format('woff2');   font-weight:400 800; font-display:block; }
+
+      :root{
+        /* STYLE LOCK — one palette for the whole video. Never drift per scene. */
+        --paper:#F2EDE4;    /* base field */
+        --ink:#1A1A1A;      /* text */
+        --accent:#FFEB00;   /* the ONE "look here" colour */
+        --accent2:#E4572E;  /* secondary, used sparingly */
+        --gray:#C9C2B6;     /* neutral data, never competes with accent */
+      }
+
+      body { font-family:'Work Sans', sans-serif; }
+      #root { background:var(--ink); }
+
+      /* full-bleed background lives on a CHILD, never only on the root */
+      .canvas-bg { position:absolute; inset:0; background:var(--paper); }
+
+      /* ONE grain overlay for the entire piece */
+      .grain {
+        position:absolute; inset:0; pointer-events:none; opacity:.11; mix-blend-mode:multiply;
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size:180px;
+      }
+
+      .scene { position:absolute; inset:0; }
+      /* S1 is visible at frame 0 -> opacity 1 in CSS. Later scenes MUST be 0 in CSS. */
+      #s1 { opacity:1; }
+      #s2 { opacity:0; }
+      #s3 { opacity:0; }
+
+      /* ---------- paper cutout ---------- */
+      .cutout {
+        position:absolute;
+        /* deterministic torn edge, precomputed: depth 4-14px at 3-6% rhythm */
+        clip-path:polygon(
+          0.6% 1.2%, 6% 0.2%, 12% 1.6%, 19% 0.3%, 26% 1.9%, 33% 0.5%, 41% 1.7%, 48% 0.4%,
+          56% 1.8%, 63% 0.6%, 71% 1.5%, 79% 0.3%, 87% 1.6%, 94% 0.5%, 99.4% 1.4%,
+          98.6% 8%, 99.5% 16%, 98.4% 25%, 99.6% 34%, 98.5% 43%, 99.4% 52%, 98.6% 61%,
+          99.5% 70%, 98.4% 79%, 99.6% 88%, 98.8% 96%, 99.2% 98.8%,
+          93% 99.6%, 86% 98.3%, 78% 99.7%, 70% 98.4%, 62% 99.6%, 54% 98.2%, 46% 99.7%,
+          38% 98.5%, 30% 99.6%, 22% 98.3%, 14% 99.5%, 7% 98.4%, 0.8% 99.2%,
+          1.4% 92%, 0.4% 84%, 1.6% 75%, 0.3% 66%, 1.5% 57%, 0.5% 48%, 1.7% 39%,
+          0.4% 30%, 1.6% 21%, 0.3% 12%, 1.2% 5%
+        );
+        filter:drop-shadow(0 2px 0 rgba(0,0,0,.25)) drop-shadow(0 8px 16px rgba(0,0,0,.20));
+      }
+      .halftone {
+        background-color:var(--accent);
+        background-image:radial-gradient(circle at center, rgba(0,0,0,.55) 3px, transparent 0);
+        background-size:14px 14px;
+      }
+
+      /* ---------- type ---------- */
+      .kicker {
+        position:absolute; font-family:'Work Sans'; font-weight:800; font-size:34px;
+        letter-spacing:.28em; text-transform:uppercase; color:var(--ink); opacity:0;
+      }
+      .headline {
+        position:absolute; font-family:'Archivo Black'; font-size:150px; line-height:0.94;
+        color:var(--ink); text-transform:uppercase;
+      }
+      .headline .ln { display:block; opacity:0; }
+      .sub {
+        position:absolute; font-family:'Work Sans'; font-weight:600; font-size:44px;
+        line-height:1.28; color:var(--ink); opacity:0;
+      }
+
+      /* highlighter: a bar behind its OWN text = legitimate decorative overlap */
+      .hl { position:relative; display:inline-block; }
+      .hl .mark {
+        position:absolute; left:-10px; right:-10px; top:10%; bottom:8%;
+        background:var(--accent); z-index:-1; transform-origin:left;
+      }
+
+      /* ---------- map ---------- */
+      .maplabel {
+        position:absolute; font-family:'Work Sans'; font-weight:800; font-size:38px;
+        letter-spacing:.14em; text-transform:uppercase; color:var(--ink); opacity:0;
+      }
+
+      /* ---------- chart ---------- */
+      .bar { position:absolute; bottom:0; width:150px; background:var(--gray); transform-origin:bottom; }
+      .barlab {
+        position:absolute; font-family:'Work Sans'; font-weight:800; font-size:32px;
+        color:var(--ink); text-align:center; width:150px; opacity:0;
+      }
+      .barval {
+        position:absolute; font-family:'Archivo Black'; font-size:64px;
+        color:var(--ink); text-align:center; width:150px; opacity:0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main"
+         data-width="1080" data-height="1920" data-fps="30"
+         data-start="0" data-duration="12">
+
+      <div class="canvas-bg"></div>
+
+      <!-- ============ S1 : HOOK ============ -->
+      <div class="scene" id="s1">
+        <div class="cutout halftone" id="s1cut" style="left:86px; top:300px; width:908px; height:520px;"></div>
+        <div class="kicker" id="s1kick" style="left:86px; top:880px;">The gate of tears</div>
+        <div class="headline" id="s1head" style="left:86px; top:960px; width:908px;">
+          <span class="ln">Twenty</span>
+          <span class="ln">miles</span>
+          <span class="ln"><span class="hl">wide<span class="mark"></span></span></span>
+        </div>
+        <div class="sub" id="s1sub" style="left:86px; top:1400px; width:880px;">
+          Almost nobody who depends on it every day knows its name.
+        </div>
+      </div>
+
+      <!-- ============ S2 : MAP / ROUTE ============ -->
+      <div class="scene" id="s2">
+        <div class="kicker" id="s2kick" style="left:86px; top:320px;">The route</div>
+        <svg id="s2svg" width="1080" height="900" style="position:absolute; left:0; top:480px;">
+          <!-- stylised landmasses, deliberately abstract, not real geography -->
+          <path id="landA" d="M90,120 L520,90 L640,250 L480,360 L120,330 Z" fill="#D9D2C5" opacity="0"/>
+          <path id="landB" d="M470,600 L980,560 L1000,800 L520,830 Z" fill="#D9D2C5" opacity="0"/>
+          <path id="route" d="M120,470 C360,430 520,520 660,470 C820,410 930,470 1000,440"
+                fill="none" stroke="#E4572E" stroke-width="12" stroke-linecap="round"
+                stroke-dasharray="1100" stroke-dashoffset="1100"/>
+          <circle class="pin" cx="120"  cy="470" r="22" fill="#1A1A1A" opacity="0"/>
+          <circle class="pin" cx="660"  cy="470" r="22" fill="#1A1A1A" opacity="0"/>
+          <circle class="pin" cx="1000" cy="440" r="22" fill="#1A1A1A" opacity="0"/>
+        </svg>
+        <div class="maplabel" id="s2lab" style="left:86px; top:1430px;">One gap. Two continents.</div>
+      </div>
+
+      <!-- ============ S3 : CHART PAYOFF ============ -->
+      <div class="scene" id="s3">
+        <div class="kicker" id="s3kick" style="left:86px; top:320px;">Share of the traffic</div>
+        <div id="s3plot" style="position:absolute; left:86px; top:520px; width:908px; height:780px;">
+          <div class="bar" style="left:0;     height:286px;"></div>
+          <div class="bar" style="left:190px; height:418px;"></div>
+          <div class="bar" style="left:380px; height:532px;"></div>
+          <div class="bar" style="left:570px; height:780px; background:var(--accent);"></div>
+        </div>
+        <div class="barlab" style="left:86px;  top:1330px;">2005</div>
+        <div class="barlab" style="left:276px; top:1330px;">2010</div>
+        <div class="barlab" style="left:466px; top:1330px;">2015</div>
+        <div class="barlab" style="left:656px; top:1330px;">Today</div>
+        <div class="barval" id="s3val" style="left:656px; top:1400px;">4x</div>
+      </div>
+
+      <div class="grain"></div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        /* initial transforms via immediate gsap.set (never tl.set at position 0) */
+        gsap.set('#s1cut',          { scale: 0.9, transformOrigin: '50% 50%' });
+        gsap.set('#s1head .ln',     { y: 40 });
+        gsap.set('#s1kick',         { y: 16 });
+        gsap.set('#s1sub',          { y: 22 });
+        gsap.set('#s2kick',         { y: 16 });
+        gsap.set('#landA, #landB',  { scale: 0.94, transformOrigin: '50% 50%' });
+        gsap.set('.pin',            { scale: 0, transformOrigin: '50% 50%' });
+        gsap.set('#s2lab',          { y: 18 });
+        gsap.set('#s3kick',         { y: 16 });
+        gsap.set('.barlab, #s3val', { y: 14 });
+
+        /* ---------------- S1 : 0.0 - 4.0 ----------------
+           Frame 0 must already be composed. In short-form the first frame is the
+           thumbnail and the scroll-stop; never open on an empty field. The cutout
+           is present at t=0 and only settles its scale. */
+        tl.to('#s1cut', { scale: 1, duration: 0.5, ease: 'back.out(1.4)' }, 0)
+          .to('#s1kick',      { opacity: 1, y: 0, duration: 0.34, ease: 'power2.out' }, 0.42)
+          .to('#s1head .ln',  { opacity: 1, y: 0, duration: 0.30, stagger: 0.07, ease: 'power2.out' }, 0.60)
+          /* highlighter lands AFTER the word settles — it is punctuation, not simultaneous noise */
+          .fromTo('.mark', { scaleX: 0 },
+             { scaleX: 1, duration: 0.26, ease: 'power3.out' }, 1.10)
+          .to('#s1sub',       { opacity: 1, y: 0, duration: 0.38, ease: 'power2.out' }, 1.28)
+          /* subtle push-in: 100% -> 104%. In vertical the cuts carry the energy, not the camera */
+          .fromTo('#s1', { scale: 1 },
+             { scale: 1.04, duration: 3.4, ease: 'power1.inOut' }, 0.10);
+
+        /* HARD CUT at 4.0 — instantaneous `set`, NOT a tween.
+           A 0.08s opacity tween is a 2-frame crossfade at 30fps: both scenes render
+           semi-transparent and it reads as an overlap defect. `set` swaps in one frame. */
+        tl.set('#s1', { opacity: 0 }, 4.00)
+          .set('#s2', { opacity: 1 }, 4.00);
+
+        /* ---------------- S2 : 4.0 - 8.0 ----------------
+           First elements land ON the cut so no empty frame is ever shown. */
+        tl.set('#landA, #landB', { opacity: 1 }, 4.00)
+          .to('#landA',  { scale: 1, duration: 0.40, ease: 'back.out(1.3)' }, 4.00)
+          .to('#landB',  { scale: 1, duration: 0.40, ease: 'back.out(1.3)' }, 4.08)
+          .to('#s2kick', { opacity: 1, y: 0, duration: 0.32, ease: 'power2.out' }, 4.06)
+          .to('#route',  { strokeDashoffset: 0, duration: 1.15, ease: 'power1.inOut' }, 4.60)
+          .to('.pin',    { opacity: 1, scale: 1, duration: 0.30, stagger: 0.34, ease: 'back.out(2)' }, 4.90)
+          .to('#s2lab',  { opacity: 1, y: 0, duration: 0.36, ease: 'power2.out' }, 6.20);
+
+        /* HARD CUT at 8.0 */
+        tl.set('#s2', { opacity: 0 }, 8.00)
+          .set('#s3', { opacity: 1 }, 8.00);
+
+        /* ---------------- S3 : 8.0 - 12.0 ----------------
+           Static base (kicker + labels) first, data second. */
+        tl.set('#s3kick', { opacity: 1, y: 0 }, 8.00)
+          .to('.barlab', { opacity: 1, y: 0, duration: 0.28, stagger: 0.09, ease: 'power2.out' }, 8.06)
+          .fromTo('.bar', { scaleY: 0 },
+             { scaleY: 1, duration: 0.60, stagger: 0.12, ease: 'power3.out' }, 8.35)
+          .to('#s3val',  { opacity: 1, y: 0, duration: 0.34, ease: 'back.out(1.6)' }, 9.40);
+
+        window.__timelines['main'] = tl;
+      })();
+    </script>
+  </body>
+</html>
