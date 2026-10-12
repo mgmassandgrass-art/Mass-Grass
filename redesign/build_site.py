@@ -1,7 +1,7 @@
 import re,os,hashlib,base64,shutil,sys,json,subprocess
 S=sys.argv[1];O=S+'/site';shutil.rmtree(O,ignore_errors=True);os.makedirs(O+'/assets');os.makedirs(O+'/img')
 for f in os.listdir(S+'/product/img'):shutil.copy(S+'/product/img/'+f,O+'/img/'+f)
-shutil.copy(S+'/site_extra/assets/paper-tile.jpg',O+'/assets/paper-tile.jpg')
+shutil.copy(S+'/site_extra/assets/paper-tile.jpg',O+'/assets/paper-tile.jpg')  # kept for pages that still name it
 for f in ['catalog.js','chrome.js']:shutil.copy(S+'/shared/'+f,O+'/'+f)
 IDS={'86FYLHG2xY2QL5ZyCvArrs':'index.html','5kf85a5RN8kA35V5coBxKt':'story.html','K5g6D9pQNBhfmd9Uq4gXpf':'paintings.html','Qcvq65wrNorvCo5JCqTzHc':'stickers.html','UPQYPnsmuWtFVHu3Sez6Ns':'calendar.html','EW7hxmo69ZWij9g4u3GweT':'apparel.html','RDtLrFNcSadjNbdhcxXMnZ':'product.html','5VtMLRwsvXpHd5kLDY5oQj':'checkout.html'}
 NAVL="['shop.html','paintings.html','stickers.html','calendar.html','apparel.html','postcards.html','designs.html','story.html','story.html#support']"
@@ -10,10 +10,10 @@ STR=json.load(open(S+'/ar_strings.json'))
 IND=str.maketrans('٠١٢٣٤٥٦٧٨٩','0123456789')
 TERMS=[('أضف للحقيبة','أضف إلى السلة'),('انضافت للحقيبة','أُضيفت إلى السلة'),('أضف للسلة','أضف إلى السلة'),('انضافت للسلة','أُضيفت إلى السلة'),("ar:'شيل'","ar:'احذف'"),('كمّل للدفع','متابعة الدفع'),('كمّل تسوّق','متابعة التسوق'),('رجوع للسلة','العودة إلى السلة'),('رجوع للوحات','العودة إلى اللوحات'),('نزّل الملف','تحميل الملف'),("ar:'طبّق'","ar:'تطبيق'"),('السلة فاضية','السلة فارغة'),("ar:'اسألنا'","ar:'تواصل معنا'"),('ملابس وشنط وطواقي','الملابس والحقائب'),('ملابس وشنط','الملابس والحقائب')]
 SHARED='''<style id="mg-shared">
-:root{--yellow:#EDE9E0;--grain-o:0;--pb:normal}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--yellow:#463928;--cream:#54452F;--shadow:#1C150D;--glow:#4E402D;--pb:multiply}}
-:root[data-theme="dark"]{--yellow:#463928;--cream:#54452F;--shadow:#1C150D;--glow:#4E402D;--pb:multiply}
-html body{background-color:var(--yellow)!important;background-image:url(assets/paper-tile.jpg)!important;background-size:1100px 1553px!important;background-repeat:repeat!important;background-blend-mode:var(--pb)!important}
+:root{--yellow:#F5F2EA;--grain-o:0;--pb:normal;--paper-img:url(assets/paper.webp)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--yellow:#463928;--cream:#54452F;--shadow:#1C150D;--glow:#4E402D;--pb:normal;--paper-img:url(assets/paper-dark.webp)}}
+:root[data-theme="dark"]{--yellow:#463928;--cream:#54452F;--shadow:#1C150D;--glow:#4E402D;--pb:normal;--paper-img:url(assets/paper-dark.webp)}
+html body{background-color:var(--yellow)!important;background-image:var(--paper-img)!important;background-size:900px 900px!important;background-repeat:repeat!important;background-blend-mode:var(--pb)!important}
 body::after{display:none!important}
 main section,main .sec,.band,.phero,.shero,.pdp,#wrap,section.sec,section.sec.alt{background-color:transparent!important}
 main .sec.alt{background-color:color-mix(in srgb,var(--cream) 45%,transparent)!important}
@@ -25,7 +25,7 @@ main .sec.alt{background-color:color-mix(in srgb,var(--cream) 45%,transparent)!i
 .toast:not(.on){visibility:hidden}
 #searchBtn,.hdr [aria-label=Search]{display:none!important}
 #navList small{display:block;font:600 12px/1 ui-monospace,monospace;letter-spacing:.2em;margin:18px 0 4px;opacity:.7}
-.mgq{border:0;padding:0;max-width:min(860px,94vw);width:100%;background:var(--yellow) url(assets/paper-tile.jpg) 0 0/1100px 1553px;background-blend-mode:var(--pb);color:var(--ink);box-shadow:0 20px 60px rgba(30,20,10,.35);border-radius:3px}
+.mgq{border:0;padding:0;max-width:min(860px,94vw);width:100%;background:var(--yellow) var(--paper-img) 0 0/900px 900px;background-blend-mode:var(--pb);color:var(--ink);box-shadow:0 20px 60px rgba(30,20,10,.35);border-radius:3px}
 .mgq[open]{display:grid;grid-template-columns:1.1fr 1fr}.mgq::backdrop{background:rgba(30,24,18,.55)}
 .mgq .x{position:absolute;top:8px;inset-inline-end:10px;background:none;border:0;font-size:30px;line-height:1;color:var(--ink);cursor:pointer;z-index:2}
 .mgq .qi{display:grid;place-items:center;padding:30px;background:color-mix(in srgb,#fff 35%,transparent)}.mgq .qi img{max-height:60vh;background:#fff;padding:5%;box-shadow:0 3px 14px rgba(0,0,0,.18)}.mgq .qi.cut img{background:none;padding:0;box-shadow:none;filter:drop-shadow(0 3px 5px rgba(0,0,0,.25))}
