@@ -60,6 +60,30 @@ dialog form{padding:20px;display:grid;gap:12px;overflow:auto;max-height:92vh}
 .toast{position:fixed;bottom:20px;inset-inline-start:20px;background:var(--ink);color:var(--paper);padding:12px 16px;font:14px var(--body);z-index:99;display:none}
 .muted{color:var(--soft);font-size:13px}
 @media(max-width:640px){.two{grid-template-columns:1fr}header h1{font-size:20px}}
+/* agent chat */
+.chat{display:grid;grid-template-columns:220px 1fr;gap:16px;min-height:calc(100vh - 170px)}
+.threads{display:flex;flex-direction:column;gap:6px}
+.threads button{text-align:start;border:1.5px solid var(--ink);background:var(--paper);padding:8px 10px;font:14px var(--body);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.threads button[aria-current=true]{background:var(--ink);color:var(--paper)}
+.log{display:flex;flex-direction:column;gap:10px;overflow:auto;max-height:calc(100vh - 290px);padding:4px}
+.msg{max-width:78%;padding:12px 14px;border:2px solid var(--ink);white-space:pre-wrap;line-height:1.6}
+.msg.user{align-self:flex-start;background:#fff}
+.msg.agent{align-self:flex-end;background:var(--paper);box-shadow:4px 4px 0 rgba(46,36,27,.8)}
+html[dir=rtl] .msg.user{align-self:flex-start}
+.msg img{max-width:220px;display:block;border:1.5px solid var(--ink)}
+.tl{align-self:flex-end;font:12px var(--mono);color:var(--soft);direction:ltr}
+.tl.err{color:var(--terra)}
+.composer{display:flex;gap:8px;align-items:flex-end;margin-top:12px;flex-wrap:wrap}
+.composer textarea{flex:1;min-height:56px;max-height:200px;resize:vertical}
+.atts{display:flex;gap:6px;flex-wrap:wrap;width:100%}
+.atts span{position:relative}.atts img{width:56px;height:56px;object-fit:cover;border:1.5px solid var(--ink)}
+.atts b{position:absolute;top:-6px;inset-inline-end:-6px;background:var(--terra);color:#fff;width:18px;height:18px;display:grid;place-items:center;font-size:11px;cursor:pointer}
+.dbar{display:none;align-items:center;gap:10px;flex-wrap:wrap;background:var(--ochre);border:2px solid var(--ink);padding:10px 14px;margin-bottom:14px}
+.dbar.on{display:flex}.dbar b{margin-inline-end:auto}
+.lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.lib .pc .im{aspect-ratio:1}
+.drop{border:2px dashed var(--ink);padding:18px;text-align:center;background:var(--paper);margin-bottom:14px;cursor:pointer}
+@media(max-width:760px){.chat{grid-template-columns:1fr}.threads{flex-direction:row;overflow:auto}.msg{max-width:92%}}
 </style>
 </head>
 <body>
@@ -67,12 +91,12 @@ dialog form{padding:20px;display:grid;gap:12px;overflow:auto;max-height:92vh}
   <img src="../assets/logo.svg" alt="Mass &amp; Grass">
   <h1>لوحة التحكم</h1>
   <nav id="nav">
-    <button data-v="home">الرئيسية</button><button data-v="products">المنتجات</button><button data-v="prices">الأسعار والإعدادات</button>
-    <button data-v="customers">الزبائن</button><button data-v="orders">الطلبات</button><button data-v="subs">النشرة البريدية</button><button data-v="me">حسابي</button>
+    <button data-v="agent">المساعد ✦</button><button data-v="home">الأرقام</button><button data-v="products">المنتجات</button><button data-v="prices">الأسعار والإعدادات</button>
+    <button data-v="customers">الزبائن</button><button data-v="orders">الطلبات</button><button data-v="subs">النشرة البريدية</button><button data-v="library">مكتبة الصور</button><button data-v="me">حسابي</button>
   </nav>
   <a class="tag" href="../" target="_blank">الموقع ↗</a>
 </header>
-<main id="main"></main>
+<main><div class="dbar" id="dbar"><b id="dtext"></b><a class="btn alt" href="/api/admin/preview?on=1" target="_blank">معاينة</a><button class="btn" id="dpub">انشر على الموقع</button><button class="btn red" id="ddis">تجاهل</button></div><div id="main"></div></main>
 <dialog id="dlg"></dialog>
 <div class="toast" id="toast"></div>
 <script>
@@ -80,15 +104,25 @@ dialog form{padding:20px;display:grid;gap:12px;overflow:auto;max-height:92vh}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(m,p,b,raw){const r=await fetch('/api/admin/'+p,{method:m,headers:raw?{'content-type':raw}:b?{'content-type':'application/json'}:{},body:raw?b:b?JSON.stringify(b):undefined});
-  const d=await r.json().catch(()=>({}));if(r.status===404&&d.error==='not_found'&&p!=='products')location.href='/account.html?next=admin/';if(!r.ok)throw new Error(d.error||r.status);return d}
+  const d=await r.json().catch(()=>({}));if(r.status===404&&d.error==='not_found'&&/^(stats|drafts)$/.test(p))location.href='/account.html?next=admin/';if(!r.ok)throw new Error(d.error||r.status);return d}
 const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',2600)};
 const KIND={painting:'لوحة',postcard:'بوست كارد',sticker:'ستكر'};
 const money=n=>'€'+(+n).toFixed(2).replace(/\.00$/,'');
 const date=d=>new Date(d).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'});
 const imgSrc=p=>'../assets/'+p.id+'.webp';
-let view=location.hash.slice(1)||'home',PRICES={},PRODUCTS=[];
+let view=location.hash.slice(1)||'agent',PRICES={},PRODUCTS=[],THREADS=[],TH=sessionStorage.mgTh||'',ATT=[],BUSY=false;
 
 const V={
+async agent(){const t=await api('GET','agent/threads');THREADS=t.threads;
+  return `<div class="chat"><div class="threads"><button class="btn" id="newt" style="justify-content:center">+ محادثة جديدة</button>${THREADS.map(x=>`<button data-th="${x.id}" aria-current="${x.id===TH}">${esc(x.title)}</button>`).join('')}</div>
+   <div><div class="log card" id="log"><p class="muted">احكيلي شو بدك أعدّل: سعر، منتج جديد، نص بصفحة، صفحة جديدة… وارفق صور إذا بدك. التعديلات على الصفحات بتصير مسودة، وما بتطلع للزوار غير لما تضغط "انشر".</p></div>
+   <div class="composer"><div class="atts" id="atts"></div><textarea id="tx" placeholder="اكتب طلبك هون… (Enter للإرسال، Shift+Enter لسطر جديد)"></textarea>
+   <label class="btn alt" style="cursor:pointer">صورة<input type="file" id="fimg" accept="image/*" multiple hidden></label><button class="btn" id="send">ابعت</button></div></div></div>`},
+async library(){const d=await api('GET','images');
+  return `<div class="row"><h2 style="margin:0 0 0 auto">مكتبة الصور (${d.images.length})</h2></div>
+   <label class="drop">اسحب صور هون أو اضغط لترفعها<input type="file" id="lup" accept="image/*" multiple hidden></label>
+   <div class="lib">${d.images.map(i=>`<div class="pc"><div class="im"><img src="${i.url}" alt="" loading="lazy"></div><div class="bd"><small dir="ltr">${esc(i.key)}</small><small>${esc(i.name||'')}${i.note?' · '+esc(i.note):''}</small><small>${Math.round(i.size/1024)} KB${i.used.length?' · مستخدمة: '+esc(i.used.join('، ')):''}</small></div>
+   <div class="ac"><button class="btn alt" data-cp="${i.url}">نسخ الرابط</button>${i.used.length?'':`<button class="btn red" data-imd="${i.key}">حذف</button>`}</div></div>`).join('')||'<p class="muted">ما في صور لهلأ.</p>'}</div>`},
 async home(){const s=await api('GET','stats');
   return `<h2>أهلًا 👋</h2><div class="stats">
    <div class="card"><b>${s.products}</b><span>منتج</span></div><div class="card"><b>${s.users}</b><span>زبون مسجّل</span></div>
@@ -144,6 +178,21 @@ async function show(v){view=V[v]?v:'home';history.replaceState(null,'','#'+view)
 $$('#nav button').forEach(b=>b.onclick=()=>show(b.dataset.v));
 
 function bind(){
+
+  // ---- agent chat ----
+  const log=$('#log');
+  if(log){
+    if(TH)loadThread(TH);
+    $('#newt').onclick=()=>{TH='';sessionStorage.mgTh='';show('agent')};
+    $$('[data-th]').forEach(b=>b.onclick=()=>{TH=b.dataset.th;sessionStorage.mgTh=TH;show('agent')});
+    const tx=$('#tx');tx.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}};
+    $('#send').onclick=send;$('#fimg').onchange=e=>attach([...e.target.files]);
+    tx.onpaste=e=>{const f=[...e.clipboardData.files].filter(x=>x.type.startsWith('image/'));if(f.length){e.preventDefault();attach(f)}};
+    log.ondragover=e=>e.preventDefault();log.ondrop=e=>{e.preventDefault();attach([...e.dataTransfer.files].filter(x=>x.type.startsWith('image/')))};
+  }
+  const lup=$('#lup');if(lup){lup.onchange=async()=>{for(const f of lup.files)await upload(f);toast('انرفعت ✓');show('library')};const dz=lup.parentElement;dz.ondragover=e=>e.preventDefault();dz.ondrop=async e=>{e.preventDefault();for(const f of e.dataTransfer.files)if(f.type.startsWith('image/'))await upload(f);show('library')}}
+  $$('[data-cp]').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(location.origin+b.dataset.cp);toast('انتسخ الرابط')});
+  $$('[data-imd]').forEach(b=>b.onclick=async()=>{if(!confirm('تحذف الصورة؟'))return;await api('DELETE','image?key='+b.dataset.imd);show('library')});
   $$('[data-k]').forEach(b=>b.onclick=()=>{sessionStorage.mgAdminKind=b.dataset.k;show('products')});
   const q=$('#q');if(q)q.onchange=()=>{sessionStorage.mgAdminQ=q.value;show('products')};
   const cq=$('#cq');if(cq)cq.onchange=()=>{sessionStorage.mgAdminCQ=cq.value;show('customers')};
@@ -195,6 +244,30 @@ function edit(p){const isNew=!p,kind=p?p.kind:(sessionStorage.mgAdminKind||'pain
         price:$('#pr').value,sale:$('#sl').value,is_new:$('#nw').checked,hidden:$('#hd').checked,sort:$('#so')?$('#so').value:0,extra});
       d.close();toast('انحفظ ✓ وبيظهر بالموقع خلال دقيقة');show('products')}
     catch(err){sv.disabled=false;$('#er').textContent={title_required:'العنوان بالإنجليزي إجباري',too_big:'الصورة كبيرة كتير',bad_price:'السعر مش مزبوط',exists:'هالمنتج موجود'}[err.message]||err.message}}}
+
+// ---------- agent chat helpers ----------
+async function upload(f){const w=await toWebp(f);const r=await api('POST','image?name='+encodeURIComponent(f.name.slice(0,100)),w.b,'image/webp');return r.key}
+async function attach(files){for(const f of files.slice(0,8)){try{const k=await upload(f);ATT.push(k)}catch(e){toast('ما انرفعت الصورة')}}drawAtts()}
+function drawAtts(){const a=$('#atts');if(a)a.innerHTML=ATT.map((k,i)=>`<span><img src="/assets/${k}.webp" alt=""><b data-ra="${i}">×</b></span>`).join('');$$('[data-ra]').forEach(b=>b.onclick=()=>{ATT.splice(+b.dataset.ra,1);drawAtts()})}
+const TOOLAR={list_files:'شاف قائمة الملفات',search_files:'دوّر بالملفات',read_file:'قرأ',edit_file:'عدّل (مسودة)',write_file:'كتب ملف (مسودة)',discard_draft:'تجاهل مسودة',file_history:'شاف النسخ',restore_original:'رجّع الأصل (مسودة)',restore_version:'رجّع نسخة',list_products:'شاف المنتجات',save_product:'حفظ منتج',delete_product:'حذف منتج',get_settings:'شاف الإعدادات',update_settings:'غيّر الإعدادات',list_orders:'شاف الطلبات',set_order_status:'غيّر حالة طلب',list_customers:'شاف الزبائن',list_subscribers:'شاف المشتركين',list_images:'شاف مكتبة الصور',note_image:'سمّى صورة'};
+function line(it){const log=$('#log');if(!log)return;const d=document.createElement('div');
+  if(it.role==='tool'){d.className='tl'+(it.ok===false?' err':'');const i=it.input||{};d.textContent=`${it.ok===false?'✕':'✓'} ${TOOLAR[it.name]||it.name} ${i.path||i.id||i.query||''}`}
+  else if(it.image){d.className='msg user';d.innerHTML=`<img src="${esc(it.image)}" alt="">`}
+  else{d.className='msg '+it.role;d.textContent=it.text}
+  log.appendChild(d);log.scrollTop=log.scrollHeight}
+async function loadThread(id){try{const t=await api('GET','agent/thread?id='+encodeURIComponent(id));const log=$('#log');log.innerHTML='';t.items.forEach(line)}catch(e){TH='';sessionStorage.mgTh=''}}
+async function send(){if(BUSY)return;const tx=$('#tx'),text=tx.value.trim();if(!text&&!ATT.length)return;BUSY=true;$('#send').disabled=true;
+  if(!TH)$('#log').innerHTML='';ATT.forEach(k=>line({role:'user',image:'/assets/'+k+'.webp'}));if(text)line({role:'user',text});
+  let body={thread:TH,text,images:ATT};tx.value='';ATT=[];drawAtts();
+  const wait=document.createElement('div');wait.className='tl';wait.textContent='… عم يشتغل';
+  try{for(let i=0;i<25;i++){$('#log').appendChild(wait);const r=await api('POST','agent',body);wait.remove();TH=r.thread;sessionStorage.mgTh=TH;
+      r.events.forEach(e=>line(e.type==='text'?{role:'agent',text:e.text}:{role:'tool',...e}));if(r.done)break;body={thread:TH}}}
+  catch(e){wait.remove();line({role:'agent',text:e.message==='agent_not_configured'?'المساعد مش مفعّل بعد: لازم مفتاح Anthropic API.':'صار خطأ: '+e.message})}
+  BUSY=false;$('#send').disabled=false;refreshDrafts()}
+async function refreshDrafts(){try{const d=await api('GET','drafts');const b=$('#dbar');b.classList.toggle('on',d.drafts.length>0);$('#dtext').textContent=`في ${d.drafts.length} ملف معدّل بانتظار النشر: ${d.drafts.map(x=>x.path).join('، ')}`}catch(e){}}
+$('#dpub').onclick=async()=>{if(!confirm('تنشر التعديلات على الموقع للزوار؟'))return;const n=prompt('وصف قصير للتعديل (اختياري)')||'';const r=await api('POST','drafts',{note:n});toast('انتشر: '+r.published.join('، '));refreshDrafts()};
+$('#ddis').onclick=async()=>{if(!confirm('تتجاهل كل التعديلات اللي ما انتشرت؟'))return;await api('DELETE','drafts');toast('انلغت المسودات');refreshDrafts()};
+refreshDrafts();
 
 show(view);
 })();

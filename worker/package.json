@@ -1,3 +1,14 @@
-{ "name": "mass-grass-api", "private": true, "type": "module",
-  "scripts": { "dev": "wrangler dev --local --persist-to .state", "deploy": "wrangler deploy", "db:local": "wrangler d1 migrations apply mass-grass --local --persist-to .state", "test": "node test/auth.test.mjs" },
-  "devDependencies": { "wrangler": "^4" } }
+{
+ "name": "mass-grass-api",
+ "private": true,
+ "type": "module",
+ "scripts": {
+  "dev": "wrangler dev --local --persist-to .state",
+  "deploy": "node tools/manifest.mjs && wrangler deploy",
+  "db:local": "wrangler d1 migrations apply mass-grass --local --persist-to .state",
+  "test": "node test/auth.test.mjs"
+ },
+ "devDependencies": {
+  "wrangler": "^4"
+ }
+}

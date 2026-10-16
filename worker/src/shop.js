@@ -179,8 +179,20 @@ export async function admin(env, req, url, p) {
     if (data.byteLength > 1.8e6) return fail('too_big', 413);
     const key = clean(url.searchParams.get('key'), 40) || 'u-' + crypto.randomUUID().slice(0, 8);
     if (!/^u-[a-z0-9-]{2,37}$/.test(key)) return fail('bad_id');
-    await env.DB.prepare('INSERT OR REPLACE INTO images(key,type,data,created_at) VALUES(?,?,?,?)').bind(key, type, data, Date.now()).run();
+    await env.DB.prepare('INSERT INTO images(key,type,data,created_at,name) VALUES(?,?,?,?,?) ON CONFLICT(key) DO UPDATE SET type=excluded.type, data=excluded.data')
+      .bind(key, type, data, Date.now(), clean(url.searchParams.get('name'), 120)).run();
     return json({ key });
+  }
+  if (p === '/api/admin/images' && m === 'GET') {
+    const { results } = await env.DB.prepare('SELECT key, name, note, created_at, length(data) size FROM images ORDER BY created_at DESC LIMIT 1000').all();
+    const { results: used } = await env.DB.prepare("SELECT id, kind, title_ar FROM products WHERE id LIKE 'u-%'").all();
+    return json({ images: results.map((r) => ({ ...r, url: `/assets/${r.key}.webp`, used: used.filter((x) => x.id === r.key).map((x) => x.title_ar || x.kind) })) });
+  }
+  if (p === '/api/admin/image' && m === 'DELETE') {
+    const key = clean(url.searchParams.get('key'), 40);
+    if (await env.DB.prepare('SELECT 1 FROM products WHERE id=?').bind(key).first()) return fail('in_use', 409);
+    await env.DB.prepare('DELETE FROM images WHERE key=?').bind(key).run();
+    return json({ ok: true });
   }
   if (p === '/api/admin/settings' && m === 'GET') {
     return json({ prices: await getSetting(env, 'prices', {}), rates: await getSetting(env, 'rates', {}), links: await getSetting(env, 'links', {}) });

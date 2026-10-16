@@ -1,5 +1,6 @@
 // Mass & Grass API: accounts and sign-in (step 1). Orders, PayPal and files come next.
 import { json, fail, readJson, clean } from './util.js';
+import { agentStep, agentThreads, agentThread, drafts, publishDrafts, discardDrafts, publishedPaths, FILE_RE, TYPES } from './agent.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin } from './shop.js';
 
 const enc = new TextEncoder();
@@ -276,7 +277,21 @@ async function api(req, env, url, p) {
   }
   const cap = p.match(/^\/api\/orders\/(MG-[A-F0-9]{8})\/capture$/);
   if (cap && req.method === 'POST') return captureOrder(env, cap[1]);
-  if (p.startsWith('/api/admin/')) return isAdmin(env, u) ? admin(env, req, url, p) : fail('not_found', 404);
+  if (p.startsWith('/api/admin/')) {
+    if (!isAdmin(env, u)) return fail('not_found', 404);
+    if (p === '/api/admin/agent' && req.method === 'POST') return agentStep(env, req, url.origin);
+    if (p === '/api/admin/agent/threads') return agentThreads(env);
+    if (p === '/api/admin/agent/thread') return agentThread(env, url.searchParams.get('id') || '');
+    // Drafts the agent made: only the owner publishes them, from the panel.
+    if (p === '/api/admin/drafts' && req.method === 'GET') return json({ drafts: await drafts(env) });
+    if (p === '/api/admin/drafts' && req.method === 'POST') { const b = await readJson(req); return json({ published: await publishDrafts(env, b?.note || 'panel') }); }
+    if (p === '/api/admin/drafts' && req.method === 'DELETE') { await discardDrafts(env, url.searchParams.get('path')); return json({ ok: true }); }
+    if (p === '/api/admin/preview') {
+      const on = url.searchParams.get('on') === '1';
+      return new Response(null, { status: 302, headers: { location: on ? '/' : '/admin/', 'set-cookie': `mg_prev=${on ? 1 : 0}; Path=/; Max-Age=${on ? 7200 : 0}; Secure; SameSite=Lax` } });
+    }
+    return admin(env, req, url, p);
+  }
   if (!u) return fail('unauthorized', 401);
   if (p === '/api/me/export' && req.method === 'GET') return exportMe(env, req, u);
   if (p === '/api/me/orders' && req.method === 'GET') return myOrders(env, u);
@@ -302,6 +317,22 @@ export default {
         const r = await env.ASSETS.fetch(req);
         const h = new Headers(r.headers); h.set('cache-control', 'no-store'); h.set('x-robots-tag', 'noindex');
         return new Response(r.body, { status: r.status, headers: h });
+      }
+      // Pages/scripts edited from the panel: the published copy for everyone, the draft for the owner in preview.
+      const fp = p === '/' ? 'index.html' : /\.(html|js|css)$/.test(p) ? p.slice(1) : p.slice(1) + '.html';
+      if (FILE_RE.test(fp)) {
+        const prev = cookies(req).mg_prev === '1' && isAdmin(env, await currentUser(env, req));
+        if (prev || (await publishedPaths(env)).has(fp)) {
+          const row = await env.DB.prepare('SELECT draft, published FROM site_files WHERE path=?').bind(fp).first();
+          const body = row && (prev && row.draft != null ? row.draft : row.published);
+          if (body != null) {
+            const ext = fp.split('.').pop(), res = new Response(body, { headers: { 'content-type': TYPES[ext], 'cache-control': 'no-cache' } });
+            if (ext !== 'html') return res;
+            const out = await withCatalog(env, res);
+            if (!prev) return out;
+            return new HTMLRewriter().on('body', { element(e) { e.append('<a href="/api/admin/preview?on=0" style="position:fixed;z-index:9999;bottom:12px;left:12px;background:#C4593F;color:#fff;font:600 13px monospace;padding:8px 12px;border:2px solid #2E241B;text-decoration:none">PREVIEW · drafts ✕</a>', { html: true }); } }).transform(out);
+          }
+        }
       }
       const img = p.match(/^\/assets\/(u-[a-z0-9-]{2,37})\.webp$/);
       if (img) return (await serveImage(env, img[1])) || new Response('Not found', { status: 404 });
