@@ -20,8 +20,9 @@ let cache = null, cacheAt = 0;
 export function dropCache() { cache = null; }
 export async function catalog(env) {
   if (cache && Date.now() - cacheAt < 30e3) return cache;
-  const { results } = await env.DB.prepare('SELECT * FROM products WHERE hidden=0 ORDER BY kind, sort, title_en').all();
-  cache = { products: results.map(pub), prices: await getSetting(env, 'prices', {}), rates: await getSetting(env, 'rates', {}), links: await getSetting(env, 'links', {}) };
+  const { results } = await env.DB.prepare('SELECT * FROM products WHERE hidden=0 AND deleted=0 ORDER BY kind, sort, title_en').all();
+  const { results: off } = await env.DB.prepare('SELECT kind, id FROM products WHERE hidden=1 OR deleted=1').all();
+  cache = { off: off.map((r) => `${r.kind}:${r.id}`), pages: await getSetting(env, 'pages', { hidden: [], sections: {} }), products: results.map(pub), prices: await getSetting(env, 'prices', {}), rates: await getSetting(env, 'rates', {}), links: await getSetting(env, 'links', {}) };
   cacheAt = Date.now();
   return cache;
 }
@@ -126,6 +127,12 @@ export async function serveImage(env, key) {
   return new Response(r.data, { headers: { 'content-type': r.type, 'cache-control': 'public, max-age=31536000, immutable' } });
 }
 
+// A kind must keep at least one visible product, so no page is left with an empty list.
+async function lastVisible(env, id, kind) {
+  const r = await env.DB.prepare('SELECT count(*) n, sum(id=?) me FROM products WHERE kind=? AND hidden=0 AND deleted=0').bind(id, kind).first();
+  return r.n <= 1 && r.me >= 1;
+}
+
 // ---------- admin ----------
 const P_FIELDS = ['title_en', 'title_ar', 'place_en', 'place_ar', 'story_en', 'story_ar'];
 export async function admin(env, req, url, p) {
@@ -133,11 +140,11 @@ export async function admin(env, req, url, p) {
   if (p === '/api/admin/stats') {
     const one = (s) => env.DB.prepare(s).first();
     const [u, o, rev, pr] = await Promise.all([one('SELECT count(*) n FROM users'), one("SELECT count(*) n FROM orders WHERE status='paid'"),
-      one("SELECT coalesce(sum(total_cents),0) n FROM orders WHERE status='paid'"), one('SELECT count(*) n FROM products')]);
+      one("SELECT coalesce(sum(total_cents),0) n FROM orders WHERE status='paid'"), one('SELECT count(*) n FROM products WHERE deleted=0')]);
     return json({ users: u.n, orders: o.n, revenue: rev.n / 100, products: pr.n });
   }
   if (p === '/api/admin/products' && m === 'GET') {
-    const { results } = await env.DB.prepare('SELECT * FROM products ORDER BY kind, sort, title_en').all();
+    const { results } = await env.DB.prepare('SELECT * FROM products WHERE deleted=0 ORDER BY kind, sort, title_en').all();
     return json({ products: results.map((r) => ({ ...pub(r), hidden: !!r.hidden, sort: r.sort })) });
   }
   if (p === '/api/admin/products' && (m === 'POST' || m === 'PUT')) {
@@ -152,11 +159,14 @@ export async function admin(env, req, url, p) {
     const sale = Math.max(0, Math.min(90, parseInt(b.sale) || 0));
     const extra = JSON.stringify(typeof b.extra === 'object' && b.extra ? b.extra : {});
     if (m === 'POST') {
-      if (await env.DB.prepare('SELECT 1 FROM products WHERE id=? AND kind=?').bind(id, b.kind).first()) return fail('exists', 409);
+      const ex = await env.DB.prepare('SELECT deleted FROM products WHERE id=? AND kind=?').bind(id, b.kind).first();
+      if (ex && !ex.deleted) return fail('exists', 409);
+      if (ex) await env.DB.prepare('DELETE FROM products WHERE id=? AND kind=?').bind(id, b.kind).run(); // re-adding a deleted one
       const s = await env.DB.prepare('SELECT coalesce(min(sort),0)-1 s FROM products WHERE kind=?').bind(b.kind).first();
       await env.DB.prepare(`INSERT INTO products(id,kind,${P_FIELDS},price_cents,sale,is_new,hidden,sort,big,extra,updated_at) VALUES(?,?,${P_FIELDS.map(() => '?')},?,?,?,?,?,?,?,?)`)
         .bind(id, b.kind, ...P_FIELDS.map((f) => v[f]), price, sale, b.is_new ? 1 : 0, b.hidden ? 1 : 0, s.s, b.big ? 1 : 0, extra, Date.now()).run();
     } else {
+      if (b.hidden && (await lastVisible(env, id, b.kind))) return fail('last_item', 409);
       const r = await env.DB.prepare(`UPDATE products SET ${P_FIELDS.map((f) => f + '=?')},price_cents=?,sale=?,is_new=?,hidden=?,sort=?,extra=?,updated_at=? WHERE id=? AND kind=?`)
         .bind(...P_FIELDS.map((f) => v[f]), price, sale, b.is_new ? 1 : 0, b.hidden ? 1 : 0, parseInt(b.sort) || 0, extra, Date.now(), id, b.kind).run();
       if (!r.meta.changes) return fail('not_found', 404);
@@ -166,9 +176,9 @@ export async function admin(env, req, url, p) {
   }
   if (p === '/api/admin/products' && m === 'DELETE') {
     const id = url.searchParams.get('id'), kind = url.searchParams.get('kind');
-    await env.DB.prepare('DELETE FROM products WHERE id=? AND kind=?').bind(id, kind).run();
-    const left = await env.DB.prepare('SELECT 1 FROM products WHERE id=?').bind(id).first();
-    if (!left && id.startsWith('u-')) await env.DB.prepare('DELETE FROM images WHERE key=?').bind(id).run();
+    if (await lastVisible(env, id, kind)) return fail('last_item', 409);
+    // Soft delete: the page scripts learn the id is gone (MGCAT.off) even when it was one of the built-in defaults.
+    await env.DB.prepare('UPDATE products SET deleted=1, hidden=1 WHERE id=? AND kind=?').bind(id, kind).run();
     dropCache();
     return json({ ok: true });
   }
@@ -190,7 +200,7 @@ export async function admin(env, req, url, p) {
   }
   if (p === '/api/admin/image' && m === 'DELETE') {
     const key = clean(url.searchParams.get('key'), 40);
-    if (await env.DB.prepare('SELECT 1 FROM products WHERE id=?').bind(key).first()) return fail('in_use', 409);
+    if (await env.DB.prepare('SELECT 1 FROM products WHERE id=? AND deleted=0').bind(key).first()) return fail('in_use', 409);
     await env.DB.prepare('DELETE FROM images WHERE key=?').bind(key).run();
     return json({ ok: true });
   }

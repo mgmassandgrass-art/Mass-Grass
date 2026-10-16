@@ -2,7 +2,6 @@
 name = "mass-grass-staging"
 main = "src/index.js"
 compatibility_date = "2025-09-01"
-rules = [{ type = "Text", globs = ["**/*.md"], fallthrough = true }]
 workers_dev = true
 
 [assets]
@@ -10,11 +9,7 @@ directory = "../prototype"
 binding = "ASSETS"
 run_worker_first = ["/*", "!/fonts/*"]
 
-[ai]
-binding = "AI"
-
 [vars]
-AGENT_MODEL = "claude-sonnet-5-5"
 ADMIN_EMAIL = "info@massandgrass.com"
 MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
 

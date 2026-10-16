@@ -170,7 +170,11 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   API, D1 database `mass-grass`). The old Pages site is untouched; deleting the route `www.massandgrass.com/*` brings it back.
 - The Worker injects `window.MGCAT` (products, prices, rates, links from D1) into every HTML page; page arrays are wrapped
   in `MGK(kind, defaults, mapper)` so the admin's products replace the hardcoded ones.
-- Admin panel: `/admin/` (only `info@massandgrass.com` with role admin; everyone else gets a redirect / 404).
+- Admin panel: `/admin/` (only `info@massandgrass.com` with role admin; everyone else gets a redirect / 404). Side menu, Arabic/English.
+  Products (add/edit/hide/soft-delete; a kind keeps at least one visible item), Pages (hide a page → 404 + its links hidden;
+  hide `<section id>`s; edit every `data-ar` text and `t('en','ar')` pair, saved to D1 `site_files` with versions),
+  Image library (every built-in image + uploads, where each is used; replacing a built-in image is served from D1).
+  Server code for this: `worker/src/site.js`; `worker/src/manifest.json` (from `tools/manifest.mjs`) lists pages and images.
   Reset its password with `node worker/tools/make-admin.mjs` and run the SQL with `wrangler d1 execute --remote`.
 - Checkout: `/api/orders` prices every line on the server; PayPal (redirect flow) switches on once the
   `PAYPAL_CLIENT_ID` / `PAYPAL_SECRET` secrets exist (`PAYPAL_ENV=live` for real money). Until then checkout says payments open soon.

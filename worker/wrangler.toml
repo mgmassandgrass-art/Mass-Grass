@@ -1,7 +1,6 @@
 name = "mass-grass"
 main = "src/index.js"
 compatibility_date = "2025-09-01"
-rules = [{ type = "Text", globs = ["**/*.md"], fallthrough = true }]
 
 # Production: the prototype site and the API on one origin (cookies stay first-party).
 # The route sits in front of the old Pages site; delete the route to bring the old site back.
@@ -14,11 +13,7 @@ directory = "../prototype"
 binding = "ASSETS"
 run_worker_first = ["/*", "!/fonts/*"]
 
-[ai]
-binding = "AI"
-
 [vars]
-AGENT_MODEL = "claude-sonnet-5-5"
 ADMIN_EMAIL = "info@massandgrass.com"
 SITE_ORIGIN = "https://www.massandgrass.com"
 MAIL_FROM = "Mass & Grass <info@massandgrass.com>"

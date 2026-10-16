@@ -1,6 +1,6 @@
 // Mass & Grass API: accounts and sign-in (step 1). Orders, PayPal and files come next.
 import { json, fail, readJson, clean } from './util.js';
-import { agentStep, agentThreads, agentThread, drafts, publishDrafts, discardDrafts, publishedPaths, FILE_RE, TYPES } from './agent.js';
+import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin } from './shop.js';
 
 const enc = new TextEncoder();
@@ -238,13 +238,15 @@ async function googleCallback(env, req, url) {
 const isAdmin = (env, u) => !!u && u.role === 'admin' && u.email === (env.ADMIN_EMAIL || '').toLowerCase();
 
 // Put the live catalog into every page so the page scripts read it synchronously.
-async function withCatalog(env, res) {
+async function withCatalog(env, res, path) {
   if (!(res.headers.get('content-type') || '').includes('text/html')) return res;
   const cat = await catalog(env);
   const data = JSON.stringify(cat).replace(/</g, '\\u003c');
-  const js = `window.MGCAT=${data};window.MGK=function(k,d,m,f){var c=(window.MGCAT.products||[]).filter(function(p){return p.kind===k&&(!f||f(p))});return c.length?c.map(m):d};`;
-  const out = new HTMLRewriter().on('head', { element(e) { e.prepend(`<script>${js}</script>`, { html: true }); } }).transform(res);
-  const h = new Headers(out.headers); h.set('cache-control', 'no-cache');
+  // Page lists come from the database; if anything goes wrong the page keeps its built-in list instead of breaking.
+  const js = `window.MGCAT=${data};window.MGK=function(k,d,m,f){try{var c=(window.MGCAT.products||[]).filter(function(p){return p.kind===k&&(!f||f(p))});return c.length?c.map(m):d}catch(e){return d}};`;
+  const css = hideCss(cat.pages || {}, path || '');
+  const out = new HTMLRewriter().on('head', { element(e) { e.prepend(`<script>${js}</script>${css}`, { html: true }); } }).transform(res);
+  const h = new Headers(out.headers); h.set('cache-control', 'no-cache'); h.delete('etag'); h.delete('last-modified');
   return new Response(out.body, { status: out.status, headers: h });
 }
 
@@ -279,17 +281,8 @@ async function api(req, env, url, p) {
   if (cap && req.method === 'POST') return captureOrder(env, cap[1]);
   if (p.startsWith('/api/admin/')) {
     if (!isAdmin(env, u)) return fail('not_found', 404);
-    if (p === '/api/admin/agent' && req.method === 'POST') return agentStep(env, req, url.origin);
-    if (p === '/api/admin/agent/threads') return agentThreads(env);
-    if (p === '/api/admin/agent/thread') return agentThread(env, url.searchParams.get('id') || '');
-    // Drafts the agent made: only the owner publishes them, from the panel.
-    if (p === '/api/admin/drafts' && req.method === 'GET') return json({ drafts: await drafts(env) });
-    if (p === '/api/admin/drafts' && req.method === 'POST') { const b = await readJson(req); return json({ published: await publishDrafts(env, b?.note || 'panel') }); }
-    if (p === '/api/admin/drafts' && req.method === 'DELETE') { await discardDrafts(env, url.searchParams.get('path')); return json({ ok: true }); }
-    if (p === '/api/admin/preview') {
-      const on = url.searchParams.get('on') === '1';
-      return new Response(null, { status: 302, headers: { location: on ? '/' : '/admin/', 'set-cookie': `mg_prev=${on ? 1 : 0}; Path=/; Max-Age=${on ? 7200 : 0}; Secure; SameSite=Lax` } });
-    }
+    const r = await siteAdmin(env, req, url, p);
+    if (r) return r;
     return admin(env, req, url, p);
   }
   if (!u) return fail('unauthorized', 401);
@@ -318,30 +311,30 @@ export default {
         const h = new Headers(r.headers); h.set('cache-control', 'no-store'); h.set('x-robots-tag', 'noindex');
         return new Response(r.body, { status: r.status, headers: h });
       }
-      // Pages/scripts edited from the panel: the published copy for everyone, the draft for the owner in preview.
-      const fp = p === '/' ? 'index.html' : /\.(html|js|css)$/.test(p) ? p.slice(1) : p.slice(1) + '.html';
-      if (FILE_RE.test(fp)) {
-        const prev = cookies(req).mg_prev === '1' && isAdmin(env, await currentUser(env, req));
-        if (prev || (await publishedPaths(env)).has(fp)) {
-          const row = await env.DB.prepare('SELECT draft, published FROM site_files WHERE path=?').bind(fp).first();
-          const body = row && (prev && row.draft != null ? row.draft : row.published);
-          if (body != null) {
-            const ext = fp.split('.').pop(), res = new Response(body, { headers: { 'content-type': TYPES[ext], 'cache-control': 'no-cache' } });
-            if (ext !== 'html') return res;
-            const out = await withCatalog(env, res);
-            if (!prev) return out;
-            return new HTMLRewriter().on('body', { element(e) { e.append('<a href="/api/admin/preview?on=0" style="position:fixed;z-index:9999;bottom:12px;left:12px;background:#C4593F;color:#fff;font:600 13px monospace;padding:8px 12px;border:2px solid #2E241B;text-decoration:none">PREVIEW · drafts ✕</a>', { html: true }); } }).transform(out);
-          }
+      const notFound = async () => {
+        const nf = await env.ASSETS.fetch(new Request(`${url.origin}/404.html`));
+        return withCatalog(env, new Response(nf.body, { status: 404, headers: nf.headers }), '404.html');
+      };
+      // Which site file this is: '/', '/shop', '/shop.html' → index.html, shop.html; scripts by their path.
+      const fp = p === '/' ? 'index.html' : /\.(js|css)$/.test(p) ? p.slice(1) : p.slice(1).replace(/\.html$/, '') + '.html';
+      if (PAGES.includes(fp) && (((await catalog(env)).pages || {}).hidden || []).includes(fp)) return notFound();
+      if ((await publishedPaths(env)).has(fp)) {
+        const row = await env.DB.prepare('SELECT published FROM site_files WHERE path=?').bind(fp).first();
+        if (row && row.published != null) {
+          const ext = fp.split('.').pop(), res = new Response(row.published, { headers: { 'content-type': TYPES[ext], 'cache-control': 'no-cache' } });
+          return ext === 'html' ? withCatalog(env, res, fp) : res;
         }
       }
       const img = p.match(/^\/assets\/(u-[a-z0-9-]{2,37})\.webp$/);
       if (img) return (await serveImage(env, img[1])) || new Response('Not found', { status: 404 });
-      const r = await env.ASSETS.fetch(req);
-      if (r.status === 404) {
-        const nf = await env.ASSETS.fetch(new Request(`${url.origin}/404.html`));
-        return withCatalog(env, new Response(nf.body, { status: 404, headers: nf.headers }));
-      }
-      return await withCatalog(env, r);
+      const af = p.match(/^\/assets\/([\w.-]+\.(?:webp|jpg|png))$/);
+      if (af && (await imageOverrides(env)).has(af[1])) return (await serveImageFile(env, af[1])) || env.ASSETS.fetch(req);
+      // Pages carry live data, so never answer them with "not modified" from the static file's ETag.
+      const isFile = /\.(webp|jpg|png|svg|ico|woff2|js|css|json|txt|xml)$/.test(p);
+      const h0 = new Headers(req.headers); if (!isFile) { h0.delete('if-none-match'); h0.delete('if-modified-since'); }
+      const r = await env.ASSETS.fetch(isFile ? req : new Request(req.url, { method: req.method, headers: h0 }));
+      if (r.status === 404) return notFound();
+      return await withCatalog(env, r, fp);
     } catch (e) {
       console.error(e);
       return p.startsWith('/api/') ? fail('server_error', 500) : new Response('Server error', { status: 500 });
