@@ -1,0 +1,19 @@
+# Staging: the whole prototype + API on one workers.dev address (nothing touches www.massandgrass.com).
+name = "mass-grass-staging"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+
+[assets]
+directory = "../prototype"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+[vars]
+MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mass-grass"
+database_id = "38928e20-44ec-4df9-9522-ed2180a2dcef"
+migrations_dir = "migrations"

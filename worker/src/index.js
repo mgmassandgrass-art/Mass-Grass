@@ -227,8 +227,9 @@ async function googleCallback(env, req, url) {
 
 // ---------- router ----------
 export default {
-  async fetch(req, env) {
+  async fetch(req, env0) {
     const url = new URL(req.url);
+    const env = { ...env0, SITE_ORIGIN: url.origin }; // same origin as the page: production host or the staging workers.dev host
     const p = url.pathname.replace(/\/+$/, '');
     try {
       // CSRF: state-changing requests must come from our own origin.
