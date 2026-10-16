@@ -763,7 +763,7 @@ addEventListener('scroll',()=>{const y=scrollY;if(y!==lastY)sDir=y>lastY?1:-1;la
   sT=setTimeout(()=>{const y=scrollY,P=POST();if(tw||y<=1||y>=P-2)return;sDir>0?toPost():toTop()},140)},{passive:true});
 /* ---- rise into place on scroll ---- */
 const popIO='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('on');popIO.unobserve(en.target)}}),{rootMargin:'0px 0px -8% 0px'}):null;
-function popAll(){document.querySelectorAll('.shead,.sheet,.bcard,.pcol,.ptext,.fgrid>div,.legal').forEach(e=>{if(e.classList.contains('pop'))return;e.classList.add('pop');
+function popAll(){document.querySelectorAll('.shead,.sheet,.bcard,.pcol,.ptext,.fgrid>div').forEach(e=>{if(e.classList.contains('pop'))return;e.classList.add('pop');
   e.style.setProperty('--d',[...e.parentNode.children].indexOf(e)%6);popIO?popIO.observe(e):e.classList.add('on')})}
 
 /* ---- the blue bird: a guide that flies to every section ---- */
