@@ -211,7 +211,7 @@ $('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}cat
 
 
 let U=MGUser.get();if(!U){location.replace('account.html?next=profile.html')}
-MGUser.ready.then(()=>{if(!MGUser.get())location.replace('account.html?next=profile.html')});
+MGUser.ready.then(()=>{if(!MGUser.get())return location.replace('account.html?next=profile.html');U=Object.assign(U||{},MGUser.get());render()});
 let tab=location.hash.slice(1)||'files';
 const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بوست كارد · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ستكرات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
 const src=x=>x.img||(x.k?`assets/${x.k}.webp`:'assets/hero.webp');

@@ -361,7 +361,7 @@ function peel(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleR
 let bagN=window.MGBag?MGBag.count():0;function addBag(it){bagN=window.MGBag?MGBag.add(it):bagN+1;const b=$('#bagn');if(b){b.textContent=ard(bagN);$('#bag').animate([{transform:'scale(1.25) rotate(-6deg)'},{transform:'none'}],{duration:350})}slap()}
 
 /* ---- the paintings: [key, EN, AR, place EN, place AR, map pin, width/height, has a larger jpg, new] ---- */
-const PT=[
+const PT=(window.MGK||((k,d)=>d))('painting',[
  ['hero','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي','mawasi',1.454,0,1],
  ['sparklers','Sparkler Night','ليلة الشماريخ','Gaza City','مدينة غزة','gaza',.723,1,1],
  ['dovegirl','Dove Girl','فتاة الحمام','Deir al-Balah','دير البلح','deir',1.33,1,0],
@@ -381,7 +381,7 @@ const PT=[
  ['ptree','Little Tree','شجرة صغيرة','Gaza','غزة',null,.66,0,0],
  ['pflower','Big Flower','الزهرة الكبيرة','Gaza','غزة',null,1.319,0,0],
  ['pmoonsleep','Moon Sleeper','نائمة على القمر','Gaza','غزة',null,.811,0,0],
- ['psea','Sea & Clouds','بحر وغيوم','Gaza','غزة',null,.923,0,0]];
+ ['psea','Sea & Clouds','بحر وغيوم','Gaza','غزة',null,.923,0,0]],p=>[p.id,p.title_en,p.title_ar,p.place_en,p.place_ar,p.extra.map||'gaza',p.extra.ratio||1,p.big?1:0,p.is_new?1:0]);
 const STK=['hero','s-dove','sparklers','guitar','pmoon','dovegirl','seafish','house','boattop','waves','psea','blueflowers','pflower','ppoppies','alley','pcartgirl','pmoonsleep','pelephant','ptree'];
 const small=k=>`assets/${k}.webp`,large=p=>p[7]?`assets/${p[0]}.jpg`:`assets/${p[0]}.webp`;
 /* a watercolour sheet's torn edge, different for each painting */

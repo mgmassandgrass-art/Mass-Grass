@@ -163,3 +163,15 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 2. Fill real contact details (WhatsApp, Instagram, e-mail) in `content/site.json`.
 3. Replace sample art with real scans; write the story section on the home page.
 5. Connect www.massandgrass.com to the Pages project, then build the content panel.
+
+## New shop (Oct 2026): prototype v38 + Worker backend
+
+- `prototype/` is the live site on www.massandgrass.com, served by the Worker `mass-grass` (`worker/`, static assets +
+  API, D1 database `mass-grass`). The old Pages site is untouched; deleting the route `www.massandgrass.com/*` brings it back.
+- The Worker injects `window.MGCAT` (products, prices, rates, links from D1) into every HTML page; page arrays are wrapped
+  in `MGK(kind, defaults, mapper)` so the admin's products replace the hardcoded ones.
+- Admin panel: `/admin/` (only `info@massandgrass.com` with role admin; everyone else gets a redirect / 404).
+  Reset its password with `node worker/tools/make-admin.mjs` and run the SQL with `wrangler d1 execute --remote`.
+- Checkout: `/api/orders` prices every line on the server; PayPal (redirect flow) switches on once the
+  `PAYPAL_CLIENT_ID` / `PAYPAL_SECRET` secrets exist (`PAYPAL_ENV=live` for real money). Until then checkout says payments open soon.
+- Staging copy: https://mass-grass-staging.mg-massandgrass.workers.dev (same database).

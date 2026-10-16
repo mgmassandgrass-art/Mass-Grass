@@ -198,7 +198,7 @@ function render(){
       <button class="btn pay" type="submit" id="go">${t('Pay','ادفع')} €${ard(tot)} <em>${t('with PayPal or card','بباي بال أو بطاقة')}</em></button>
       <div class="ways"><span>PayPal</span><span>Visa</span><span>Mastercard</span><span>Apple Pay</span><span>Google Pay</span></div>
       <span class="err" id="err" role="alert"></span>
-      <p class="note">${t('Payment is handled by PayPal; we never see your card. Prototype: no money is taken yet.','الدفع عن طريق باي بال، وإحنا ما بنشوف بطاقتك. نموذج تجريبي: ما في دفع حقيقي لهلأ.')}</p>
+      <p class="note">${t('Payment is handled by PayPal; we never see your card.','الدفع عن طريق باي بال، وإحنا ما بنشوف بطاقتك.')}</p>
     </div>
   </form>
   <aside class="box sum"><h2>${t('Your bag','سلتك')} <b>${ard(n)}</b></h2>
@@ -213,14 +213,24 @@ function render(){
   document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{B.remove(+b.dataset.rm);render()});
   f.onsubmit=async e=>{e.preventDefault();const em=$('#em').value.trim();
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){$('#em').classList.add('bad');$('#em').focus();$('#err').textContent=t('We need your email to send the files.','بدنا إيميلك عشان نبعتلك الملفات.');return}
-    const go=$('#go');go.disabled=true;go.innerHTML=t('Sealing…','عم نختمها…');await new Promise(r=>setTimeout(r,900));done(em)};
+    const go=$('#go');go.disabled=true;go.innerHTML=t('Sealing…','عم نختمها…');
+    const r=await MGUser.api('POST','/api/orders',{email:em,name:$('#nm').value.trim(),news:form.news,items:B.get()});
+    const fail=m=>{go.disabled=false;go.innerHTML=t('Pay','ادفع');$('#err').textContent=m};
+    if(r.ok&&r.data.approve){try{sessionStorage.mgPending=JSON.stringify({id:r.data.id,em})}catch(e){}location.href=r.data.approve;return}
+    if(r.ok&&r.data.payments==='off')return fail(t('Card and PayPal payments open very soon. Nothing was charged.','الدفع بالبطاقة وباي بال بيفتح قريبًا جدًا. ما انخصم اشي.'));
+    if(r.data&&r.data.error==='item_unavailable')return fail(t('One of the pieces in your bag is no longer for sale. Remove it and try again.','في قطعة بالسلة ما عادت للبيع. شيلها وجرّب مرة ثانية.'));
+    fail(t('Something went wrong. Please try again.','صار خطأ. جرّب مرة ثانية.'))};
 }
 
-function done(em){
-  const a=B.get(),tot=B.total(),no='MG-'+Math.floor(1000+Math.random()*9000),d=new Date(),dd=`${String(d.getDate()).padStart(2,'0')}·${String(d.getMonth()+1).padStart(2,'0')}·${String(d.getFullYear()).slice(2)}`;
-  try{sessionStorage.mgLast=JSON.stringify({a,em,no,tot,dd})}catch(e){}
-  if(window.MGUser)MGUser.addOrder({no,em,tot,date:new Date().toISOString(),items:a});
-  B.clear();showDone({a,em,no,tot,dd})}
+function done(o){
+  const d=new Date(o.date),dd=`${String(d.getDate()).padStart(2,'0')}·${String(d.getMonth()+1).padStart(2,'0')}·${String(d.getFullYear()).slice(2)}`;
+  const a=o.items.map(i=>Object.assign({p:i.cents/100},i));
+  const D={a,em:o.email,no:o.id,tot:o.total,dd};try{sessionStorage.mgLast=JSON.stringify(D)}catch(e){}B.clear();if(window.MGUser)MGUser.sync();showDone(D)}
+(async()=>{const q=new URLSearchParams(location.search);
+  if(q.get('order')){$('#wrap').innerHTML=`<div class="box empty" style="grid-column:1/-1"><p>${t('Confirming your payment…','عم نأكد الدفع…')}</p></div>`;
+    const r=await MGUser.api('POST','/api/orders/'+encodeURIComponent(q.get('order'))+'/capture');history.replaceState(null,'','checkout.html');
+    if(r.ok)return done(r.data.order);render();$('#err')&&($('#err').textContent=t('The payment was not completed. Nothing was charged.','الدفع ما كمل. ما انخصم اشي.'))}
+  else if(q.get('cancelled')){history.replaceState(null,'','checkout.html');setTimeout(()=>{$('#err')&&($('#err').textContent=t('Payment cancelled. Your bag is still here.','انلغى الدفع. سلتك لسا هون.'))},50)}})();
 function showDone(o){
   $('#pay').hidden=true;const D=$('#done');D.classList.add('on');
   D.innerHTML=`<div class="top"><div class="pmk">GAZA<br>${o.dd}<br>${o.no}</div>
@@ -228,7 +238,7 @@ function showDone(o){
     <p class="lead">${t(`Thank you. Your files are below, and a copy is on its way to ${esc(o.em)}.`,`شكرًا إلك. ملفاتك تحت، ونسخة منها في طريقها لـ${esc(o.em)}.`)}</p></div></div>
     <div class="dl">${o.a.map(x=>`<div class="row"><span class="th"><img src="${esc(src(x))}" alt=""></span><div><h3 style="font:18px/1.05 var(--en);text-transform:uppercase">${esc(nm(x))}</h3><small class="note">${esc(kd(x))}${x.gift?' · '+t('sent to ','انبعتت لـ')+esc(x.gift.to):''}</small></div>
       <div class="b">${x.gift?`<span class="note">✉ ${t('On its way','في الطريق')}</span>`:(x.kind==='sticker'?`<button class="btn alt" data-dl>PNG</button><button class="btn alt" data-dl>WhatsApp</button>`:`<button class="btn alt" data-dl>PDF</button><button class="btn alt" data-dl>PNG</button>`)}</div></div>`).join('')}</div>
-    <p class="note" style="margin-top:12px">${t('Prototype: the download buttons go live with the real shop.','نموذج تجريبي: أزرار التحميل بتشتغل لما يفتح المتجر الحقيقي.')}</p>
+    <p class="note" style="margin-top:12px">${t('Your files will reach your email and your profile shortly.','ملفاتك رح توصل على إيميلك وبروفايلك قريبًا.')}</p>
     <div class="next"><a class="btn terra" href="postcards.html#write">${t('Send a free postcard','ابعت بوست كارد ببلاش')} ✉</a><a class="btn alt" href="shop.html">${t('Back to the shop','رجوع للمتجر')}</a></div>`;
   D.querySelectorAll('[data-dl]').forEach(b=>b.onclick=()=>{b.textContent='✓';b.disabled=true});
   scrollTo(0,0)}

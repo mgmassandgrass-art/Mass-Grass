@@ -7,9 +7,10 @@ workers_dev = true
 [assets]
 directory = "../prototype"
 binding = "ASSETS"
-run_worker_first = ["/api/*"]
+run_worker_first = ["/*", "!/fonts/*"]
 
 [vars]
+ADMIN_EMAIL = "info@massandgrass.com"
 MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
 
 [[d1_databases]]

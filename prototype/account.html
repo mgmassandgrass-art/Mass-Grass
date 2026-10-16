@@ -183,7 +183,7 @@ function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body
 $('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}catch(e){}};
 
 
-const q=new URLSearchParams(location.search),next=q.get('next')||'profile.html';
+const q=new URLSearchParams(location.search),next=/^([a-z0-9_-]+\.html([?#][\w=&.%#-]*)?|admin\/)$/i.test(q.get('next')||'')?q.get('next'):'profile.html';
 MGUser.ready.then(()=>{if(MGUser.get())location.replace(next)});
 const ERR={email_invalid:['That email doesn’t look right.','الإيميل مش مزبوط.'],name_required:['Tell us your name.','اكتب اسمك.'],password_short:['Use 8 characters or more for the password.','كلمة السر لازم تكون ٨ أحرف أو أكثر.'],email_taken:['There is already an account with this email. Sign in instead.','في حساب على هالإيميل. ادخل منه.'],bad_credentials:['Email or password is wrong.','الإيميل أو كلمة السر غلط.'],rate_limited:['Too many tries. Please wait a little.','محاولات كتير. استنى شوي.'],token_invalid:['This link has expired. Ask for a new one.','الرابط انتهت صلاحيته. اطلب رابط جديد.'],google_not_configured:['Google sign-in is not ready yet.','الدخول بجوجل مش جاهز بعد.'],state:['Sign-in was interrupted. Try again.','انقطع الدخول. جرّب مرة ثانية.'],google:['Google sign-in failed. Try again.','فشل الدخول بجوجل. جرّب مرة ثانية.'],cancelled:['Sign-in was cancelled.','انلغى الدخول.'],offline:['The server is not connected yet.','السيرفر مش متصل بعد.']};
 const errMsg=c=>{const m=ERR[c]||ERR.offline;return t(m[0],m[1])};

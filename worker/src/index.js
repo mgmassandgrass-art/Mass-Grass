@@ -1,4 +1,7 @@
 // Mass & Grass API: accounts and sign-in (step 1). Orders, PayPal and files come next.
+import { json, fail, readJson, clean } from './util.js';
+import { catalog, createOrder, captureOrder, myOrders, serveImage, admin } from './shop.js';
+
 const enc = new TextEncoder();
 const PBKDF2_ITER = 100000; // Workers' maximum for PBKDF2
 const SESSION_DAYS = 30;
@@ -21,10 +24,6 @@ function same(a, b) {
   for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return d === 0;
 }
-
-const json = (data, status = 200, headers = {}) =>
-  new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store', ...headers } });
-const fail = (code, status = 400, extra = {}) => json({ error: code, ...extra }, status);
 
 function cookies(req) {
   const out = {};
@@ -78,13 +77,7 @@ async function sendMail(env, to, subject, html) {
   return r.ok;
 }
 
-async function readJson(req) {
-  if (!(req.headers.get('content-type') || '').includes('application/json')) return null;
-  try { return await req.json(); } catch { return null; }
-}
-
-const clean = (s, n) => String(s ?? '').replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, n);
-const safeNext = (n) => (typeof n === 'string' && /^[a-z0-9_-]+\.html(\?[\w=&.%-]*)?$/i.test(n) ? n : 'profile.html');
+const safeNext = (n) => (typeof n === 'string' && /^([a-z0-9_-]+\.html(\?[\w=&.%-]*)?|admin\/)$/i.test(n) ? n : 'profile.html');
 
 // ---------- handlers ----------
 async function signup(env, req) {
@@ -95,6 +88,7 @@ async function signup(env, req) {
   if (!EMAIL.test(email)) return fail('email_invalid');
   if (!name) return fail('name_required');
   if (pw.length < 8 || pw.length > 200) return fail('password_short');
+  if (email === (env.ADMIN_EMAIL || '').toLowerCase()) return fail('email_taken', 409);
   if (await env.DB.prepare('SELECT 1 FROM users WHERE email=?').bind(email).first()) return fail('email_taken', 409);
   const id = crypto.randomUUID(), salt = rand(16);
   await env.DB.prepare('INSERT INTO users(id,email,name,pw_hash,pw_salt,pw_iter,created_at) VALUES(?,?,?,?,?,?,?)')
@@ -179,6 +173,20 @@ async function reset(env, req) {
   return json({ ok: true });
 }
 
+async function changePassword(env, req, u) {
+  if (!(await limit(env, req, 'pw', 10, 3600))) return fail('rate_limited', 429);
+  const b = await readJson(req);
+  const old = String(b?.old ?? ''), pw = String(b?.password ?? '');
+  if (pw.length < 10 || pw.length > 200) return fail('password_short');
+  if (u.pw_hash && !same(await hashPw(old.slice(0, 200), unb64(u.pw_salt), u.pw_iter), u.pw_hash)) return fail('bad_credentials', 401);
+  const salt = rand(16), t = cookies(req)[COOKIE];
+  await env.DB.batch([
+    env.DB.prepare('UPDATE users SET pw_hash=?, pw_salt=?, pw_iter=? WHERE id=?').bind(await hashPw(pw, salt), b64(salt), PBKDF2_ITER, u.id),
+    env.DB.prepare('DELETE FROM sessions WHERE user_id=? AND token_hash<>?').bind(u.id, await sha256(t || '')),
+  ]);
+  return json({ ok: true });
+}
+
 // ---------- Google OAuth (authorization code flow) ----------
 async function googleStart(env, req, url) {
   if (!env.GOOGLE_CLIENT_ID) return fail('google_not_configured', 503);
@@ -226,36 +234,79 @@ async function googleCallback(env, req, url) {
 }
 
 // ---------- router ----------
+const isAdmin = (env, u) => !!u && u.role === 'admin' && u.email === (env.ADMIN_EMAIL || '').toLowerCase();
+
+// Put the live catalog into every page so the page scripts read it synchronously.
+async function withCatalog(env, res) {
+  if (!(res.headers.get('content-type') || '').includes('text/html')) return res;
+  const cat = await catalog(env);
+  const data = JSON.stringify(cat).replace(/</g, '\\u003c');
+  const js = `window.MGCAT=${data};window.MGK=function(k,d,m,f){var c=(window.MGCAT.products||[]).filter(function(p){return p.kind===k&&(!f||f(p))});return c.length?c.map(m):d};`;
+  const out = new HTMLRewriter().on('head', { element(e) { e.prepend(`<script>${js}</script>`, { html: true }); } }).transform(res);
+  const h = new Headers(out.headers); h.set('cache-control', 'no-cache');
+  return new Response(out.body, { status: out.status, headers: h });
+}
+
+async function api(req, env, url, p) {
+  // CSRF: state-changing requests must come from our own origin.
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    const o = req.headers.get('origin');
+    if (!o || (o !== env.SITE_ORIGIN && !/^https?:\/\/localhost(:\d+)?$/.test(o))) return fail('forbidden', 403);
+  }
+  if (p === '/api/signup' && req.method === 'POST') return signup(env, req);
+  if (p === '/api/login' && req.method === 'POST') return login(env, req);
+  if (p === '/api/logout' && req.method === 'POST') return logout(env, req);
+  if (p === '/api/forgot' && req.method === 'POST') return forgot(env, req);
+  if (p === '/api/reset' && req.method === 'POST') return reset(env, req);
+  if (p === '/api/auth/google' && req.method === 'GET') return googleStart(env, req, url);
+  if (p === '/api/auth/google/callback' && req.method === 'GET') return googleCallback(env, req, url);
+  if (p === '/api/me' && req.method === 'GET') return me(env, req);
+  if (p === '/api/catalog' && req.method === 'GET') return json(await catalog(env));
+  const u = await currentUser(env, req);
+  if (p === '/api/orders' && req.method === 'POST') {
+    if (!(await limit(env, req, 'order', 30, 3600))) return fail('rate_limited', 429);
+    return createOrder(env, req, u);
+  }
+  const cap = p.match(/^\/api\/orders\/(MG-[A-F0-9]{8})\/capture$/);
+  if (cap && req.method === 'POST') return captureOrder(env, cap[1]);
+  if (p.startsWith('/api/admin/')) return isAdmin(env, u) ? admin(env, req, url, p) : fail('not_found', 404);
+  if (!u) return fail('unauthorized', 401);
+  if (p === '/api/me/export' && req.method === 'GET') return exportMe(env, req, u);
+  if (p === '/api/me/orders' && req.method === 'GET') return myOrders(env, u);
+  if (p === '/api/me/password' && req.method === 'POST') return changePassword(env, req, u);
+  if (p === '/api/me' && req.method === 'PATCH') return updateMe(env, req, u);
+  if (p === '/api/me' && req.method === 'DELETE') return u.role === 'admin' ? fail('cannot_delete_admin') : deleteMe(env, req, u);
+  return fail('not_found', 404);
+}
+
 export default {
   async fetch(req, env0) {
     const url = new URL(req.url);
     const env = { ...env0, SITE_ORIGIN: url.origin }; // same origin as the page: production host or the staging workers.dev host
-    const p = url.pathname.replace(/\/+$/, '');
+    const p = url.pathname.replace(/\/+$/, '') || '/';
     try {
-      // CSRF: state-changing requests must come from our own origin.
-      if (req.method !== 'GET' && req.method !== 'HEAD') {
-        const o = req.headers.get('origin');
-        if (!o || (o !== env.SITE_ORIGIN && !/^https?:\/\/localhost(:\d+)?$/.test(o))) return fail('forbidden', 403);
-      }
-      if (p === '/api/signup' && req.method === 'POST') return await signup(env, req);
-      if (p === '/api/login' && req.method === 'POST') return await login(env, req);
-      if (p === '/api/logout' && req.method === 'POST') return await logout(env, req);
-      if (p === '/api/forgot' && req.method === 'POST') return await forgot(env, req);
-      if (p === '/api/reset' && req.method === 'POST') return await reset(env, req);
-      if (p === '/api/auth/google' && req.method === 'GET') return await googleStart(env, req, url);
-      if (p === '/api/auth/google/callback' && req.method === 'GET') return await googleCallback(env, req, url);
-      if (p === '/api/me' && req.method === 'GET') return await me(env, req);
-      if (p === '/api/me' || p === '/api/me/export') {
+      if (p.startsWith('/api/')) return await api(req, env, url, p);
+      if (p === '/admin' || p.startsWith('/admin/')) {
         const u = await currentUser(env, req);
-        if (!u) return fail('unauthorized', 401);
-        if (p === '/api/me/export' && req.method === 'GET') return await exportMe(env, req, u);
-        if (req.method === 'PATCH') return await updateMe(env, req, u);
-        if (req.method === 'DELETE') return await deleteMe(env, req, u);
+        if (!isAdmin(env, u)) {
+          if (p === '/admin' || p === '/admin/index.html') return Response.redirect(`${url.origin}/account.html?next=admin/`, 302);
+          return env.ASSETS.fetch(new Request(`${url.origin}/404.html`)).then((r) => new Response(r.body, { status: 404, headers: r.headers }));
+        }
+        const r = await env.ASSETS.fetch(req);
+        const h = new Headers(r.headers); h.set('cache-control', 'no-store'); h.set('x-robots-tag', 'noindex');
+        return new Response(r.body, { status: r.status, headers: h });
       }
-      return fail('not_found', 404);
+      const img = p.match(/^\/assets\/(u-[a-z0-9-]{2,37})\.webp$/);
+      if (img) return (await serveImage(env, img[1])) || new Response('Not found', { status: 404 });
+      const r = await env.ASSETS.fetch(req);
+      if (r.status === 404) {
+        const nf = await env.ASSETS.fetch(new Request(`${url.origin}/404.html`));
+        return withCatalog(env, new Response(nf.body, { status: 404, headers: nf.headers }));
+      }
+      return await withCatalog(env, r);
     } catch (e) {
       console.error(e);
-      return fail('server_error', 500);
+      return p.startsWith('/api/') ? fail('server_error', 500) : new Response('Server error', { status: 500 });
     }
   },
 };

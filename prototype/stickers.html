@@ -475,7 +475,7 @@ let AR=false;const t=(en,ar)=>AR?ar:en;
 const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
 
 /* ---- the stickers: [key, cut, EN, AR, place EN, place AR] ---- */
-const S=[
+const S=(window.MGK||((k,d)=>d))('sticker',[
  ['s-lemons','die','Lemons','ليمون','Deir al-Balah','دير البلح'],
  ['hero','rect','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي'],
  ['s-dove','die','Blue Dove','الحمامة الزرقاء','Beit Lahia','بيت لاهيا'],
@@ -498,7 +498,7 @@ const S=[
  ['pcartgirl','round','Girl with Cart','فتاة والعربة','Gaza','غزة'],
  ['pmoonsleep','round','Moon Sleeper','نائمة على القمر','Gaza','غزة'],
  ['pelephant','rect','Elephant on a Bike','فيل على دراجة','Gaza','غزة'],
- ['ptree','round','Little Tree','شجرة صغيرة','Gaza','غزة']];
+ ['ptree','round','Little Tree','شجرة صغيرة','Gaza','غزة']],p=>[p.id,p.extra.shape||'die',p.title_en,p.title_ar,p.place_en,p.place_ar]);
 const BY=Object.fromEntries(S.map(s=>[s[0],s]));
 const src=k=>`assets/${k}.webp`;
 const stk=(k,alt)=>{const s=BY[k],a=alt??'';return s[1]==='die'?`<div class="stk die"><img src="${src(k)}" alt="${a}" draggable="false" loading="lazy"></div>`:`<div class="stk ${s[1]}"><i><img src="${src(k)}" alt="${a}" draggable="false" loading="lazy"></i></div>`};

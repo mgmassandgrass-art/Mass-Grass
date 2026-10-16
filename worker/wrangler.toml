@@ -11,9 +11,10 @@ routes = [
 [assets]
 directory = "../prototype"
 binding = "ASSETS"
-run_worker_first = ["/api/*"]
+run_worker_first = ["/*", "!/fonts/*"]
 
 [vars]
+ADMIN_EMAIL = "info@massandgrass.com"
 SITE_ORIGIN = "https://www.massandgrass.com"
 MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
 

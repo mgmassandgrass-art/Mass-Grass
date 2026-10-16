@@ -232,6 +232,15 @@ const FORMS={painting:[['file','High-res file · PDF + PNG','ملف عالي ا�
   calendar:[['cal','Calendar PDF · A3 + A4','تقويم PDF · A3 + A4',8]],
   archive:[['arc','Past edition · archive','نسخة سابقة · أرشيف',0]],
   apparel:[['tee','Tee','بلوزة',0],['tote','Tote bag','شنطة',0],['mug','Mug','مج',0]]};
+const FBASE=JSON.parse(JSON.stringify(FORMS));
+/* live prices from the admin (window.MGCAT is put into the page by the server) */
+function applyPrices(P){const c=window.MGCAT||{},pr=c.prices||{};
+  Object.keys(FORMS).forEach(k=>FORMS[k].forEach((f,i)=>f[3]=FBASE[k][i][3]));
+  if(pr.painting!=null)FORMS.painting[0][3]=pr.painting;if(pr.postcard!=null)FORMS.postcard[0][3]=pr.postcard;
+  if(pr.sticker!=null)FORMS.sticker[0][3]=pr.sticker;if(pr.pack!=null)FORMS.sticker[1][3]=pr.pack;if(pr.calendar!=null)FORMS.calendar[0][3]=pr.calendar;
+  const p=P&&(c.products||[]).find(x=>x.id===P.key&&x.kind===P.kind);
+  if(p&&FORMS[P.kind]){const base=p.price!=null?p.price:FORMS[P.kind][0][3];FORMS[P.kind][0][3]=Math.round(base*(100-(p.sale||0)))/100}}
+applyPrices();
 const VIEWSK={painting:[['art','The painting','اللوحة'],['frame','Framed','بإطار']],
   postcard:[['art','The card','البطاقة'],['pc','Front & back','وجه وظهر']],
   sticker:[['stk','The sticker','الستكر'],['lap','On a laptop','عاللابتوب']],
@@ -251,7 +260,7 @@ function wallTone(key,src){if(WB[key])return;const im=new Image();im.onload=()=>
   for(let i=0;i<d.length;i+=4){const r=d[i]/255,g=d[i+1]/255,b=d[i+2]/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,dd=mx-mn;if(dd<.06)continue;const s=dd/(1-Math.abs(2*l-1));let h=mx===r?((g-b)/dd)%6:mx===g?(b-r)/dd+2:(r-g)/dd+4;h*=60;if(h<0)h+=360;const w=s*(1-Math.abs(2*l-1)),k=Math.floor(h/30)%12;bins[k]+=w;hs[k]+=h*w;hc[k]+=s*w}
   let k=0;bins.forEach((v,j)=>{if(v>bins[k])k=j});if(!bins[k]){WB[key]='#ECE8E2';return}const H=hs[k]/bins[k],S=Math.min(.55,hc[k]/bins[k]);
   WB[key]=`hsl(${Math.round(H)} ${Math.round(18+S*40)}% 82%)`;document.querySelectorAll('.mk-frame').forEach(e=>e.style.setProperty('--wb',WB[key]))}catch(e){}};im.src=src}
-function open(p){P=Object.assign({kind:'painting',place:'Gaza',placeAr:'غزة'},p);if(P.kind==='calendar'&&!P.key)P.key=(P.months||['hero'])[0];wallTone(p.key,img(p.key));view=0;form=Math.max(0,(FORMS[P.kind]||FORMS.painting).findIndex(f=>f[0]===P.form));render();const d=ensureDlg();if(!d.open)d.showModal();try{(window.peel||(()=>{}))()}catch(e){}}
+function open(p){P=Object.assign({kind:'painting',place:'Gaza',placeAr:'غزة'},p);applyPrices(P);if(P.kind==='calendar'&&!P.key)P.key=(P.months||['hero'])[0];wallTone(p.key,img(p.key));view=0;form=Math.max(0,(FORMS[P.kind]||FORMS.painting).findIndex(f=>f[0]===P.form));render();const d=ensureDlg();if(!d.open)d.showModal();try{(window.peel||(()=>{}))()}catch(e){}}
 const isCal=()=>P.kind==='calendar';
 const views=()=>VIEWSK[P.kind]||VIEWSK.painting;
 function mock(id){const s=img(P.key),wb=`--wb:${WB[P.key]||'#ECE8E2'}`,sh=P.shape||'rect';
@@ -352,9 +361,10 @@ const USER={get(){return LS.get('mgUser',null)},
   async api(method,path,body){try{const r=await fetch(path,{method,credentials:'same-origin',headers:body?{'content-type':'application/json'}:{},body:body?JSON.stringify(body):undefined});
     const ct=r.headers.get('content-type')||'';if(!ct.includes('json'))return {ok:false,status:r.status,offline:true,data:null};return {ok:r.ok,status:r.status,data:await r.json()}}catch(e){return {ok:false,status:0,offline:true,data:null}}},
   async sync(){const r=await this.api('GET','/api/me');if(r.offline)return;const cur=LS.get('mgUser',null),u=r.data&&r.data.user;
-    if(!u){if(cur)LS.set('mgUser',null)}else LS.set('mgUser',Object.assign({},cur&&cur.email===u.email?cur:{},u));paintAcct()},
+    if(!u){if(cur)LS.set('mgUser',null);LS.set('mgOrders',[])}else{LS.set('mgUser',Object.assign({},cur&&cur.email===u.email?cur:{},u));
+      const o=await this.api('GET','/api/me/orders');if(o.ok)LS.set('mgOrders',o.data.orders.map(x=>({no:x.id,em:u.email,tot:x.total,date:x.date,items:x.items.map(i=>Object.assign({p:i.cents/100},i))})))}paintAcct()},
   orders(){const u=this.get();return LS.get('mgOrders',[]).filter(o=>!u||o.em===u.email)},
-  addOrder(o){const a=LS.get('mgOrders',[]);a.unshift(o);LS.set('mgOrders',a)}};
+  addOrder(){}};
 window.MGUser=USER;USER.ready=USER.sync();
 function paintAcct(){const u=USER.get();document.querySelectorAll('.mgacct').forEach(a=>{a.href=u?'profile.html':'account.html';a.setAttribute('aria-label',u?t('Your profile','بروفايلك'):t('Sign in','سجّل دخول'));
   a.innerHTML=u?(u.photo?`<img src="${u.photo}" alt="">`:`<b>${esc((u.name||u.email||'?').trim()[0].toUpperCase())}</b>`):'<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>'})}
@@ -366,7 +376,7 @@ new MutationObserver(paintAcct).observe(document.documentElement,{attributes:tru
 
 /* ---------- 7. local currency: prices are kept in euros and shown in the visitor's currency.
    Prototype: guessed from the time zone. Real site: Cloudflare's CF-IPCountry header, same price table. ---------- */
-const CUR={EUR:['€',1],USD:['$',1.08],GBP:['£',.85],ILS:['₪',4]};
+const CUR={EUR:['€',1],USD:['$',1.08],GBP:['£',.85],ILS:['₪',4]};try{const R=(window.MGCAT||{}).rates||{};Object.keys(R).forEach(k=>{if(CUR[k]&&R[k]>0)CUR[k][1]=R[k]})}catch(e){}
 function guessCur(){try{const z=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
   if(/^Asia\/(Gaza|Hebron|Jerusalem|Tel_Aviv)/.test(z))return 'ILS';if(/^Europe\/(London|Belfast|Guernsey|Jersey|Isle_of_Man)/.test(z))return 'GBP';
   if(/^Europe\//.test(z))return 'EUR';if(/^(America|Pacific\/Honolulu)/.test(z))return 'USD';return 'USD'}catch(e){return 'EUR'}}

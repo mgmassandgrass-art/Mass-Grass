@@ -431,12 +431,12 @@ function peel(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleR
 let bagN=window.MGBag?MGBag.count():0;function addBag(it){bagN=window.MGBag?MGBag.add(it):bagN+1;const b=$('#bagn');if(b){b.textContent=ard(bagN);$('#bag').animate([{transform:'scale(1.25) rotate(-6deg)'},{transform:'none'}],{duration:350})}slap()}
 
 /* ---- the cards: Postcards from Gaza [key, EN, AR, place EN, place AR] ---- */
-const PC=[
+const PC=(window.MGK||((k,d)=>d))('postcard',[
  ['hero','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي'],['blueflowers','White Dove','الحمامة البيضاء','Beit Lahia','بيت لاهيا'],['waves','The Waves','الموج','Gaza beach','بحر غزة'],
  ['boatman','The Boatman','الصياد','Gaza port','ميناء غزة'],['house','Home','البيت','Az-Zawayda','الزوايدة'],['ppoppies','Blue Poppies','شقائق زرقاء','Gaza','غزة'],
  ['dovegirl','Dove Girl','فتاة الحمام','Deir al-Balah','دير البلح'],['pcartgirl','Girl with Cart','فتاة والعربة','Gaza','غزة'],['pflower','Big Flower','الزهرة الكبيرة','Gaza','غزة'],
  ['hill','Hill & Boat','التلة والقارب','Khan Younis','خان يونس'],['boattop','The Boat','القارب','Gaza port','ميناء غزة'],['psea','Sea & Clouds','بحر وغيوم','Gaza','غزة'],
- ['alley','The Alley','الزقاق','Old City','البلدة القديمة'],['sparklers','Sparkler Night','ليلة الشماريخ','Gaza City','مدينة غزة'],['guitar','Guitar Girl','فتاة الجيتار','Tel al-Hawa','تل الهوا']];
+ ['alley','The Alley','الزقاق','Old City','البلدة القديمة'],['sparklers','Sparkler Night','ليلة الشماريخ','Gaza City','مدينة غزة'],['guitar','Guitar Girl','فتاة الجيتار','Tel al-Hawa','تل الهوا']],p=>[p.id,p.title_en,p.title_ar,p.place_en,p.place_ar]);
 const STAMPS=[['plemons','#D9A441'],['psea','#3f6b8a'],['pmoon','#2E3B4E'],['ptree','#66805A'],['pwhale','#C4593F'],['pflower','#8a5a3c']];
 const img=k=>`assets/${k}.webp`,isAr=s=>/[؀-ۿ]/.test(s||''),esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const today=()=>{const d=new Date();return `${String(d.getDate()).padStart(2,'0')}·${String(d.getMonth()+1).padStart(2,'0')}·${String(d.getFullYear()).slice(2)}`};
