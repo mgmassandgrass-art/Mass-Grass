@@ -157,7 +157,7 @@ section.pad{padding:clamp(70px,9vw,130px) var(--gut)}
   background:repeating-linear-gradient(90deg,transparent 0 calc(var(--ch)*.006),#8d8a85 calc(var(--ch)*.006) calc(var(--ch)*.009),#e8e6e2 calc(var(--ch)*.009) calc(var(--ch)*.012),#77736d calc(var(--ch)*.012) calc(var(--ch)*.0145),transparent calc(var(--ch)*.0145) calc(var(--ch)*.0242));
   -webkit-mask:linear-gradient(90deg,#000 0 44%,transparent 44% 56%,#000 56%);mask:linear-gradient(90deg,#000 0 44%,transparent 44% 56%,#000 56%);filter:drop-shadow(0 2px 1px rgba(0,0,0,.35))}
 .stack{position:absolute;inset:0;user-select:none;-webkit-user-select:none}
-.stack .page{transform-origin:50% 0;will-change:transform;cursor:grab;filter:drop-shadow(0 calc(var(--ch)*.012) calc(var(--ch)*.018) rgba(20,15,10,.22))}
+.stack .page{transform-origin:50% 0;will-change:transform;cursor:grab}
 .stack .page:active{cursor:grabbing}
 .stack .page.gone{visibility:hidden}
 .stack .page.torn{clip-path:var(--tear)}
@@ -309,6 +309,11 @@ dialog::backdrop{background:#1e1811d9;backdrop-filter:blur(3px)}
 @keyframes marq{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.marq div{animation:none}.bigm.in{animation:none}}
 
+/* one shadow for the whole stack instead of one filter per page (much cheaper while the weather canvas animates) */
+html[lang=ar] .blk img{right:auto;left:-6%;rotate:8deg}
+.blk img{width:44%}.blk span{max-width:min(22ch,56%)}
+@media(max-width:640px){.blk img{width:40%;bottom:-6%}.blk span{max-width:60%}}
+#stack{filter:drop-shadow(0 calc(var(--ch)*.012) calc(var(--ch)*.018) rgba(20,15,10,.22))}
 </style>
 </head>
 <body>
@@ -555,7 +560,8 @@ function chirp(){const c=AC();if(!c||performance.now()-lastChirp<2500)return;las
 const cv=$('#fx'),cx=cv.getContext('2d'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let W=0,H=0,dpr=1,P=[],wx={},layers={sun:0,wave:0,star:0},sunT=0,waveT=0,starT=0,poppies=[],stars=[],lastT=performance.now(),seen=true,birdAt=0;
 const BIRD=['bird0','bird1','bird2'].map(k=>{const i=new Image();i.src=`assets/${k}.webp`;return i});
-function sizeFx(){dpr=Math.min(2,devicePixelRatio||1);W=hang.clientWidth;H=hang.clientHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
+const COARSE=matchMedia('(pointer:coarse)').matches;
+function sizeFx(){dpr=Math.min(COARSE?1:1.5,devicePixelRatio||1);W=hang.clientWidth;H=hang.clientHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
   stars=Array.from({length:90},()=>({x:Math.random()*W,y:Math.random()*H*.7,r:Math.random()*1.6+.4,p:Math.random()*6}))}
 function setWeather(fx){wx=fx||{};sunT=wx.sun||0;waveT=wx.wave?1:0;starT=wx.star?1:0;
   poppies.forEach(p=>p.dead=true);
@@ -572,7 +578,7 @@ function spawn(dt){const k=dt/16.7;
   if(wx.spark&&R()<wx.spark*1.4*k)P.push({t:'sp',x:W*(.08+R()*.18),y:H*(.62+R()*.1),vx:(R()-.5)*2.4,vy:-(1+R()*2.2),life:1,a:1});
   if(wx.dust&&R()<wx.dust*.3*k)P.push({t:'gl',x:R()*W,y:R()*H,vy:-.15,r:1+R()*1.4,life:1,a:.5,dust:1});
   if(wx.bird&&performance.now()>birdAt){birdAt=performance.now()+3500+R()*5000/(wx.bird||1);const s=40+R()*30;P.push({t:'bird',x:-s,y:H*(.1+R()*.3),vx:2.2+R()*1.4,s,ph:R()*6,a:1});if(R()<.5)setTimeout(chirp,600)}
-  if(P.length>260)P.splice(0,P.length-260)}
+  const MAXP=COARSE?120:220;if(P.length>MAXP)P.splice(0,P.length-MAXP)}
 function leafPath(s,narrow){cx.beginPath();cx.moveTo(-s,0);cx.quadraticCurveTo(0,-s*(narrow?.28:.6),s,0);cx.quadraticCurveTo(0,s*(narrow?.28:.6),-s,0);cx.fill();cx.strokeStyle='rgba(0,0,0,.18)';cx.lineWidth=1;cx.beginPath();cx.moveTo(-s,0);cx.lineTo(s*.9,0);cx.stroke()}
 function frame(now){requestAnimationFrame(frame);const dt=Math.min(50,now-lastT);lastT=now;if(!seen||reduce||document.hidden)return;
   cx.clearRect(0,0,W,H);const k=dt/16.7;

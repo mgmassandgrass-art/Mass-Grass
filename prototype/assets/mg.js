@@ -416,7 +416,7 @@ document.readyState==='loading'?document.addEventListener('DOMContentLoaded',ini
 })();
 /* mobile hardening: no sideways scroll, 44px touch targets */
 (function(){const st=document.createElement('style');
-st.textContent='html,body{overflow-x:clip}@media(pointer:coarse){.mg-hit{position:relative}.mg-hit::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}}';
+st.textContent='html body{overflow-x:clip}@media(pointer:coarse){.mg-hit{position:relative}.mg-hit::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}}';
 document.head.appendChild(st);
 function hit(){if(!matchMedia('(pointer:coarse)').matches)return;document.querySelectorAll('a,button').forEach(e=>{const r=e.getBoundingClientRect();if(r.width&&(r.width<44||r.height<44)){if(getComputedStyle(e).position==='static'&&getComputedStyle(e,'::after').content==='none')e.classList.add('mg-hit')}})}
 addEventListener('load',()=>setTimeout(hit,600));})();
