@@ -426,3 +426,9 @@ st.textContent='footer h2{line-height:1.05;font-family:var(--en,Anton,Impact,san
 document.head.appendChild(st);
 function hit(){if(!matchMedia('(pointer:coarse)').matches)return;document.querySelectorAll('a,button').forEach(e=>{const r=e.getBoundingClientRect();if(r.width&&(r.width<44||r.height<44)){if(getComputedStyle(e).position==='static'&&getComputedStyle(e,'::after').content==='none')e.classList.add('mg-hit')}})}
 addEventListener('load',()=>setTimeout(hit,600));})();
+
+/* page title follows the language */
+(function(){const AR={shop:'المتجر',paintings:'اللوحات',postcards:'البوست كارد',stickers:'الستكرات',calendar:'التقويم',story:'حكاية فرح',help:'المساعدة والتواصل',terms:'الشروط والخصوصية',account:'حسابك',profile:'بروفايلك',checkout:'الدفع','404':'رسالة ضايعة'};
+  const k=(location.pathname.split('/').pop()||'index').replace(/\.html$/,'')||'index',en=document.title;
+  const set=()=>{document.title=document.documentElement.lang==='ar'&&AR[k]?AR[k]+' · Mass & Grass':en};set();
+  new MutationObserver(set).observe(document.documentElement,{attributes:true,attributeFilter:['lang']})})();
