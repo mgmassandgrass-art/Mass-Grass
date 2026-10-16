@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your profile · Mass &amp; Grass</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="assets/mg.js"></script>
+<style>
+:root{--gut:clamp(20px,5vw,80px);
+  --field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--sky:#3f6b8a;
+  --soft:#6f604d;--env:#FBF7EE;--sh:rgba(46,36,27,.25);
+  --en:'Anton',Impact,sans-serif;--ar:'Lalezar','IBM Plex Sans Arabic',sans-serif;
+  --body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--hand:'Caveat','Aref Ruqaa',cursive;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+.d{font-family:var(--en);text-transform:uppercase;letter-spacing:.01em;font-weight:400;line-height:.95}
+.ar-on .d{font-family:var(--ar)!important;letter-spacing:0!important}
+.ar-on [data-ar]{font-family:var(--body)}
+.ar-on .d[data-ar]{font-family:var(--ar)!important}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+header{direction:ltr}
+/* ---------- header ---------- */
+header{position:fixed;inset:0 0 auto;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:14px clamp(16px,3vw,34px);pointer-events:none}
+header>*{pointer-events:auto}
+.logo{width:58px;height:46px;background:var(--env);padding:6px 8px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);transform:rotate(-3deg);display:block}
+.logo img{width:100%;height:100%}
+nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
+nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
+nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+.ar-on nav a{font-family:var(--ar);font-size:16px}
+.tools{display:flex;gap:8px;justify-self:end}
+.chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
+.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
+.bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
+/* header scales with the screen instead of jumping at a breakpoint */
+header{gap:clamp(8px,1.4vw,14px);padding:clamp(10px,1.4vw,14px) var(--gut)}
+.logo{width:clamp(44px,1.4vw + 38px,58px);height:auto;aspect-ratio:58/46;padding:clamp(4px,.5vw,6px) clamp(5px,.7vw,8px)}
+nav{padding:clamp(3px,.4vw,5px);gap:clamp(2px,.3vw,4px)}
+nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp(7px,1vw,12px) clamp(5px,.5vw,7px)}
+.chip{height:clamp(32px,.6vw + 29.6px,38px);min-width:clamp(32px,.6vw + 29.6px,38px);padding:0 clamp(7px,.8vw,10px);font-size:clamp(12px,.1vw + 11.6px,13px)}
+.tools{gap:clamp(5px,.8vw,8px)}
+@media (max-width:420px){.bag span{display:none}}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper);padding:clamp(60px,8vw,100px) var(--gut) 30px;position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:-14px;height:16px;background:linear-gradient(-45deg,var(--ink) 8px,transparent 0),linear-gradient(45deg,var(--ink) 8px,transparent 0);background-size:16px 16px}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px}
+footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
+.news{display:flex;gap:0;max-width:440px;margin-top:10px}
+.news input{flex:1;min-width:0;border:2px solid var(--paper);background:transparent;color:var(--paper);padding:13px 14px;font:15px var(--body)}
+.news input::placeholder{color:#efe4cf99}
+.news button{border:2px solid var(--paper);background:var(--terra);color:#fff;padding:0 18px;font:17px/1 var(--en);text-transform:uppercase}
+.ar-on .news button{font-family:var(--ar)}
+footer ul{list-style:none;padding:0;display:grid;gap:8px}
+footer ul a{text-decoration:none;opacity:.85}
+footer ul a:hover{opacity:1;text-decoration:underline}
+footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
+.legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
+
+
+.kick{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);background:var(--paper);border:1.5px solid var(--ink);padding:6px 9px 5px;rotate:-2deg}
+.ar-on .kick{font-family:var(--body);letter-spacing:0;font-size:13px}
+.page{padding:clamp(100px,11vw,140px) var(--gut) clamp(60px,8vw,110px);min-height:70svh}
+.page h1{font-size:clamp(46px,6vw + 10px,110px);margin:14px 0 10px}
+.page h1 em{font-style:normal;color:var(--terra)}
+.lead{color:var(--soft);max-width:50ch;font-size:clamp(15px,.3vw + 14px,18px)}
+.box{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);padding:clamp(18px,2.6vw,32px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:13px 18px 11px;font:17px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;box-shadow:3px 3px 0 rgba(196,89,63,.45);text-decoration:none;transition:transform .15s}
+.btn:hover{transform:translate(-1px,-1px)}.btn.terra{background:var(--terra)}.btn.alt{background:var(--paper);color:var(--ink)}.btn.ochre{background:var(--ochre);color:var(--ink)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.ar-on .btn{font-family:var(--ar)}
+label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.ar-on label.f{font-family:var(--body);letter-spacing:0;font-size:13px}
+.f input,.f textarea,.f select{width:100%;border:2px solid var(--ink);background:#FFFDF8;padding:12px 14px;font:16px var(--body);color:var(--ink)}
+.f textarea{min-height:120px;resize:vertical}
+.f input:focus,.f textarea:focus,.f select:focus{outline:3px solid rgba(196,89,63,.4);outline-offset:1px}
+.f input.bad{border-color:var(--terra);background:#fff3ef}
+.note{font:12px/1.5 var(--mono);color:var(--soft)}
+.ar-on .note{font-family:var(--body);font-size:13px}
+.err{font:600 19px/1.15 var(--hand);color:var(--terra);min-height:1em;display:block}
+.ok{font:600 21px/1.2 var(--hand);color:var(--sage)}
+@media (max-width:640px){.btn{font-size:14.5px;padding:11px 14px 9px}}
+
+
+.me{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(16px,3vw,36px);align-items:center}
+.av{position:relative;width:clamp(96px,10vw,140px);aspect-ratio:1;border-radius:50%;background:var(--paper);border:3px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);overflow:hidden;display:grid;place-items:center;cursor:pointer}
+.av img{width:100%;height:100%;object-fit:cover}
+.av b{font:clamp(44px,5vw,64px)/1 var(--en);color:var(--terra)}
+.av span{position:absolute;inset:auto 0 0;background:rgba(46,36,27,.75);color:#fff;font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:6px 0 7px;text-align:center;opacity:0;transition:opacity .2s}
+.av:hover span,.av:focus-visible span{opacity:1}
+.me h1{font-size:clamp(36px,4vw + 12px,76px);margin:8px 0 4px}
+.me .meta{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font:600 11px var(--mono);letter-spacing:.06em;border:1.5px solid var(--ink);background:var(--paper);padding:4px 8px 3px}
+.tag.g{background:var(--sage);color:#fff;border-color:var(--sage)}
+.ar-on .tag{font-family:var(--body);letter-spacing:0}
+.ptabs{display:flex;gap:6px;flex-wrap:wrap;margin:clamp(28px,4vw,48px) 0 18px;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.ptabs button{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;border:1.5px solid var(--ink);background:var(--paper);padding:9px 12px 8px;cursor:pointer;display:flex;gap:7px;align-items:center}
+.ptabs button small{font:600 11px var(--mono);color:var(--terra)}
+.ptabs button[aria-selected=true]{background:var(--ink);color:var(--paper)}.ptabs button[aria-selected=true] small{color:var(--ochre)}
+.ar-on .ptabs button{font-family:var(--ar)}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:18px}
+.fi{background:#FFFDF8;border:1.5px solid var(--ink);padding:12px;display:grid;gap:10px}
+.fi .th{aspect-ratio:4/3;background:#fff;display:grid;place-items:center;padding:6px;box-shadow:inset 0 0 0 1px rgba(46,36,27,.12)}
+.fi .th{position:relative}.fi .th img{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:contain}
+.fi h3{font:18px/1.05 var(--en);text-transform:uppercase;font-weight:400}
+.ar-on .fi h3{font-family:var(--ar)}
+.fi .b{display:flex;gap:6px;flex-wrap:wrap}
+.mini{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1.5px solid var(--ink);background:var(--paper);padding:7px 9px 6px;cursor:pointer;box-shadow:1px 1px 0 var(--sh);text-decoration:none}
+.mini.t{background:var(--terra);color:#fff}
+.ord{display:grid;gap:12px}
+.ord .o{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:#FFFDF8;border:1.5px solid var(--ink);padding:12px 16px}
+.ord .o .pm{width:64px;aspect-ratio:1;border-radius:50%;border:2px solid rgba(43,58,85,.7);color:rgba(43,58,85,.85);display:grid;place-items:center;text-align:center;font:600 9px/1.3 var(--mono);rotate:-10deg}
+.ord .o b{font:22px/1 var(--en)}
+.ord .o .th{display:flex;gap:4px;margin-top:6px}
+.ord .o .th img{width:34px;height:34px;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.empty{text-align:center;padding:40px 10px;display:grid;gap:14px;justify-items:center}
+.empty p{font:600 26px/1.2 var(--hand);color:var(--soft)}
+.sub{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(20px,4vw,50px);align-items:center}
+.sub h2{font-size:clamp(34px,3vw + 14px,64px);margin:10px 0}
+.sub .price{font:clamp(48px,4vw + 20px,90px)/.9 var(--en);color:var(--terra)}
+.sub .price small{font:14px var(--mono);color:var(--soft);margin-inline-start:6px}
+.sub ul{list-style:none;padding:0;display:grid;gap:8px;margin:14px 0 18px}
+.sub li{display:flex;gap:10px;color:var(--soft)}.sub li::before{content:"✶";color:var(--terra)}
+.env{position:relative;aspect-ratio:1.45;background:#FBF7EE;box-shadow:4px 6px 0 var(--sh);border:1.5px solid rgba(46,36,27,.2);overflow:hidden}
+.env{border:12px solid transparent;border-image:repeating-linear-gradient(-45deg,#C4593F 0 12px,#FBF7EE 12px 24px,#3f6b8a 24px 36px,#FBF7EE 36px 48px) 12}
+.env .st{position:absolute;right:8%;top:12%;width:22%;aspect-ratio:.82;background:#fff center/cover;border:5px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3);rotate:4deg}
+.env .pm{position:absolute;right:24%;top:14%;width:22%;aspect-ratio:1;border-radius:50%;border:2px solid rgba(43,58,85,.6);color:rgba(43,58,85,.8);display:grid;place-items:center;text-align:center;font:600 10px/1.3 var(--mono);rotate:-14deg}
+.env p{position:absolute;left:10%;bottom:16%;font:600 clamp(20px,2vw,28px)/1.2 var(--hand);color:#2b3a55}
+.active{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 4px rgba(102,128,90,.25)}
+.months{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px;margin-top:22px}
+.months figure{margin:0;background:#fff;padding:6px;box-shadow:2px 3px 0 var(--sh)}
+.months img{width:100%;aspect-ratio:1;object-fit:cover}
+.months figcaption{font:600 11px var(--mono);padding-top:6px;color:var(--soft)}
+.months .lock{aspect-ratio:1;display:grid;place-items:center;background:repeating-linear-gradient(45deg,#efe6d4 0 8px,#f7f0e2 8px 16px);font:600 26px var(--hand);color:var(--soft)}
+.set{display:grid;gap:16px;max-width:620px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chk{display:flex;gap:10px;align-items:center;font-size:15px}
+.chk input{width:18px;height:18px;accent-color:var(--terra)}
+.danger{border-top:1.5px dashed rgba(46,36,27,.3);padding-top:16px;margin-top:6px}
+.link{border:0;background:none;padding:0;font:12px var(--mono);text-decoration:underline;color:var(--terra);cursor:pointer}
+.sheet{position:fixed;inset:0;z-index:120;background:rgba(30,24,17,.6);display:none;place-items:center;padding:16px}
+.sheet.on{display:grid}.sheet .box{width:min(440px,100%);display:grid;gap:14px}
+.sheet h3{font:28px/1 var(--en);text-transform:uppercase}.ar-on .sheet h3{font-family:var(--ar)}
+@media (max-width:760px){.me{grid-template-columns:auto 1fr}.me .out{grid-column:1/-1;justify-self:start}.sub{grid-template-columns:1fr}.two{grid-template-columns:1fr}.ord .o{grid-template-columns:1fr auto}.ord .o .pm{display:none}}
+
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
+  <nav>
+    <a href="index.html" data-ar="الرئيسية">Index</a>
+    <a href="shop.html" data-ar="المتجر">Shop</a>
+    <a href="story.html" data-ar="الحكاية">Story</a>
+  </nav>
+  <div class="tools">
+    <button class="chip" id="langBtn" aria-label="Arabic / English">ع</button>
+        <button class="chip bag" id="bag"><span data-ar="السلة">Bag</span><b id="bagn">0</b></button>
+  </div>
+</header>
+
+<main>
+<section class="page">
+  <div class="me" id="me"></div>
+  <div class="ptabs" role="tablist" id="ptabs"></div>
+  <div id="panel"></div>
+  <input type="file" id="ph" accept="image/*" hidden>
+</section>
+<div class="sheet" id="sh" role="dialog" aria-modal="true"><div class="box" id="shb"></div></div>
+</main>
+<footer>
+  <div class="fgrid">
+    <div>
+      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
+    </div>
+    <div><h4 data-ar="المتجر">Shop</h4><ul>
+      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+    <div><h4 data-ar="عنّا">About</h4><ul>
+      <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 Mass &amp; Grass · Gaza, Palestine</span><span data-ar="رُسمت باليد في غزة، بحب.">Painted by hand in Gaza, with love.</span></div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let AR=false;const t=(en,ar)=>AR?ar:en;
+const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
+function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
+  $$('[data-ar]').forEach(e=>{if(e.dataset.en==null)e.dataset.en=e.innerHTML;e.innerHTML=a?e.dataset.ar:e.dataset.en});
+  $$('main,footer').forEach(e=>e.dir=a?'rtl':'ltr');const lb=$('#langBtn');if(lb)lb.textContent=a?'EN':'ع';if(window.render)render()}
+$('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}catch(e){}};
+
+
+let U=MGUser.get();if(!U){location.replace('account.html?next=profile.html')}
+let tab=location.hash.slice(1)||'files';
+const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بوست كارد · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ستكرات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
+const src=x=>x.img||(x.k?`assets/${x.k}.webp`:'assets/hero.webp');
+const nm=x=>t(x.t||'Mass & Grass piece',x.ta||x.t||'قطعة');
+const MONTHLY=['ppoppies','pflower','hero','boattop','seafish','dovegirl','deirbalah','alley','sparklers','waves','psea','blueflowers'];
+const MN=()=>AR?['كانون الثاني','شباط','آذار','نيسان','أيار','حزيران','تموز','آب','أيلول','تشرين الأول','تشرين الثاني','كانون الأول']:['January','February','March','April','May','June','July','August','September','October','November','December'];
+const fmt=d=>{d=new Date(d);return `${ard(d.getDate())} ${MN()[d.getMonth()]} ${ard(d.getFullYear())}`};
+function save(){MGUser.set(U)}
+window.render=()=>{if(!U)return;
+  const orders=MGUser.orders(),files=orders.flatMap(o=>o.items.filter(x=>!x.gift).map(x=>Object.assign({},x,{no:o.no}))),sub=U.sub&&U.sub.on;
+  $('#me').innerHTML=`<button class="av" id="av" aria-label="${t('Change your photo','غيّر صورتك')}">${U.photo?`<img src="${U.photo}" alt="">`:`<b>${esc((U.name||U.email)[0].toUpperCase())}</b>`}<span>${t('Change photo','غيّر الصورة')}</span></button>
+   <div><span class="kick">${t('Your profile','بروفايلك')}</span><h1 class="d">${esc(U.name||U.email)}</h1><div class="meta"><span class="tag">${esc(U.email)}</span><span class="tag">${t('Member since','عضو من')} ${fmt(U.joined||Date.now())}</span>${U.via==='google'?`<span class="tag g">Google</span>`:''}${sub?`<span class="tag g">${t('Monthly painting ✶','لوحة كل شهر ✶')}</span>`:''}</div></div>
+   <button class="btn alt out" id="out">${t('Sign out','اطلع')}</button>`;
+  const T=[['files',t('Your files','ملفاتك'),files.length],['orders',t('Orders','الطلبات'),orders.length],['monthly',t('A painting a month','لوحة كل شهر'),sub?'✶':''],['settings',t('Settings','الإعدادات'),'']];
+  $('#ptabs').innerHTML=T.map(([k,l,n])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${l}${n!==''?`<small>${typeof n==='number'?ard(n):n}</small>`:''}</button>`).join('');
+  let h='';
+  if(tab==='files')h=files.length?`<div class="files">${files.map(x=>`<div class="fi"><div class="th"><img src="${esc(src(x))}" alt=""></div><div><h3>${esc(nm(x))}</h3><span class="note">${t(...(KIND[x.kind]||['Digital file','ملف رقمي']))}</span></div><div class="b">${x.kind==='sticker'?`<button class="mini" data-dl>PNG</button><button class="mini" data-dl>WhatsApp</button>`:`<button class="mini" data-dl>PDF</button><button class="mini" data-dl>PNG</button>`}</div></div>`).join('')}</div><p class="note" style="margin-top:14px">${t('Prototype: downloads go live with the real shop. Your files stay here for good.','نموذج: التحميل بيشتغل مع المتجر الحقيقي. ملفاتك بتضل محفوظة هون.')}</p>`
+    :`<div class="box empty"><p>${t('Nothing here yet. Your files land here after you buy.','لسا ما في شي. ملفاتك بتنزل هون بعد ما تشتري.')}</p><a class="btn terra" href="shop.html">${t('Go to the shop','روح عالمتجر')}</a></div>`;
+  if(tab==='orders')h=orders.length?`<div class="ord">${orders.map(o=>`<div class="o"><span class="pm">GAZA<br>${o.no}</span><div><span class="note">${t('Order','طلب')} ${o.no} · ${fmt(o.date)}</span><div class="th">${o.items.slice(0,8).map(x=>`<img src="${esc(src(x))}" alt="">`).join('')}</div><span class="note">${ard(o.items.length)} ${t('items','قطع')}${o.items.some(x=>x.gift)?' · '+t('includes gifts','فيها هدايا'):''}</span></div><b>€${ard(o.tot)}</b></div>`).join('')}</div>`
+    :`<div class="box empty"><p>${t('No orders yet.','لسا ما في طلبات.')}</p><a class="btn terra" href="shop.html">${t('Go to the shop','روح عالمتجر')}</a></div>`;
+  if(tab==='monthly'){const s=U.sub||{},start=s.since?new Date(s.since):null,got=[];
+    if(sub){const n=Math.max(1,(new Date().getFullYear()-start.getFullYear())*12+new Date().getMonth()-start.getMonth()+1);for(let i=0;i<n&&i<12;i++){const d=new Date(start.getFullYear(),start.getMonth()+i,1);got.push([MONTHLY[(d.getMonth())%12],d])}}
+    const nx=new Date();nx.setMonth(nx.getMonth()+1,1);
+    h=`<div class="box"><div class="sub"><div><span class="kick">${t('Subscription','اشتراك')}</span><h2 class="d">${t('A painting a month','لوحة كل شهر')}</h2>
+      <div class="price">€${ard(5)}<small>${t('/ month','/ بالشهر')}</small></div>
+      <ul><li>${t('A new painting by Farah on the 1st of every month, as a high-res PDF + PNG','لوحة جديدة من فرح أول كل شهر، ملف PDF + PNG بدقة عالية')}</li><li>${t('You get it before it reaches the shop','بتوصلك قبل ما تنزل عالمتجر')}</li><li>${t('A short note from Farah about the day she painted it','كلمة قصيرة من فرح عن اليوم اللي رسمتها فيه')}</li><li>${t('Cancel any time, keep everything you received','ألغِ وقت ما بدك، وكل اللي وصلك بيضل إلك')}</li></ul>
+      ${sub?`<div class="active"><span class="dot"></span><b>${t('Active since','شغّال من')} ${fmt(s.since)}</b></div><p class="note">${t('Next painting','اللوحة الجاية')}: ${fmt(nx)} · ${t('paid with PayPal','الدفع بباي بال')}</p><p style="margin-top:12px"><button class="link" id="cancel">${t('Cancel the subscription','إلغاء الاشتراك')}</button></p>`
+      :`<button class="btn terra" id="subb">${t('Subscribe · €5 a month','اشترك · €٥ بالشهر')}</button><p class="note" style="margin-top:10px">${t('Paid monthly with PayPal or card. Prototype: nothing is charged.','بتدفع كل شهر بباي بال أو بطاقة. نموذج: ما في دفع حقيقي.')}</p>`}
+      </div><div class="env"><span class="st" style="background-image:url(assets/${MONTHLY[nx.getMonth()]}.webp)"></span><span class="pm">GAZA<br>01·${String(nx.getMonth()+1).padStart(2,'0')}<br>✶</span><p>${t('For ','إلى ')}${esc(U.name||'')}<br>${t('a painting, every month','لوحة، كل شهر')}</p></div></div>
+      ${sub?`<p class="note" style="margin-top:26px">${t('Your monthly paintings','لوحاتك الشهرية')}</p><div class="months">${got.map(([k,d])=>`<figure><img src="assets/${k}.webp" alt=""><figcaption>${MN()[d.getMonth()]} ${ard(d.getFullYear())}</figcaption></figure>`).join('')}<figure><div class="lock">${MN()[nx.getMonth()]}</div><figcaption>${t('coming','قريبًا')}</figcaption></figure></div>`:''}</div>`}
+  if(tab==='settings')h=`<form class="box set" id="setf" novalidate><div class="two"><label class="f">${t('Name','الاسم')}<input id="snm" value="${esc(U.name||'')}" maxlength="60"></label><label class="f">${t('Email','الإيميل')}<input value="${esc(U.email)}" disabled dir="ltr"></label></div>
+     <label class="f">${t('Country','البلد')}<input id="sct" value="${esc(U.country||'')}" maxlength="60" placeholder="${t('Palestine','فلسطين')}"></label>
+     <label class="chk"><input type="checkbox" id="snews" ${U.news!==false?'checked':''}>${t('Send me the free monthly postcard email','ابعتولي إيميل البوست كارد الشهري المجاني')}</label>
+     <div><button class="btn terra" type="submit">${t('Save','احفظ')}</button> <span class="ok" id="saved"></span></div>
+     <div class="danger"><button class="link" type="button" id="del">${t('Delete my account','احذف حسابي')}</button><p class="note">${t('Removes your profile and order history from this browser.','بيمسح بروفايلك وطلباتك من هالمتصفح.')}</p></div></form>`;
+  $('#panel').innerHTML=h;
+  $$('#ptabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;history.replaceState(null,'','#'+tab);render()});
+  $('#av').onclick=()=>$('#ph').click();
+  $('#out').onclick=()=>{MGUser.out();location.href='index.html'};
+  $$('[data-dl]').forEach(b=>b.onclick=()=>{b.textContent='✓';b.disabled=true});
+  const sb=$('#subb');if(sb)sb.onclick=subscribe;
+  const cn=$('#cancel');if(cn)cn.onclick=()=>sheet(`<h3>${t('Cancel it?','تلغي الاشتراك؟')}</h3><p class="lead">${t('You keep every painting you received. No more charges after this month.','بتضل معك كل اللوحات اللي وصلتك، وما في دفع بعد هالشهر.')}</p><div class="active"><button class="btn terra" id="yes">${t('Yes, cancel','آه، ألغِ')}</button><button class="btn alt" id="no">${t('Keep it','خلّيه')}</button></div>`,()=>{$('#yes').onclick=()=>{U.sub={on:false,since:U.sub.since,ended:new Date().toISOString()};save();closeSheet();render()};$('#no').onclick=closeSheet});
+  const sf=$('#setf');if(sf)sf.onsubmit=e=>{e.preventDefault();U.name=$('#snm').value.trim()||U.name;U.country=$('#sct').value.trim();U.news=$('#snews').checked;save();render();$('#saved').textContent=t('Saved ✓','انحفظ ✓')};
+  const dl=$('#del');if(dl)dl.onclick=()=>sheet(`<h3>${t('Delete your account?','تحذف حسابك؟')}</h3><p class="lead">${t('This can’t be undone.','ما في رجعة.')}</p><div class="active"><button class="btn terra" id="yes">${t('Delete','احذف')}</button><button class="btn alt" id="no">${t('Cancel','إلغاء')}</button></div>`,()=>{$('#yes').onclick=()=>{try{const a=JSON.parse(localStorage.mgUsers||'{}');delete a[U.email];localStorage.mgUsers=JSON.stringify(a);localStorage.mgOrders=JSON.stringify(JSON.parse(localStorage.mgOrders||'[]').filter(o=>o.em!==U.email))}catch(e){}MGUser.out();location.href='index.html'};$('#no').onclick=closeSheet});
+};
+function sheet(html,bind){$('#shb').innerHTML=html;$('#sh').classList.add('on');bind&&bind()}
+function closeSheet(){$('#sh').classList.remove('on')}
+$('#sh').onclick=e=>{if(e.target.id==='sh')closeSheet()};addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+function subscribe(){sheet(`<h3>${t('A painting a month','لوحة كل شهر')}</h3><p class="lead">${t('€5 every month, starting today. The first painting arrives right away.','€٥ كل شهر من اليوم. أول لوحة بتوصلك فورًا.')}</p><button class="btn ochre" id="pay">${t('Subscribe with PayPal or card','اشترك بباي بال أو بطاقة')}</button><button class="btn alt" id="no">${t('Not now','مش هلأ')}</button><p class="note">${t('Prototype: nothing is charged.','نموذج: ما في دفع حقيقي.')}</p>`,()=>{
+  $('#no').onclick=closeSheet;$('#pay').onclick=()=>{$('#pay').disabled=true;$('#pay').textContent=t('Sealing…','عم نختمها…');setTimeout(()=>{U.sub={on:true,since:new Date().toISOString()};save();closeSheet();tab='monthly';render()},800)}})}
+$('#ph').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),S=200,s=Math.min(im.width,im.height);c.width=c.height=S;c.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,S,S);U.photo=c.toDataURL('image/jpeg',.82);save();render()};im.src=r.result};r.readAsDataURL(f)};
+
+let saved=false;try{saved=localStorage.mgLang==='ar'}catch(e){}
+setLang(saved);
+})();
+</script>
+</body>
+</html>

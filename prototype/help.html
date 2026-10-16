@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Help &amp; contact · Mass &amp; Grass</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="assets/mg.js"></script>
+<style>
+:root{--gut:clamp(20px,5vw,80px);
+  --field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--sky:#3f6b8a;
+  --soft:#6f604d;--env:#FBF7EE;--sh:rgba(46,36,27,.25);
+  --en:'Anton',Impact,sans-serif;--ar:'Lalezar','IBM Plex Sans Arabic',sans-serif;
+  --body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--hand:'Caveat','Aref Ruqaa',cursive;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+.d{font-family:var(--en);text-transform:uppercase;letter-spacing:.01em;font-weight:400;line-height:.95}
+.ar-on .d{font-family:var(--ar)!important;letter-spacing:0!important}
+.ar-on [data-ar]{font-family:var(--body)}
+.ar-on .d[data-ar]{font-family:var(--ar)!important}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+header{direction:ltr}
+/* ---------- header ---------- */
+header{position:fixed;inset:0 0 auto;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:14px clamp(16px,3vw,34px);pointer-events:none}
+header>*{pointer-events:auto}
+.logo{width:58px;height:46px;background:var(--env);padding:6px 8px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);transform:rotate(-3deg);display:block}
+.logo img{width:100%;height:100%}
+nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
+nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
+nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+.ar-on nav a{font-family:var(--ar);font-size:16px}
+.tools{display:flex;gap:8px;justify-self:end}
+.chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
+.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
+.bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
+/* header scales with the screen instead of jumping at a breakpoint */
+header{gap:clamp(8px,1.4vw,14px);padding:clamp(10px,1.4vw,14px) var(--gut)}
+.logo{width:clamp(44px,1.4vw + 38px,58px);height:auto;aspect-ratio:58/46;padding:clamp(4px,.5vw,6px) clamp(5px,.7vw,8px)}
+nav{padding:clamp(3px,.4vw,5px);gap:clamp(2px,.3vw,4px)}
+nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp(7px,1vw,12px) clamp(5px,.5vw,7px)}
+.chip{height:clamp(32px,.6vw + 29.6px,38px);min-width:clamp(32px,.6vw + 29.6px,38px);padding:0 clamp(7px,.8vw,10px);font-size:clamp(12px,.1vw + 11.6px,13px)}
+.tools{gap:clamp(5px,.8vw,8px)}
+@media (max-width:420px){.bag span{display:none}}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper);padding:clamp(60px,8vw,100px) var(--gut) 30px;position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:-14px;height:16px;background:linear-gradient(-45deg,var(--ink) 8px,transparent 0),linear-gradient(45deg,var(--ink) 8px,transparent 0);background-size:16px 16px}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px}
+footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
+.news{display:flex;gap:0;max-width:440px;margin-top:10px}
+.news input{flex:1;min-width:0;border:2px solid var(--paper);background:transparent;color:var(--paper);padding:13px 14px;font:15px var(--body)}
+.news input::placeholder{color:#efe4cf99}
+.news button{border:2px solid var(--paper);background:var(--terra);color:#fff;padding:0 18px;font:17px/1 var(--en);text-transform:uppercase}
+.ar-on .news button{font-family:var(--ar)}
+footer ul{list-style:none;padding:0;display:grid;gap:8px}
+footer ul a{text-decoration:none;opacity:.85}
+footer ul a:hover{opacity:1;text-decoration:underline}
+footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
+.legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
+
+
+.kick{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);background:var(--paper);border:1.5px solid var(--ink);padding:6px 9px 5px;rotate:-2deg}
+.ar-on .kick{font-family:var(--body);letter-spacing:0;font-size:13px}
+.page{padding:clamp(100px,11vw,140px) var(--gut) clamp(60px,8vw,110px);min-height:70svh}
+.page h1{font-size:clamp(46px,6vw + 10px,110px);margin:14px 0 10px}
+.page h1 em{font-style:normal;color:var(--terra)}
+.lead{color:var(--soft);max-width:50ch;font-size:clamp(15px,.3vw + 14px,18px)}
+.box{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);padding:clamp(18px,2.6vw,32px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:13px 18px 11px;font:17px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;box-shadow:3px 3px 0 rgba(196,89,63,.45);text-decoration:none;transition:transform .15s}
+.btn:hover{transform:translate(-1px,-1px)}.btn.terra{background:var(--terra)}.btn.alt{background:var(--paper);color:var(--ink)}.btn.ochre{background:var(--ochre);color:var(--ink)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.ar-on .btn{font-family:var(--ar)}
+label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.ar-on label.f{font-family:var(--body);letter-spacing:0;font-size:13px}
+.f input,.f textarea,.f select{width:100%;border:2px solid var(--ink);background:#FFFDF8;padding:12px 14px;font:16px var(--body);color:var(--ink)}
+.f textarea{min-height:120px;resize:vertical}
+.f input:focus,.f textarea:focus,.f select:focus{outline:3px solid rgba(196,89,63,.4);outline-offset:1px}
+.f input.bad{border-color:var(--terra);background:#fff3ef}
+.note{font:12px/1.5 var(--mono);color:var(--soft)}
+.ar-on .note{font-family:var(--body);font-size:13px}
+.err{font:600 19px/1.15 var(--hand);color:var(--terra);min-height:1em;display:block}
+.ok{font:600 21px/1.2 var(--hand);color:var(--sage)}
+@media (max-width:640px){.btn{font-size:14.5px;padding:11px 14px 9px}}
+
+
+.hg{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(28px,5vw,70px);align-items:start;margin-top:clamp(24px,3vw,40px)}
+.faq details{border-bottom:1.5px dashed rgba(46,36,27,.3)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;padding:16px 0;font:clamp(18px,.6vw + 15px,24px)/1.1 var(--en);text-transform:uppercase}
+.ar-on .faq summary{font-family:var(--ar)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:24px/1 var(--mono);color:var(--terra);transition:rotate .2s;flex:none}
+.faq details[open] summary::after{rotate:45deg}
+.faq p{padding:0 0 18px;color:var(--soft);max-width:60ch}
+.cf{display:grid;gap:14px;position:sticky;top:90px}
+.cf h2{font-size:clamp(30px,2vw + 16px,48px)}
+.ways{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.ways a{font:600 12px var(--mono);text-decoration:none;border:1.5px solid var(--ink);background:#FFFDF8;padding:7px 10px 6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:860px){.hg{grid-template-columns:1fr}.cf{position:static}}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
+  <nav>
+    <a href="index.html" data-ar="الرئيسية">Index</a>
+    <a href="shop.html" data-ar="المتجر">Shop</a>
+    <a href="story.html" data-ar="الحكاية">Story</a>
+  </nav>
+  <div class="tools">
+    <button class="chip" id="langBtn" aria-label="Arabic / English">ع</button>
+        <button class="chip bag" id="bag"><span data-ar="السلة">Bag</span><b id="bagn">0</b></button>
+  </div>
+</header>
+
+<main>
+<section class="page">
+  <span class="kick" data-ar="مساعدة">Help</span>
+  <h1 class="d" data-ar="أسئلة <em>وتواصل</em>">Questions &amp; <em>hello</em></h1>
+  <p class="lead" data-ar="أغلب الأسئلة جوابها هون. إذا لا، ابعتلنا وبنرد خلال يومين.">Most answers are here. If not, write to us and we reply within two days.</p>
+  <div class="hg"><div class="faq" id="faq"></div><form class="box cf" id="cf" novalidate></form></div>
+</section>
+</main>
+<footer>
+  <div class="fgrid">
+    <div>
+      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
+    </div>
+    <div><h4 data-ar="المتجر">Shop</h4><ul>
+      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+    <div><h4 data-ar="عنّا">About</h4><ul>
+      <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 Mass &amp; Grass · Gaza, Palestine</span><span data-ar="رُسمت باليد في غزة، بحب.">Painted by hand in Gaza, with love.</span></div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let AR=false;const t=(en,ar)=>AR?ar:en;
+const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
+function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
+  $$('[data-ar]').forEach(e=>{if(e.dataset.en==null)e.dataset.en=e.innerHTML;e.innerHTML=a?e.dataset.ar:e.dataset.en});
+  $$('main,footer').forEach(e=>e.dir=a?'rtl':'ltr');const lb=$('#langBtn');if(lb)lb.textContent=a?'EN':'ع';if(window.render)render()}
+$('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}catch(e){}};
+
+
+const QA=[
+ ['How do I get my files?','كيف بتوصلني الملفات؟','Right after you pay you get a download page, and a copy goes to your email. If you have an account, every file also stays in your profile.','بعد الدفع مباشرة بتطلعلك صفحة تحميل، ونسخة بتوصل إيميلك. وإذا عندك حساب، كل ملف بيضل محفوظ ببروفايلك.'],
+ ['What formats do I get?','شو صيغة الملفات؟','Paintings and postcards come as a high-res PDF and PNG (300 dpi). Stickers come as transparent PNGs plus WhatsApp and Telegram packs. The calendar is a PDF in A3 and A4.','اللوحات والبوست كارد PDF وPNG بدقة عالية (٣٠٠ dpi). الستكرات PNG شفاف مع باكيت واتساب وتيليغرام. التقويم PDF بمقاسين A3 وA4.'],
+ ['How big can I print?','لأي حجم بقدر أطبع؟','Up to A3 looks sharp. For bigger, write to us and we send a larger file.','لحد A3 بتطلع حادة. إذا بدك أكبر، ابعتلنا وبنبعتلك ملف أكبر.'],
+ ['Can I sell prints or use them commercially?','بقدر أبيع الطبعات أو أستخدمها تجاريًا؟','No. Files are for you: print them, hang them, give them as gifts. Selling, reprinting for sale or using them in products needs Farah’s written permission. See the licence in the terms.','لا. الملفات إلك: اطبعها، علّقها، أهديها. البيع أو إعادة الطباعة للبيع أو استخدامها بمنتجات بدها إذن مكتوب من فرح. شوف الرخصة بالشروط.'],
+ ['How do gifts work?','كيف بتشتغل الهدايا؟','Choose “Send it to someone”, write their name, email and a note. Once you pay, we email them the file with your words.','اختار «ابعثها لحد»، اكتب اسمه وإيميله وكلمة إله. بعد الدفع بنبعتله الملف مع كلمتك.'],
+ ['What is “A painting a month”?','شو هو «لوحة كل شهر»؟','A €5 monthly subscription: a new painting by Farah on the 1st of each month, before it reaches the shop. Cancel any time from your profile.','اشتراك بـ€٥ بالشهر: لوحة جديدة من فرح أول كل شهر، قبل ما تنزل عالمتجر. بتلغيه وقت ما بدك من بروفايلك.'],
+ ['Something is wrong with my file. Can I get a refund?','في مشكلة بالملف، بقدر أسترجع؟','If a file is broken or not what you ordered, write to us within 14 days and we fix it or refund you.','إذا الملف خربان أو مش اللي طلبته، ابعتلنا خلال ١٤ يوم وبنصلحه أو بنرجعلك المبلغ.'],
+ ['Do you ship printed things?','بتشحنوا أشياء مطبوعة؟','Not yet. Tees, totes and mugs printed on demand are coming soon.','لسا لا. البلايز والشنط والمجات المطبوعة حسب الطلب قريبًا.'],
+ ['Where does the money go?','لوين بتروح المصاري؟','Straight to the studio in Gaza: paint, paper, and keeping Farah painting and telling the story.','مباشرة للاستوديو في غزة: ألوان وورق، وعشان تضل فرح ترسم وتحكي الحكاية.']];
+window.render=()=>{
+  $('#faq').innerHTML=QA.map((q,i)=>`<details${i===0?' open':''}><summary>${t(q[0],q[1])}</summary><p>${t(q[2],q[3])}</p></details>`).join('');
+  const U=window.MGUser&&MGUser.get();
+  $('#cf').innerHTML=`<span class="kick">${t('Write to us','ابعتلنا')}</span><h2 class="d">${t('Say hello','قول مرحبا')}</h2>
+   <div class="two"><label class="f">${t('Name','الاسم')}<input id="n" maxlength="60" value="${esc(U?U.name:'')}"></label><label class="f">${t('Email','الإيميل')}<input id="e" type="email" maxlength="100" dir="ltr" value="${esc(U?U.email:'')}"></label></div>
+   <label class="f">${t('About','الموضوع')}<select id="s"><option>${t('My order','طلبي')}</option><option>${t('A file problem','مشكلة بملف')}</option><option>${t('Licensing or a big print','رخصة أو طباعة كبيرة')}</option><option>${t('Press or collaboration','صحافة أو تعاون')}</option><option>${t('Something else','شي تاني')}</option></select></label>
+   <label class="f">${t('Message','الرسالة')}<textarea id="m" maxlength="1500"></textarea></label>
+   <span class="err" id="er" role="alert"></span>
+   <div><button class="btn terra" type="submit">${t('Send','ابعت')} ✉</button></div>
+   <div class="ways"><a href="mailto:info@massandgrass.com">info@massandgrass.com</a><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener">Instagram</a></div>`;
+  $('#cf').onsubmit=e=>{e.preventDefault();const em=$('#e').value.trim(),m=$('#m').value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){$('#e').classList.add('bad');$('#er').textContent=t('We need your email to reply.','بدنا إيميلك عشان نرد.');return}
+    if(m.length<5){$('#m').classList.add('bad');$('#er').textContent=t('Write a few words.','اكتب كم كلمة.');return}
+    $('#cf').innerHTML=`<span class="kick">${t('Sent','انبعتت')}</span><h2 class="d">${t('Thank you','شكرًا')}</h2><p class="ok">${t('We got it, and we’ll write back within two days.','وصلتنا، وبنرد عليك خلال يومين.')}</p><p class="note">${t('Prototype: messages aren’t sent yet.','نموذج: الرسائل ما بتنبعت لهلأ.')}</p>`}};
+
+let saved=false;try{saved=localStorage.mgLang==='ar'}catch(e){}
+setLang(saved);
+})();
+</script>
+</body>
+</html>

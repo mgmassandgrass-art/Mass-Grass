@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout · Mass &amp; Grass</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{--gut:clamp(16px,4vw,56px);--field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--soft:#6f604d;--en:'Anton',Impact,sans-serif;--ar:'Lalezar',sans-serif;--body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;--hand:'Caveat','Aref Ruqaa',cursive}
+*{box-sizing:border-box;margin:0}
+html{background:var(--field)}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);min-height:100svh;overflow-x:hidden}
+a{color:inherit}
+button{font:inherit;color:inherit}
+.kick{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);background:var(--paper);border:1.5px solid var(--ink);padding:6px 9px 5px;rotate:-2deg}
+h1{font:clamp(40px,5vw + 14px,84px)/.92 var(--en);text-transform:uppercase;margin:12px 0 8px}
+.lead{color:var(--soft);max-width:46ch}
+main{padding:clamp(96px,10vw,130px) var(--gut) 80px}
+header{direction:ltr}
+/* ---------- header ---------- */
+header{position:fixed;inset:0 0 auto;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:14px clamp(16px,3vw,34px);pointer-events:none}
+header>*{pointer-events:auto}
+.logo{width:58px;height:46px;background:var(--env);padding:6px 8px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);transform:rotate(-3deg);display:block}
+.logo img{width:100%;height:100%}
+nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
+nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
+nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+.ar-on nav a{font-family:var(--ar);font-size:16px}
+.tools{display:flex;gap:8px;justify-self:end}
+.chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
+.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
+.bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
+/* header scales with the screen instead of jumping at a breakpoint */
+header{gap:clamp(8px,1.4vw,14px);padding:clamp(10px,1.4vw,14px) var(--gut)}
+.logo{width:clamp(44px,1.4vw + 38px,58px);height:auto;aspect-ratio:58/46;padding:clamp(4px,.5vw,6px) clamp(5px,.7vw,8px)}
+nav{padding:clamp(3px,.4vw,5px);gap:clamp(2px,.3vw,4px)}
+nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp(7px,1vw,12px) clamp(5px,.5vw,7px)}
+.chip{height:clamp(32px,.6vw + 29.6px,38px);min-width:clamp(32px,.6vw + 29.6px,38px);padding:0 clamp(7px,.8vw,10px);font-size:clamp(12px,.1vw + 11.6px,13px)}
+.tools{gap:clamp(5px,.8vw,8px)}
+@media (max-width:420px){.bag span{display:none}}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper);padding:clamp(60px,8vw,100px) var(--gut) 30px;position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:-14px;height:16px;background:linear-gradient(-45deg,var(--ink) 8px,transparent 0),linear-gradient(45deg,var(--ink) 8px,transparent 0);background-size:16px 16px}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px}
+footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
+.news{display:flex;gap:0;max-width:440px;margin-top:10px}
+.news input{flex:1;min-width:0;border:2px solid var(--paper);background:transparent;color:var(--paper);padding:13px 14px;font:15px var(--body)}
+.news input::placeholder{color:#efe4cf99}
+.news button{border:2px solid var(--paper);background:var(--terra);color:#fff;padding:0 18px;font:17px/1 var(--en);text-transform:uppercase}
+.ar-on .news button{font-family:var(--ar)}
+footer ul{list-style:none;padding:0;display:grid;gap:8px}
+footer ul a{text-decoration:none;opacity:.85}
+footer ul a:hover{opacity:1;text-decoration:underline}
+footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
+.legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
+
+.wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:start;margin-top:clamp(20px,3vw,40px)}
+.box{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);padding:clamp(18px,2.4vw,30px)}
+.step{display:grid;gap:12px;padding-bottom:22px;margin-bottom:22px;border-bottom:1.5px dashed rgba(46,36,27,.3)}
+.step:last-child{border:0;margin:0;padding:0}
+.step h2{display:flex;align-items:baseline;gap:10px;font:clamp(22px,1vw + 16px,30px)/1 var(--en);text-transform:uppercase}
+.step h2 i{font:600 12px var(--mono);font-style:normal;color:#fff;background:var(--terra);padding:4px 7px 3px;letter-spacing:.06em}
+label{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+input[type=email],input[type=text]{width:100%;border:2px solid var(--ink);background:#FFFDF8;padding:12px 14px;font:16px var(--body);color:var(--ink)}
+input:focus{outline:3px solid rgba(196,89,63,.4);outline-offset:1px}
+input.bad{border-color:var(--terra);background:#fff3ef}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk{display:flex;gap:10px;align-items:flex-start;font:15px/1.4 var(--body);letter-spacing:0;text-transform:none;color:var(--ink);cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--terra);margin-top:1px;flex:none}
+.err{font:600 18px/1.1 var(--hand);color:var(--terra);min-height:1em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:14px 18px 12px;font:18px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;box-shadow:3px 3px 0 rgba(196,89,63,.45);text-decoration:none;transition:transform .15s}
+.btn:hover{transform:translate(-1px,-1px)}
+.btn.terra{background:var(--terra)}
+.btn.alt{background:var(--paper);color:var(--ink)}
+.btn.pay{width:100%;background:var(--ochre);color:var(--ink);font-size:20px;padding:16px 18px 14px}
+.btn.pay em{font:600 13px var(--mono);font-style:normal;letter-spacing:.02em;text-transform:none;opacity:.8}
+.btn[disabled]{opacity:.5;cursor:wait}
+.ways{display:flex;flex-wrap:wrap;gap:6px}
+.ways span{font:11px var(--mono);letter-spacing:.06em;border:1.5px solid rgba(46,36,27,.35);padding:5px 8px 4px;background:#FFFDF8}
+.note{font:12px/1.5 var(--mono);color:var(--soft)}
+.sum{position:sticky;top:18px}
+.sum h2{font:28px/1 var(--en);text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.sum h2 b{font:600 12px var(--mono);background:var(--terra);color:#fff;padding:4px 7px 3px}
+.it{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1.5px dashed rgba(46,36,27,.25)}
+.th{width:64px;aspect-ratio:1;background:#fff;padding:4px;box-shadow:2px 3px 0 rgba(46,36,27,.2);display:grid;place-items:center;rotate:-2deg}
+.th img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.it h3{font:17px/1.05 var(--en);text-transform:uppercase}
+.it small{display:block;font:11px/1.4 var(--mono);color:var(--soft)}
+.it .gf{display:block;font:600 17px/1.1 var(--hand);color:var(--terra)}
+.it .pr{font:20px/1 var(--en)}
+.it .rm{display:block;margin-top:6px;border:0;background:none;font:11px var(--mono);text-decoration:underline;color:var(--soft);cursor:pointer;padding:0}
+.tot{display:grid;gap:6px;margin-top:14px}
+.tot div{display:flex;justify-content:space-between;font:12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+.tot .g{border-top:2px solid var(--ink);padding-top:10px;margin-top:4px;color:var(--ink);align-items:baseline}
+.tot .g b{font:40px/1 var(--en);letter-spacing:0}
+.promise{margin-top:16px;display:grid;gap:8px}
+.promise p{display:flex;gap:10px;font-size:14px;color:var(--soft)}
+.promise p::before{content:"✶";color:var(--terra)}
+.empty{text-align:center;display:grid;gap:16px;justify-items:center;padding:60px 10px}
+.empty p{font:600 28px/1.2 var(--hand);color:var(--soft)}
+/* done */
+.done{display:none;max-width:860px;margin:clamp(10px,3vw,40px) auto 0}
+.done.on{display:block;animation:in .6s cubic-bezier(.2,1.2,.4,1)}
+@keyframes in{from{opacity:0;translate:0 20px}}
+.done .top{display:grid;grid-template-columns:auto 1fr;gap:clamp(18px,3vw,40px);align-items:center}
+.pmk{width:clamp(110px,16vw,160px);aspect-ratio:1;border-radius:50%;border:3px solid rgba(43,58,85,.8);color:rgba(43,58,85,.9);display:grid;place-items:center;text-align:center;font:600 13px/1.35 var(--mono);letter-spacing:.08em;rotate:-12deg;animation:thud .5s cubic-bezier(.3,1.6,.5,1) .2s both;position:relative}
+.pmk::after{content:"";position:absolute;inset:8px;border-radius:50%;border:1.5px dashed rgba(43,58,85,.5)}
+@keyframes thud{from{scale:2;opacity:0}}
+.done h1 em{font-style:normal;color:var(--terra)}
+.dl{margin-top:24px;display:grid;gap:12px}
+.dl .row{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;background:#FFFDF8;border:1.5px solid var(--ink);padding:10px 14px}
+.dl .row .b{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.dl .row .b .btn{font-size:14px;padding:9px 11px 7px;box-shadow:2px 2px 0 rgba(196,89,63,.4)}
+.next{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap}
+/* arabic */
+.ar-on{direction:rtl}
+.ar-on h1,.ar-on h2,.ar-on h3,.ar-on .btn,.ar-on .sum h2{font-family:var(--ar)}
+.ar-on label,.ar-on .kick,.ar-on .tot div,.ar-on .note,.ar-on .back{font-family:var(--body);letter-spacing:0}
+@media (max-width:860px){.wrap{grid-template-columns:1fr}.sum{position:static}}
+@media (max-width:560px){.two{grid-template-columns:1fr}.btn{font-size:15px;padding:12px 14px 10px}.btn.pay{font-size:17px}.done .top{grid-template-columns:1fr;justify-items:start}.dl .row{grid-template-columns:52px 1fr}.dl .row .b{grid-column:1/-1;justify-content:flex-start}.back{font-size:10px;padding:7px 8px 6px}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
+  <nav>
+    <a href="index.html" data-ar="الرئيسية">Index</a>
+    <a href="shop.html" data-ar="المتجر">Shop</a>
+    <a href="story.html" data-ar="الحكاية">Story</a>
+  </nav>
+  <div class="tools">
+    <button class="chip" id="langBtn" aria-label="Arabic / English">ع</button>
+        <button class="chip bag" id="bag"><span data-ar="السلة">Bag</span><b id="bagn">0</b></button>
+  </div>
+</header>
+<main>
+  <section id="pay">
+    <span class="kick" data-ar="الدفع">Checkout</span>
+    <h1 data-ar="قرّبنا نختمها">Almost sealed</h1>
+    <p class="lead" data-ar="كل شي هون ملف رقمي. بعد الدفع بتحمّله فورًا، وبيوصلك نسخة على إيميلك.">Everything here is a digital file. You download it right after you pay, and a copy goes to your email.</p>
+    <div class="wrap" id="wrap"></div>
+  </section>
+  <section class="done" id="done" aria-live="polite"></section>
+</main>
+<footer>
+  <div class="fgrid">
+    <div>
+      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
+    </div>
+    <div><h4 data-ar="المتجر">Shop</h4><ul>
+      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+    <div><h4 data-ar="عنّا">About</h4><ul>
+      <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 Mass &amp; Grass · Gaza, Palestine</span><span data-ar="رُسمت باليد في غزة، بحب.">Painted by hand in Gaza, with love.</span></div>
+</footer>
+<script src="assets/mg.js"></script>
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+let AR=false;try{AR=localStorage.mgLang==='ar'}catch(e){}
+const t=(en,ar)=>AR?ar:en;
+const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const B=window.MGBag;
+const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بوست كارد · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ستكرات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
+const src=x=>x.img||(x.k?`assets/${x.k}.webp`:'assets/hero.webp');
+const nm=x=>t(x.t||'Mass & Grass piece',x.ta||x.t||'قطعة من ماس اند جراس');
+const kd=x=>t(...(KIND[x.kind]||['Digital file','ملف رقمي']));
+const U=window.MGUser&&MGUser.get();const form={name:U?U.name||'':'',em:U?U.email:'',news:true};
+
+function itemRow(x,i,rm){return `<div class="it"><span class="th"><img src="${esc(src(x))}" alt=""></span><div><h3>${esc(nm(x))}</h3><small>${esc(kd(x))}</small>${x.gift?`<span class="gf">${t('A gift for ','هدية لـ')}${esc(x.gift.to)} ✉</span>`:''}${x.note?`<span class="gf">${t('For ','لـ')}${esc(x.note)}</span>`:''}</div><div class="pr">€${ard(+x.p||0)}${rm?`<button class="rm" data-rm="${i}">${t('Remove','شيل')}</button>`:''}</div></div>`}
+
+function render(){
+  document.documentElement.lang=AR?'ar':'en';document.body.classList.toggle('ar-on',AR);$('#langBtn').textContent=AR?'EN':'ع';document.querySelectorAll('main,footer').forEach(e=>e.dir=AR?'rtl':'ltr');
+  document.querySelectorAll('[data-ar]').forEach(el=>{if(!el.dataset.en)el.dataset.en=el.textContent;el.textContent=AR?el.dataset.ar:el.dataset.en});
+  const a=B.get(),n=a.length,tot=B.total(),gifts=a.filter(x=>x.gift);
+  if(!n){$('#wrap').innerHTML=`<div class="box empty" style="grid-column:1/-1"><p>${t('Your bag is empty, for now.','السلة فاضية، لهلأ.')}</p><a class="btn terra" href="shop.html">${t('Go to the shop','روح عالمتجر')}</a></div>`;return}
+  $('#wrap').innerHTML=`
+  <form class="box" id="f" novalidate>
+    <div class="step"><h2><i>01</i>${t('Where do we send it?','وين نبعتلك؟')}</h2>
+      <div class="two"><label>${t('Your name','اسمك')}<input type="text" id="nm" autocomplete="name" maxlength="60" value="${esc(form.name)}" placeholder="${t('Lina','لينا')}"></label>
+      <label>${t('Your email','إيميلك')}<input type="email" id="em" autocomplete="email" maxlength="100" value="${esc(form.em)}" placeholder="lina@email.com" dir="ltr"></label></div>
+      <p class="note">${U?t('Signed in as ','داخل باسم ')+esc(U.email)+' · <a href="profile.html">'+t('your profile','بروفايلك')+'</a>':`<a href="account.html?next=checkout.html">${t('Sign in','سجّل دخول')}</a> ${t('to keep your files in your profile, or just carry on.','عشان تنحفظ ملفاتك ببروفايلك، أو كمّل عادي.')}`}</p>
+      <label class="chk"><input type="checkbox" id="news" ${form.news?'checked':''}>${t('Send me one new painting a month. Nothing else.','ابعتولي لوحة جديدة كل شهر. ولا شي غيرها.')}</label>
+    </div>
+    ${gifts.length?`<div class="step"><h2><i>02</i>${t('Gifts','الهدايا')}</h2><p class="note">${t('These go to the people you named, with your note, once you pay:','هدول بيروحوا للي اخترتهم مع كلمتك بعد الدفع:')}</p>${gifts.map(x=>`<p class="note">✉ ${esc(nm(x))} → <b>${esc(x.gift.to)}</b> · ${esc(x.gift.em)}</p>`).join('')}</div>`:''}
+    <div class="step"><h2><i>${ard(gifts.length?'03':'02')}</i>${t('Pay','ادفع')}</h2>
+      <button class="btn pay" type="submit" id="go">${t('Pay','ادفع')} €${ard(tot)} <em>${t('with PayPal or card','بباي بال أو بطاقة')}</em></button>
+      <div class="ways"><span>PayPal</span><span>Visa</span><span>Mastercard</span><span>Apple Pay</span><span>Google Pay</span></div>
+      <span class="err" id="err" role="alert"></span>
+      <p class="note">${t('Payment is handled by PayPal; we never see your card. Prototype: no money is taken yet.','الدفع عن طريق باي بال، وإحنا ما بنشوف بطاقتك. نموذج تجريبي: ما في دفع حقيقي لهلأ.')}</p>
+    </div>
+  </form>
+  <aside class="box sum"><h2>${t('Your bag','سلتك')} <b>${ard(n)}</b></h2>
+    ${a.map((x,i)=>itemRow(x,i,true)).join('')}
+    <div class="tot"><div><span>${t('Files','الملفات')}</span><span>€${ard(tot)}</span></div><div><span>${t('Delivery','التوصيل')}</span><span>${t('Instant · free','فوري · ببلاش')}</span></div>
+    <div class="g"><span>${t('Total','المجموع')}</span><b>€${ard(tot)}</b></div></div>
+    <div class="promise"><p>${t('Painted by hand in Gaza by Farah Al-Helou','مرسومة بإيد فرح الحلو في غزة')}</p><p>${t('High-res PDF + PNG, yours to print at any size','PDF + PNG بدقة عالية، اطبعها بأي حجم')}</p><p>${t('Every sale goes straight to the studio in Gaza','كل بيعة بتروح مباشرة للاستوديو في غزة')}</p></div>
+  </aside>`;
+  const f=$('#f');
+  ['nm','em'].forEach(id=>$('#'+id).oninput=e=>{form[id==='nm'?'name':'em']=e.target.value;e.target.classList.remove('bad');$('#err').textContent=''});
+  $('#news').onchange=e=>form.news=e.target.checked;
+  document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{B.remove(+b.dataset.rm);render()});
+  f.onsubmit=async e=>{e.preventDefault();const em=$('#em').value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){$('#em').classList.add('bad');$('#em').focus();$('#err').textContent=t('We need your email to send the files.','بدنا إيميلك عشان نبعتلك الملفات.');return}
+    const go=$('#go');go.disabled=true;go.innerHTML=t('Sealing…','عم نختمها…');await new Promise(r=>setTimeout(r,900));done(em)};
+}
+
+function done(em){
+  const a=B.get(),tot=B.total(),no='MG-'+Math.floor(1000+Math.random()*9000),d=new Date(),dd=`${String(d.getDate()).padStart(2,'0')}·${String(d.getMonth()+1).padStart(2,'0')}·${String(d.getFullYear()).slice(2)}`;
+  try{sessionStorage.mgLast=JSON.stringify({a,em,no,tot,dd})}catch(e){}
+  if(window.MGUser)MGUser.addOrder({no,em,tot,date:new Date().toISOString(),items:a});
+  B.clear();showDone({a,em,no,tot,dd})}
+function showDone(o){
+  $('#pay').hidden=true;const D=$('#done');D.classList.add('on');
+  D.innerHTML=`<div class="top"><div class="pmk">GAZA<br>${o.dd}<br>${o.no}</div>
+    <div><span class="kick">${t('Order','طلب')} ${o.no}</span><h1>${t('Sealed in <em>Gaza</em>','انختمت من <em>غزة</em>')}</h1>
+    <p class="lead">${t(`Thank you. Your files are below, and a copy is on its way to ${esc(o.em)}.`,`شكرًا إلك. ملفاتك تحت، ونسخة منها في طريقها لـ${esc(o.em)}.`)}</p></div></div>
+    <div class="dl">${o.a.map(x=>`<div class="row"><span class="th"><img src="${esc(src(x))}" alt=""></span><div><h3 style="font:18px/1.05 var(--en);text-transform:uppercase">${esc(nm(x))}</h3><small class="note">${esc(kd(x))}${x.gift?' · '+t('sent to ','انبعتت لـ')+esc(x.gift.to):''}</small></div>
+      <div class="b">${x.gift?`<span class="note">✉ ${t('On its way','في الطريق')}</span>`:(x.kind==='sticker'?`<button class="btn alt" data-dl>PNG</button><button class="btn alt" data-dl>WhatsApp</button>`:`<button class="btn alt" data-dl>PDF</button><button class="btn alt" data-dl>PNG</button>`)}</div></div>`).join('')}</div>
+    <p class="note" style="margin-top:12px">${t('Prototype: the download buttons go live with the real shop.','نموذج تجريبي: أزرار التحميل بتشتغل لما يفتح المتجر الحقيقي.')}</p>
+    <div class="next"><a class="btn terra" href="postcards.html#write">${t('Send a free postcard','ابعت بوست كارد ببلاش')} ✉</a><a class="btn alt" href="shop.html">${t('Back to the shop','رجوع للمتجر')}</a></div>`;
+  D.querySelectorAll('[data-dl]').forEach(b=>b.onclick=()=>{b.textContent='✓';b.disabled=true});
+  scrollTo(0,0)}
+
+$('#bag').onclick=e=>{e.preventDefault();(document.querySelector('.sum')||document.body).scrollIntoView({behavior:'smooth'})};
+$('#langBtn').onclick=()=>{AR=!AR;try{localStorage.mgLang=AR?'ar':'en'}catch(e){}
+  if($('#done').classList.contains('on')){try{showDone(JSON.parse(sessionStorage.mgLast))}catch(e){}}render()};
+render();
+})();
+</script>
+</body>
+</html>

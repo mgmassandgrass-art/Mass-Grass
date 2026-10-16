@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Terms &amp; privacy · Mass &amp; Grass</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="assets/mg.js"></script>
+<style>
+:root{--gut:clamp(20px,5vw,80px);
+  --field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--sky:#3f6b8a;
+  --soft:#6f604d;--env:#FBF7EE;--sh:rgba(46,36,27,.25);
+  --en:'Anton',Impact,sans-serif;--ar:'Lalezar','IBM Plex Sans Arabic',sans-serif;
+  --body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--hand:'Caveat','Aref Ruqaa',cursive;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+.d{font-family:var(--en);text-transform:uppercase;letter-spacing:.01em;font-weight:400;line-height:.95}
+.ar-on .d{font-family:var(--ar)!important;letter-spacing:0!important}
+.ar-on [data-ar]{font-family:var(--body)}
+.ar-on .d[data-ar]{font-family:var(--ar)!important}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+header{direction:ltr}
+/* ---------- header ---------- */
+header{position:fixed;inset:0 0 auto;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:14px clamp(16px,3vw,34px);pointer-events:none}
+header>*{pointer-events:auto}
+.logo{width:58px;height:46px;background:var(--env);padding:6px 8px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);transform:rotate(-3deg);display:block}
+.logo img{width:100%;height:100%}
+nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
+nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
+nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+.ar-on nav a{font-family:var(--ar);font-size:16px}
+.tools{display:flex;gap:8px;justify-self:end}
+.chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
+.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
+.bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
+/* header scales with the screen instead of jumping at a breakpoint */
+header{gap:clamp(8px,1.4vw,14px);padding:clamp(10px,1.4vw,14px) var(--gut)}
+.logo{width:clamp(44px,1.4vw + 38px,58px);height:auto;aspect-ratio:58/46;padding:clamp(4px,.5vw,6px) clamp(5px,.7vw,8px)}
+nav{padding:clamp(3px,.4vw,5px);gap:clamp(2px,.3vw,4px)}
+nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp(7px,1vw,12px) clamp(5px,.5vw,7px)}
+.chip{height:clamp(32px,.6vw + 29.6px,38px);min-width:clamp(32px,.6vw + 29.6px,38px);padding:0 clamp(7px,.8vw,10px);font-size:clamp(12px,.1vw + 11.6px,13px)}
+.tools{gap:clamp(5px,.8vw,8px)}
+@media (max-width:420px){.bag span{display:none}}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper);padding:clamp(60px,8vw,100px) var(--gut) 30px;position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:-14px;height:16px;background:linear-gradient(-45deg,var(--ink) 8px,transparent 0),linear-gradient(45deg,var(--ink) 8px,transparent 0);background-size:16px 16px}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px}
+footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
+.news{display:flex;gap:0;max-width:440px;margin-top:10px}
+.news input{flex:1;min-width:0;border:2px solid var(--paper);background:transparent;color:var(--paper);padding:13px 14px;font:15px var(--body)}
+.news input::placeholder{color:#efe4cf99}
+.news button{border:2px solid var(--paper);background:var(--terra);color:#fff;padding:0 18px;font:17px/1 var(--en);text-transform:uppercase}
+.ar-on .news button{font-family:var(--ar)}
+footer ul{list-style:none;padding:0;display:grid;gap:8px}
+footer ul a{text-decoration:none;opacity:.85}
+footer ul a:hover{opacity:1;text-decoration:underline}
+footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
+.legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
+
+
+.kick{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);background:var(--paper);border:1.5px solid var(--ink);padding:6px 9px 5px;rotate:-2deg}
+.ar-on .kick{font-family:var(--body);letter-spacing:0;font-size:13px}
+.page{padding:clamp(100px,11vw,140px) var(--gut) clamp(60px,8vw,110px);min-height:70svh}
+.page h1{font-size:clamp(46px,6vw + 10px,110px);margin:14px 0 10px}
+.page h1 em{font-style:normal;color:var(--terra)}
+.lead{color:var(--soft);max-width:50ch;font-size:clamp(15px,.3vw + 14px,18px)}
+.box{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);padding:clamp(18px,2.6vw,32px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:13px 18px 11px;font:17px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;box-shadow:3px 3px 0 rgba(196,89,63,.45);text-decoration:none;transition:transform .15s}
+.btn:hover{transform:translate(-1px,-1px)}.btn.terra{background:var(--terra)}.btn.alt{background:var(--paper);color:var(--ink)}.btn.ochre{background:var(--ochre);color:var(--ink)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.ar-on .btn{font-family:var(--ar)}
+label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.ar-on label.f{font-family:var(--body);letter-spacing:0;font-size:13px}
+.f input,.f textarea,.f select{width:100%;border:2px solid var(--ink);background:#FFFDF8;padding:12px 14px;font:16px var(--body);color:var(--ink)}
+.f textarea{min-height:120px;resize:vertical}
+.f input:focus,.f textarea:focus,.f select:focus{outline:3px solid rgba(196,89,63,.4);outline-offset:1px}
+.f input.bad{border-color:var(--terra);background:#fff3ef}
+.note{font:12px/1.5 var(--mono);color:var(--soft)}
+.ar-on .note{font-family:var(--body);font-size:13px}
+.err{font:600 19px/1.15 var(--hand);color:var(--terra);min-height:1em;display:block}
+.ok{font:600 21px/1.2 var(--hand);color:var(--sage)}
+@media (max-width:640px){.btn{font-size:14.5px;padding:11px 14px 9px}}
+
+
+.tg{display:grid;grid-template-columns:220px minmax(0,1fr);gap:clamp(24px,5vw,70px);align-items:start;margin-top:clamp(24px,3vw,40px)}
+.toc{position:sticky;top:96px;display:grid;gap:6px}
+.toc a{font:15px/1 var(--en);text-transform:uppercase;text-decoration:none;border:1.5px solid var(--ink);background:var(--paper);padding:9px 12px 8px;box-shadow:2px 2px 0 var(--sh)}
+.ar-on .toc a{font-family:var(--ar)}
+.doc section{scroll-margin-top:96px;margin-bottom:clamp(36px,5vw,60px)}
+.doc h2{font-size:clamp(30px,2vw + 16px,52px);margin-bottom:14px}
+.doc h3{font:18px/1.2 var(--en);text-transform:uppercase;margin:18px 0 6px;font-weight:400}
+.ar-on .doc h3{font-family:var(--ar)}
+.doc p,.doc li{color:var(--soft);max-width:68ch}
+.doc ul{padding-inline-start:20px;display:grid;gap:6px}
+.draft{border:1.5px dashed var(--terra);color:var(--terra);padding:10px 12px;font:12px/1.5 var(--mono);margin-top:16px;max-width:68ch}
+.ar-on .draft{font-family:var(--body)}
+@media (max-width:760px){.tg{grid-template-columns:1fr}.toc{position:static;grid-auto-flow:column;overflow-x:auto}.toc a{white-space:nowrap}}
+
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
+  <nav>
+    <a href="index.html" data-ar="الرئيسية">Index</a>
+    <a href="shop.html" data-ar="المتجر">Shop</a>
+    <a href="story.html" data-ar="الحكاية">Story</a>
+  </nav>
+  <div class="tools">
+    <button class="chip" id="langBtn" aria-label="Arabic / English">ع</button>
+        <button class="chip bag" id="bag"><span data-ar="السلة">Bag</span><b id="bagn">0</b></button>
+  </div>
+</header>
+
+<main>
+<section class="page">
+  <span class="kick" data-ar="القانوني">The small print</span>
+  <h1 class="d" data-ar="الشروط <em>والخصوصية</em>">Terms &amp; <em>privacy</em></h1>
+  <p class="lead" data-ar="بكلام بسيط: شو بتشتري، شو مسموح تعمل فيه، وشو بنعمل ببياناتك.">In plain words: what you buy, what you may do with it, and what we do with your data.</p>
+  <p class="draft" data-ar="مسودة للنموذج. لازم محامي يراجعها قبل ما يفتح المتجر.">Draft for the prototype. Have a lawyer review it before the shop opens.</p>
+  <div class="tg"><nav class="toc" id="toc"></nav><div class="doc" id="doc"></div></div>
+</section>
+</main>
+<footer>
+  <div class="fgrid">
+    <div>
+      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
+    </div>
+    <div><h4 data-ar="المتجر">Shop</h4><ul>
+      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+    <div><h4 data-ar="عنّا">About</h4><ul>
+      <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 Mass &amp; Grass · Gaza, Palestine</span><span data-ar="رُسمت باليد في غزة، بحب.">Painted by hand in Gaza, with love.</span></div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let AR=false;const t=(en,ar)=>AR?ar:en;
+const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
+function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
+  $$('[data-ar]').forEach(e=>{if(e.dataset.en==null)e.dataset.en=e.innerHTML;e.innerHTML=a?e.dataset.ar:e.dataset.en});
+  $$('main,footer').forEach(e=>e.dir=a?'rtl':'ltr');const lb=$('#langBtn');if(lb)lb.textContent=a?'EN':'ع';if(window.render)render()}
+$('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}catch(e){}};
+
+
+const D=[
+ ['licence','Licence','الرخصة',[
+  ['What you get','شو بتاخذ','When you buy a file you get a personal licence to use it. The painting and its copyright stay with Farah Al-Helou.','لما تشتري ملف بتاخذ رخصة استخدام شخصي. اللوحة وحقوقها بتضل لفرح الحلو.'],
+  ['You may','مسموح','Print it for your home or office · use it as a wallpaper · send a postcard file to friends · give a print as a gift.','تطبعه لبيتك أو مكتبك · تستخدمه خلفية · تبعت ملف البوست كارد لأصحابك · تهدي طبعة.'],
+  ['You may not','ممنوع','Sell the file or prints of it · put it on products for sale · share it publicly for download · use it to train AI · remove the signature.','تبيع الملف أو طبعاته · تحطه على منتجات للبيع · تنشره للتحميل العام · تستخدمه لتدريب ذكاء اصطناعي · تشيل التوقيع.']]],
+ ['terms','Terms of sale','شروط البيع',[
+  ['Prices and payment','الأسعار والدفع','Prices show in your local currency (euro, dollar, pound or shekel), picked from where you open the site, and include all fees. You pay in that currency through PayPal; we never see your card.','الأسعار بتطلع بعملة بلدك (يورو، دولار، جنيه أو شيكل) حسب المكان اللي فاتح منه الموقع، وشاملة كل شي. بتدفع بنفس العملة عن طريق باي بال، وإحنا ما بنشوف بطاقتك.'],
+  ['Delivery','التوصيل','Files are delivered instantly as downloads and by email. Nothing physical is shipped yet.','الملفات بتوصل فورًا للتحميل وعلى الإيميل. ما في شحن لأشياء مطبوعة لهلأ.'],
+  ['Refunds','الاسترجاع','Because files are delivered instantly, sales are final. If a file is broken or not what you ordered, write within 14 days and we fix it or refund you.','لأن الملفات بتوصل فورًا، البيع نهائي. إذا الملف خربان أو مش اللي طلبته، ابعتلنا خلال ١٤ يوم وبنصلحه أو بنرجعلك.'],
+  ['A painting a month','لوحة كل شهر','€5 billed monthly from the day you subscribe. Cancel any time from your profile; you keep every painting you received.','€٥ كل شهر من يوم الاشتراك. بتلغيه وقت ما بدك من بروفايلك، وكل لوحة وصلتك بتضل إلك.']]],
+ ['privacy','Privacy','الخصوصية',[
+  ['What we keep','شو بنحفظ','Your name, email, photo if you add one, your orders and your subscription. If you sign in with Google we receive your name, email and photo from Google.','اسمك، إيميلك، صورتك إذا ضفتها، طلباتك واشتراكك. إذا دخلت بجوجل بيوصلنا منه اسمك وإيميلك وصورتك.'],
+  ['What we do with it','شو بنعمل فيها','Deliver your files, run your account, and, if you agree, send the monthly postcard email. We never sell your data.','بنوصلك ملفاتك، بنشغّل حسابك، وإذا وافقت بنبعتلك إيميل البوست كارد الشهري. وما بنبيع بياناتك أبدًا.'],
+  ['Your rights','حقوقك','Ask for a copy of your data or delete your account at any time from Settings, or by writing to info@massandgrass.com.','بتقدر تطلب نسخة من بياناتك أو تحذف حسابك وقت ما بدك من الإعدادات، أو تبعتلنا على info@massandgrass.com.']]]];
+window.render=()=>{
+  $('#toc').innerHTML=D.map(d=>`<a href="#${d[0]}">${t(d[1],d[2])}</a>`).join('');
+  $('#doc').innerHTML=D.map(d=>`<section id="${d[0]}"><h2 class="d">${t(d[1],d[2])}</h2>${d[3].map(x=>`<h3>${t(x[0],x[1])}</h3><p>${t(x[2],x[3])}</p>`).join('')}</section>`).join('')+`<p class="note">${t('Last updated','آخر تحديث')}: ${ard(16)}·${ard(10)}·${ard(2026)} · Mass &amp; Grass, Gaza</p>`};
+
+let saved=false;try{saved=localStorage.mgLang==='ar'}catch(e){}
+setLang(saved);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mass &amp; Grass Postcards</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="assets/mg.js"></script>
+<style>
+:root{--gut:clamp(20px,5vw,80px);
+  --field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--sky:#3f6b8a;
+  --soft:#6f604d;--env:#FBF7EE;--sh:rgba(46,36,27,.25);
+  --en:'Anton',Impact,sans-serif;--ar:'Lalezar','IBM Plex Sans Arabic',sans-serif;
+  --body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--hand:'Caveat','Aref Ruqaa',cursive;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+.d{font-family:var(--en);text-transform:uppercase;letter-spacing:.01em;font-weight:400;line-height:.95}
+.ar-on .d{font-family:var(--ar)!important;letter-spacing:0!important}
+.ar-on [data-ar]{font-family:var(--body)}
+.ar-on .d[data-ar]{font-family:var(--ar)!important}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+header{direction:ltr}
+/* ---------- header ---------- */
+header{position:fixed;inset:0 0 auto;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:14px clamp(16px,3vw,34px);pointer-events:none}
+header>*{pointer-events:auto}
+.logo{width:58px;height:46px;background:var(--env);padding:6px 8px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);transform:rotate(-3deg);display:block}
+.logo img{width:100%;height:100%}
+nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
+nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
+nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+.ar-on nav a{font-family:var(--ar);font-size:16px}
+.tools{display:flex;gap:8px;justify-self:end}
+.chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
+.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
+.bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
+/* header scales with the screen instead of jumping at a breakpoint */
+header{gap:clamp(8px,1.4vw,14px);padding:clamp(10px,1.4vw,14px) var(--gut)}
+.logo{width:clamp(44px,1.4vw + 38px,58px);height:auto;aspect-ratio:58/46;padding:clamp(4px,.5vw,6px) clamp(5px,.7vw,8px)}
+nav{padding:clamp(3px,.4vw,5px);gap:clamp(2px,.3vw,4px)}
+nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp(7px,1vw,12px) clamp(5px,.5vw,7px)}
+.chip{height:clamp(32px,.6vw + 29.6px,38px);min-width:clamp(32px,.6vw + 29.6px,38px);padding:0 clamp(7px,.8vw,10px);font-size:clamp(12px,.1vw + 11.6px,13px)}
+.tools{gap:clamp(5px,.8vw,8px)}
+@media (max-width:420px){.bag span{display:none}}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper);padding:clamp(60px,8vw,100px) var(--gut) 30px;position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:-14px;height:16px;background:linear-gradient(-45deg,var(--ink) 8px,transparent 0),linear-gradient(45deg,var(--ink) 8px,transparent 0);background-size:16px 16px}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px}
+footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
+.news{display:flex;gap:0;max-width:440px;margin-top:10px}
+.news input{flex:1;min-width:0;border:2px solid var(--paper);background:transparent;color:var(--paper);padding:13px 14px;font:15px var(--body)}
+.news input::placeholder{color:#efe4cf99}
+.news button{border:2px solid var(--paper);background:var(--terra);color:#fff;padding:0 18px;font:17px/1 var(--en);text-transform:uppercase}
+.ar-on .news button{font-family:var(--ar)}
+footer ul{list-style:none;padding:0;display:grid;gap:8px}
+footer ul a{text-decoration:none;opacity:.85}
+footer ul a:hover{opacity:1;text-decoration:underline}
+footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
+.legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
+
+
+
+/* ---------- shared bits ---------- */
+section.pad{padding:clamp(70px,9vw,130px) var(--gut)}
+.kick{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);background:var(--paper);border:1.5px solid var(--ink);padding:6px 9px 5px;transform:rotate(-2deg)}
+.ar-on .kick{font:500 14px/1 var(--body);letter-spacing:0}
+.shead{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:clamp(36px,5vw,60px)}
+.shead h2{font-size:clamp(32px,4.6vw + 14px,88px);margin-top:14px}
+.shead p{max-width:38ch;color:var(--soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:13px 18px 11px;font:17px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;box-shadow:2px 2px 0 rgba(196,89,63,.4);transition:.15s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 rgba(196,89,63,.4)}
+.btn:active{transform:translate(1px,1px);box-shadow:0 0 0 transparent}
+.btn.alt{background:var(--paper);color:var(--ink);box-shadow:2px 2px 0 var(--sh)}
+.btn.terra{background:var(--terra);border-color:var(--ink)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.ar-on .btn{font-family:var(--ar)}
+.chipf{display:inline-block;font:11px/1 var(--mono);letter-spacing:.06em;border:1.5px solid var(--ink);background:var(--paper);padding:5px 7px 4px}
+.pop{opacity:0;translate:0 46px}
+.pop.on{opacity:1;translate:0 0;transition:opacity .5s,translate .8s cubic-bezier(.2,1.25,.3,1);transition-delay:calc(var(--d,0)*90ms)}
+
+
+/* ---------- a postcard: front (the painting) and back (message, stamp, postmark, address) ---------- */
+.pcard{position:relative;aspect-ratio:3/2;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.1,.2,1)}
+.pcard.back{transform:rotateY(180deg)}
+.pcard>.f,.pcard>.b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;container-type:inline-size;box-shadow:0 1px 0 rgba(46,36,27,.15),0 0 0 1px rgba(46,36,27,.06)}
+.pcard>.f{background:#fff;padding:3.2%}
+.pcard>.f img{width:100%;height:100%;object-fit:cover;display:block}
+.pcard>.b{transform:rotateY(180deg);background:#FBF8F1 url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);display:grid;grid-template-columns:1.15fr 1fr;padding:5% 5% 4%;gap:0 4%}
+.pcard>.b::before{content:"";position:absolute;left:53.5%;top:9%;bottom:9%;width:.25cqw;background:rgba(46,36,27,.35)}
+.pcard .msg{position:relative;font:600 4.3cqw/1.32 var(--hand);color:#2b3a55;white-space:pre-wrap;overflow:hidden;word-break:break-word;padding-top:9cqw}
+.pcard .msg.ar{font-family:'Aref Ruqaa',serif;font-weight:400;direction:rtl;text-align:right;font-size:3.9cqw;line-height:1.6}
+.pcard .msg.ph{color:#9a8d7b}
+.pcard .msg .from{display:block;margin-top:2cqw}
+.pcard .lbl{position:absolute;left:5cqw;top:4.6cqw;font:600 1.7cqw/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.pcard .lbl b{display:block;font:2.6cqw/1 var(--en);letter-spacing:.02em;color:var(--ink);margin-top:.6cqw}
+.pcard .rt{position:relative;display:flex;flex-direction:column}
+.pcard .stampbox{align-self:flex-end;width:17cqw;aspect-ratio:.82;border:.3cqw dashed rgba(46,36,27,.35);display:grid;place-items:center;font:1.6cqw/1.2 var(--mono);color:var(--soft);text-align:center}
+.pcard .stampbox .stamp{width:100%;rotate:3deg}
+.pcard .pm{position:absolute;right:13cqw;top:4cqw;width:17cqw;aspect-ratio:1;border-radius:50%;border:.35cqw solid rgba(43,58,85,.7);color:rgba(43,58,85,.8);display:grid;place-items:center;text-align:center;font:600 1.7cqw/1.15 var(--mono);letter-spacing:.06em;rotate:-14deg;opacity:0;scale:1.6;transition:opacity .2s,scale .25s cubic-bezier(.3,1.6,.5,1)}
+.pcard .pm::after{content:"";position:absolute;left:85%;top:28%;width:22cqw;height:12cqw;background:repeating-linear-gradient(180deg,transparent 0 2cqw,rgba(43,58,85,.6) 2cqw 2.4cqw);-webkit-mask:radial-gradient(ellipse at 0 50%,#000 60%,transparent 62%);mask:linear-gradient(90deg,#000,transparent)}
+.pcard .pm.on{opacity:1;scale:1}
+.pcard .addr{margin-top:auto;display:grid;gap:4.4cqw;padding-bottom:2cqw}
+.pcard .addr span{display:block;border-bottom:.25cqw solid rgba(46,36,27,.35);min-height:4.4cqw;font:600 4cqw/1 var(--hand);color:#2b3a55;padding-bottom:.4cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard .addr span.ar{font-family:'Aref Ruqaa',serif;direction:rtl;text-align:right}
+.pcard .tl{position:absolute;left:5cqw;bottom:2.6cqw;font:1.6cqw/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--soft)}
+.pcard .brand{position:absolute;right:5cqw;bottom:2.6cqw;font:1.6cqw/1 var(--mono);letter-spacing:.12em;color:var(--soft)}
+/* a stamp cut from a painting, perforated edge */
+.stamp{position:relative;display:block;aspect-ratio:.82;background:#FBF8F1;padding:8%;
+  -webkit-mask:radial-gradient(circle at 50% 50%,#000 60%,transparent 64%) -4px -4px/8px 8px round,linear-gradient(#000,#000) 4px 4px/calc(100% - 8px) calc(100% - 8px) no-repeat;
+  mask:radial-gradient(circle,#000 58%,transparent 62%) 0 0/9px 9px round,linear-gradient(#000,#000) center/calc(100% - 9px) calc(100% - 9px) no-repeat;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
+.stamp i{position:absolute;inset:8% 8% 26%;background:center/cover no-repeat var(--img)}
+.stamp b{position:absolute;left:8%;right:8%;bottom:7%;display:flex;justify-content:space-between;font:600 clamp(6px,1.1cqw,11px)/1 var(--mono);letter-spacing:.06em;color:var(--ink)}
+.stamp b em{font-style:normal;color:var(--terra)}
+
+/* ---------- 1. one big postcard in your hands (full screen) ---------- */
+.hold1{--cw:min(56vw,calc((100svh - 280px)*1.5),980px);--bg:#5c6f80;--fg:#FAF5E9;position:relative;height:max(100svh,700px);overflow:hidden;background:var(--bg);color:var(--fg);transition:background-color .9s ease,color .6s;user-select:none;-webkit-user-select:none}
+.hold1::before{content:"";position:absolute;inset:0;background:url(assets/paper.jpg);mix-blend-mode:multiply;opacity:.38;pointer-events:none}
+.hold1::after{content:"";position:absolute;inset:0;background:url(assets/grain.png),radial-gradient(70% 60% at 50% 45%,rgba(255,255,255,.12),transparent 70%);background-blend-mode:multiply,normal;opacity:.55;pointer-events:none}
+.hstage{position:absolute;left:50%;top:calc(50% + 4px);translate:-50% -50%;width:var(--cw);aspect-ratio:3/2;perspective:calc(var(--cw)*2.2);z-index:2;touch-action:pan-y}
+.under{position:absolute;inset:0;background:#fff;padding:2.2%;box-shadow:0 18px 30px rgba(0,0,0,.25);transition:transform .5s cubic-bezier(.2,1.2,.4,1)}
+.under img{width:100%;height:100%;object-fit:cover}
+.under.u1{transform:translate(1.6%,2.4%) rotate(2.4deg) scale(.97)}
+.under.u2{transform:translate(-2%,3.6%) rotate(-3.2deg) scale(.94)}
+.hshadow{position:absolute;inset:4% 3% -4% 3%;background:rgba(10,8,5,.45);filter:blur(28px);transition:transform .2s}
+.throw{position:absolute;inset:0;transform-style:preserve-3d;cursor:grab}
+.throw.grab{cursor:grabbing}
+.tilt{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .25s ease-out}
+.tilt .pcard{position:absolute;inset:0;width:100%}
+.tilt .pcard.snap{transition:transform .7s cubic-bezier(.3,.1,.2,1)}
+.tilt .pcard:not(.snap){transition:none}
+.tilt .pcard>.f::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,var(--gl,0)) 0%,transparent 45%)}
+.curl{position:absolute;right:0;bottom:0;width:10%;aspect-ratio:1;z-index:5;cursor:grab;transform:translateZ(1px);background:linear-gradient(135deg,transparent 49%,rgba(0,0,0,.18) 50%,#efe8da 52%,#d8cfbf 100%);box-shadow:-2px -2px 6px rgba(0,0,0,.18);transition:width .25s}
+.curl:hover{width:13%}
+.curl::after{content:"";position:absolute;right:120%;bottom:110%;white-space:nowrap;font:600 18px/1 var(--hand);color:var(--fg);opacity:.85}
+.hcap{position:absolute;z-index:3;left:50%;top:calc(50% + var(--cw)/3 + 26px);translate:-50% 0;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;width:max-content;max-width:92vw}
+.hcap .t{font:600 22px/1.1 var(--hand);opacity:.95}
+.hcap .btn{padding:11px 15px 9px;font-size:15px}
+.hhead{position:absolute;z-index:3;left:var(--gut);top:clamp(92px,13vh,130px);max-width:min(280px,17vw)}
+.ar-on .hhead{left:auto;right:var(--gut)}
+.hhead h1{font-size:clamp(34px,2.6vw + 12px,72px);margin:12px 0 10px}
+.hhead p{opacity:.85;font-size:15px}
+.hnum{position:absolute;z-index:3;right:var(--gut);top:clamp(92px,13vh,130px);text-align:end}
+.ar-on .hnum{right:auto;left:var(--gut);text-align:start}
+.hnum b{display:block;font:clamp(60px,5vw + 20px,140px)/.8 var(--en)}
+.hnum small{display:block;font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-top:10px}
+.hnum em{display:block;font:600 22px/1.1 var(--hand);font-style:normal;margin-top:6px;opacity:.9;max-width:16ch;margin-inline-start:auto}
+.ar-on .hnum em{margin-inline-start:0}
+.harr{position:absolute;z-index:3;top:50%;translate:0 -50%;width:52px;height:52px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);display:grid;place-items:center;font:22px/1 var(--mono);box-shadow:2px 2px 0 rgba(0,0,0,.3)}
+.harr.l{left:var(--gut)}.harr.r{right:var(--gut)}
+.harr:hover{transform:translate(-1px,-1px)}
+.hhint{position:absolute;z-index:3;left:50%;bottom:clamp(14px,3vh,28px);translate:-50% 0;font:600 20px/1 var(--hand);opacity:.8;white-space:nowrap;transition:opacity .5s}
+@media (max-width:980px){
+  .hold1{height:max(100svh,700px)}
+  .hold1{--cw:min(calc(100vw - 40px),calc((100svh - 330px)*1.5))}
+  .hstage{top:calc(50% - 10px)}
+  .hhead{max-width:none;right:var(--gut);top:clamp(74px,10vh,96px)}
+  .hhead h1{font-size:clamp(30px,8vw,44px);margin:8px 0 4px}.hhead p{display:none}
+  .hnum{top:auto;bottom:clamp(70px,10vh,100px);left:var(--gut);right:auto;text-align:start}.hnum b{font-size:48px}.hnum em,.hnum small{display:none}
+  .harr{top:auto;bottom:clamp(70px,10vh,100px);translate:none;width:46px;height:46px}.harr.l{left:auto;right:calc(var(--gut) + 56px)}
+  .hcap{top:calc(50% - 10px + var(--cw)/3 + 18px)}
+  .hcap .t{display:none}
+}
+
+/* ---------- Farah's envelope (the same one as on the story page) ---------- */
+.menv{position:absolute;perspective:1600px;perspective-origin:50% 0}
+.menv>span,.menv>i{position:absolute;display:block}
+.menv .ein{inset:0;background:url(assets/env_inside.webp) center/100% 100%;z-index:1;box-shadow:4px 6px 0 rgba(46,36,27,.2)}
+.menv .epk{inset:0;background:url(assets/env_pocket.webp) center/100% 100%;z-index:3;pointer-events:none}
+.menv .seal{width:24%;aspect-ratio:1;left:38%;top:44%;background:center/100% 100% no-repeat;filter:drop-shadow(2px 2px 0 rgba(46,36,27,.25))}
+.menv .sealB{background-image:url(assets/sealB.webp);z-index:4}
+.menv .sealW{background-image:url(assets/sealW.webp);z-index:6;opacity:0;scale:1.4;transition:opacity .2s,scale .35s cubic-bezier(.3,1.7,.5,1)}
+.menv .flap{left:0;right:0;top:0;height:60%;z-index:1;transform-origin:50% 0;transform-style:preserve-3d;transform:rotateX(-180deg);transition:transform .8s cubic-bezier(.45,.05,.25,1),z-index 0s .4s}
+.menv .flap>span{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:center/100% 100% no-repeat}
+.menv .flap .fo{background-image:url(assets/flap_out.webp);filter:drop-shadow(2px 3px 0 rgba(46,36,27,.28))}
+.menv .flap .fo .seal{position:absolute;display:block;left:38%;top:73.33%;width:24%;background-image:url(assets/sealA.webp)}
+.menv .flap .fi{background-image:url(assets/flap_in.webp);transform:rotateX(180deg)}
+.menv.shut .flap{transform:rotateX(0);z-index:5;transition:transform .8s cubic-bezier(.45,.05,.25,1),z-index 0s}
+.menv.sealed .sealW{opacity:1;scale:1}
+
+/* ---------- 2. write & send ---------- */
+#write{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply}
+.studio{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:start}
+.steps{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;min-width:0}
+.step{min-width:0}
+.step h4{display:flex;align-items:baseline;gap:10px;font:clamp(20px,1vw + 14px,28px)/1 var(--en);text-transform:uppercase;margin-bottom:10px}
+.ar-on .step h4{font-family:var(--ar)}
+.step h4 i{font:600 12px var(--mono);font-style:normal;color:#fff;background:var(--terra);padding:4px 7px 3px;letter-spacing:.06em}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:thin}
+.thumbs button{flex:none;width:92px;aspect-ratio:3/2;border:0;padding:3px;background:#fff;box-shadow:1px 2px 0 var(--sh);transition:translate .2s}
+.thumbs button img{width:100%;height:100%;object-fit:cover}
+.thumbs button[aria-pressed=true]{outline:3px solid var(--terra);outline-offset:2px;translate:0 -3px}
+.stamps{display:flex;flex-wrap:wrap;gap:12px}
+.stamps button{border:0;background:none;padding:0;width:64px;container-type:inline-size;transition:rotate .2s,translate .2s}
+.stamps button:hover{rotate:-4deg}
+.stamps button[aria-pressed=true]{translate:0 -5px;filter:drop-shadow(0 0 0 var(--terra))}
+.stamps button[aria-pressed=true] .stamp{outline:3px solid var(--terra);outline-offset:3px}
+.field{display:grid;gap:6px;margin-bottom:12px}
+.field label{font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.ar-on .field label{font:500 14px var(--body);letter-spacing:0}
+.field textarea,.field input{width:100%;border:2px solid var(--ink);background:#FFFDF8;padding:12px 14px;font:600 20px/1.35 var(--hand);color:#2b3a55;resize:vertical}
+.field textarea{min-height:120px}
+.field input{font-size:19px}
+.field textarea:focus,.field input:focus{outline:3px solid rgba(196,89,63,.4);outline-offset:1px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.count{font:11px var(--mono);color:var(--soft);text-align:end}
+.sendrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.share{display:none;margin-top:16px;padding:18px;border:2px solid var(--ink);background:#FFFDF8;box-shadow:3px 3px 0 var(--sh)}
+.share.on{display:block;animation:cardIn .5s cubic-bezier(.2,1.3,.4,1)}
+@keyframes cardIn{from{opacity:0;translate:0 16px}}
+.share p{font:600 22px/1.15 var(--hand);color:var(--terra);margin-bottom:12px}
+.share .btns{display:flex;flex-wrap:wrap;gap:8px}
+.share small{display:block;margin-top:12px;color:var(--soft);font-size:13px}
+.howto{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:clamp(40px,6vw,80px);border-top:2px dashed rgba(46,36,27,.3);padding-top:28px}
+.howto div{display:flex;gap:12px;align-items:flex-start}
+.howto b{flex:none;width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font:20px/1 var(--en)}
+.howto span{font-size:15px;color:var(--soft)}
+.howto span strong{display:block;color:var(--ink);font:18px/1.1 var(--en);text-transform:uppercase;margin-bottom:3px}
+.ar-on .howto span strong{font-family:var(--ar)}
+@media (max-width:900px){.studio{grid-template-columns:1fr}.desk{position:relative;top:0}.howto{grid-template-columns:1fr}}
+
+/* the desk: the card, and the envelope it goes into */
+.desk{position:sticky;top:90px}
+@media (max-width:900px){.desk{position:relative;top:0;margin-bottom:8px}}
+.dstage{position:relative;aspect-ratio:1.18;container-type:inline-size}
+.dstage .menv{left:10%;width:80%;bottom:0;aspect-ratio:1200/840}
+.dstage .menv>.ein,.dstage .menv>.epk,.dstage .menv>.sealB,.dstage .menv>.flap{opacity:0;translate:0 30%;transition:opacity .45s,translate .7s cubic-bezier(.2,1.1,.3,1),transform .8s cubic-bezier(.45,.05,.25,1),z-index 0s .4s}
+.dstage.env .menv>.ein,.dstage.env .menv>.epk,.dstage.env .menv>.sealB,.dstage.env .menv>.flap{opacity:1;translate:0 0}
+.dstage.env .menv.shut>.flap{transition:opacity .45s,translate .7s,transform .8s cubic-bezier(.45,.05,.25,1),z-index 0s}
+.dwrap{position:absolute;z-index:2;left:-3.75%;width:107.5%;top:-34.3%;transform-origin:50% 0;transition:transform .85s cubic-bezier(.5,0,.25,1)}
+.dwrap #dcard{filter:drop-shadow(6px 14px 14px rgba(46,36,27,.22))}
+.dwrap .pcard{width:100%;cursor:pointer}
+.dstage.lift .dwrap{transform:translateY(-14%) scale(.86)}
+.dstage.in .dwrap{transform:translateY(44%) scale(.86)}
+.flipb{margin-top:16px;display:flex;gap:10px;align-items:center;font:600 19px/1 var(--hand);color:var(--soft);transition:opacity .3s}
+.desk.done .flipb{opacity:0;pointer-events:none}
+
+/* ---------- 3. all the postcards ---------- */
+#all{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply}
+.fchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:clamp(26px,3vw,40px)}
+.fchips button{border:1.5px solid var(--ink);background:var(--paper);padding:9px 13px 8px;font:14px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;box-shadow:1px 1px 0 var(--sh)}
+.ar-on .fchips button{font-family:var(--ar)}
+.fchips button b{font:600 11px var(--mono);color:var(--terra);margin-inline-start:6px}
+.fchips button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.fchips button[aria-pressed=true] b{color:var(--ochre)}
+.allg{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:clamp(30px,3.6vw,52px) clamp(20px,2.6vw,36px)}
+.pitem{animation:cardIn .55s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--i)*55ms)}
+.pitem.hide{display:none}
+.pitem .pw{position:relative;rotate:var(--r);transition:rotate .35s,translate .35s;perspective:1400px;cursor:pointer}
+.pitem .pw::after{content:"";position:absolute;inset:6% 4% -5% 4%;background:rgba(46,36,27,.35);filter:blur(14px);z-index:-1;transition:transform .35s}
+.pitem:hover .pw{rotate:0deg;translate:0 -6px}
+.pitem:hover .pw::after{transform:translateY(8px) scale(1.02)}
+.pitem .pw .pcard{width:100%}
+.pitem .meta{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:16px}
+.pitem .meta b{font:clamp(20px,.8vw + 14px,26px)/1 var(--en);text-transform:uppercase}
+.ar-on .pitem .meta b{font-family:var(--ar)}
+.pitem .meta span{font:600 18px/1 var(--hand);color:var(--soft)}
+.pitem .meta em{font:15px/1 var(--en);font-style:normal;color:var(--terra)}
+.pitem .row{display:flex;gap:8px;margin-top:12px}
+.pitem .row .btn{padding:9px 12px 8px;font-size:14px}
+
+/* ---------- you've got a postcard (opening a shared link) ---------- */
+.recv{position:fixed;inset:0;z-index:300;background:rgba(30,24,17,.86);display:none;place-items:center;padding:20px}
+.recv.on{display:grid}
+.recv .box{width:min(620px,92vw);text-align:center;color:#FAF5E9}
+.recv .box h2{font-size:clamp(30px,3vw + 14px,56px);margin:10px 0 18px}
+.recv .renv{position:relative;width:min(440px,80vw);aspect-ratio:1200/840;margin:40px auto 0;cursor:pointer}
+.recv .renv .menv{inset:0}
+.recv .renv .menv .flap{transform:rotateX(0);z-index:5;transition:none}
+.recv .renv .menv .sealW{opacity:1;scale:1}
+.recv .renv.open .menv .flap{transform:rotateX(-180deg);z-index:1;transition:transform .8s cubic-bezier(.45,.05,.25,1),z-index 0s .4s}
+.recv .renv.open .menv .sealW{opacity:0;scale:1.2}
+.recv .rwrap{position:absolute;z-index:2;left:5%;width:90%;top:14%;transition:transform 1s cubic-bezier(.3,1,.3,1) .75s}
+.recv .renv.open .rwrap{transform:translateY(-64%)}
+.recv .full{display:none;width:min(620px,92vw);margin:0 auto}
+.recv .full .pcard{cursor:pointer}
+.recv .full{filter:drop-shadow(0 20px 30px rgba(0,0,0,.4))}
+.recv.read .renv{display:none}.recv.read .full{display:block;animation:cardIn .6s cubic-bezier(.2,1.2,.4,1)}
+.recv .acts{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:22px}
+.recv .tap{font:600 21px/1 var(--hand);opacity:.85;margin-top:16px}
+
+/* ---------- marquee ---------- */
+.marq{background:var(--ochre);border-block:2px solid var(--ink);overflow:hidden;white-space:nowrap;padding:14px 0}
+.marq div{display:inline-flex;gap:40px;animation:marq 34s linear infinite;font:clamp(20px,1.4vw + 12px,32px)/1 var(--en);text-transform:uppercase;color:var(--ink)}
+.marq div span::after{content:"✶";margin-inline-start:40px;color:var(--terra)}
+.ar-on .marq div{font-family:var(--ar)}
+@keyframes marq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.marq div{animation:none}}
+
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
+  <nav>
+    <a href="index.html" data-ar="الرئيسية">Index</a>
+    <a href="shop.html" class="on" data-ar="المتجر">Shop</a>
+    <a href="story.html" data-ar="الحكاية">Story</a>
+  </nav>
+  <div class="tools">
+    <button class="chip" id="langBtn" aria-label="Arabic / English">ع</button>
+        <button class="chip bag" id="bag"><span data-ar="السلة">Bag</span><b id="bagn">0</b></button>
+  </div>
+</header>
+
+<main>
+<!-- 1 · ONE BIG POSTCARD IN YOUR HANDS (full screen) -->
+<section class="hold1" id="hold1" aria-label="Postcards from Gaza">
+  <div class="hhead">
+    <span class="kick" data-ar="بوست كارد · رقمية أولًا">Postcards · digital first</span>
+    <h1 class="d" data-ar="بوست كارد من غزة">Postcards from Gaza</h1>
+    <p data-ar="اسحب زاوية البطاقة لتقلبها، أو ارميها يمين وشمال لتشوف اللي وراها.">Pull the corner to turn a card over, or toss it aside to see the next one.</p>
+  </div>
+  <div class="hnum"><b id="hn">01</b><small id="hof">of 15</small><em id="hpl"></em></div>
+  <div class="hstage" id="hstage">
+    <div class="hshadow" id="hshadow"></div>
+    <div class="under u2" id="u2"><img alt="" src="assets/blueflowers.webp"></div>
+    <div class="under u1" id="u1"><img alt="" src="assets/blueflowers.webp"></div>
+    <div class="throw" id="throw"><div class="tilt" id="tilt"></div></div>
+  </div>
+  <button class="harr l" id="hprev" aria-label="Previous card">←</button><button class="harr r" id="hnext" aria-label="Next card">→</button>
+  <div class="hcap"><span class="t" id="ht"></span><button class="btn terra" id="hwrite" data-ar="اكتب عليها">Write on this one</button><button class="btn alt" id="hadd" data-ar="أضف للسلة · €2">Add to bag · €2</button></div>
+  <span class="hhint" id="hhint" data-ar="اسحب الزاوية لتقلبها ↻ · ارميها لتشوف اللي بعدها ↔">pull the corner to turn it ↻ · toss it for the next ↔</span>
+</section>
+
+<!-- 2 · WRITE & SEND -->
+<section class="pad" id="write">
+  <div class="shead">
+    <div><span class="kick" data-ar="اكتب وابعت">Write &amp; send</span><h2 class="d" data-ar="ابعت بطاقة من غزة">Send a postcard from Gaza</h2></div>
+    <p data-ar="اختار لوحة وطابع، اكتب رسالتك، وبتنختم من غزة وبتنحط بظرف. بتوصل كرابط على واتساب أو الإيميل.">Pick a painting and a stamp, write your message, and it gets a Gaza postmark and goes in an envelope. It arrives as a link on WhatsApp or by email.</p>
+  </div>
+  <div class="studio">
+    <div class="desk" id="desk">
+      <div class="dstage" id="dstage">
+        <div class="menv"><span class="ein"></span><div class="dwrap" id="dwrap"><div id="dcard"></div></div><span class="epk"></span><span class="seal sealB"></span><span class="flap"><span class="fo"><i class="seal sealA"></i></span><span class="fi"></span></span><span class="seal sealW"></span></div>
+      </div>
+      <div class="flipb" id="flipb"><button class="btn alt" id="flipBtn" data-ar="اقلبها ↻">Turn it over ↻</button><span data-ar="أو اضغط على البطاقة">or tap the card</span></div>
+    </div>
+    <div class="steps">
+      <div class="step"><h4><i>01</i><span data-ar="اختار اللوحة">Pick a painting</span></h4><div class="thumbs" id="thumbs"></div></div>
+      <div class="step"><h4><i>02</i><span data-ar="اختار الطابع">Pick a stamp</span></h4><div class="stamps" id="stamps"></div></div>
+      <div class="step"><h4><i>03</i><span data-ar="اكتب">Write</span></h4>
+        <div class="field"><label for="msg" data-ar="رسالتك (عربي أو إنجليزي)">Your message (English or Arabic)</label><textarea id="msg" maxlength="240"></textarea><span class="count" id="count">0 / 240</span></div>
+        <div class="two"><div class="field"><label for="to" data-ar="لمين؟">To</label><input id="to" maxlength="40"></div><div class="field"><label for="from" data-ar="منك">From</label><input id="from" maxlength="30"></div></div>
+      </div>
+      <div class="step"><h4><i>04</i><span data-ar="اختمها وابعتها">Seal &amp; send</span></h4>
+        <div class="sendrow"><button class="btn terra" id="seal" data-ar="اختمها وسكّر الظرف">Postmark &amp; seal</button><button class="btn alt" id="dl" data-ar="حمّلها صورة">Download image</button></div>
+        <div class="share" id="share">
+          <p data-ar="انختمت من غزة وانحطت بالظرف ✶">Postmarked in Gaza and sealed ✶</p>
+          <div class="btns"><a class="btn" id="sWa" target="_blank" rel="noopener" data-ar="واتساب">WhatsApp</a><a class="btn alt" id="sMail" data-ar="إيميل">Email</a><button class="btn alt" id="sCopy" data-ar="انسخ الرابط">Copy link</button><button class="btn alt" id="again" data-ar="بطاقة جديدة">Write another</button></div>
+          <small data-ar="الرابط بيفتح الظرف عند اللي بتبعتله. الرسالة بتنحفظ جوّا الرابط نفسه، مش على أي سيرفر.">The link opens the envelope for whoever you send it to. Your message lives inside the link itself, not on any server.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="howto">
+    <div class="pop" style="--d:0"><b>1</b><span><strong data-ar="اطبع">Print</strong><span data-ar="٤ بطاقات على ورقة A4، أحسن على ورق سميك.">Four cards on one A4 sheet, best on thick paper.</span></span></div>
+    <div class="pop" style="--d:1"><b>2</b><span><strong data-ar="قصّ">Cut</strong><span data-ar="على الخط المنقّط، وخلّي الحواف بيضا.">Along the dotted line, keep the white border.</span></span></div>
+    <div class="pop" style="--d:2"><b>3</b><span><strong data-ar="اكتب والزق طابع">Write &amp; stamp</strong><span data-ar="وابعتها بالبريد، أو سلّمها باليد.">Post it, or hand it over yourself.</span></span></div>
+  </div>
+</section>
+
+<!-- 3 · ALL THE POSTCARDS -->
+<section class="pad" id="all">
+  <div class="shead">
+    <div><span class="kick" data-ar="السلسلة كاملة">The whole series</span><h2 class="d" data-ar="كل البوست كارد">All the postcards</h2></div>
+    <p data-ar="١٥ بطاقة من غزة. مرّر على أي بطاقة لتشوف ظهرها، واكتب عليها أو أضفها للسلة.">Fifteen cards from Gaza. Hover over any card to see its back, then write on it or add it to your bag.</p>
+  </div>
+  <div class="fchips" id="fchips"></div>
+  <div class="allg" id="allg"></div>
+</section>
+
+<div class="marq" aria-hidden="true"><div id="marq"></div></div>
+</main>
+
+<div class="recv" id="recv" role="dialog" aria-modal="true" aria-label="A postcard for you">
+  <div class="box">
+    <span class="kick" data-ar="وصلك بريد">You've got mail</span>
+    <h2 class="d" id="rtitle"></h2>
+    <div class="renv" id="env2"><div class="menv"><span class="ein"></span><div class="rwrap" id="rcard2"></div><span class="epk"></span><span class="seal sealB"></span><span class="flap"><span class="fo"><i class="seal sealA"></i></span><span class="fi"></span></span><span class="seal sealW"></span></div></div>
+    <div class="tap" id="rtap" data-ar="اضغط لتفتح الظرف">tap to open the envelope</div>
+    <div class="full" id="rfull"></div>
+    <div class="acts"><button class="btn terra" id="rreply" data-ar="ابعت وحدة إلهم">Send one back</button><button class="btn alt" id="rclose" data-ar="سكّر">Close</button></div>
+  </div>
+</div>
+
+<footer>
+  <div class="fgrid">
+    <div>
+      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
+    </div>
+    <div><h4 data-ar="المتجر">Shop</h4><ul>
+      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+    <div><h4 data-ar="عنّا">About</h4><ul>
+      <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 Mass &amp; Grass · Gaza, Palestine</span><span data-ar="رُسمت باليد في غزة، بحب.">Painted by hand in Gaza, with love.</span></div>
+</footer>
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let AR=false;const t=(en,ar)=>AR?ar:en;
+const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+
+/* ---- sounds: a soft paper slap and the bird chirp used across the site ---- */
+let actx;const AC=()=>{try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx}catch(e){return null}};
+function slap(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleRate*.08,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,4);
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='lowpass';f.frequency.value=1800;g.gain.value=.22;s.connect(f).connect(g).connect(c.destination);s.start(t0);
+  const o=c.createOscillator(),og=c.createGain();o.frequency.setValueAtTime(150,t0);o.frequency.exponentialRampToValueAtTime(60,t0+.08);og.gain.setValueAtTime(.12,t0);og.gain.exponentialRampToValueAtTime(.001,t0+.09);o.connect(og).connect(c.destination);o.start(t0);o.stop(t0+.1)}
+function peel(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleRate*.22,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(i/n)*(1-i/n)*4;
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='bandpass';f.frequency.setValueAtTime(1200,t0);f.frequency.linearRampToValueAtTime(3800,t0+.22);f.Q.value=1.2;g.gain.value=.12;s.connect(f).connect(g).connect(c.destination);s.start(t0)}
+
+/* ---- bag ---- */
+let bagN=window.MGBag?MGBag.count():0;function addBag(it){bagN=window.MGBag?MGBag.add(it):bagN+1;const b=$('#bagn');if(b){b.textContent=ard(bagN);$('#bag').animate([{transform:'scale(1.25) rotate(-6deg)'},{transform:'none'}],{duration:350})}slap()}
+
+/* ---- the cards: Postcards from Gaza [key, EN, AR, place EN, place AR] ---- */
+const PC=[
+ ['hero','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي'],['blueflowers','White Dove','الحمامة البيضاء','Beit Lahia','بيت لاهيا'],['waves','The Waves','الموج','Gaza beach','بحر غزة'],
+ ['boatman','The Boatman','الصياد','Gaza port','ميناء غزة'],['house','Home','البيت','Az-Zawayda','الزوايدة'],['ppoppies','Blue Poppies','شقائق زرقاء','Gaza','غزة'],
+ ['dovegirl','Dove Girl','فتاة الحمام','Deir al-Balah','دير البلح'],['pcartgirl','Girl with Cart','فتاة والعربة','Gaza','غزة'],['pflower','Big Flower','الزهرة الكبيرة','Gaza','غزة'],
+ ['hill','Hill & Boat','التلة والقارب','Khan Younis','خان يونس'],['boattop','The Boat','القارب','Gaza port','ميناء غزة'],['psea','Sea & Clouds','بحر وغيوم','Gaza','غزة'],
+ ['alley','The Alley','الزقاق','Old City','البلدة القديمة'],['sparklers','Sparkler Night','ليلة الشماريخ','Gaza City','مدينة غزة'],['guitar','Guitar Girl','فتاة الجيتار','Tel al-Hawa','تل الهوا']];
+const STAMPS=[['plemons','#D9A441'],['psea','#3f6b8a'],['pmoon','#2E3B4E'],['ptree','#66805A'],['pwhale','#C4593F'],['pflower','#8a5a3c']];
+const img=k=>`assets/${k}.webp`,isAr=s=>/[؀-ۿ]/.test(s||''),esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today=()=>{const d=new Date();return `${String(d.getDate()).padStart(2,'0')}·${String(d.getMonth()+1).padStart(2,'0')}·${String(d.getFullYear()).slice(2)}`};
+const stampHTML=i=>`<span class="stamp" style="--img:url(${img(STAMPS[i][0])})"><i></i><b><span>GAZA</span><em>M&amp;G</em></b></span>`;
+/* one postcard, front and back */
+function cardHTML(ci,o={}){const p=PC[ci],m=o.msg||'',ph=!m&&o.ph;
+  return `<div class="pcard${o.back?' back':''}"><div class="f"><img src="${img(p[0])}" alt="${esc(t(p[1],p[2]))}" draggable="false" loading="${o.lazy?'lazy':'eager'}"></div>
+   <div class="b"><span class="lbl">${t('Postcard','بوست كارد')}<b>${esc(t(p[1],p[2]))}</b></span>
+     <div class="msg${isAr(m||(ph?o.ph:''))?' ar':''}${ph?' ph':''}">${esc(m||o.ph||'')}${o.from?`<span class="from">— ${esc(o.from)}</span>`:''}</div>
+     <div class="rt"><span class="stampbox">${o.stamp!=null?stampHTML(o.stamp):t('stamp','طابع')}</span><span class="pm${o.pm?' on':''}">GAZA<br>${today()}<br>✶</span>
+       <div class="addr"><span class="${isAr(o.to)?'ar':''}">${o.to?esc(o.to):''}</span><span></span><span></span></div></div>
+     <span class="tl">${esc(t(p[3],p[4]))} · ${t('painted by Farah','بريشة فرح')}</span><span class="brand">massandgrass</span></div></div>`}
+
+/* ---- 1. one big postcard in your hands ---- */
+const reduceM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hold1=$('#hold1'),hst=$('#hstage'),thr=$('#throw'),tilt=$('#tilt');let hi=0,flipped=false,hdrag=null,busy=false;const PAL={};
+/* each card brings its own wall colour, taken from the painting itself */
+function palette(k){return new Promise(res=>{if(PAL[k])return res(PAL[k]);const im=new Image();im.onload=()=>{try{const c=document.createElement('canvas');c.width=32;c.height=22;const g=c.getContext('2d');g.drawImage(im,0,0,32,22);
+  const d=g.getImageData(0,0,32,22).data;let r=0,gg=0,b=0,w=0;for(let i=0;i<d.length;i+=4){const R=d[i],G=d[i+1],B=d[i+2],mx=Math.max(R,G,B),mn=Math.min(R,G,B),s=mx?(mx-mn)/mx:0,wt=.15+s*s*3;r+=R*wt;gg+=G*wt;b+=B*wt;w+=wt}
+  r/=w;gg/=w;b/=w;let [h,s,l]=hsl(r,gg,b);s=Math.min(.5,s*1.1+.08);l=Math.min(.46,Math.max(.3,l*.75));PAL[k]=`hsl(${(h*360)|0} ${(s*100)|0}% ${(l*100)|0}%)`}catch(e){PAL[k]='#5c6f80'}res(PAL[k])};im.onerror=()=>res('#5c6f80');im.src=img(k)})}
+function hsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;if(mx===mn)return[0,0,l];const d=mx-mn,s=l>.5?d/(2-mx-mn):d/(mx+mn);let h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;return[h/6,s,l]}
+const note=p=>t(`Dear you,\nthis is ${p[3]}. I painted it so I would never forget it, and now it's yours.`,`عزيزي،\nهاي ${p[4]}. رسمتها عشان ما أنساها أبدًا، وهلأ صارت إلك.`);
+function showCard(i,from){hi=(i+PC.length)%PC.length;const p=PC[hi];flipped=false;
+  tilt.innerHTML=cardHTML(hi,{msg:note(p),from:t('Farah','فرح'),to:t('you, wherever you are','إلك، وين ما كنت'),stamp:hi%STAMPS.length,pm:true})+'<span class="curl" id="curl" aria-hidden="true"></span>';
+  [['#u1',1],['#u2',2]].forEach(([s,o])=>$(s+' img').src=img(PC[(hi+o)%PC.length][0]));
+  $('#hn').textContent=ard(String(hi+1).padStart(2,'0'));$('#hof').textContent=t(`of ${PC.length} cards`,`من ${ard(PC.length)} بطاقة`);$('#hpl').textContent=t(p[1]+', '+p[3],p[2]+'، '+p[4]);$('#ht').textContent=t(p[1]+' · '+p[3],p[2]+' · '+p[4]);
+  palette(p[0]).then(c=>{if(hi!==PC.indexOf(p))return;hold1.style.setProperty('--bg',c)});
+  if(from){thr.animate([{transform:`translateZ(-60px) scale(.96) rotate(${from*-2}deg)`},{transform:'none'}],{duration:450,easing:'cubic-bezier(.2,1.2,.4,1)'})}
+  $('#hadd').textContent=t('Add to bag · €2','أضف للسلة · €2');
+  /* prefetch the next one's colour */palette(PC[(hi+1)%PC.length][0])}
+const pc=()=>tilt.querySelector('.pcard');
+function setFlip(deg,snap){const c=pc();c.classList.toggle('snap',!!snap);c.style.transform=`rotateY(${deg}deg)`;const g=Math.max(0,Math.sin(deg*Math.PI/180))*.0;c.querySelector('.f').style.setProperty('--gl',(Math.abs(Math.sin(deg*Math.PI/180))*.35).toFixed(2))}
+function flip(){flipped=!flipped;setFlip(flipped?180:0,true);peel();$('#hhint').style.opacity=0}
+function toss(dir,step=1){if(busy)return;busy=true;$('#hhint').style.opacity=0;const cur=thr.style.transform||'none';
+  const a=thr.animate([{transform:cur},{transform:`translate(${dir*110}vw,${-8+Math.random()*16}vh) rotate(${dir*28}deg)`}],{duration:520,easing:'cubic-bezier(.4,0,.8,.5)'});peel();
+  a.onfinish=()=>{thr.style.transform='';showCard(hi+step,dir);busy=false}}
+/* mouse tilt: the card follows your hand a little */
+hst.addEventListener('pointermove',e=>{if(hdrag||reduceM||e.pointerType!=='mouse')return;const r=hst.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  tilt.style.transform=`rotateY(${x*9}deg) rotateX(${-y*7}deg)`;$('#hshadow').style.transform=`translate(${-x*24}px,${-y*18}px)`});
+hst.addEventListener('pointerleave',()=>{tilt.style.transform='';$('#hshadow').style.transform=''});
+/* drag: from the corner it turns the card over; from anywhere else it tosses it */
+hst.addEventListener('pointerdown',e=>{if(e.button>0||busy)return;AC();const corner=!!e.target.closest('.curl');hdrag={x:e.clientX,y:e.clientY,corner,moved:0,horiz:null,id:e.pointerId,base:flipped?180:0};tilt.style.transform=''});
+addEventListener('pointermove',e=>{if(!hdrag||e.pointerId!==hdrag.id)return;const dx=e.clientX-hdrag.x,dy=e.clientY-hdrag.y;
+  if(hdrag.horiz===null&&Math.hypot(dx,dy)>6){hdrag.horiz=hdrag.corner||Math.abs(dx)>Math.abs(dy);if(hdrag.horiz){thr.classList.add('grab');try{hst.setPointerCapture(e.pointerId)}catch(_){}}}
+  if(!hdrag.horiz)return;hdrag.moved=Math.hypot(dx,dy);
+  if(hdrag.corner){const w=hst.clientWidth,deg=Math.max(-180,Math.min(180,hdrag.base+(-dx/w)*230*(hdrag.base?-1:1)*(hdrag.base?-1:1)));setFlip(hdrag.base===0?Math.min(180,Math.max(0,-dx/w*230)):Math.max(0,180-dx/w*230))}
+  else thr.style.transform=`translate(${dx}px,${dy*.4}px) rotate(${dx*.03}deg)`});
+addEventListener('pointerup',e=>{if(!hdrag||e.pointerId!==hdrag.id)return;const d=hdrag,dx=e.clientX-d.x;hdrag=null;thr.classList.remove('grab');
+  if(d.corner){if(d.moved<6){flip();return}const deg=parseFloat((pc().style.transform.match(/-?[\d.]+/)||[0])[0]);flipped=deg>90;setFlip(flipped?180:0,true);peel();$('#hhint').style.opacity=0;return}
+  if(d.moved<6&&!d.horiz){flip();return}
+  if(Math.abs(dx)>110)toss(Math.sign(dx));else{thr.animate([{transform:thr.style.transform||'none'},{transform:'none'}],{duration:420,easing:'cubic-bezier(.2,1.5,.4,1)'});thr.style.transform=''}});
+addEventListener('pointercancel',()=>{if(hdrag){hdrag=null;thr.style.transform='';thr.classList.remove('grab')}});
+$('#hprev').onclick=()=>toss(1,-1);$('#hnext').onclick=()=>toss(-1,1);
+addEventListener('keydown',e=>{const r=hold1.getBoundingClientRect();if(r.bottom<120||r.top>innerHeight-120||/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+  if(e.key==='ArrowRight')toss(-1,1);else if(e.key==='ArrowLeft')toss(1,-1);else if(e.key===' '||e.key==='Enter'){if(e.target===document.body){e.preventDefault();flip()}}});
+$('#hwrite').onclick=()=>{pickCard(hi);$('#write').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#msg').focus({preventScroll:true}),900)};
+$('#hadd').onclick=()=>{const p=PC[hi];addBag({k:p[0],kind:'postcard',t:p[1],ta:p[2],p:2});$('#hadd').textContent=t('Added ✓','انضافت ✓')};
+
+/* ---- 2. write & send ---- */
+const S={c:0,s:0,msg:'',to:'',from:'',back:true,sealed:false};
+function renderDesk(){$('#dcard').innerHTML=cardHTML(S.c,{back:S.back,msg:S.msg,to:S.to,from:S.from,stamp:S.s,pm:S.sealed,ph:t('Dear…\nYour message will appear here, in handwriting.','عزيزي…\nرسالتك رح تطلع هون بخط الإيد.')});
+  $('#dcard .pcard').addEventListener('click',()=>{if($('#desk').classList.contains('done'))return;S.back=!S.back;$('#dcard .pcard').classList.toggle('back',S.back);peel()})}
+function updateBack(){const b=$('#dcard .b');if(!b)return renderDesk();const tmp=document.createElement('div');tmp.innerHTML=cardHTML(S.c,{back:true,msg:S.msg,to:S.to,from:S.from,stamp:S.s,pm:S.sealed,ph:t('Dear…\nYour message will appear here, in handwriting.','عزيزي…\nرسالتك رح تطلع هون بخط الإيد.')});
+  b.replaceWith(tmp.querySelector('.b'))}
+function buildStudio(){$('#thumbs').innerHTML=PC.map((p,i)=>`<button data-i="${i}" aria-pressed="${i===S.c}" aria-label="${esc(t(p[1],p[2]))}"><img src="${img(p[0])}" alt="" loading="lazy"></button>`).join('');
+  $('#stamps').innerHTML=STAMPS.map((s,i)=>`<button data-i="${i}" aria-pressed="${i===S.s}" aria-label="Stamp ${i+1}">${stampHTML(i)}</button>`).join('');
+  $('#msg').placeholder=t('Dear Lina, a little piece of Gaza for you…','عزيزتي لينا، قطعة صغيرة من غزة إلك…');$('#to').placeholder=t('Lina, Glasgow','لينا، غلاسكو');$('#from').placeholder=t('Farah','فرح');renderDesk()}
+function pickCard(i){S.c=i;S.sealed=false;$$('#thumbs button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===i));const b=$(`#thumbs button[data-i="${i}"]`);if(b)b.parentElement.scrollTo({left:b.offsetLeft-40,behavior:'smooth'});
+  S.back=false;renderDesk();setTimeout(()=>{S.back=true;$('#dcard .pcard').classList.add('back')},700);resetSeal()}
+$('#thumbs').addEventListener('click',e=>{const b=e.target.closest('button');if(b){pickCard(+b.dataset.i);peel()}});
+$('#stamps').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.s=+b.dataset.i;$$('#stamps button').forEach(x=>x.setAttribute('aria-pressed',x===b));if(!S.back){S.back=true;$('#dcard .pcard').classList.add('back')}updateBack();slap();resetSeal()});
+['msg','to','from'].forEach(id=>$('#'+id).addEventListener('input',e=>{S[id]=e.target.value;if(id==='msg')$('#count').textContent=`${S.msg.length} / 240`;if(!S.back){S.back=true;$('#dcard .pcard').classList.add('back')}updateBack();resetSeal()}));
+$('#flipBtn').onclick=()=>{S.back=!S.back;$('#dcard .pcard').classList.toggle('back',S.back);peel()};
+function resetSeal(){const st=$('#dstage');if(!S.sealed&&!st.classList.contains('env'))return;S.sealed=false;busySeal=false;$('#share').classList.remove('on');$('#desk').classList.remove('done');
+  const m=st.querySelector('.menv');m.classList.remove('shut','sealed');st.classList.remove('in');setTimeout(()=>st.classList.remove('lift','env'),350);updateBack()}
+let busySeal=false;
+/* the link carries the card: which painting, which stamp, the words */
+const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const dec=s=>{try{return JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g,'+').replace(/_/g,'/')))))}catch(e){return null}};
+const linkFor=()=>location.href.split('?')[0].split('#')[0]+'?pc='+enc({c:S.c,s:S.s,m:S.msg,t:S.to,f:S.from});
+$('#seal').onclick=async()=>{if(busySeal)return;busySeal=true;const st=$('#dstage'),m=st.querySelector('.menv');
+  if($('#share').classList.contains('on')){busySeal=false;return}
+  if(!S.back){S.back=true;$('#dcard .pcard').classList.add('back');await wait(850)}
+  /* 1. the postmark */S.sealed=true;updateBack();thunk();await wait(800);
+  /* 2. the envelope comes up, open, and the card lifts */$('#desk').classList.add('done');st.classList.add('env','lift');peel();await wait(800);
+  /* 3. the card slides in */st.classList.add('in');await wait(900);
+  /* 4. the flap folds down and the seal goes on */m.classList.add('shut');peel();await wait(850);m.classList.add('sealed');thunk();await wait(450);
+  const L=linkFor(),txt=t(`A postcard from Gaza for you${S.to?', '+S.to.split(',')[0]:''} ✶`,`بوست كارد من غزة إلك${S.to?' يا '+S.to.split('،')[0].split(',')[0]:''} ✶`);
+  $('#sWa').href='https://wa.me/?text='+encodeURIComponent(txt+'\n'+L);$('#sMail').href='mailto:?subject='+encodeURIComponent(txt)+'&body='+encodeURIComponent(txt+'\n\n'+L);
+  $('#share').classList.add('on');busySeal=false;if(innerWidth<900)setTimeout(()=>$('#share').scrollIntoView({behavior:'smooth',block:'center'}),300)};
+$('#sCopy').onclick=async()=>{try{await navigator.clipboard.writeText(linkFor());$('#sCopy').textContent=t('Copied ✓','انتسخ ✓')}catch(e){prompt('Link',linkFor())}};
+$('#again').onclick=()=>{S.msg=S.to=S.from='';$('#msg').value=$('#to').value=$('#from').value='';$('#count').textContent='0 / 240';resetSeal();renderDesk()};
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+/* download: front and back side by side */
+$('#dl').onclick=async()=>{const p=PC[S.c],W=1500,H=1000,c=document.createElement('canvas');c.width=W*2+60;c.height=H+60;const g=c.getContext('2d');
+  try{await Promise.all([document.fonts.load('600 40px Caveat'),document.fonts.load('40px "Aref Ruqaa"'),document.fonts.load('30px Anton'),document.fonts.load('20px "IBM Plex Mono"')])}catch(e){}
+  const im=new Image();im.src=img(p[0]);try{await im.decode()}catch(e){}const st=new Image();st.src=img(STAMPS[S.s][0]);try{await st.decode()}catch(e){}
+  g.fillStyle='#E9DCC2';g.fillRect(0,0,c.width,c.height);
+  const card=(x)=>{g.save();g.shadowColor='rgba(0,0,0,.2)';g.shadowBlur=24;g.shadowOffsetY=8;g.fillStyle='#fff';g.fillRect(x,30,W,H);g.restore()};
+  card(30);const pd=48,tw=W-2*pd,th=H-2*pd,r=im.naturalWidth/im.naturalHeight;let sw=im.naturalWidth,sh=im.naturalHeight,sx=0,sy=0;if(r>tw/th){sw=sh*tw/th;sx=(im.naturalWidth-sw)/2}else{sh=sw*th/tw;sy=(im.naturalHeight-sh)/2}
+  try{g.drawImage(im,sx,sy,sw,sh,30+pd,30+pd,tw,th)}catch(e){}
+  const X=W+60;card(X);g.fillStyle='#FBF8F1';g.fillRect(X,30,W,H);g.fillStyle='rgba(46,36,27,.35)';g.fillRect(X+W*.535,30+H*.09,3,H*.82);
+  g.fillStyle='#6f604d';g.font='600 24px "IBM Plex Mono"';g.fillText(t('POSTCARD','بوست كارد'),X+75,30+80);g.fillStyle='#2E241B';g.font='38px Anton';g.fillText(t(p[1],p[2]).toUpperCase(),X+75,30+125);
+  const ar=isAr(S.msg),lines=wrap(g,S.msg+(S.from?'\n— '+S.from:''),ar?'40px "Aref Ruqaa"':'600 58px Caveat',W*.44);g.fillStyle='#2b3a55';g.textAlign=ar?'right':'left';
+  lines.forEach((l,i)=>g.fillText(l,ar?X+W*.5:X+75,30+230+i*(ar?72:70)));g.textAlign='left';
+  const sx2=X+W-75-250,sy2=30+70;g.fillStyle='#FBF8F1';g.save();g.shadowColor='rgba(0,0,0,.25)';g.shadowBlur=6;g.fillRect(sx2,sy2,250,305);g.restore();try{g.drawImage(st,sx2+20,sy2+20,210,200)}catch(e){}
+  g.fillStyle='#2E241B';g.font='600 22px "IBM Plex Mono"';g.fillText('GAZA',sx2+22,sy2+275);g.fillStyle='#C4593F';g.fillText('M&G',sx2+180,sy2+275);
+  g.save();g.translate(sx2-60,sy2+170);g.rotate(-.25);g.strokeStyle='rgba(43,58,85,.75)';g.lineWidth=5;g.beginPath();g.arc(0,0,120,0,7);g.stroke();g.fillStyle='rgba(43,58,85,.85)';g.font='600 30px "IBM Plex Mono"';g.textAlign='center';g.fillText('GAZA',0,-14);g.fillText(today(),0,26);g.restore();
+  g.strokeStyle='rgba(46,36,27,.35)';g.lineWidth=3;for(let i=0;i<3;i++){const y=30+H-300+i*90;g.beginPath();g.moveTo(X+W*.57,y);g.lineTo(X+W-75,y);g.stroke()}
+  if(S.to){g.fillStyle='#2b3a55';g.font=isAr(S.to)?'44px "Aref Ruqaa"':'600 56px Caveat';g.fillText(S.to,X+W*.58,30+H-310)}
+  g.fillStyle='#6f604d';g.font='22px "IBM Plex Mono"';g.fillText(t(p[3],p[4]).toUpperCase()+' · MASSANDGRASS',X+75,30+H-50);
+  const a=document.createElement('a');a.download=`postcard-${p[0]}.jpg`;a.href=c.toDataURL('image/jpeg',.92);document.body.appendChild(a);a.click();a.remove();slap()};
+function wrap(g,text,font,maxW){g.font=font;const out=[];String(text||'').split('\n').forEach(par=>{let line='';par.split(' ').forEach(w=>{const tt=line?line+' '+w:w;if(g.measureText(tt).width>maxW&&line){out.push(line);line=w}else line=tt});out.push(line)});return out.slice(0,9)}
+function thunk(){const c=AC();if(!c)return;const t0=c.currentTime+.01,o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(140,t0);o.frequency.exponentialRampToValueAtTime(45,t0+.14);g.gain.setValueAtTime(.35,t0);g.gain.exponentialRampToValueAtTime(.001,t0+.18);o.connect(g).connect(c.destination);o.start(t0);o.stop(t0+.2);slap()}
+
+/* ---- 3. all the postcards ---- */
+const TAGS={hero:'sea',waves:'sea',boatman:'sea',boattop:'sea',psea:'sea',house:'places',alley:'places',hill:'places',dovegirl:'people',pcartgirl:'people',guitar:'people',sparklers:'people',blueflowers:'flowers',ppoppies:'flowers',pflower:'flowers'};
+const FT=[['all','All','الكل'],['sea','The sea','البحر'],['places','Places','أماكن'],['people','People','ناس'],['flowers','Flowers','زهور']];let fcur='all';
+function buildAllCards(){$('#fchips').innerHTML=FT.map(([k,en,ar])=>`<button data-f="${k}" aria-pressed="${k===fcur}">${t(en,ar)}<b>${ard(k==='all'?PC.length:PC.filter(p=>TAGS[p[0]]===k).length)}</b></button>`).join('');
+  $('#allg').innerHTML=PC.map((p,i)=>`<article class="pitem${fcur!=='all'&&TAGS[p[0]]!==fcur?' hide':''}" data-i="${i}" style="--i:${i%6}"><div class="pw" style="--r:${(i%3-1)*1.4}deg">${cardHTML(i,{lazy:1,msg:note(p),from:t('Farah','فرح'),stamp:i%STAMPS.length,pm:true,to:t('you, wherever you are','إلك، وين ما كنت')})}</div>
+    <div class="meta"><b>${esc(t(p[1],p[2]))}</b><em>€2</em></div><span style="display:block;margin-top:4px;font:600 18px/1 var(--hand);color:var(--soft)">${esc(t(p[3],p[4]))}</span>
+    <div class="row"><button class="btn terra" data-w="${i}">${t('Write on it','اكتب عليها')}</button><button class="btn alt" data-a="${i}">${t('Add to bag','أضف للسلة')}</button></div></article>`).join('')}
+$('#fchips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;fcur=b.dataset.f;$$('#fchips button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  $$('#allg .pitem').forEach(el=>{const on=fcur==='all'||TAGS[PC[+el.dataset.i][0]]===fcur;el.classList.toggle('hide',!on);if(on){el.style.animation='none';void el.offsetWidth;el.style.animation=''}});peel()});
+const hov=matchMedia('(hover:hover)').matches;
+$('#allg').addEventListener('mouseover',e=>{if(!hov)return;const w=e.target.closest('.pw');if(w&&!w.dataset.f){w.dataset.f=1;w.querySelector('.pcard').classList.add('back')}});
+$('#allg').addEventListener('mouseout',e=>{if(!hov)return;const w=e.target.closest('.pw');if(w&&!w.contains(e.relatedTarget)){delete w.dataset.f;w.querySelector('.pcard').classList.remove('back')}});
+$('#allg').addEventListener('click',e=>{const w=e.target.closest('[data-w]'),a=e.target.closest('[data-a]'),pw=e.target.closest('.pw');
+  if(w){pickCard(+w.dataset.w);$('#write').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#msg').focus({preventScroll:true}),900)}
+  else if(a){const p=PC[+a.dataset.a];addBag({k:p[0],kind:'postcard',t:p[1],ta:p[2],p:2});a.textContent=t('Added ✓','انضافت ✓')}
+  else if(pw&&!hov){pw.querySelector('.pcard').classList.toggle('back');peel()}});
+
+/* ---- you've got a postcard: opening a shared link ---- */
+function receive(){const q=new URLSearchParams(location.search).get('pc');if(!q)return;const o=dec(q);if(!o||!PC[o.c])return;
+  const r=$('#recv');r.classList.add('on');$('#rtitle').textContent=o.f?t(`A postcard from ${o.f}`,`بوست كارد من ${o.f}`):t('A postcard from Gaza','بوست كارد من غزة');
+  $('#rcard2').innerHTML=cardHTML(o.c,{lazy:0});$('#rfull').innerHTML=cardHTML(o.c,{back:true,msg:o.m,to:o.t,from:o.f,stamp:STAMPS[o.s]?o.s:0,pm:true});
+  $('#env2').onclick=()=>{const e=$('#env2');if(e.classList.contains('open'))return;e.classList.add('open');peel();$('#rtap').hidden=true;setTimeout(()=>{r.classList.add('read');slap()},1700)};
+  $('#rfull').onclick=()=>{$('#rfull .pcard').classList.toggle('back');peel()};
+  $('#rclose').onclick=()=>r.classList.remove('on');$('#rreply').onclick=()=>{r.classList.remove('on');if(o.f){S.to=o.f;$('#to').value=o.f;updateBack()}$('#write').scrollIntoView({behavior:'smooth'})}}
+
+function buildMarq(){const s=[t('Postcards from Gaza','بوست كارد من غزة'),t('Write it, seal it, send it','اكتبها، اختمها، ابعتها'),t('Fifteen cards from Gaza','١٥ بطاقة من غزة'),t('€2 each · print at home','€2 البطاقة · اطبعها بالبيت')];
+  $('#marq').innerHTML=[...s,...s,...s,...s].map(x=>`<span>${x}</span>`).join('')}
+let firstBuild=true;
+function buildAll(){showCard(hi);buildStudio();buildAllCards();buildMarq();if(firstBuild){firstBuild=false;receive()}}
+
+
+/* ---- rise into place + chat plays when seen ---- */
+const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('on');io.unobserve(en.target)}}),{rootMargin:'0px 0px -10% 0px'}):null;
+function observe(){$$('.pop:not(.on),.shead:not(.on)').forEach(e=>{e.classList.add('pop');io?io.observe(e):e.classList.add('on')})}
+
+
+/* ---- language (shared with the other pages) ---- */
+$$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
+function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
+  $$('[data-ar]').forEach(e=>{e.innerHTML=a?e.dataset.ar:e.dataset.en});
+  $$('main,footer,.info').forEach(e=>e.dir=a?'rtl':'ltr');
+  const lb=$('#langBtn');if(lb)lb.textContent=a?'EN':'ع';
+  buildAll();const b=$('#bagn');if(b)b.textContent=ard(bagN)}
+const lb=$('#langBtn');if(lb)lb.onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}catch(e){}};
+buildAll();observe();
+try{if(localStorage.mgLang==='ar')setLang(true)}catch(e){}
+})();
+</script>
+</body>
+</html>

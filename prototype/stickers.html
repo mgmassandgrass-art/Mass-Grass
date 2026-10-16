@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mass &amp; Grass Stickers</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="assets/mg.js"></script>
+<style>
+:root{--gut:clamp(20px,5vw,80px);
+  --field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--sky:#3f6b8a;
+  --soft:#6f604d;--env:#FBF7EE;--sh:rgba(46,36,27,.25);
+  --en:'Anton',Impact,sans-serif;--ar:'Lalezar','IBM Plex Sans Arabic',sans-serif;
+  --body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--hand:'Caveat','Aref Ruqaa',cursive;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+.d{font-family:var(--en);text-transform:uppercase;letter-spacing:.01em;font-weight:400;line-height:.95}
+.ar-on .d{font-family:var(--ar)!important;letter-spacing:0!important}
+.ar-on [data-ar]{font-family:var(--body)}
+.ar-on .d[data-ar]{font-family:var(--ar)!important}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+header{direction:ltr}
+/* ---------- header ---------- */
+header{position:fixed;inset:0 0 auto;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:14px clamp(16px,3vw,34px);pointer-events:none}
+header>*{pointer-events:auto}
+.logo{width:58px;height:46px;background:var(--env);padding:6px 8px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);transform:rotate(-3deg);display:block}
+.logo img{width:100%;height:100%}
+nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
+nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
+nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+.ar-on nav a{font-family:var(--ar);font-size:16px}
+.tools{display:flex;gap:8px;justify-self:end}
+.chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
+.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
+.bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
+/* header scales with the screen instead of jumping at a breakpoint */
+header{gap:clamp(8px,1.4vw,14px);padding:clamp(10px,1.4vw,14px) var(--gut)}
+.logo{width:clamp(44px,1.4vw + 38px,58px);height:auto;aspect-ratio:58/46;padding:clamp(4px,.5vw,6px) clamp(5px,.7vw,8px)}
+nav{padding:clamp(3px,.4vw,5px);gap:clamp(2px,.3vw,4px)}
+nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp(7px,1vw,12px) clamp(5px,.5vw,7px)}
+.chip{height:clamp(32px,.6vw + 29.6px,38px);min-width:clamp(32px,.6vw + 29.6px,38px);padding:0 clamp(7px,.8vw,10px);font-size:clamp(12px,.1vw + 11.6px,13px)}
+.tools{gap:clamp(5px,.8vw,8px)}
+@media (max-width:420px){.bag span{display:none}}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper);padding:clamp(60px,8vw,100px) var(--gut) 30px;position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:-14px;height:16px;background:linear-gradient(-45deg,var(--ink) 8px,transparent 0),linear-gradient(45deg,var(--ink) 8px,transparent 0);background-size:16px 16px}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px}
+footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
+.news{display:flex;gap:0;max-width:440px;margin-top:10px}
+.news input{flex:1;min-width:0;border:2px solid var(--paper);background:transparent;color:var(--paper);padding:13px 14px;font:15px var(--body)}
+.news input::placeholder{color:#efe4cf99}
+.news button{border:2px solid var(--paper);background:var(--terra);color:#fff;padding:0 18px;font:17px/1 var(--en);text-transform:uppercase}
+.ar-on .news button{font-family:var(--ar)}
+footer ul{list-style:none;padding:0;display:grid;gap:8px}
+footer ul a{text-decoration:none;opacity:.85}
+footer ul a:hover{opacity:1;text-decoration:underline}
+footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
+.legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
+
+
+
+/* ---------- shared bits ---------- */
+section.pad{padding:clamp(70px,9vw,130px) var(--gut)}
+.kick{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);background:var(--paper);border:1.5px solid var(--ink);padding:6px 9px 5px;transform:rotate(-2deg)}
+.ar-on .kick{font:500 14px/1 var(--body);letter-spacing:0}
+.shead{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:clamp(36px,5vw,60px)}
+.shead h2{font-size:clamp(32px,4.6vw + 14px,88px);margin-top:14px}
+.shead p{max-width:38ch;color:var(--soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:13px 18px 11px;font:17px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;box-shadow:2px 2px 0 rgba(196,89,63,.4);transition:.15s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 rgba(196,89,63,.4)}
+.btn:active{transform:translate(1px,1px);box-shadow:0 0 0 transparent}
+.btn.alt{background:var(--paper);color:var(--ink);box-shadow:2px 2px 0 var(--sh)}
+.btn.terra{background:var(--terra);border-color:var(--ink)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.ar-on .btn{font-family:var(--ar)}
+.chipf{display:inline-block;font:11px/1 var(--mono);letter-spacing:.06em;border:1.5px solid var(--ink);background:var(--paper);padding:5px 7px 4px}
+.pop{opacity:0;translate:0 46px}
+.pop.on{opacity:1;translate:0 0;transition:opacity .5s,translate .8s cubic-bezier(.2,1.25,.3,1);transition-delay:calc(var(--d,0)*90ms)}
+
+/* the sticker itself: die-cut art already has its white edge; paintings get a white border */
+.stk{position:relative;width:100%;aspect-ratio:1;display:grid;place-items:center;filter:drop-shadow(2px 3px 0 var(--sh));user-select:none;-webkit-user-select:none}
+.stk img{pointer-events:none;-webkit-user-drag:none}
+.stk.die img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.stk.round>i,.stk.rect>i{display:block;width:88%;aspect-ratio:1;background:#fff;padding:7%;border-radius:50%}
+.stk.rect>i{border-radius:14%}
+.stk.round img,.stk.rect img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;border-radius:50%}
+.stk.rect img{border-radius:9%}
+
+/* ---------- 1. the sheet ---------- */
+.hero{padding:clamp(110px,12vw,150px) var(--gut) clamp(50px,7vw,90px)}
+.hero-top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:18px 40px;margin-bottom:clamp(30px,4vw,50px)}
+.hero h1{font-size:clamp(44px,6vw + 20px,124px);margin-top:16px}
+.hero h1 em{font-style:normal;color:var(--terra)}
+.hero-top p{max-width:40ch;color:var(--soft)}
+.sheet{position:relative;background:#FBF8F1;border-radius:18px;padding:clamp(18px,3vw,40px) clamp(14px,2.6vw,36px) clamp(20px,3vw,40px);box-shadow:3px 4px 0 var(--sh);
+  background-image:linear-gradient(rgba(46,36,27,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(46,36,27,.05) 1px,transparent 1px);background-size:24px 24px;rotate:-.6deg}
+.sheet .strip{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:2px dashed rgba(46,36,27,.25);padding-bottom:12px;margin-bottom:clamp(14px,2vw,26px);font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.slots{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(8px,1.6vw,22px)}
+.slot{position:relative;cursor:pointer;border:0;background:none;padding:0;rotate:var(--r,0deg);transition:rotate .35s cubic-bezier(.2,.8,.2,1.3),translate .35s cubic-bezier(.2,.8,.2,1.3)}
+.slot::before{content:"";position:absolute;inset:6%;border:1.5px dashed rgba(46,36,27,.16);border-radius:16px;pointer-events:none}
+.slot .stk{transition:filter .3s}
+.slot:hover,.slot:focus-visible{rotate:0deg;translate:0 -6px;outline:0}
+.slot:hover .stk,.slot:focus-visible .stk{filter:drop-shadow(5px 8px 0 rgba(46,36,27,.2))}
+/* corner peel on hover */
+.slot .curl{position:absolute;right:7%;bottom:7%;width:22%;aspect-ratio:1;pointer-events:none;opacity:0;transform:scale(.3);transform-origin:100% 100%;transition:.3s cubic-bezier(.2,.8,.2,1.3);
+  background:linear-gradient(135deg,transparent 49%,#e6dfd2 50%,#fff 75%);clip-path:polygon(100% 0,100% 100%,0 100%);filter:drop-shadow(-2px -2px 1px rgba(46,36,27,.18))}
+.slot:hover .curl,.slot:focus-visible .curl{opacity:1;transform:scale(1)}
+.slot.die .curl{display:none}
+.slot .nm{position:absolute;left:50%;bottom:-4px;translate:-50% 0;white-space:nowrap;background:var(--ink);color:var(--paper);font:11px/1 var(--en);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px 4px;opacity:0;transition:opacity .25s;pointer-events:none}
+.ar-on .slot .nm{font-family:var(--ar);font-size:13px}
+.slot:hover .nm,.slot:focus-visible .nm{opacity:1}
+/* stickers slap onto the sheet */
+.slot.land{animation:slap .55s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i)*70ms + .2s)}
+@keyframes slap{0%{opacity:0;transform:scale(1.5) translateY(-30px)}60%{opacity:1;transform:scale(.95)}100%{opacity:1;transform:none}}
+.hero .cta{display:flex;flex-wrap:wrap;gap:14px 18px;margin-top:clamp(26px,3vw,40px);align-items:center}
+.hero .cta small{font:12px var(--mono);color:var(--soft);letter-spacing:.06em}
+@media (max-width:760px){.slots{grid-template-columns:repeat(3,minmax(0,1fr))}.sheet{rotate:0deg}}
+
+/* ---------- sticker dialog (flips to show the back) ---------- */
+dialog{margin:auto;border:0;padding:0;background:transparent;width:min(860px,94vw);max-width:none;color:var(--ink)}
+dialog::backdrop{background:#1e1811cc;backdrop-filter:blur(3px)}
+.dl{position:relative;background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);display:grid;grid-template-columns:1fr 1fr;max-height:90svh;overflow:auto}
+.dl .pvw{background:var(--field);display:grid;place-items:center;padding:clamp(20px,4vw,40px);border-inline-end:2px solid var(--ink);perspective:1200px}
+.flip{position:relative;width:min(300px,62vw);aspect-ratio:1;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.4,.1,.2,1);cursor:pointer}
+.flip.back{transform:rotateY(180deg)}
+.flip>div{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flip .bk{transform:rotateY(180deg);background:#fff;border-radius:50%;display:grid;place-items:center;text-align:center;padding:16%;box-shadow:2px 3px 0 var(--sh);
+  background-image:repeating-linear-gradient(-45deg,transparent 0 10px,rgba(46,36,27,.04) 10px 11px)}
+.flip .bk b{display:block;font:clamp(20px,2.4vw,28px)/1 var(--en);text-transform:uppercase}
+.ar-on .flip .bk b{font-family:var(--ar)}
+.flip .bk span{display:block;margin-top:10px;font:600 clamp(17px,1.8vw,21px)/1.25 var(--hand);color:var(--soft)}
+.flip .bk small{display:block;margin-top:12px;font:10px var(--mono);letter-spacing:.14em;color:var(--terra)}
+.fliphint{display:block;text-align:center;margin-top:14px;font:600 18px/1 var(--hand);color:var(--soft)}
+.dl .info{padding:clamp(20px,3vw,32px)}
+.dl h3{font-size:clamp(32px,3vw + 12px,52px);margin:12px 0 8px}
+.dl .story{color:var(--soft);font-size:15px;margin-bottom:16px}
+.dl .row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.dl .acts{display:flex;flex-wrap:wrap;gap:12px}
+.x{position:absolute;right:12px;top:12px;z-index:3;width:38px;height:38px;border:1.5px solid var(--ink);background:var(--paper);display:grid;place-items:center;font:600 14px var(--mono)}
+[dir=rtl] .x{right:auto;left:12px}
+@media (max-width:700px){.dl{grid-template-columns:1fr}.dl .pvw{border:0;border-bottom:2px solid var(--ink)}}
+
+/* ---------- 2. packs ---------- */
+.packs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(22px,2.6vw,36px)}
+.pack{position:relative;display:flex;flex-direction:column}
+.pack .mini{position:relative;background:#FBF8F1;border-radius:14px;padding:12px;box-shadow:2px 3px 0 var(--sh);display:grid;grid-template-columns:repeat(3,1fr);gap:4px;rotate:var(--r,0deg);transition:rotate .3s,translate .3s;
+  background-image:linear-gradient(rgba(46,36,27,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(46,36,27,.05) 1px,transparent 1px);background-size:18px 18px}
+.pack:hover .mini{rotate:0deg;translate:0 -5px}
+.pack .mini .stk{filter:drop-shadow(1px 2px 0 var(--sh))}
+.pack .tab{position:absolute;top:-12px;inset-inline-start:10px;z-index:2;background:var(--c,var(--terra));color:#fff;font:13px/1 var(--en);letter-spacing:.05em;text-transform:uppercase;padding:6px 9px 5px;rotate:-3deg;box-shadow:1px 1px 0 var(--sh)}
+.ar-on .pack .tab{font-family:var(--ar)}
+.pack h3{font-size:clamp(22px,1.2vw + 14px,32px);margin-top:18px}
+.pack p{color:var(--soft);font-size:14px;margin:6px 0 12px}
+.pack .row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.pack .buy{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pack .price{font:26px/1 var(--en)}
+@media (max-width:1000px){.packs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.packs{grid-template-columns:1fr}}
+
+/* ---------- 3. stick them on: one blue envelope, full screen ---------- */
+.tryfs{--blue:#7DB0CF;position:relative;height:max(100svh,680px);overflow:hidden;background:var(--blue);color:var(--ink)}
+.tryfs::after{content:"";position:absolute;inset:0;z-index:1;background:url(assets/paper.jpg);mix-blend-mode:multiply;opacity:.28;pointer-events:none}
+.tryfs::before{content:"";position:absolute;inset:0;z-index:1;background:url(assets/grain.png);opacity:.45;mix-blend-mode:multiply;pointer-events:none}
+.thandles{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;overflow:visible}
+.thandles polygon{fill:none;stroke:#fff;stroke-width:1.5;stroke-dasharray:6 5;filter:drop-shadow(0 0 1px rgba(0,0,0,.6));opacity:0;transition:opacity .15s}
+.thandles.on polygon{opacity:1}
+.tknobs{position:absolute;inset:0;z-index:5;pointer-events:none}
+.tknobs[hidden]{display:none}
+.tknobs i{position:absolute;left:0;top:0;width:16px;height:16px;margin:-8px 0 0 -8px;background:#fff;border:2px solid #2E241B;border-radius:3px;pointer-events:auto;cursor:nwse-resize;touch-action:none;box-shadow:0 1px 3px rgba(0,0,0,.35)}
+.tknobs i:hover{background:var(--ochre)}
+.tknobs i::after{content:"";position:absolute;inset:-12px}
+.tknobs button{position:absolute;left:0;top:0;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;border:2px solid #2E241B;background:var(--terra);color:#fff;font:700 12px/1 var(--mono);display:grid;place-items:center;pointer-events:auto;box-shadow:0 1px 3px rgba(0,0,0,.35);padding:0}
+.thead{position:absolute;z-index:3;left:var(--gut);top:clamp(92px,12vh,130px);max-width:min(440px,34vw)}
+.ar-on .thead{left:auto;right:var(--gut)}
+.thead h2{font-size:clamp(34px,3.4vw + 12px,78px);margin:12px 0 10px}
+.thead p{opacity:.85;max-width:34ch}
+.tpanel{position:absolute;z-index:3;right:var(--gut);top:50%;translate:0 -46%;width:clamp(250px,21vw,320px);display:grid;grid-template-columns:minmax(0,1fr);gap:12px;color:var(--ink)}
+.ar-on .tpanel{right:auto;left:var(--gut)}
+.tsheet{min-width:0;background:#FBF8F1;border-radius:14px;padding:12px;box-shadow:2px 3px 0 rgba(0,0,0,.2);rotate:1deg;
+  background-image:linear-gradient(rgba(46,36,27,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(46,36,27,.05) 1px,transparent 1px);background-size:16px 16px}
+.sstrip{display:flex;justify-content:space-between;gap:6px;font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--soft);border-bottom:1.5px dashed rgba(46,36,27,.22);padding-bottom:7px;margin-bottom:8px}
+.ar-on .sstrip span:last-child{font:500 12px var(--body);letter-spacing:0}
+.tgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.tgrid button{border:0;background:none;padding:2px;cursor:grab;touch-action:none;transition:scale .2s}
+.tgrid button:hover{scale:1.08}
+.tbtns{display:flex;gap:8px;flex-wrap:wrap}
+.tbtns .btn{padding:11px 14px 9px;font-size:15px}
+/* the envelope */
+.tenv{--tilt:-7deg;position:absolute;z-index:2;left:var(--ex,50%);top:var(--ey,55%);height:var(--eh,70svh);aspect-ratio:600/800;transform:translate(-50%,-50%) rotate(var(--tilt,-7deg));touch-action:none;user-select:none;-webkit-user-select:none;
+  filter:drop-shadow(10px 16px 18px rgba(20,45,70,.28)) drop-shadow(2px 3px 2px rgba(20,45,70,.2));opacity:0;translate:0 40px;transition:opacity .7s ease,translate 1s cubic-bezier(.2,1.25,.35,1)}
+.tenv.in{opacity:1;translate:0 0}
+.tenv svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.tlayer{position:absolute;inset:0}
+.ghost{position:fixed;z-index:300;width:84px;pointer-events:none;translate:-50% -50%;rotate:-6deg;opacity:.95}
+.st{position:absolute;width:var(--w,24%);left:var(--x);top:var(--y);transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(var(--s,1));cursor:move;touch-action:none;line-height:normal}
+.st .stk{filter:drop-shadow(1px 2px 1px rgba(0,0,0,.28))}
+.st.new{animation:slap2 .35s cubic-bezier(.2,1.4,.4,1)}
+.thint{position:absolute;z-index:3;left:50%;bottom:22px;translate:-50% 0;font:600 20px/1 var(--hand);opacity:.75;pointer-events:none;transition:opacity .5s}
+@media (prefers-reduced-motion:reduce){.tenv{transition:none;translate:none;opacity:1}}
+@media (max-width:860px){
+  .tryfs{height:max(100svh,760px)}
+  .thead{max-width:none;right:var(--gut);top:clamp(80px,11vh,110px)}
+  .thead h2{font-size:clamp(30px,8vw,46px);margin:8px 0 6px}
+  .thead p{font-size:14px}
+  .tpanel{top:auto;bottom:12px;translate:none;left:var(--gut);right:var(--gut);width:auto;gap:8px}
+  .ar-on .tpanel{left:var(--gut);right:var(--gut)}
+  .tsheet{rotate:0deg;padding:8px}
+  .tgrid{grid-template-columns:repeat(10,minmax(48px,1fr));overflow-x:auto;scrollbar-width:none}
+  .tgrid::-webkit-scrollbar{display:none}
+  .tbtns .btn{padding:9px 12px 8px;font-size:14px}
+  .thint{display:none}
+  .tknobs i{width:22px;height:22px;margin:-11px 0 0 -11px}
+}
+
+/* ---------- 5. build your pack ---------- */
+#build{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply}
+.build{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(24px,4vw,60px);align-items:start}
+.sizes{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+.sizes button{border:1.5px solid var(--ink);background:var(--paper);padding:9px 14px 8px;font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;box-shadow:1px 1px 0 var(--sh)}
+.ar-on .sizes button{font-family:var(--ar)}
+.sizes button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.sizes .count{font:13px var(--mono);margin-inline-start:auto;color:var(--soft)}
+.pick{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(6px,1vw,12px)}
+.pick button{position:relative;border:0;background:none;padding:4px;border-radius:12px;transition:background .2s}
+.pick button:hover{background:rgba(46,36,27,.06)}
+.pick button[aria-pressed=true]{background:rgba(196,89,63,.14)}
+.pick button[aria-pressed=true]::after{content:"✓";position:absolute;top:0;inset-inline-end:0;width:22px;height:22px;border-radius:50%;background:var(--terra);color:#fff;display:grid;place-items:center;font:700 12px/1 var(--mono)}
+.pick button.no{opacity:.35}
+.mysheet{position:sticky;top:90px;background:#FBF8F1;border-radius:16px;padding:18px;box-shadow:3px 4px 0 var(--sh);
+  background-image:linear-gradient(rgba(46,36,27,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(46,36,27,.05) 1px,transparent 1px);background-size:20px 20px}
+.mysheet .strip{font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--soft);border-bottom:2px dashed rgba(46,36,27,.2);padding-bottom:10px;margin-bottom:12px;display:flex;justify-content:space-between;gap:8px}
+.mygrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.mygrid .empty{aspect-ratio:1;border:1.5px dashed rgba(46,36,27,.2);border-radius:50%}
+.mygrid .stk{animation:slap2 .35s cubic-bezier(.2,1.4,.4,1)}
+.named{margin-top:14px;font:600 22px/1.2 var(--hand);color:var(--terra);min-height:1.2em}
+.mysheet label{display:block;font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin:14px 0 6px}
+.ar-on .mysheet label{font:500 13px var(--body);letter-spacing:0}
+.mysheet input{width:100%;border:1.5px solid var(--ink);background:#fff;padding:11px 12px;font:15px var(--body)}
+.mysheet .buy{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.mysheet .price{font:34px/1 var(--en)}
+@media (max-width:900px){.build{grid-template-columns:1fr}.mysheet{position:relative;top:0}}
+@media (max-width:560px){.pick{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* ---------- 6. free sticker ---------- */
+.free{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(24px,4vw,60px);align-items:center;background:var(--paper);border:2px solid var(--ink);padding:clamp(24px,4vw,48px);box-shadow:3px 3px 0 var(--sh);position:relative}
+.free .gift{width:clamp(130px,16vw,210px);rotate:-8deg}
+.free h2{font-size:clamp(30px,3vw + 14px,60px);margin:12px 0 10px}
+.free p{color:var(--soft);max-width:46ch}
+.free>div{min-width:0}
+.free form{display:flex;max-width:460px;margin-top:18px}
+.free form .btn{flex:none}
+.free input{flex:1;min-width:0;width:100%;border:2px solid var(--ink);border-inline-end:0;background:#fff;padding:13px 14px;font:15px var(--body)}
+.free .got{display:none;margin-top:18px;align-items:center;gap:14px;flex-wrap:wrap}
+.free.done form{display:none}.free.done .got{display:flex}
+.soon{margin-top:clamp(36px,5vw,60px);display:flex;align-items:center;gap:14px;flex-wrap:wrap;font:13px var(--mono);letter-spacing:.06em;color:var(--soft)}
+.soon b{background:var(--ochre);color:var(--ink);font:13px/1 var(--en);letter-spacing:.06em;text-transform:uppercase;padding:6px 9px 5px;font-weight:400;rotate:-2deg}
+.ar-on .soon b{font-family:var(--ar)}
+@media (max-width:640px){.free{grid-template-columns:1fr;text-align:start}.free .gift{width:120px}}
+
+
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition:none!important}.pop{opacity:1;translate:none}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
+  <nav>
+    <a href="index.html" data-ar="الرئيسية">Index</a>
+    <a href="shop.html" class="on" data-ar="المتجر">Shop</a>
+    <a href="story.html" data-ar="الحكاية">Story</a>
+  </nav>
+  <div class="tools">
+    <button class="chip" id="langBtn" aria-label="Arabic / English">ع</button>
+        <button class="chip bag" id="bag"><span data-ar="السلة">Bag</span><b id="bagn">0</b></button>
+  </div>
+</header>
+
+<main>
+<!-- 1 · THE SHEET -->
+<section class="hero" id="sheet">
+  <div class="hero-top">
+    <div>
+      <span class="kick" data-ar="ستكرات · رقمية أولًا">Stickers · digital first</span>
+      <h1 class="d" data-ar="ورقة ستكرات <em>فرح</em>">Farah's <em>sticker</em> sheet</h1>
+    </div>
+    <p data-ar="كل ستكر قصّته فرح من لوحاتها المائية. مرّر على أي ستكر لتقشره، واضغط لتقلبه وتعرف حكايته.">Every sticker is cut from one of Farah's watercolours. Hover to peel one, tap to flip it and read where it comes from.</p>
+  </div>
+  <div class="sheet">
+    <div class="strip"><span>Mass &amp; Grass · Sticker sheet Nº01</span><span id="sheetCount">12 stickers</span></div>
+    <div class="slots" id="slots"></div>
+  </div>
+  <div class="cta"><a class="btn" href="#packs" data-ar="شوف الباكيتات">See the packs</a><a class="btn alt" href="#build" data-ar="ركّب باكيتك">Build your own</a><small data-ar="واتساب · تيليغرام · آيفون · PNG · PDF للطباعة">WhatsApp · Telegram · iPhone · PNG · print PDF</small></div>
+</section>
+
+<!-- 2 · PACKS -->
+<section class="pad" id="packs" style="padding-top:clamp(40px,5vw,70px)">
+  <div class="shead">
+    <div><span class="kick" data-ar="الباكيتات">The packs</span><h2 class="d" data-ar="ست ستكرات بكل باكيت">Six stickers a pack</h2></div>
+    <p data-ar="كل باكيت ملف رقمي واحد فيه كل الصيغ. حمّله مرة واستعمله وين ما بدك.">Each pack is one download with every format inside. Get it once, use it everywhere.</p>
+  </div>
+  <div class="packs" id="packGrid"></div>
+</section>
+
+<!-- 3 · STICK THEM ON (full screen) -->
+<section class="tryfs" id="try">
+  <div class="tenv" id="tenv">
+    <svg id="envsvg" viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg" aria-label="A blue string-tie envelope with a little paintbrush worm painting a line across it" role="img">
+      <defs>
+        <filter id="eGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 .12  0 0 0 0 .2  0 0 0 0 .28  0 0 0 -.9 .62" result="g"/><feComposite in="g" in2="SourceGraphic" operator="in" result="gg"/><feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="gg"/></feMerge></filter>
+        <filter id="eFiber" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".012 .06" numOctaves="3" seed="9" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -.7 .42" result="g"/><feComposite in="g" in2="SourceGraphic" operator="in"/></filter>
+        <filter id="eSoft" x="-20%" y="-20%" width="140%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
+        <filter id="eRough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter>
+        <radialGradient id="eBrass" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fbeec2"/><stop offset=".45" stop-color="#c9a24e"/><stop offset="1" stop-color="#6e5523"/></radialGradient>
+        <radialGradient id="eWasher" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#ffe27a"/><stop offset=".7" stop-color="#f2c33f"/><stop offset="1" stop-color="#d9a52a"/></radialGradient>
+        <linearGradient id="eShade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#0b2c47" stop-opacity=".14"/></linearGradient>
+        <clipPath id="eBodyClip"><rect x="0" y="0" width="600" height="800" rx="8"/></clipPath>
+      </defs>
+      <!-- body -->
+      <g clip-path="url(#eBodyClip)">
+        <rect x="0" y="0" width="600" height="800" rx="8" fill="#5E9BC1" filter="url(#eGrain)"/>
+        <rect x="0" y="0" width="600" height="800" fill="#5E9BC1" filter="url(#eFiber)" opacity=".18"/>
+        <rect x="0" y="0" width="600" height="800" fill="url(#eShade)"/>
+        <!-- side seams of the folded paper -->
+        <path d="M22 330 L8 800" stroke="#0e3a5c" stroke-opacity=".12" stroke-width="2" fill="none"/>
+        <path d="M578 330 L592 800" stroke="#fff" stroke-opacity=".14" stroke-width="2" fill="none"/>
+        <!-- the cream line the brush paints -->
+        <path id="eLineBase" d="M-20 352 C 60 330, 70 430, 120 480 S 250 610, 360 560 S 430 380, 320 360 S 170 470, 250 560 S 400 650, 470 690 S 560 760, 540 830" fill="none" stroke="#EFE4D0" stroke-opacity="0" stroke-width="30"/>
+        <path id="eLine" d="M-20 352 C 60 330, 70 430, 120 480 S 250 610, 360 560 S 430 380, 320 360 S 170 470, 250 560 S 400 650, 470 690 S 560 760, 540 830" fill="none" stroke="#EFE4D0" stroke-width="30" stroke-linecap="round" filter="url(#eRough)"/>
+        <!-- the worm: a little paintbrush that crawls along the line -->
+        <g id="eWorm">
+          <path id="eWShadow" fill="none" stroke="#0b2c47" stroke-opacity=".22" stroke-width="30" stroke-linecap="round" transform="translate(4 6)" filter="url(#eSoft)"/>
+          <path id="eWBody" fill="none" stroke="#2E241B" stroke-width="31" stroke-linecap="round"/>
+          <path id="eWFill" fill="none" stroke="#C4593F" stroke-width="24" stroke-linecap="round"/>
+          <path id="eWStripe" fill="none" stroke="#E07A5A" stroke-width="6" stroke-linecap="round" stroke-dasharray="1 0"/>
+          <path id="eWRing" fill="none" stroke="#2E241B" stroke-width="31" stroke-dasharray="3 22"/>
+          <g id="eWHead">
+            <rect x="-6" y="-15.5" width="20" height="31" rx="3" fill="#D8D2C8" stroke="#2E241B" stroke-width="3"/>
+            <path d="M14 -13 C 30 -12, 44 -5, 52 0 C 44 5, 30 12, 14 13 Z" fill="#3A2C20" stroke="#2E241B" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M36 -6 C 44 -3, 50 -1, 52 0 C 50 1, 44 3, 36 6 C 38 2, 38 -2, 36 -6 Z" fill="#EFE4D0"/>
+            <circle cx="2" cy="-6" r="2.4" fill="#2E241B"/><circle cx="2" cy="6" r="2.4" fill="#2E241B"/>
+          </g>
+        </g>
+      </g>
+      <!-- flap -->
+      <path d="M0 8 Q0 0 8 0 H592 Q600 0 600 8 V300 Q600 330 570 333 L30 333 Q0 330 0 300 Z" fill="#0b2c47" opacity=".22" filter="url(#eSoft)" transform="translate(0 6)"/>
+      <path id="eFlap" d="M0 8 Q0 0 8 0 H592 Q600 0 600 8 V300 Q600 330 570 333 L30 333 Q0 330 0 300 Z" fill="#64A1C6" filter="url(#eGrain)"/>
+      <path d="M0 8 Q0 0 8 0 H592 Q600 0 600 8 V300 Q600 330 570 333 L30 333 Q0 330 0 300 Z" fill="url(#eShade)"/>
+      <path d="M30 331 L570 331" stroke="#fff" stroke-opacity=".25" stroke-width="1.5"/>
+      <!-- string, washers and eyelets -->
+      <g id="eTie">
+        <path d="M318 225 C 300 300, 296 360, 296 440 M342 225 C 336 300, 322 380, 306 440" stroke="#2E241B" stroke-opacity=".18" stroke-width="7" fill="none" transform="translate(4 6)" filter="url(#eSoft)"/>
+        <circle cx="330" cy="214" r="54" fill="#0b2c47" opacity=".25" filter="url(#eSoft)" transform="translate(4 7)"/>
+        <circle cx="330" cy="214" r="54" fill="url(#eWasher)" filter="url(#eGrain)"/>
+        <circle cx="330" cy="214" r="54" fill="none" stroke="#b9861b" stroke-opacity=".5" stroke-width="2"/>
+        <circle cx="300" cy="470" r="54" fill="#0b2c47" opacity=".25" filter="url(#eSoft)" transform="translate(4 7)"/>
+        <circle cx="300" cy="470" r="54" fill="url(#eWasher)" filter="url(#eGrain)"/>
+        <circle cx="300" cy="470" r="54" fill="none" stroke="#b9861b" stroke-opacity=".5" stroke-width="2"/>
+        <path id="eStrA" d="M318 228 C 302 300, 296 360, 293 452" stroke="#F7F4EE" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+        <path id="eStrB" d="M342 228 C 338 300, 324 380, 309 452" stroke="#F7F4EE" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+        <path d="M318 228 C 302 300, 296 360, 293 452 M342 228 C 338 300, 324 380, 309 452" stroke="#c9c2b6" stroke-width="1.4" stroke-dasharray="3 4" fill="none"/>
+        <circle cx="330" cy="214" r="17" fill="url(#eBrass)" stroke="#5a4418" stroke-width="1.5"/><circle cx="330" cy="214" r="8" fill="#2a2016"/>
+        <circle cx="300" cy="470" r="17" fill="url(#eBrass)" stroke="#5a4418" stroke-width="1.5"/><circle cx="300" cy="470" r="8" fill="#2a2016"/>
+        <path id="eTail" d="M346 214 C 420 196, 470 170, 545 196" stroke="#F7F4EE" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+      </g>
+    </svg>
+
+    <div class="tlayer" id="tlayer"></div>
+  </div>
+  <svg class="thandles" id="thandles" aria-hidden="true"><polygon id="tbox"/></svg>
+  <div class="tknobs" id="tknobs" hidden><i data-c="0"></i><i data-c="1"></i><i data-c="2"></i><i data-c="3"></i><button id="tx" aria-label="Remove sticker">✕</button></div>
+  <div class="thead">
+    <span class="kick" data-ar="جرّبها">Try them on</span>
+    <h2 class="d" data-ar="زيّن الظرف">Seal it with stickers</h2>
+    <p data-ar="اسحب ستكر عالظرف، شدّ زواياه لتكبّره وتدوّره، وبعدين احفظ الصورة.">Drag a sticker onto the envelope, pull its corners to resize and turn it, then save the picture.</p>
+  </div>
+  <aside class="tpanel">
+    <div class="tsheet">
+      <div class="sstrip"><span>M&amp;G · Nº01</span><span data-ar="اسحب أو اضغط">drag or tap</span></div>
+      <div class="tgrid" id="tgrid"></div>
+    </div>
+    <div class="trow tbtns">
+      <button class="btn alt" id="tclear" data-ar="امسح">Clear</button>
+      <button class="btn terra" id="tsave" data-ar="احفظ الصورة">Save picture</button>
+    </div>
+  </aside>
+  <span class="thint" data-ar="اسحب الستكر عالظرف ↓">drag a sticker onto it ↓</span>
+</section>
+
+<!-- 5 · BUILD YOUR PACK -->
+<section class="pad" id="build">
+  <div class="shead">
+    <div><span class="kick" data-ar="على ذوقك">Your choice</span><h2 class="d" data-ar="ركّب باكيتك">Build your pack</h2></div>
+    <p data-ar="اختار 6 أو 12 ستكر، واكتب اسم الشخص اللي رح تهديها إله.">Pick 6 or 12 stickers and add the name of whoever it's for.</p>
+  </div>
+  <div class="build">
+    <div>
+      <div class="sizes" id="sizes"><button data-n="6" aria-pressed="true" data-ar="٦ ستكرات · ٣€">6 stickers · €3</button><button data-n="12" aria-pressed="false" data-ar="١٢ ستكر · ٥€">12 stickers · €5</button><span class="count" id="count">0 / 6</span></div>
+      <div class="pick" id="pick"></div>
+    </div>
+    <aside class="mysheet">
+      <div class="strip"><span data-ar="باكيتك">Your pack</span><span id="mycount">0 / 6</span></div>
+      <div class="mygrid" id="mygrid"></div>
+      <div class="named" id="named"></div>
+      <label for="forName" data-ar="لمين؟ (اختياري)">For whom? (optional)</label>
+      <input id="forName" maxlength="24" placeholder="Lina">
+      <div class="buy"><span class="price" id="myprice">€3</span><button class="btn terra" id="addMine" disabled data-ar="أضف للسلة">Add to bag</button></div>
+    </aside>
+  </div>
+</section>
+
+<!-- 6 · FREE STICKER -->
+<section class="pad" id="free" style="padding-top:clamp(40px,5vw,70px)">
+  <div class="free pop" id="freeBox">
+    <img class="gift" src="assets/s-heart.webp" alt="Tatreez heart sticker">
+    <div>
+      <span class="kick" data-ar="هدية">A gift</span>
+      <h2 class="d" data-ar="ستكر مجاني من فرح">A free sticker from Farah</h2>
+      <p data-ar="اشترك بالقائمة البريدية وبتوصلك لوحة جديدة كل شهر، ومعها قلب التطريز هدية.">Join the list for one new painting a month, and take the tatreez heart as a thank-you.</p>
+      <form id="freeForm"><input type="email" required placeholder="you@email.com" aria-label="Email"><button class="btn terra" data-ar="بدي إياه">Send it</button></form>
+      <div class="got"><a class="btn" href="assets/s-heart.webp" download="mass-grass-tatreez-heart.webp" data-ar="حمّل الستكر">Download the sticker</a><small class="mono" data-ar="شكرًا ✶">Thank you ✶</small></div>
+    </div>
+  </div>
+  <div class="soon pop"><b data-ar="قريبًا">Coming soon</b><span data-ar="ستكرات مطبوعة على ورق فينيل. لسا ما في شحن.">Printed vinyl stickers. No shipping yet.</span></div>
+</section>
+</main>
+
+<dialog id="dlg"><div class="dl">
+  <div class="pvw"><div><div class="flip" id="flip"><div class="fr" id="fr"></div><div class="bk" id="bk"></div></div><span class="fliphint" id="fliphint">Tap to flip ↻</span></div></div>
+  <div class="info">
+    <button class="x" id="close" aria-label="Close">✕</button>
+    <span class="kick" id="dk">Sticker</span>
+    <h3 class="d" id="dt"></h3>
+    <p class="story" id="ds"></p>
+    <div class="row" id="dfmt"></div>
+    <div class="acts"><a class="btn" id="dpack" href="#packs">See its pack</a><button class="btn alt" id="dadd">Add to my pack</button></div>
+  </div>
+</div></dialog>
+
+<footer>
+  <div class="fgrid">
+    <div>
+      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
+    </div>
+    <div><h4 data-ar="المتجر">Shop</h4><ul>
+      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+    <div><h4 data-ar="عنّا">About</h4><ul>
+      <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 Mass &amp; Grass · Gaza, Palestine</span><span data-ar="رُسمت باليد في غزة، بحب.">Painted by hand in Gaza, with love.</span></div>
+</footer>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let AR=false;const t=(en,ar)=>AR?ar:en;
+const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+
+/* ---- the stickers: [key, cut, EN, AR, place EN, place AR] ---- */
+const S=[
+ ['s-lemons','die','Lemons','ليمون','Deir al-Balah','دير البلح'],
+ ['hero','rect','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي'],
+ ['s-dove','die','Blue Dove','الحمامة الزرقاء','Beit Lahia','بيت لاهيا'],
+ ['sparklers','round','Sparkler Night','ليلة الشماريخ','Gaza City','مدينة غزة'],
+ ['s-gaza','die','Gaza','غزة','Gaza','غزة'],
+ ['guitar','rect','Guitar Girl','فتاة الجيتار','Tel al-Hawa','تل الهوا'],
+ ['pmoon','round','Moon Swing','أرجوحة القمر','Gaza','غزة'],
+ ['s-heart','die','Tatreez Heart','قلب مطرّز','Gaza City','مدينة غزة'],
+ ['dovegirl','round','Dove Girl','فتاة الحمام','Deir al-Balah','دير البلح'],
+ ['s-whale','die','Bike Ride','مشوار بالبسكليت','Az-Zawayda','الزوايدة'],
+ ['seafish','rect','Sea Fish','سمك البحر','Al-Shati','الشاطئ'],
+ ['house','round','Home','البيت','Az-Zawayda','الزوايدة'],
+ ['boattop','round','The Boat','القارب','Gaza port','ميناء غزة'],
+ ['waves','rect','The Waves','الموج','Gaza beach','بحر غزة'],
+ ['psea','round','Sea & Clouds','بحر وغيوم','Gaza beach','بحر غزة'],
+ ['blueflowers','rect','White Dove','الحمامة البيضاء','Beit Lahia','بيت لاهيا'],
+ ['pflower','round','Big Flower','الزهرة الكبيرة','Gaza','غزة'],
+ ['ppoppies','rect','Blue Poppies','شقائق زرقاء','Gaza','غزة'],
+ ['alley','rect','The Alley','الزقاق','Old City','البلدة القديمة'],
+ ['pcartgirl','round','Girl with Cart','فتاة والعربة','Gaza','غزة'],
+ ['pmoonsleep','round','Moon Sleeper','نائمة على القمر','Gaza','غزة'],
+ ['pelephant','rect','Elephant on a Bike','فيل على دراجة','Gaza','غزة'],
+ ['ptree','round','Little Tree','شجرة صغيرة','Gaza','غزة']];
+const BY=Object.fromEntries(S.map(s=>[s[0],s]));
+const src=k=>`assets/${k}.webp`;
+const stk=(k,alt)=>{const s=BY[k],a=alt??'';return s[1]==='die'?`<div class="stk die"><img src="${src(k)}" alt="${a}" draggable="false" loading="lazy"></div>`:`<div class="stk ${s[1]}"><i><img src="${src(k)}" alt="${a}" draggable="false" loading="lazy"></i></div>`};
+const PACKS=[ // [id, EN, AR, EN line, AR line, colour, stickers]
+ ['sea','Gaza Sea','بحر غزة','The coast, the boats and the fish of Gaza.','الساحل والقوارب وسمك غزة.','#3f6b8a',['hero','seafish','boattop','waves','psea','s-dove']],
+ ['lemons','Lemons & Birds','ليمون وعصافير','Lemon branches, doves and flowers.','أغصان ليمون وحمام وزهور.','#D9A441',['s-lemons','s-dove','dovegirl','blueflowers','pflower','ppoppies']],
+ ['home','Home','البيت','Gaza, home and the streets around it.','غزة والبيت والشوارع حوله.','#C4593F',['s-gaza','s-heart','house','alley','pcartgirl','s-whale']],
+ ['night','Gaza Nights','ليالي غزة','Moons, sparklers and night songs.','أقمار وشماريخ وأغاني الليل.','#2E241B',['sparklers','pmoon','pmoonsleep','guitar','pelephant','ptree']]];
+const packOf=k=>PACKS.find(p=>p[6].includes(k));
+const FMT=['WhatsApp','Telegram','iPhone','PNG','PDF'];
+
+/* ---- sounds: a soft paper slap and the bird chirp used across the site ---- */
+let actx;const AC=()=>{try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx}catch(e){return null}};
+function slap(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleRate*.08,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,4);
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='lowpass';f.frequency.value=1800;g.gain.value=.22;s.connect(f).connect(g).connect(c.destination);s.start(t0);
+  const o=c.createOscillator(),og=c.createGain();o.frequency.setValueAtTime(150,t0);o.frequency.exponentialRampToValueAtTime(60,t0+.08);og.gain.setValueAtTime(.12,t0);og.gain.exponentialRampToValueAtTime(.001,t0+.09);o.connect(og).connect(c.destination);o.start(t0);o.stop(t0+.1)}
+function peel(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleRate*.22,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(i/n)*(1-i/n)*4;
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='bandpass';f.frequency.setValueAtTime(1200,t0);f.frequency.linearRampToValueAtTime(3800,t0+.22);f.Q.value=1.2;g.gain.value=.12;s.connect(f).connect(g).connect(c.destination);s.start(t0)}
+
+/* ---- bag ---- */
+let bagN=window.MGBag?MGBag.count():0;function addBag(it){bagN=window.MGBag?MGBag.add(it):bagN+1;const b=$('#bagn');if(b){b.textContent=ard(bagN);$('#bag').animate([{transform:'scale(1.25) rotate(-6deg)'},{transform:'none'}],{duration:350})}slap()}
+
+/* ---- 1. the sheet ---- */
+const SHEET=['s-lemons','hero','s-dove','sparklers','s-gaza','guitar','pmoon','s-heart','dovegirl','s-whale','seafish','house'];
+const rot=i=>((i*37)%11-5)*1.1;
+function buildSheet(first){$('#slots').innerHTML=SHEET.map((k,i)=>{const s=BY[k];return `<button class="slot ${s[1]}${first?' land':''}" style="--r:${rot(i)}deg;--i:${i}" data-k="${k}" aria-label="${t(s[2],s[3])}">${stk(k,t(s[2],s[3]))}<span class="curl"></span><span class="nm">${t(s[2],s[3])}</span></button>`}).join('');
+  $('#sheetCount').textContent=AR?`${ard(SHEET.length)} ستكر`:`${SHEET.length} stickers`}
+$('#slots').addEventListener('click',e=>{const b=e.target.closest('.slot');if(b){peel();openStk(b.dataset.k)}});
+
+/* ---- dialog ---- */
+let curK=null;const dlg=$('#dlg');
+function openStk(k){curK=k;const s=BY[k],p=packOf(k);
+  $('#fr').innerHTML=stk(k,t(s[2],s[3]));$('#flip').classList.remove('back');
+  $('#bk').innerHTML=`<div><b>${t(s[2],s[3])}</b><span>${t('Painted in '+s[4]+'. Farah\'s note about this one goes here.','رُسمت في '+s[5]+'. كلمة فرح عن هذا الستكر تُضاف هنا.')}</span><small>MASS &amp; GRASS · ${s[4].toUpperCase()}</small></div>`;
+  $('#dk').textContent=t('Sticker','ستكر');$('#dt').textContent=t(s[2],s[3]);
+  $('#ds').textContent=t(`Cut from Farah's watercolour, ${s[4]}. Comes in the ${p?p[1]:''} pack, or add it to a pack of your own.`,`مقصوص من لوحة فرح المائية، ${s[5]}. موجود بباكيت ${p?p[2]:''}، أو أضفه لباكيتك.`);
+  $('#dfmt').innerHTML=FMT.map(f=>`<span class="chipf">${f}</span>`).join('');
+  $('#dpack').textContent=t('See its pack','شوف الباكيت');$('#dadd').textContent=t('Add to my pack','أضف لباكيتي');$('#fliphint').textContent=t('Tap to flip ↻','اضغط لتقلبه ↻');
+  $('#dpack').href='#pack-'+(p?p[0]:'');
+  dlg.dir=AR?'rtl':'ltr';dlg.showModal()}
+$('#flip').onclick=()=>{$('#flip').classList.toggle('back');peel()};
+$('#close').onclick=()=>dlg.close();dlg.onclick=e=>{if(e.target===dlg)dlg.close()};
+$('#dpack').onclick=()=>dlg.close();
+$('#dadd').onclick=()=>{dlg.close();if(!mine.includes(curK)&&mine.length<size){mine.push(curK);renderBuild()}$('#build').scrollIntoView({behavior:'smooth'})};
+
+/* ---- 2. packs ---- */
+function buildPacks(){$('#packGrid').innerHTML=PACKS.map(([id,en,ar,le,la,c,ks],i)=>`<article class="pack pop" id="pack-${id}" style="--d:${i};--c:${c}"><span class="tab">${t(en,ar)}</span>
+  <div class="mini" style="--r:${(i%2?1:-1)*1.2}deg">${ks.map(k=>stk(k,'')).join('')}</div>
+  <h3 class="d">${t(en,ar)}</h3><p>${t(le,la)}</p><div class="row">${FMT.map(f=>`<span class="chipf">${f}</span>`).join('')}</div>
+  <div class="buy"><span class="price">€3</span><button class="btn" data-add="${id}">${t('Add to bag','أضف للسلة')}</button></div></article>`).join('');observe()}
+$('#packGrid').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(!b)return;const P=PACKS.find(x=>x[0]===b.dataset.add)||[];const im=b.closest('article')?.querySelector('img');addBag({k:'pack-'+P[0],kind:'sticker',t:P[1]+' · sticker pack',ta:'باكيت ستكرات · '+P[2],p:3,img:im?im.getAttribute('src'):''});b.textContent=t('Added ✓','انضاف ✓')});
+
+/* ---- 3. stick them on: one blue envelope. A little paintbrush worm paints a line across it,
+   stickers drop onto it, pull the 4 corners to resize and turn ---- */
+const TK=['s-lemons','s-dove','s-gaza','s-heart','s-whale','sparklers','hero','pmoon','dovegirl','house'];
+const IMG={};TK.forEach(k=>{const i=new Image();i.src=`assets/${k}.webp`;IMG[k]=i});
+const sec=$('#try'),env=$('#tenv'),layer=$('#tlayer'),panel=$('.tpanel'),knobs=$('#tknobs'),hsvg=$('#thandles'),box=$('#tbox');
+let sel=null;
+const mob=()=>sec.clientWidth<=860;
+const tilt=()=>(parseFloat(getComputedStyle(env).getPropertyValue('--tilt'))||0)*Math.PI/180;
+
+/* place the envelope in the free space between the words and the sticker sheet */
+function placeEnv(){const sr=sec.getBoundingClientRect(),hd=$('.thead').getBoundingClientRect(),pr=panel.getBoundingClientRect();let x,y,h;
+  if(mob()){const top=hd.bottom-sr.top+18,bot=pr.top-sr.top-18;h=Math.max(220,(bot-top)*.92);x=sr.width/2;y=(top+bot)/2;h=Math.min(h,(sr.width-56)/.75/1.16)}
+  else{const AR_=document.body.classList.contains('ar-on'),l=AR_?pr.right-sr.left:hd.right-sr.left,r=AR_?hd.left-sr.left:pr.left-sr.left;x=(l+r)/2;y=sr.height*.54;h=Math.min(sr.height*.8,(r-l-30)/.75/1.12,720)}
+  env.style.setProperty('--ex',x+'px');env.style.setProperty('--ey',y+'px');env.style.setProperty('--eh',h+'px');layer.querySelectorAll('.st').forEach(keepIn);placeKnobs()}
+addEventListener('resize',placeEnv);
+
+/* the worm */
+const base=$('#eLineBase'),line=$('#eLine'),L=base.getTotalLength(),WL=118,W={b:$('#eWBody'),f:$('#eWFill'),st:$('#eWStripe'),r:$('#eWRing'),sh:$('#eWShadow'),h:$('#eWHead')};
+const tail=$('#eTail');
+function at(s){if(s<0){const p=base.getPointAtLength(0),q=base.getPointAtLength(2),d=Math.hypot(q.x-p.x,q.y-p.y)||1;return{x:p.x+(q.x-p.x)/d*s,y:p.y+(q.y-p.y)/d*s}}
+  if(s>L){const p=base.getPointAtLength(L),q=base.getPointAtLength(L-2),d=Math.hypot(p.x-q.x,p.y-q.y)||1;return{x:p.x+(p.x-q.x)/d*(s-L),y:p.y+(p.y-q.y)/d*(s-L)}}return base.getPointAtLength(s)}
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+line.style.strokeDasharray=L+' '+(L+400);
+let wt0=null,running=false;
+let wdone=false;
+function worm(now){if(wt0==null)wt0=now;const PAINT=11000,t=reduce?PAINT:Math.min(PAINT,now-wt0);if(t>=PAINT)wdone=true;
+  const u=Math.min(1,t/PAINT),s=-40+u*(L+WL+80),head=s;
+  line.style.strokeDashoffset=Math.max(0,L-head+10);
+  const pts=[],N=22;for(let i=0;i<=N;i++){const a=head-WL+WL*i/N,p=at(a),q=at(a+1.5),dx=q.x-p.x,dy=q.y-p.y,d=Math.hypot(dx,dy)||1,taper=Math.sin(Math.PI*i/N),w=reduce?0:5.5*Math.sin(i*.55-now/170)*taper;pts.push([p.x-dy/d*w,p.y+dx/d*w])}
+  const dpath='M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L');
+  [W.b,W.f,W.r,W.sh].forEach(e=>e.setAttribute('d',dpath));W.st.setAttribute('d','M'+pts.slice(2,-3).map(p=>p[0].toFixed(1)+' '+(p[1]-5).toFixed(1)).join(' L'));
+  const h=pts[N],h2=pts[N-2],ang=Math.atan2(h[1]-h2[1],h[0]-h2[0])*180/Math.PI;W.h.setAttribute('transform',`translate(${h[0].toFixed(1)} ${h[1].toFixed(1)}) rotate(${ang.toFixed(1)})`);
+  const sw=reduce?0:Math.sin(now/900)*14;tail.setAttribute('d',`M346 214 C 420 ${196+sw*.4}, 470 ${170+sw}, 545 ${196+sw*1.6}`)}
+(function loop(now){requestAnimationFrame(loop);if(running&&!wdone)worm(now);else if(running){const sw=reduce?0:Math.sin(now/900)*14;tail.setAttribute('d',`M346 214 C 420 ${196+sw*.4}, 470 ${170+sw}, 545 ${196+sw*1.6}`)}if(sel)placeKnobs()})(performance.now());
+new IntersectionObserver(es=>{running=es[0].isIntersecting;if(running&&!env.classList.contains('in')){placeEnv();env.classList.add('in')}},{threshold:.2}).observe(sec);
+
+/* stickers drawn to a canvas for "save picture" */
+function drawStk(g,k,w){const s=BY[k],im=IMG[k];if(!im.complete||!im.naturalWidth)return;
+  if(s[1]==='die'){const f=Math.min(w/im.naturalWidth,w/im.naturalHeight);g.drawImage(im,-im.naturalWidth*f/2,-im.naturalHeight*f/2,im.naturalWidth*f,im.naturalHeight*f);return}
+  const o=w*.88,rr=s[1]==='round'?o/2:o*.14,p=new Path2D();p.roundRect(-o/2,-o/2,o,o,rr);g.fillStyle='#fff';g.fill(p);
+  const ins=o*.86,ir=s[1]==='round'?ins/2:ins*.09,p2=new Path2D();p2.roundRect(-ins/2,-ins/2,ins,ins,ir);g.save();g.clip(p2);
+  const f=Math.max(ins/im.naturalWidth,ins/im.naturalHeight);g.drawImage(im,-im.naturalWidth*f/2,-im.naturalHeight*f/2,im.naturalWidth*f,im.naturalHeight*f);g.restore()}
+
+/* geometry: stickers live in the envelope's own (unrotated) space; the envelope is tilted */
+function envGeo(){const sr=sec.getBoundingClientRect(),r=env.getBoundingClientRect();return{cx:r.left+r.width/2-sr.left,cy:r.top+r.height/2-sr.top,W:env.offsetWidth,H:env.offsetHeight,t:tilt(),sr}}
+const rotv=(x,y,a)=>[x*Math.cos(a)-y*Math.sin(a),x*Math.sin(a)+y*Math.cos(a)];
+function corners(){if(!sel)return null;const g=envGeo(),el=sel.el,cs=el.style,sc=+cs.getPropertyValue('--s')||1,r=(parseFloat(cs.getPropertyValue('--r'))||0)*Math.PI/180,
+    lx=parseFloat(cs.getPropertyValue('--x'))/100*g.W-g.W/2,ly=parseFloat(cs.getPropertyValue('--y'))/100*g.H-g.H/2,[ox,oy]=rotv(lx,ly,g.t),cx=g.cx+ox,cy=g.cy+oy,hw=el.offsetWidth*sc/2,hh=el.offsetHeight*sc/2;
+  return{c:{x:cx,y:cy},pts:[[-hw,-hh],[hw,-hh],[hw,hh],[-hw,hh]].map(([x,y])=>{const [a,b]=rotv(x,y,g.t+r);return{x:cx+a,y:cy+b}})}}
+function toLocal(px,py){const g=envGeo(),[x,y]=rotv(px-g.sr.left-g.cx,py-g.sr.top-g.cy,-g.t);return{x:(x+g.W/2)/g.W,y:(y+g.H/2)/g.H}}
+function placeKnobs(){const k=corners();knobs.hidden=!k;hsvg.classList.toggle('on',!!k);if(!k)return;
+  box.setAttribute('points',k.pts.map(q=>q.x+','+q.y).join(' '));knobs.querySelectorAll('i').forEach((el,i)=>{el.style.transform=`translate(${k.pts[i].x}px,${k.pts[i].y}px)`});
+  const a=k.pts[1],dx=a.x-k.c.x,dy=a.y-k.c.y,l=Math.hypot(dx,dy)||1;$('#tx').style.transform=`translate(${a.x+dx/l*22}px,${a.y+dy/l*22}px)`}
+function select(st){sel=st;placeKnobs()}
+knobs.querySelectorAll('i').forEach(el=>el.addEventListener('pointerdown',e=>{if(!sel)return;e.preventDefault();e.stopPropagation();el.setPointerCapture(e.pointerId);const k=corners(),sr=sec.getBoundingClientRect(),c={x:k.c.x+sr.left,y:k.c.y+sr.top},
+    v0=[e.clientX-c.x,e.clientY-c.y],d0=Math.hypot(...v0)||1,a0=Math.atan2(v0[1],v0[0]),s0=+sel.el.style.getPropertyValue('--s')||1,r0=parseFloat(sel.el.style.getPropertyValue('--r'))||0;
+  const mv=ev=>{const v=[ev.clientX-c.x,ev.clientY-c.y],f=Math.hypot(...v)/d0,da=Math.atan2(v[1],v[0])-a0;
+    sel.el.style.setProperty('--s',Math.min(4,Math.max(.3,s0*f)).toFixed(3));sel.el.style.setProperty('--r',(r0+da*180/Math.PI).toFixed(1)+'deg');keepIn(sel.el);placeKnobs()};
+  const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up)};el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)}));
+function removeSel(){if(!sel)return;sel.el.remove();select(null);peel()}
+$('#tx').addEventListener('pointerdown',e=>{e.stopPropagation()});$('#tx').onclick=removeSel;
+
+const clamp01=v=>Math.min(1,Math.max(0,v));
+/* a sticker stays whole on the paper: its turned outline must fit inside the envelope */
+function keepIn(el){const W=env.offsetWidth,H=env.offsetHeight,cs=el.style;let sc=+cs.getPropertyValue('--s')||1;const r=(parseFloat(cs.getPropertyValue('--r'))||0)*Math.PI/180,c=Math.abs(Math.cos(r)),s_=Math.abs(Math.sin(r)),m=W*.025;
+  const ext=k=>[(c*el.offsetWidth+s_*el.offsetHeight)*k/2,(s_*el.offsetWidth+c*el.offsetHeight)*k/2];let [ex,ey]=ext(sc);
+  const fit=Math.min((W/2-m)/ex,(H/2-m)/ey,1);if(fit<1){sc*=fit;cs.setProperty('--s',sc.toFixed(3));[ex,ey]=ext(sc)}
+  const x=parseFloat(cs.getPropertyValue('--x'))/100*W,y=parseFloat(cs.getPropertyValue('--y'))/100*H;
+  cs.setProperty('--x',Math.min(W-ex-m,Math.max(ex+m,x))/W*100+'%');cs.setProperty('--y',Math.min(H-ey-m,Math.max(ey+m,y))/H*100+'%')}
+function addStk(k,x,y,opt={}){const el=document.createElement('div');el.className='st'+(opt.quiet?'':' new');el.dataset.k=k;
+  el.style.setProperty('--x',clamp01(x)*100+'%');el.style.setProperty('--y',clamp01(y)*100+'%');el.style.setProperty('--s',opt.s||1);el.style.setProperty('--r',(opt.r??(Math.random()*16-8)).toFixed(0)+'deg');
+  el.innerHTML=stk(k,'');layer.appendChild(el);keepIn(el);const st={el,k};if(!opt.quiet){select(st);slap()}
+  el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();select(st);el.setPointerCapture(e.pointerId);$('.thint').style.opacity=0;
+    const p0=toLocal(e.clientX,e.clientY),x0=parseFloat(el.style.getPropertyValue('--x'))/100,y0=parseFloat(el.style.getPropertyValue('--y'))/100;
+    const mv=ev=>{const p=toLocal(ev.clientX,ev.clientY);el.style.setProperty('--x',clamp01(x0+p.x-p0.x)*100+'%');el.style.setProperty('--y',clamp01(y0+p.y-p0.y)*100+'%');keepIn(el);placeKnobs()};
+    const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up)};el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)})}
+sec.addEventListener('pointerdown',e=>{if(!e.target.closest('.st,.tknobs,.tpanel'))select(null)});
+
+/* tray: tap to stick in a free spot, or drag onto the envelope */
+const buildTry=()=>{$('#tgrid').innerHTML=TK.map(k=>`<button data-k="${k}" aria-label="${t(BY[k][2],BY[k][3])}">${stk(k,'')}</button>`).join('');placeEnv()};
+const SPOTS=[[.5,.75],[.75,.6],[.22,.86],[.78,.42],[.45,.9],[.2,.48]];let spot=0;
+let ghost=null,gk=null,moved=0,sx=0,sy=0;
+$('#tgrid').addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;gk=b.dataset.k;moved=0;sx=e.clientX;sy=e.clientY;
+  ghost=document.createElement('div');ghost.className='ghost';ghost.innerHTML=stk(gk,'');ghost.style.left=sx+'px';ghost.style.top=sy+'px';ghost.style.opacity=0;document.body.appendChild(ghost)});
+addEventListener('pointermove',e=>{if(!ghost)return;moved=Math.hypot(e.clientX-sx,e.clientY-sy);ghost.style.opacity=moved>8?1:0;ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px'});
+addEventListener('pointerup',e=>{if(!ghost)return;ghost.remove();ghost=null;peel();$('.thint').style.opacity=0;
+  if(moved<8){const [x,y]=SPOTS[spot++%SPOTS.length];addStk(gk,x+(Math.random()-.5)*.06,y+(Math.random()-.5)*.05);return}
+  const p=toLocal(e.clientX,e.clientY);if(p.x>-.25&&p.x<1.25&&p.y>-.2&&p.y<1.2)addStk(gk,p.x,p.y)});
+addEventListener('pointercancel',()=>{if(ghost){ghost.remove();ghost=null}});
+addEventListener('keydown',e=>{if(sel&&(e.key==='Delete'||e.key==='Backspace')&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName))removeSel()});
+$('#tclear').onclick=()=>{layer.innerHTML='';select(null);peel()};
+
+/* save: the envelope as you see it, on the blue, with your stickers */
+$('#tsave').onclick=async()=>{select(null);const svg=$('#envsvg'),W=env.offsetWidth,H=env.offsetHeight,S=1600/Math.max(W,H)/1.25,c=document.createElement('canvas');c.width=1600;c.height=1600;const g=c.getContext('2d');
+  g.fillStyle='#7DB0CF';g.fillRect(0,0,c.width,c.height);
+  const xml=new XMLSerializer().serializeToString(svg).replace('<svg ','<svg width="600" height="800" '),im=new Image();im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml);
+  try{await im.decode()}catch(e){}
+  g.save();g.translate(c.width/2,c.height/2);g.rotate(tilt());g.shadowColor='rgba(20,45,70,.3)';g.shadowBlur=40;g.shadowOffsetX=14;g.shadowOffsetY=22;
+  try{g.drawImage(im,-W*S/2,-H*S/2,W*S,H*S)}catch(e){}g.shadowColor='transparent';
+  for(const el of layer.querySelectorAll('.st')){const cs=el.style,x=(parseFloat(cs.getPropertyValue('--x'))/100-.5)*W*S,y=(parseFloat(cs.getPropertyValue('--y'))/100-.5)*H*S,w=el.offsetWidth*S*(+cs.getPropertyValue('--s')||1),r=(parseFloat(cs.getPropertyValue('--r'))||0)*Math.PI/180;
+    g.save();g.translate(x,y);g.rotate(r);g.shadowColor='rgba(0,0,0,.28)';g.shadowBlur=w*.03;g.shadowOffsetY=w*.02;drawStk(g,el.dataset.k,w);g.restore()}
+  g.restore();
+  g.font=`600 ${Math.round(c.width*.016)}px "IBM Plex Mono",monospace`;g.fillStyle='rgba(46,36,27,.7)';g.textAlign='right';g.fillText('massandgrass ✶',c.width-30,c.height-30);
+  const a=document.createElement('a');a.download='mass-grass-envelope.jpg';a.href=c.toDataURL('image/jpeg',.92);document.body.appendChild(a);a.click();a.remove();slap()};
+
+buildTry();
+/* two stickers already on, like a real one */
+addStk('s-lemons',.24,.6,{quiet:true,r:-12,s:.95});addStk('sparklers',.76,.86,{quiet:true,r:8,s:.8});
+
+/* ---- 5. build your pack ---- */
+let size=6,mine=[];
+function renderBuild(){
+  $('#pick').innerHTML=S.map(s=>{const on=mine.includes(s[0]);return `<button data-k="${s[0]}" aria-pressed="${on}" class="${!on&&mine.length>=size?'no':''}" aria-label="${t(s[2],s[3])}">${stk(s[0],'')}</button>`}).join('');
+  $('#mygrid').innerHTML=Array.from({length:size},(_,i)=>mine[i]?stk(mine[i],''):'<span class="empty"></span>').join('');
+  const c=`${ard(mine.length)} / ${ard(size)}`;$('#count').textContent=c;$('#mycount').textContent=c;
+  $('#myprice').textContent=size===6?'€3':'€5';$('#addMine').disabled=mine.length!==size;
+  const n=$('#forName').value.trim();$('#named').textContent=n?t(`A pack for ${n} ✶`,`باكيت لـ${n} ✶`):''}
+$('#sizes').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;size=+b.dataset.n;mine=mine.slice(0,size);$$('#sizes button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderBuild()});
+$('#pick').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.k,i=mine.indexOf(k);
+  if(i>=0){mine.splice(i,1);peel()}else if(mine.length<size){mine.push(k);slap()}renderBuild()});
+$('#forName').addEventListener('input',renderBuild);
+$('#addMine').onclick=()=>{const im=$('#mygrid img');const n=$('#forName').value.trim();addBag({k:'mine-'+Date.now(),kind:'sticker',t:'Your pack of '+size,ta:'باكيتك · '+size+' ستكرات',p:size===6?3:5,img:im?im.getAttribute('src'):'',note:n});mine=[];$('#forName').value='';renderBuild()};
+
+/* ---- 6. free sticker ---- */
+$('#freeForm').addEventListener('submit',e=>{e.preventDefault();$('#freeBox').classList.add('done');slap()});
+
+/* ---- rise into place + chat plays when seen ---- */
+const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('on');io.unobserve(en.target)}}),{rootMargin:'0px 0px -10% 0px'}):null;
+function observe(){$$('.pop:not(.on),.shead:not(.on)').forEach(e=>{e.classList.add('pop');io?io.observe(e):e.classList.add('on')})}
+
+/* ---- language (shared with the other pages) ---- */
+$$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
+function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
+  $$('[data-ar]').forEach(e=>{e.innerHTML=a?e.dataset.ar:e.dataset.en});
+  $$('main,footer,.info').forEach(e=>e.dir=a?'rtl':'ltr');
+  const lb=$('#langBtn');if(lb)lb.textContent=a?'EN':'ع';$('#forName').placeholder=a?'لينا':'Lina';
+  buildSheet(false);buildPacks();buildTry();renderBuild();const b=$('#bagn');if(b)b.textContent=ard(bagN)}
+const lb=$('#langBtn');if(lb)lb.onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}catch(e){}};
+
+
+
+buildSheet(true);buildPacks();renderBuild();observe();
+try{if(localStorage.mgLang==='ar')setLang(true)}catch(e){}
+})();
+</script>
+</body>
+</html>

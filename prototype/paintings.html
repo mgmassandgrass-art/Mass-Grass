@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mass &amp; Grass Paintings</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="assets/mg.js"></script>
+<style>
+:root{--gut:clamp(20px,5vw,80px);
+  --field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--sky:#3f6b8a;
+  --soft:#6f604d;--env:#FBF7EE;--sh:rgba(46,36,27,.25);
+  --en:'Anton',Impact,sans-serif;--ar:'Lalezar','IBM Plex Sans Arabic',sans-serif;
+  --body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--hand:'Caveat','Aref Ruqaa',cursive;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+.d{font-family:var(--en);text-transform:uppercase;letter-spacing:.01em;font-weight:400;line-height:.95}
+.ar-on .d{font-family:var(--ar)!important;letter-spacing:0!important}
+.ar-on [data-ar]{font-family:var(--body)}
+.ar-on .d[data-ar]{font-family:var(--ar)!important}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+header{direction:ltr}
+/* ---------- header ---------- */
+header{position:fixed;inset:0 0 auto;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:14px clamp(16px,3vw,34px);pointer-events:none}
+header>*{pointer-events:auto}
+.logo{width:58px;height:46px;background:var(--env);padding:6px 8px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);transform:rotate(-3deg);display:block}
+.logo img{width:100%;height:100%}
+nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
+nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
+nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+.ar-on nav a{font-family:var(--ar);font-size:16px}
+.tools{display:flex;gap:8px;justify-self:end}
+.chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
+.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
+.bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
+/* header scales with the screen instead of jumping at a breakpoint */
+header{gap:clamp(8px,1.4vw,14px);padding:clamp(10px,1.4vw,14px) var(--gut)}
+.logo{width:clamp(44px,1.4vw + 38px,58px);height:auto;aspect-ratio:58/46;padding:clamp(4px,.5vw,6px) clamp(5px,.7vw,8px)}
+nav{padding:clamp(3px,.4vw,5px);gap:clamp(2px,.3vw,4px)}
+nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp(7px,1vw,12px) clamp(5px,.5vw,7px)}
+.chip{height:clamp(32px,.6vw + 29.6px,38px);min-width:clamp(32px,.6vw + 29.6px,38px);padding:0 clamp(7px,.8vw,10px);font-size:clamp(12px,.1vw + 11.6px,13px)}
+.tools{gap:clamp(5px,.8vw,8px)}
+@media (max-width:420px){.bag span{display:none}}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper);padding:clamp(60px,8vw,100px) var(--gut) 30px;position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:-14px;height:16px;background:linear-gradient(-45deg,var(--ink) 8px,transparent 0),linear-gradient(45deg,var(--ink) 8px,transparent 0);background-size:16px 16px}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px}
+footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
+.news{display:flex;gap:0;max-width:440px;margin-top:10px}
+.news input{flex:1;min-width:0;border:2px solid var(--paper);background:transparent;color:var(--paper);padding:13px 14px;font:15px var(--body)}
+.news input::placeholder{color:#efe4cf99}
+.news button{border:2px solid var(--paper);background:var(--terra);color:#fff;padding:0 18px;font:17px/1 var(--en);text-transform:uppercase}
+.ar-on .news button{font-family:var(--ar)}
+footer ul{list-style:none;padding:0;display:grid;gap:8px}
+footer ul a{text-decoration:none;opacity:.85}
+footer ul a:hover{opacity:1;text-decoration:underline}
+footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
+.legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
+
+
+
+/* ---------- shared bits ---------- */
+section.pad{padding:clamp(70px,9vw,130px) var(--gut)}
+.kick{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);background:var(--paper);border:1.5px solid var(--ink);padding:6px 9px 5px;transform:rotate(-2deg)}
+.ar-on .kick{font:500 14px/1 var(--body);letter-spacing:0}
+.shead{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:clamp(36px,5vw,60px)}
+.shead h2{font-size:clamp(32px,4.6vw + 14px,88px);margin-top:14px}
+.shead p{max-width:38ch;color:var(--soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:13px 18px 11px;font:17px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;box-shadow:2px 2px 0 rgba(196,89,63,.4);transition:.15s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 rgba(196,89,63,.4)}
+.btn:active{transform:translate(1px,1px);box-shadow:0 0 0 transparent}
+.btn.alt{background:var(--paper);color:var(--ink);box-shadow:2px 2px 0 var(--sh)}
+.btn.terra{background:var(--terra);border-color:var(--ink)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.ar-on .btn{font-family:var(--ar)}
+.chipf{display:inline-block;font:11px/1 var(--mono);letter-spacing:.06em;border:1.5px solid var(--ink);background:var(--paper);padding:5px 7px 4px}
+.pop{opacity:0;translate:0 46px}
+.pop.on{opacity:1;translate:0 0;transition:opacity .5s,translate .8s cubic-bezier(.2,1.25,.3,1);transition-delay:calc(var(--d,0)*90ms)}
+
+
+/* ---------- 1. Farah's wall: watercolours drying on two lines, full screen ---------- */
+.wall{position:relative;height:max(100svh,640px);overflow:hidden;background:#EFE5D2;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+.wall.grab{cursor:grabbing}
+.wall::before{content:"";position:absolute;inset:0;z-index:0;background:url(assets/paper.jpg);mix-blend-mode:multiply;opacity:.5;pointer-events:none}
+.wall::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:url(assets/grain.png),radial-gradient(120% 70% at 50% 0%,rgba(255,250,238,.55),transparent 60%),linear-gradient(180deg,transparent 70%,rgba(46,36,27,.08));
+  background-blend-mode:multiply,normal,normal;opacity:.5}
+.track{position:absolute;left:0;top:0;height:100%;z-index:1;will-change:transform}
+.lines{position:absolute;left:0;top:0;height:100%;overflow:visible;pointer-events:none}
+.lines .ln{fill:none;stroke:#7d6c58;stroke-width:1.6;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.6s cubic-bezier(.5,0,.2,1)}
+.lines .sh{fill:none;stroke:rgba(46,36,27,.13);stroke-width:2.4;filter:blur(2px);stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.6s cubic-bezier(.5,0,.2,1)}
+.wall.in .lines .ln,.wall.in .lines .sh{stroke-dashoffset:0}
+.lines .nail{fill:#5c4b39;stroke:#2E241B;stroke-width:1}
+.pt{position:absolute;padding:0;border:0;background:none;transform-origin:50% 0;cursor:pointer;scale:1;transition:scale .35s cubic-bezier(.2,1.3,.4,1);
+  filter:drop-shadow(4px 10px 8px rgba(46,36,27,.22)) drop-shadow(1px 2px 1px rgba(46,36,27,.18));translate:0 -130vh}
+.wall.in .pt{translate:0 0;transition:translate 1.05s cubic-bezier(.25,1.35,.45,1) calc(var(--i)*55ms + .35s),scale .35s cubic-bezier(.2,1.3,.4,1)}
+.pt:hover,.pt:focus-visible{scale:1.045;z-index:5;filter:drop-shadow(10px 22px 16px rgba(46,36,27,.26)) drop-shadow(1px 2px 1px rgba(46,36,27,.18))}
+.pt:focus-visible{outline:none}
+.pt:focus-visible .pp{outline:3px solid var(--terra);outline-offset:4px}
+.pt .pp{display:block;width:100%;height:100%;background:#FBF8F1 url(assets/paper.jpg);background-blend-mode:multiply;padding:5.5%;clip-path:var(--deckle)}
+.pt img{width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.pt .peg{position:absolute;left:50%;top:-20px;width:13px;height:36px;margin-left:-6.5px;z-index:2;border-radius:3px 3px 2px 2px;
+  background:linear-gradient(90deg,#b98a57,#d9ad78 45%,#a97a49);box-shadow:1px 2px 2px rgba(46,36,27,.35),inset 0 0 0 1px rgba(80,50,20,.35)}
+.pt .peg::after{content:"";position:absolute;left:-2px;right:-2px;top:12px;height:5px;border-radius:2px;background:linear-gradient(#d8d4cc,#8f8a82);box-shadow:0 1px 1px rgba(0,0,0,.3)}
+.pt .cap{position:absolute;left:0;right:0;top:calc(100% + 8px);text-align:center;font:600 clamp(15px,.5vw + 12px,19px)/1.1 var(--hand);color:var(--soft);white-space:nowrap;opacity:.8;transition:opacity .3s}
+.pt:hover .cap{opacity:1;color:var(--ink)}
+.pt .new{position:absolute;right:-10px;top:12%;z-index:2;font:11px/1 var(--mono);letter-spacing:.12em;background:var(--terra);color:#fff;padding:5px 7px 4px;rotate:8deg;box-shadow:1px 1px 0 rgba(46,36,27,.3)}
+.ar-on .pt .new{font:500 12px/1 var(--body);letter-spacing:0}
+.whead{position:absolute;z-index:3;left:var(--gut);bottom:clamp(22px,4vh,44px);max-width:min(560px,46vw);pointer-events:none}
+.ar-on .whead{left:auto;right:var(--gut)}
+.whead h1{font-size:clamp(46px,5.4vw + 14px,124px);margin:12px 0 8px}
+.whead p{color:var(--soft);max-width:40ch}
+.wctl{position:absolute;z-index:3;right:var(--gut);bottom:clamp(22px,4vh,44px);display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.ar-on .wctl{right:auto;left:var(--gut);align-items:flex-start}
+.wctl .hint{font:600 21px/1 var(--hand);color:var(--soft)}
+.wctl .row{display:flex;gap:8px;align-items:center}
+.wctl .cnt{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-inline-end:6px}
+.ar-on .wctl .cnt{font:500 14px var(--body);letter-spacing:0}
+.arw{width:46px;height:46px;border:2px solid var(--ink);background:var(--paper);display:grid;place-items:center;font:20px/1 var(--mono);box-shadow:2px 2px 0 var(--sh);transition:.15s}
+.arw:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--sh)}
+.arw:active{transform:translate(1px,1px);box-shadow:none}
+.prog{width:180px;height:3px;background:rgba(46,36,27,.15);position:relative}
+.prog i{position:absolute;left:0;top:0;bottom:0;width:var(--w,20%);translate:var(--p,0) 0;background:var(--ink)}
+@media (max-width:760px){
+  .whead{max-width:none;right:var(--gut);bottom:96px}
+  .whead h1{font-size:clamp(40px,12vw,64px);margin:8px 0 4px}
+  .whead p{font-size:14px}
+  .wctl{left:var(--gut);right:var(--gut);flex-direction:row;justify-content:space-between;align-items:center;bottom:24px}
+  .ar-on .wctl{left:var(--gut);right:var(--gut)}
+  .wctl .hint{display:none}
+  .prog{width:96px}
+}
+
+/* ---------- painting dialog ---------- */
+dialog{margin:auto;border:0;padding:0;background:transparent;width:min(1040px,94vw);max-width:none;color:var(--ink)}
+dialog::backdrop{background:#1e1811cc;backdrop-filter:blur(3px)}
+.dl{position:relative;background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);max-height:92svh;overflow:auto}
+.dl .pvw{background:#EFE5D2 url(assets/paper.jpg);background-blend-mode:multiply;display:grid;place-items:center;padding:clamp(22px,4vw,48px);border-inline-end:2px solid var(--ink);position:relative;min-height:320px}
+.dl .big{position:relative;max-width:100%;filter:drop-shadow(6px 14px 12px rgba(46,36,27,.25))}
+.dl .big .pp{display:block;background:#FBF8F1 url(assets/paper.jpg);background-blend-mode:multiply;padding:4.5%;clip-path:var(--deckle)}
+.dl .big img{display:block;max-width:100%;max-height:64svh;width:auto;height:auto}
+.dl .big.swap{animation:swap .45s cubic-bezier(.2,1.2,.4,1)}
+@keyframes swap{from{opacity:0;translate:0 18px;rotate:-2deg}}
+.dl .info{padding:clamp(22px,3vw,36px);display:flex;flex-direction:column;align-items:flex-start}
+.dl .info>.row,.dl .info>.story,.dl .nav2{align-self:stretch}
+.dl h3{font-size:clamp(34px,3vw + 14px,60px);margin:14px 0 6px}
+.dl .where{font:600 22px/1.1 var(--hand);color:var(--terra);margin-bottom:14px}
+.dl .story{color:var(--soft);font-size:15px;margin-bottom:18px}
+.dl .row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.dl .price{font:clamp(30px,2vw + 16px,42px)/1 var(--en);margin-bottom:16px}
+.dl .price small{font:12px var(--mono);letter-spacing:.12em;color:var(--soft);text-transform:uppercase;margin-inline-start:8px}
+.ar-on .dl .price small{font:500 14px var(--body);letter-spacing:0}
+.dl .acts{display:flex;flex-wrap:wrap;gap:12px}
+.dl .nav2{margin-top:auto;padding-top:22px;display:flex;justify-content:space-between;align-items:center;gap:10px;font:12px var(--mono);letter-spacing:.1em;color:var(--soft)}
+.x{position:absolute;right:12px;top:12px;z-index:3;width:38px;height:38px;border:1.5px solid var(--ink);background:var(--paper);display:grid;place-items:center;font:600 14px var(--mono)}
+[dir=rtl] .x{right:auto;left:12px}
+@media (max-width:760px){.dl{grid-template-columns:1fr}.dl .pvw{border:0;border-bottom:2px solid var(--ink);min-height:0}.dl .big img{max-height:44svh}}
+
+/* ---------- 2. the map: where each one was painted ---------- */
+#where{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;position:relative}
+.wgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(28px,5vw,80px);align-items:start}
+.pchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.pchips button{border:1.5px solid var(--ink);background:var(--paper);padding:8px 11px 7px;font:13px/1 var(--mono);letter-spacing:.04em;box-shadow:1px 1px 0 var(--sh)}
+.ar-on .pchips button{font:500 14px/1 var(--body)}
+.pchips button b{font-weight:600;color:var(--terra);margin-inline-start:6px}
+.pchips button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.pchips button[aria-pressed=true] b{color:var(--ochre)}
+.mapw{position:sticky;top:96px}
+.map{position:relative;width:100%;max-width:560px;margin-inline:auto;aspect-ratio:600/707;rotate:-1.2deg}
+.map .pp{position:absolute;inset:0;--pc:#EFE3C9;filter:drop-shadow(4px 5px 0 var(--sh))}
+.map .pp>i{position:absolute;inset:0;display:block;background:#EFE3C9 url(assets/paper.jpg);background-blend-mode:multiply;
+  clip-path:polygon(0 1.6%,9% .4%,24% 1.3%,33% 0,47% .9%,66% 0,74% 1.1%,90% .2%,100% 1.4%,99.1% 13%,100% 25%,98.8% 38%,99.6% 50%,98.9% 63%,100% 75%,99.2% 88%,99.8% 100%,84% 98.8%,66% 100%,52% 99%,33% 100%,18% 98.9%,0 99.6%,1% 87%,0 75%,.9% 62%,0 50%,1.1% 37%,0 25%,.8% 12%)}
+.map .pp>i::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,transparent calc(33.3% - 1.5px),rgba(70,50,25,.25) calc(33.3% - 1.5px) 33.3%,rgba(255,250,235,.6) 33.3% calc(33.3% + 1.5px),transparent calc(33.3% + 1.5px) calc(66.6% - 1.5px),rgba(70,50,25,.25) calc(66.6% - 1.5px) 66.6%,rgba(255,250,235,.6) 66.6% calc(66.6% + 1.5px),transparent calc(66.6% + 1.5px)),
+  linear-gradient(180deg,transparent calc(50% - 1.5px),rgba(70,50,25,.25) calc(50% - 1.5px) 50%,rgba(255,250,235,.6) 50% calc(50% + 1.5px),transparent calc(50% + 1.5px))}
+.map svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.map .sea{fill:#9FC2D6;opacity:.55}
+.map .waves path{fill:none;stroke:#5B86A8;stroke-width:1.4;opacity:.55;stroke-linecap:round}
+.map .land{fill:none;stroke:#2E241B;stroke-width:2.6;stroke-linejoin:round}
+.map .gov{stroke:none}.map .g-north{fill:#E7CFA0}.map .g-gaza{fill:#EBD7AF}.map .g-deir{fill:#E3CA98}.map .g-khan{fill:#EAD4A8}.map .g-rafah{fill:#E0C590}
+.map .inner{fill:none;stroke:#2E241B;stroke-width:1.3;stroke-dasharray:5 4;opacity:.6}
+.map .seat{font:500 15px var(--mono);fill:#3f6886;letter-spacing:.06em}
+.ar-on .map .seat{font:500 16px var(--body);letter-spacing:0}
+.map .ttl{font:400 26px var(--en);text-transform:uppercase;fill:#2E241B}
+.ar-on .map .ttl{font-family:var(--ar)}
+.map .src{font:500 8px var(--mono);fill:#9a8a74;letter-spacing:.06em}
+.map .pin{cursor:pointer;outline:none}
+.map .pin:focus-visible .dot{stroke:#C4593F;stroke-width:4}
+.map .pin .hit{fill:transparent}
+.map .pin .dot{fill:#FBF6EA;stroke:#2E241B;stroke-width:2.4;transition:fill .25s}
+.map .pin .num{font:600 11px var(--mono);fill:#2E241B;text-anchor:middle;pointer-events:none}
+.map .pin .pulse{fill:none;stroke:#C4593F;stroke-width:2;opacity:0}
+.map .pin.on .dot{fill:#C4593F}.map .pin.on .num{fill:#fff}
+.map .pin.on .pulse{animation:pulse 1.6s ease-out infinite}
+@keyframes pulse{0%{r:11;opacity:.9}100%{r:26;opacity:0}}
+.map .pin text.lbl{font:600 14px var(--mono);fill:#2E241B;paint-order:stroke;stroke:#F4EBD8;stroke-width:4px;stroke-linejoin:round;opacity:.75}
+.ar-on .map .pin text.lbl{font:600 15px var(--body)}
+.map .pin.on text.lbl{opacity:1;fill:#B23A2A}
+.map .pin:hover .dot{fill:#F2C94C}
+.map .pin.on:hover .dot{fill:#C4593F}
+.perch{position:absolute;z-index:4;left:0;top:0;width:62px;aspect-ratio:515/520;pointer-events:none;margin:-50px 0 0 -6px;
+  filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(1px 2px 0 rgba(46,36,27,.28))}
+.perch i{position:absolute;inset:0;background:center/contain no-repeat;opacity:0}
+.perch i:nth-child(1){background-image:url(assets/bird0.webp);opacity:1}
+.perch i:nth-child(2){background-image:url(assets/bird1.webp)}.perch i:nth-child(3){background-image:url(assets/bird2.webp)}
+.perch.flying i{animation:frame .36s steps(1,end) infinite}
+.perch.flying i:nth-child(2){animation-delay:-.12s}.perch.flying i:nth-child(3){animation-delay:-.24s}
+@keyframes frame{0%{opacity:1}33.3%,100%{opacity:0}}
+.place h3{font-size:clamp(38px,3.6vw + 16px,84px);margin:4px 0 4px}
+.place .sub{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-bottom:22px}
+.ar-on .place .sub{font:500 14px var(--body);letter-spacing:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(150px,40vw),1fr));gap:clamp(18px,2.4vw,30px) clamp(14px,2vw,24px)}
+.card{border:0;background:none;padding:0;text-align:start;cursor:pointer;animation:cardIn .55s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--i)*70ms)}
+@keyframes cardIn{from{opacity:0;translate:0 26px;rotate:-3deg}}
+.card .ph{position:relative;display:block;rotate:var(--r);transition:rotate .3s,translate .3s;filter:drop-shadow(3px 6px 6px rgba(46,36,27,.2))}
+.card:hover .ph{rotate:0deg;translate:0 -4px}
+.card .ph .pp{display:block;aspect-ratio:4/5;background:#FBF8F1 url(assets/paper.jpg);background-blend-mode:multiply;padding:6%;clip-path:var(--deckle)}
+.card .ph img{width:100%;height:100%;object-fit:cover}
+.card .ph::before{content:"";position:absolute;left:50%;top:-9px;width:46%;height:20px;translate:-50% 0;rotate:-3deg;z-index:2;background:rgba(232,214,170,.82);box-shadow:0 1px 1px rgba(46,36,27,.12)}
+.card b{display:block;margin-top:12px;font:clamp(17px,.6vw + 13px,22px)/1 var(--en);text-transform:uppercase}
+.ar-on .card b{font-family:var(--ar)}
+.card small{display:block;margin-top:4px;font:600 17px/1.1 var(--hand);color:var(--soft)}
+@media (max-width:860px){.wgrid{grid-template-columns:1fr}.mapw{position:relative;top:0}.map{max-width:440px}}
+
+/* ---------- 3. off the wall ---------- */
+.off{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4vw,30px)}
+.off a{position:relative;display:block;text-decoration:none;background:var(--paper);border:2px solid var(--ink);padding:clamp(18px,2vw,26px);box-shadow:3px 3px 0 var(--sh);transition:.2s}
+.off a:hover{transform:translate(-2px,-3px);box-shadow:5px 6px 0 var(--sh)}
+.off a b{display:block;font:clamp(24px,1.6vw + 14px,36px)/1 var(--en);text-transform:uppercase;margin:12px 0 8px}
+.ar-on .off a b{font-family:var(--ar)}
+.off a span{color:var(--soft);font-size:15px}
+.off a em{display:block;margin-top:16px;font:600 20px/1 var(--hand);font-style:normal;color:var(--terra)}
+@media (max-width:760px){.off{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.pt,.wall.in .pt{translate:none;transition:none}.lines .ln,.lines .sh{stroke-dashoffset:0;transition:none}.card{animation:none}}
+
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
+  <nav>
+    <a href="index.html" data-ar="الرئيسية">Index</a>
+    <a href="shop.html" class="on" data-ar="المتجر">Shop</a>
+    <a href="story.html" data-ar="الحكاية">Story</a>
+  </nav>
+  <div class="tools">
+    <button class="chip" id="langBtn" aria-label="Arabic / English">ع</button>
+        <button class="chip bag" id="bag"><span data-ar="السلة">Bag</span><b id="bagn">0</b></button>
+  </div>
+</header>
+
+<main>
+<!-- 1 · FARAH'S WALL (full screen) -->
+<section class="wall" id="wall" aria-label="Farah's paintings drying on a line">
+  <div class="track" id="track"><svg class="lines" id="lines" aria-hidden="true"></svg></div>
+  <div class="whead">
+    <span class="kick" data-ar="لوحات · رقمية أولًا">Paintings · digital first</span>
+    <h1 class="d" data-ar="حبل فرح">Farah's line</h1>
+    <p data-ar="ألوان مائية معلّقة لتنشف على حبل فرح. اسحب الحيط، واضغط على أي لوحة لتشوفها من قريب.">Watercolours pegged up to dry on Farah's line. Drag the wall, tap any painting to look closer.</p>
+  </div>
+  <div class="wctl">
+    <span class="hint" data-ar="اسحب ↔">drag the wall ↔</span>
+    <div class="row"><span class="cnt" id="cnt">20 paintings</span><div class="prog" id="prog"><i></i></div>
+      <button class="arw" id="wprev" aria-label="Back">←</button><button class="arw" id="wnext" aria-label="More">→</button></div>
+  </div>
+</section>
+
+<!-- 2 · WHERE THEY WERE PAINTED -->
+<section class="pad" id="where">
+  <div class="shead">
+    <div><span class="kick" data-ar="وين انرسمت">Where they were painted</span><h2 class="d" data-ar="مرسومة على امتداد غزة">Painted across Gaza</h2></div>
+    <p data-ar="اختار مكان على الخريطة، والعصفور بطير لعنده ويفرجيك اللوحات اللي انرسمت هناك.">Pick a place on the map. The bird flies there and shows you what Farah painted in it.</p>
+  </div>
+  <div class="wgrid">
+    <div class="mapw"><div class="map" id="map"><span class="pp"><i></i></span><svg id="mapSvg" viewBox="0 0 600 707" role="img" aria-label="Map of the Gaza Strip with the places Farah painted"></svg><span class="perch" id="perch"><i></i><i></i><i></i></span></div></div>
+    <div class="place">
+      <div class="pchips" id="pchips"></div>
+      <span class="kick" id="pk" data-ar="المكان">The place</span>
+      <h3 class="d" id="ph"></h3>
+      <div class="sub" id="psub"></div>
+      <div class="cards" id="cards"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · OFF THE WALL -->
+<section class="pad" id="offwall" style="padding-top:clamp(40px,5vw,70px)">
+  <div class="shead">
+    <div><span class="kick" data-ar="من الحيط لإلك">Off the wall</span><h2 class="d" data-ar="خذ لوحة معك">Take one with you</h2></div>
+    <p data-ar="كل لوحة ملف رقمي، وكثير منها صار بوست كارد أو ستكر.">Every painting is a digital file, and many of them are postcards and stickers too.</p>
+  </div>
+  <div class="off">
+    <a class="pop" style="--d:0" href="postcards.html"><span class="kick" data-ar="بوست كارد">Postcards</span><b data-ar="ابعث لوحة">Send a painting</b><span data-ar="بطاقة رقمية تبعثها لحد بتحبه، أو تطبعها.">A digital card to send to someone you love, or print.</span><em data-ar="المتجر ←">to the shop →</em></a>
+    <a class="pop" style="--d:1" href="stickers.html"><span class="kick" data-ar="ستكرات">Stickers</span><b data-ar="الزقها">Stick it on</b><span data-ar="مقصوصة من نفس اللوحات، لواتساب وتيليغرام والطباعة.">Cut from the same paintings, for WhatsApp, Telegram and print.</span><em data-ar="الستكرات ←">to the stickers →</em></a>
+    <a class="pop" style="--d:2" href="story.html"><span class="kick" data-ar="الحكاية">The story</span><b data-ar="مين فرح؟">Who is Farah?</b><span data-ar="رسّامة من غزة، بترسم بالألوان المائية من عمر ١٤.">A painter from Gaza, in watercolour since she was fourteen.</span><em data-ar="اقرأ الحكاية ←">read her story →</em></a>
+  </div>
+</section>
+</main>
+
+<dialog id="dlg"><div class="dl">
+  <div class="pvw"><div class="big" id="big"></div></div>
+  <div class="info">
+    <button class="x" id="close" aria-label="Close">✕</button>
+    <span class="kick" id="dk">Painting</span>
+    <h3 class="d" id="dt"></h3>
+    <div class="where" id="dw"></div>
+    <p class="story" id="ds"></p>
+    <div class="row" id="dfmt"></div>
+    <div class="price" id="dp"></div>
+    <div class="acts"><button class="btn terra" id="dadd">Add to bag</button><button class="btn alt" id="dmap">On the map</button></div>
+    <div class="nav2"><button class="arw" id="dprev" aria-label="Previous">←</button><span id="dn"></span><button class="arw" id="dnext" aria-label="Next">→</button></div>
+  </div>
+</div></dialog>
+
+<footer>
+  <div class="fgrid">
+    <div>
+      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
+    </div>
+    <div><h4 data-ar="المتجر">Shop</h4><ul>
+      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+    <div><h4 data-ar="عنّا">About</h4><ul>
+      <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 Mass &amp; Grass · Gaza, Palestine</span><span data-ar="رُسمت باليد في غزة، بحب.">Painted by hand in Gaza, with love.</span></div>
+</footer>
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let AR=false;const t=(en,ar)=>AR?ar:en;
+const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const GZ={"VW": 600, "VH": 707, "strip": "M28.7,510.6 L118.2,422.9 L153.1,383.4 L171.0,368.0 L211.5,327.2 L233.8,301.5 L262.1,266.1 L344.0,168.3 L353.9,152.7 L352.4,149.5 L356.6,150.1 L360.3,147.0 L394.3,103.3 L448.3,21.8 L565.5,118.1 L563.7,131.9 L546.3,153.0 L546.2,159.7 L539.7,163.1 L534.3,170.0 L510.2,180.7 L500.4,188.0 L478.8,193.6 L435.9,231.0 L428.2,242.9 L420.7,246.3 L379.1,294.2 L365.1,301.1 L357.3,314.9 L348.0,324.9 L318.4,350.6 L310.9,353.3 L300.9,364.8 L297.1,373.2 L278.1,392.2 L276.8,399.1 L268.3,411.6 L267.2,420.1 L264.5,427.7 L257.3,429.5 L254.5,442.3 L267.3,540.3 L261.9,560.0 L256.4,571.4 L220.0,592.3 L210.2,611.7 L193.6,630.2 L181.2,639.9 L143.5,659.0 L123.8,681.0 L101.5,689.7 L61.8,561.2 L54.6,559.0Z", "gov": {"rafah": "M67.9,478.1 L73.4,484.8 L80.9,487.2 L79.7,488.9 L82.7,493.7 L88.7,487.0 L97.5,498.5 L107.1,517.6 L108.5,515.1 L110.6,516.1 L112.0,506.2 L117.3,508.9 L126.1,521.4 L130.3,523.4 L126.9,533.9 L118.7,546.0 L127.8,555.9 L132.2,559.1 L132.5,554.5 L149.1,565.2 L161.8,565.6 L177.4,562.1 L174.5,575.2 L177.7,577.8 L183.6,602.9 L184.5,604.9 L190.9,601.9 L199.1,617.8 L191.7,624.0 L193.6,630.2 L181.2,639.9 L143.4,659.0 L123.8,681.0 L101.5,689.7 L61.7,560.9 L54.6,559.0 L28.7,510.6 L64.8,475.9Z", "north": "M485.4,183.8 L479.0,179.8 L479.6,179.3 L466.4,168.1 L460.7,176.4 L444.5,159.8 L439.2,163.1 L437.7,161.2 L431.9,163.8 L430.0,159.4 L431.3,157.4 L425.7,153.5 L424.4,154.5 L416.5,147.9 L413.8,147.2 L421.4,142.8 L423.8,143.5 L426.6,136.9 L423.0,135.7 L403.0,117.1 L390.1,108.3 L410.9,79.2 L448.3,21.8 L565.5,118.1 L563.7,131.9 L546.2,153.2 L546.2,159.7 L539.7,163.1 L534.3,170.0 L510.2,180.7 L500.4,188.0 L492.1,189.8Z", "gaza": "M390.1,108.3 L403.0,117.1 L423.0,135.7 L426.6,136.9 L423.8,143.5 L421.4,142.8 L413.8,147.2 L416.5,147.9 L424.4,154.5 L425.7,153.5 L431.3,157.4 L430.0,159.4 L431.9,163.8 L437.7,161.2 L439.2,163.1 L444.5,159.8 L460.7,176.4 L466.4,168.1 L479.6,179.3 L479.0,179.8 L485.4,183.8 L492.1,189.8 L478.9,193.5 L435.9,231.1 L428.2,242.9 L420.7,246.3 L379.1,294.2 L365.1,301.1 L357.3,314.9 L348.0,324.9 L348.3,321.4 L332.8,316.6 L332.0,313.1 L335.3,312.5 L334.5,310.0 L337.9,309.6 L337.9,308.7 L337.3,306.8 L334.3,306.7 L331.9,300.5 L332.5,298.6 L322.5,281.5 L325.7,278.8 L327.3,279.4 L327.7,278.7 L325.9,277.4 L330.6,273.4 L328.0,271.0 L310.8,266.0 L307.7,262.8 L306.6,255.7 L304.2,254.0 L301.3,255.3 L296.6,254.2 L286.8,254.5 L278.1,258.7 L265.9,262.5 L344.0,168.3 L354.1,152.4 L352.4,149.5 L356.5,150.1 L360.3,147.0Z", "khan": "M191.7,624.0 L199.1,617.8 L190.9,601.9 L184.5,604.9 L183.6,602.9 L177.7,577.8 L174.5,575.2 L177.4,562.1 L161.8,565.6 L149.1,565.2 L132.5,554.5 L132.2,559.1 L127.8,555.9 L118.7,546.0 L126.9,533.9 L130.3,523.4 L126.1,521.4 L117.3,508.9 L112.0,506.2 L110.6,516.1 L108.5,515.1 L107.1,517.6 L97.5,498.5 L88.7,487.0 L82.7,493.7 L79.7,488.9 L80.9,487.2 L73.4,484.8 L67.9,478.1 L64.8,475.9 L118.2,422.9 L153.1,383.4 L171.0,368.0 L185.1,378.6 L185.8,384.9 L189.9,390.3 L204.8,389.7 L216.9,400.6 L224.1,389.5 L230.9,393.9 L244.6,413.9 L248.0,416.0 L250.2,413.4 L253.5,417.5 L267.2,420.1 L264.5,427.7 L257.4,429.2 L254.5,442.4 L267.3,540.3 L261.9,560.0 L256.4,571.4 L219.9,592.3 L210.2,611.7 L193.6,630.2Z", "deir": "M265.9,262.5 L286.8,254.5 L305.7,254.6 L307.0,256.4 L307.7,262.8 L310.8,266.0 L325.6,269.8 L330.6,273.4 L325.9,277.4 L327.7,278.7 L327.3,279.4 L325.7,278.8 L322.5,281.5 L332.5,298.6 L331.9,300.5 L334.3,306.7 L337.3,306.8 L337.9,308.7 L337.9,309.6 L334.5,310.0 L335.3,312.5 L332.0,313.1 L332.8,316.6 L348.3,321.4 L348.0,324.9 L318.4,350.6 L311.0,353.3 L300.9,364.8 L297.1,373.2 L278.0,392.2 L276.8,399.1 L268.3,411.6 L267.2,420.1 L253.5,417.5 L250.2,413.4 L248.0,416.0 L244.6,413.9 L230.9,393.9 L224.1,389.5 L216.9,400.6 L204.8,389.7 L189.9,390.3 L185.8,384.9 L185.1,378.6 L171.0,368.0 L211.5,327.1 L233.8,301.5 L262.1,266.1Z"}, "inner": "M172.6,369.3 L185.1,378.6 L185.8,384.9 L189.9,390.3 L204.8,389.7 L216.9,400.6 L224.1,389.5 L230.9,393.9 L244.6,413.9 L248.0,416.0 L250.2,413.4 L253.5,417.5 L265.3,419.8 M192.9,628.0 L191.7,624.0 L199.1,617.8 L190.9,601.9 L184.5,604.9 L183.6,602.9 L177.7,577.8 L174.5,575.2 L177.4,562.1 L161.8,565.6 L149.1,565.2 L132.5,554.5 L132.2,559.1 L127.8,555.9 L118.7,546.0 L126.9,533.9 L130.3,523.4 L126.1,521.4 L117.3,508.9 L112.0,506.2 L110.6,516.1 L108.5,515.1 L107.1,517.6 L97.5,498.5 L88.7,487.0 L82.7,493.7 L79.7,488.9 L80.9,487.2 L73.4,484.8 L66.5,477.0 M265.3,419.8 L253.5,417.5 L250.2,413.4 L248.0,416.0 L244.6,413.9 L230.9,393.9 L224.1,389.5 L216.9,400.6 L204.8,389.7 L189.9,390.3 L185.8,384.9 L185.1,378.6 L172.6,369.3 M269.2,261.6 L286.8,254.5 L296.6,254.2 L301.3,255.3 L304.2,254.0 L306.6,255.7 L307.7,262.8 L310.8,266.0 L328.0,271.0 L330.6,273.4 L325.9,277.4 L327.7,278.7 L327.3,279.4 L325.7,278.8 L322.5,281.5 L332.5,298.6 L331.9,300.5 L334.3,306.7 L337.3,306.8 L337.9,308.7 L337.9,309.6 L334.5,310.0 L335.3,312.5 L332.0,313.1 L332.8,316.6 L348.3,321.7 M348.3,321.7 L332.8,316.6 L332.0,313.1 L335.3,312.5 L334.5,310.0 L337.9,309.6 L337.9,308.7 L337.3,306.8 L334.3,306.7 L331.9,300.5 L332.5,298.6 L322.5,281.5 L325.7,278.8 L327.3,279.4 L327.7,278.7 L325.9,277.4 L330.6,273.4 L328.0,271.0 L310.8,266.0 L307.7,262.8 L306.6,255.7 L304.2,254.0 L301.3,255.3 L296.6,254.2 L286.8,254.5 L269.2,261.6 M391.9,109.3 L403.0,117.1 L423.0,135.7 L426.6,136.9 L423.8,143.5 L421.4,142.8 L413.8,147.2 L416.5,147.9 L424.4,154.5 L425.7,153.5 L431.3,157.4 L430.0,159.4 L431.9,163.8 L437.7,161.2 L439.2,163.1 L444.5,159.8 L460.7,176.4 L466.4,168.1 L479.6,179.3 L479.0,179.8 L490.2,188.1 M490.2,188.1 L479.0,179.8 L479.6,179.3 L466.4,168.1 L460.7,176.4 L444.5,159.8 L439.2,163.1 L437.7,161.2 L431.9,163.8 L430.0,159.4 L431.3,157.4 L425.7,153.5 L424.4,154.5 L416.5,147.9 L413.8,147.2 L421.4,142.8 L423.8,143.5 L426.6,136.9 L423.0,135.7 L403.0,117.1 L391.9,109.3 M67.9,478.1 L73.4,484.8 L80.9,487.2 L79.7,488.9 L82.7,493.7 L88.7,487.0 L97.5,498.5 L107.1,517.6 L108.5,515.1 L110.6,516.1 L112.0,506.2 L117.3,508.9 L126.1,521.4 L130.3,523.4 L126.9,533.9 L118.7,546.0 L127.8,555.9 L132.2,559.1 L132.5,554.5 L149.1,565.2 L161.8,565.6 L177.4,562.1 L174.5,575.2 L177.7,577.8 L183.6,602.9 L184.5,604.9 L190.9,601.9 L199.1,617.8 L191.7,624.0 L192.9,628.0", "sea": "M0.0,0.0 L469.2,0.0 L448.3,21.8 L394.3,103.3 L360.3,147.0 L356.6,150.1 L352.4,149.5 L353.9,152.7 L344.0,168.3 L262.1,266.1 L233.8,301.5 L211.5,327.2 L171.0,368.0 L153.1,383.4 L118.2,422.9 L28.7,510.6 L0.0,533.6Z", "coast": "M448.3,21.8 L394.3,103.3 L360.3,147.0 L356.6,150.1 L352.4,149.5 L353.9,152.7 L344.0,168.3 L262.1,266.1 L233.8,301.5 L211.5,327.2 L171.0,368.0 L153.1,383.4 L118.2,422.9 L28.7,510.6", "cen": {"rafah": [125.6, 589.8], "north": [471.1, 104.6], "gaza": [382.5, 212.3], "khan": [180.9, 502.4], "deir": [265.9, 338.9]}, "govl": {"rafah": [136, 622], "north": [486, 123], "gaza": [385, 243], "khan": [205, 503], "deir": [282, 353]}, "waves": [[56, 30], [140, 30], [224, 30], [308, 30], [392, 30], [38, 66], [374, 66], [65, 102], [149, 102], [233, 102], [317, 102], [47, 138], [113, 174], [197, 174], [281, 174], [56, 210], [38, 246], [122, 246], [206, 246], [65, 282], [149, 282], [47, 318], [131, 318], [56, 390], [38, 426]]};
+/* ---- sounds: a soft paper slap and the bird chirp used across the site ---- */
+let actx;const AC=()=>{try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx}catch(e){return null}};
+function slap(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleRate*.08,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,4);
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='lowpass';f.frequency.value=1800;g.gain.value=.22;s.connect(f).connect(g).connect(c.destination);s.start(t0);
+  const o=c.createOscillator(),og=c.createGain();o.frequency.setValueAtTime(150,t0);o.frequency.exponentialRampToValueAtTime(60,t0+.08);og.gain.setValueAtTime(.12,t0);og.gain.exponentialRampToValueAtTime(.001,t0+.09);o.connect(og).connect(c.destination);o.start(t0);o.stop(t0+.1)}
+function peel(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleRate*.22,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(i/n)*(1-i/n)*4;
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='bandpass';f.frequency.setValueAtTime(1200,t0);f.frequency.linearRampToValueAtTime(3800,t0+.22);f.Q.value=1.2;g.gain.value=.12;s.connect(f).connect(g).connect(c.destination);s.start(t0)}
+
+/* ---- bag ---- */
+let bagN=window.MGBag?MGBag.count():0;function addBag(it){bagN=window.MGBag?MGBag.add(it):bagN+1;const b=$('#bagn');if(b){b.textContent=ard(bagN);$('#bag').animate([{transform:'scale(1.25) rotate(-6deg)'},{transform:'none'}],{duration:350})}slap()}
+
+/* ---- the paintings: [key, EN, AR, place EN, place AR, map pin, width/height, has a larger jpg, new] ---- */
+const PT=[
+ ['hero','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي','mawasi',1.454,0,1],
+ ['sparklers','Sparkler Night','ليلة الشماريخ','Gaza City','مدينة غزة','gaza',.723,1,1],
+ ['dovegirl','Dove Girl','فتاة الحمام','Deir al-Balah','دير البلح','deir',1.33,1,0],
+ ['boattop','The Boat','القارب','Gaza port','ميناء غزة','gaza',.939,0,0],
+ ['guitar','Guitar Girl','فتاة الجيتار','Tel al-Hawa','تل الهوا','gaza',.781,1,0],
+ ['pmoon','Moon Swing','أرجوحة القمر','Gaza','غزة',null,.835,0,0],
+ ['house','Home','البيت','Az-Zawayda','الزوايدة','zawayda',1.342,1,0],
+ ['alley','The Alley','الزقاق','Old City','البلدة القديمة','gaza',.84,0,0],
+ ['blueflowers','White Dove','الحمامة البيضاء','Beit Lahia','بيت لاهيا','beitlahia',1.39,0,0],
+ ['seafish','Sea Fish','سمك البحر','Al-Shati','الشاطئ','gaza',.674,1,0],
+ ['pcartgirl','Girl with Cart','فتاة والعربة','Gaza','غزة',null,1.294,0,0],
+ ['hill','Hill & Boat','التلة والقارب','Khan Younis','خان يونس','khan',1.011,1,0],
+ ['pelephant','Elephant on a Bike','فيل على دراجة','Gaza','غزة',null,.719,0,0],
+ ['waves','The Waves','الموج','Gaza beach','بحر غزة','gaza',1.473,0,0],
+ ['deirbalah','Deir al-Balah','دير البلح','Deir al-Balah','دير البلح','deir',.815,1,0],
+ ['ppoppies','Blue Poppies','شقائق زرقاء','Gaza','غزة',null,1.396,0,0],
+ ['ptree','Little Tree','شجرة صغيرة','Gaza','غزة',null,.66,0,0],
+ ['pflower','Big Flower','الزهرة الكبيرة','Gaza','غزة',null,1.319,0,0],
+ ['pmoonsleep','Moon Sleeper','نائمة على القمر','Gaza','غزة',null,.811,0,0],
+ ['psea','Sea & Clouds','بحر وغيوم','Gaza','غزة',null,.923,0,0]];
+const STK=['hero','s-dove','sparklers','guitar','pmoon','dovegirl','seafish','house','boattop','waves','psea','blueflowers','pflower','ppoppies','alley','pcartgirl','pmoonsleep','pelephant','ptree'];
+const small=k=>`assets/${k}.webp`,large=p=>p[7]?`assets/${p[0]}.jpg`:`assets/${p[0]}.webp`;
+/* a watercolour sheet's torn edge, different for each painting */
+function deckle(seed){let s=seed*9301+49297;const r=()=>(s=(s*9301+49297)%233280)/233280;const pts=[],n=9;
+  for(let i=0;i<n;i++)pts.push([i/n*100,r()*1.2]);for(let i=0;i<n;i++)pts.push([100-r()*1.2,i/n*100]);
+  for(let i=0;i<n;i++)pts.push([100-i/n*100,100-r()*1.2]);for(let i=0;i<n;i++)pts.push([r()*1.2,100-i/n*100]);
+  return 'polygon('+pts.map(([x,y])=>x.toFixed(1)+'% '+y.toFixed(1)+'%').join(',')+')'}
+
+/* ---- 1. the wall ---- */
+const wall=$('#wall'),track=$('#track'),lines=$('#lines');
+let items=[],WX=0,VX=0,trackW=0,lastWX=0,lastV=0,drag=null,run=false;
+function buildWall(){track.querySelectorAll('.pt').forEach(n=>n.remove());
+  items=PT.map((p,i)=>{const b=document.createElement('button');b.className='pt';b.style.setProperty('--i',i);b.style.setProperty('--deckle',deckle(i+3));b.dataset.i=i;
+    b.setAttribute('aria-label',t(p[1],p[2])+' — '+t(p[3],p[4]));
+    b.innerHTML=`<span class="pp"><img src="${small(p[0])}" alt="" draggable="false" loading="${i<8?'eager':'lazy'}"></span><span class="peg"></span>${p[8]?`<span class="new">${t('NEW','جديد')}</span>`:''}<span class="cap">${t(p[1],p[2])}</span>`;
+    track.appendChild(b);b.addEventListener('pointerenter',()=>{it.v+=(Math.random()<.5?-1:1)*.9;kick()});const it={el:b,a:0,v:0,p,i};return it});
+  $('#cnt').textContent=AR?`${ard(PT.length)} لوحة`:`${PT.length} paintings`;layoutWall()}
+function layoutWall(){const H=wall.clientHeight,W=wall.clientWidth,m=W<760;
+  const yA=H*(m?.16:.14),yB=H*(m?.43:.43),hA=H*(m?.17:.215),hB=H*(m?.18:.215),S=m?380:640,sag=H*(m?.03:.035),gap=m?34:62;
+  const yAt=(y0,x)=>{const f=(((x%S)+S)%S)/S;return y0+4*sag*f*(1-f)};
+  let xA=W*(m?.08:.06),xB=xA+(m?70:150);
+  items.forEach((it,i)=>{const lane=i%2,hh=(lane?hB:hA)*(.86+((i*37)%7)/22),w=hh*it.p[6],x=lane?xB:xA;if(lane)xB+=w+gap;else xA+=w+gap;
+    const cx=x+w/2,y=yAt(lane?yB:yA,cx);Object.assign(it.el.style,{left:x+'px',top:(y-4)+'px',width:w+'px',height:hh+'px'})});
+  trackW=Math.max(xA,xB)+W*(m?.1:.12);track.style.width=trackW+'px';
+  lines.setAttribute('width',trackW);lines.setAttribute('viewBox',`0 0 ${trackW} ${H}`);
+  const path=y0=>{let d=`M0 ${y0}`;for(let x=0;x<trackW;x+=S)d+=` Q${x+S/2} ${y0+2*sag} ${x+S} ${y0}`;return d};
+  let svg='';[yA,yB].forEach(y0=>{const d=path(y0);svg+=`<path class="sh" d="${d}" transform="translate(4 9)"/><path class="ln" d="${d}"/>`;for(let x=0;x<=trackW;x+=S)svg+=`<circle class="nail" cx="${x}" cy="${y0}" r="3.2"/>`});
+  lines.innerHTML=svg;lines.querySelectorAll('.ln,.sh').forEach(p=>p.style.setProperty('--len',Math.ceil(p.getTotalLength()+20)));
+  setX(WX,true)}
+const maxX=()=>Math.max(0,trackW-wall.clientWidth);
+function setX(x,hard){WX=x;track.style.transform=`translateX(${-WX}px)`;const mx=maxX(),w=wall.clientWidth/trackW;
+  const pr=$('#prog'),pw=pr.clientWidth;pr.style.setProperty('--w',Math.min(100,w*100)+'%');pr.style.setProperty('--p',(mx?Math.min(1,Math.max(0,WX/mx)):0)*pw*(1-w)+'px')}
+function kick(){if(!run){run=true;requestAnimationFrame(tick)}}
+function tick(){const mx=maxX();
+  if(!drag){WX+=VX;VX*=.93;if(WX<0){VX*=.6;WX+=(0-WX)*.18}else if(WX>mx){VX*=.6;WX+=(mx-WX)*.18}}
+  const v=WX-lastWX,acc=v-lastV;lastWX=WX;lastV=v;setX(WX);
+  let energy=Math.abs(VX)+Math.abs(v);
+  for(const it of items){it.v+=-acc*.55-.022*it.a-.075*it.v;it.v=Math.max(-3,Math.min(3,it.v));it.a+=it.v;it.a=Math.max(-14,Math.min(14,it.a));
+    it.el.style.transform=`rotate(${it.a.toFixed(2)}deg)`;energy+=Math.abs(it.a)+Math.abs(it.v)}
+  if(energy>.02||drag)requestAnimationFrame(tick);else{run=false;items.forEach(it=>{it.a=0;it.el.style.transform=''})}}
+wall.addEventListener('pointerdown',e=>{if(e.button>0||e.target.closest('.arw,a'))return;drag={x:e.clientX,y:e.clientY,wx:WX,id:e.pointerId,moved:0,horiz:null,t:performance.now(),lx:e.clientX};VX=0;kick()});
+addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  if(drag.horiz===null&&Math.hypot(dx,dy)>6){drag.horiz=Math.abs(dx)>Math.abs(dy);if(drag.horiz){wall.classList.add('grab');try{wall.setPointerCapture(e.pointerId)}catch(_){}}}
+  if(!drag.horiz)return;drag.moved=Math.max(drag.moved,Math.abs(dx));let x=drag.wx-dx;const mx=maxX();if(x<0)x*=.35;else if(x>mx)x=mx+(x-mx)*.35;
+  const now=performance.now();VX=(drag.lx-e.clientX)/Math.max(1,now-drag.t)*16;drag.t=now;drag.lx=e.clientX;WX=x});
+function endDrag(e){if(!drag||(e&&e.pointerId!==drag.id))return;const wasClick=drag.moved<6&&!drag.horiz,tg=e&&document.elementFromPoint(e.clientX,e.clientY);wall.classList.remove('grab');
+  if(performance.now()-drag.t>90)VX=0;drag=null;kick();
+  if(wasClick&&tg){const b=tg.closest('.pt');if(b)openP(+b.dataset.i)}}
+addEventListener('pointerup',endDrag);addEventListener('pointercancel',()=>{drag=null;wall.classList.remove('grab')});
+wall.addEventListener('click',e=>{if(e.detail===0){const b=e.target.closest('.pt');if(b)openP(+b.dataset.i)}}); // keyboard Enter/Space
+wall.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>1){e.preventDefault();WX=Math.min(maxX()+40,Math.max(-40,WX+e.deltaX));VX=e.deltaX*.15;kick()}},{passive:false});
+const nudge=d=>{VX=d*wall.clientWidth*.6*(1-.93);kick();peel()};
+$('#wprev').onclick=()=>nudge(-1);$('#wnext').onclick=()=>nudge(1);
+wall.addEventListener('focusin',e=>{const b=e.target.closest('.pt');if(!b)return;const l=parseFloat(b.style.left),w=parseFloat(b.style.width),W=wall.clientWidth;
+  if(l-WX<40||l+w-WX>W-40){WX=Math.min(maxX(),Math.max(0,l+w/2-W/2));setX(WX)}});
+addEventListener('resize',()=>{layoutWall();placeBird(true)});
+/* the line draws itself, then the paintings drop onto it and swing */
+requestAnimationFrame(()=>requestAnimationFrame(()=>{wall.classList.add('in');
+  items.forEach(it=>setTimeout(()=>{it.v+=(it.i%2?1:-1)*(2+Math.random());kick();if(it.i<6)slap()},1050+it.i*55+350))}));
+
+/* ---- painting dialog ---- */
+const dlg=$('#dlg');let curP=0;
+function openP(i,swap){curP=(i+PT.length)%PT.length;const p=PT[curP];
+  if(window.MGProduct){MGProduct.open({key:p[0],title:p[1],titleAr:p[2],place:p[3],placeAr:p[4],kind:'painting',no:curP+1,big:p[7]?`assets/${p[0]}.jpg`:null});return}
+  $('#big').innerHTML=`<span class="pp" style="--deckle:${deckle(curP+3)}"><img src="${large(p)}" alt="${t(p[1],p[2])}"></span>`;
+  if(swap){$('#big').classList.remove('swap');void $('#big').offsetWidth;$('#big').classList.add('swap')}
+  $('#dk').textContent=t('Painting','لوحة');$('#dt').textContent=t(p[1],p[2]);
+  $('#dw').textContent=t('Painted in '+p[3],'انرسمت في '+p[4]);
+  $('#ds').textContent=t("Farah's note about this painting goes here: the day, the place, and what she wanted to keep from it.",'هون بتنكتب كلمة فرح عن اللوحة: اليوم، والمكان، وشو حبّت تحفظ منه.');
+  const f=[t('Digital file','ملف رقمي'),t('Print at home','للطباعة')];if(STK.includes(p[0]))f.push(t('Also a sticker','موجودة كستكر'));
+  $('#dfmt').innerHTML=f.map(x=>`<span class="chipf">${x}</span>`).join('');
+  $('#dp').innerHTML=`€12 <small>PDF + PNG</small>`;
+  $('#dadd').textContent=t('Add to bag','أضف للسلة');$('#dmap').textContent=t('On the map','على الخريطة');$('#dmap').hidden=!p[5];
+  $('#dn').textContent=`${ard(String(curP+1).padStart(2,'0'))} / ${ard(PT.length)}`;
+  dlg.dir=AR?'rtl':'ltr';if(!dlg.open){dlg.showModal();peel()}}
+$('#close').onclick=()=>dlg.close();dlg.onclick=e=>{if(e.target===dlg)dlg.close()};
+$('#dprev').onclick=()=>{openP(curP-1,true);peel()};$('#dnext').onclick=()=>{openP(curP+1,true);peel()};
+dlg.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){openP(curP+(AR?-1:1),true)}else if(e.key==='ArrowLeft'){openP(curP+(AR?1:-1),true)}});
+$('#dadd').onclick=()=>{const p=PT[curP];addBag({k:p[0],kind:'painting',t:p[1],ta:p[2],p:12});$('#dadd').textContent=t('Added ✓','انضافت ✓')};
+$('#dmap').onclick=()=>{const k=PT[curP][5];dlg.close();if(!k)return;$('#where').scrollIntoView({behavior:'smooth'});setTimeout(()=>pick(k),450)};
+
+/* ---- 2. the map ---- */
+const PL={ // pins sit on Farah's map (same drawing as the story page)
+ beitlahia:{x:453.8,y:108.2,en:'Beit Lahia',ar:'بيت لاهيا',s:'R'},
+ gaza:{x:384,y:163,en:'Gaza City',ar:'مدينة غزة',s:'L'},
+ zawayda:{x:264.6,y:313.7,en:'Az-Zawayda',ar:'الزوايدة',s:'R'},
+ deir:{x:232.3,y:340.7,en:'Deir al-Balah',ar:'دير البلح',s:'L'},
+ khan:{x:170,y:476,en:'Khan Younis',ar:'خان يونس',s:'R'},
+ mawasi:{x:140,y:452,en:'Al-Mawasi',ar:'المواصي',s:'L'}};
+const byPin=k=>PT.map((p,i)=>[p,i]).filter(([p])=>k==='all'?!p[5]:p[5]===k);
+let curPin=null;
+function buildMap(){const svg=$('#mapSvg');
+  const waves=GZ.waves.map(([x,y])=>`<path d="M${x-18},${y} q6,-5 12,0 t12,0 t12,0"/>`).join('');
+  const gov=Object.entries(GZ.gov).map(([k,d])=>`<path class="gov g-${k}" d="${d}"/>`).join('');
+  const pins=Object.entries(PL).map(([k,p])=>{const n=byPin(k).length,L=p.s==='L';
+    return `<g class="pin" data-k="${k}" transform="translate(${p.x} ${p.y})" tabindex="0" role="button" aria-label="${t(p.en,p.ar)}"><circle class="hit" r="20"/><circle class="pulse" r="11"/><circle class="dot" r="11"/><text class="num" y="4">${ard(n)}</text>
+      <text class="lbl" x="${L?-18:18}" y="5" text-anchor="${L?'end':'start'}" style="direction:ltr;unicode-bidi:plaintext">${t(p.en,p.ar)}</text></g>`}).join('');
+  svg.innerHTML=`<path class="sea" d="${GZ.sea}"/><g class="waves">${waves}</g>${gov}<path class="inner" d="${GZ.inner}"/><path class="land" d="${GZ.strip}"/>
+    <text class="seat" transform="translate(150 290) rotate(-51)" text-anchor="middle">${t('Mediterranean Sea','البحر الأبيض المتوسط')}</text>
+    <text class="ttl" x="574" y="681" text-anchor="end" style="direction:ltr;unicode-bidi:plaintext">${t("Farah's map",'خريطة فرح')}</text>
+    <text class="src" x="574" y="697" text-anchor="end">geoBoundaries · CC BY 4.0</text>${pins}`;
+  svg.querySelectorAll('.pin').forEach(g=>{g.addEventListener('click',()=>pick(g.dataset.k));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(g.dataset.k)}})});
+  $('#pchips').innerHTML=[...Object.keys(PL),'all'].map(k=>`<button data-k="${k}" aria-pressed="${k===curPin}">${k==='all'?t('Across Gaza','على امتداد غزة'):t(PL[k].en,PL[k].ar)}<b>${ard(byPin(k).length)}</b></button>`).join('');
+  if(curPin)pick(curPin,true)}
+$('#pchips').addEventListener('click',e=>{const b=e.target.closest('button');if(b)pick(b.dataset.k)});
+function pick(k,quiet){const same=k===curPin;curPin=k;
+  $$('#mapSvg .pin').forEach(g=>g.classList.toggle('on',g.dataset.k===k));$$('#pchips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));
+  const list=byPin(k);$('#pk').textContent=t('The place','المكان');
+  $('#ph').textContent=k==='all'?t('Across Gaza','على امتداد غزة'):t(PL[k].en,PL[k].ar);
+  $('#psub').textContent=k==='all'?t(`${list.length} paintings from all over the Strip`,`${ard(list.length)} لوحات من كل القطاع`):t(`${list.length} painting${list.length>1?'s':''} painted here`,`${ard(list.length)} ${list.length>2?'لوحات':'لوحة'} انرسمت هون`);
+  $('#cards').innerHTML=list.map(([p,i],j)=>`<button class="card" data-i="${i}" style="--i:${j}"><span class="ph" style="--r:${(j%2?1.6:-1.4)}deg"><span class="pp" style="--deckle:${deckle(i+3)}"><img src="${small(p[0])}" alt="" loading="lazy"></span></span><b>${t(p[1],p[2])}</b><small>${t(p[3],p[4])}</small></button>`).join('');
+  if(!quiet&&!same)flyTo(k)}
+$('#cards').addEventListener('click',e=>{const b=e.target.closest('.card');if(b)openP(+b.dataset.i)});
+/* the bird flies from place to place and perches on the pin */
+const perch=$('#perch'),mapEl=$('#map');let bird={x:0,y:0},flying=null;
+function pinXY(k){const p=k==='all'?{x:300,y:330}:PL[k],svg=$('#mapSvg'),r=svg.getBoundingClientRect(),m=mapEl.getBoundingClientRect(),sx=r.width/600,sy=r.height/707;
+  return{x:r.left-m.left+p.x*sx,y:r.top-m.top+p.y*sy}}
+function placeBird(snap){if(!curPin)return;const q=pinXY(curPin);if(snap||!flying){bird=q;perch.style.transform=`translate(${q.x}px,${q.y}px)`}}
+function flyTo(k){const a={...bird},b=pinXY(k),t0=performance.now(),D=Math.min(1400,500+Math.hypot(b.x-a.x,b.y-a.y)*3.2);flying=k;perch.classList.add('flying');
+  perch.querySelector('i').style.transform=b.x<a.x?'scaleX(-1)':'';perch.querySelectorAll('i').forEach(i=>i.style.transform=b.x<a.x?'scaleX(-1)':'');
+  (function step(now){const u=Math.min(1,(now-t0)/D),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,lift=Math.sin(Math.PI*u)*Math.min(120,40+Math.hypot(b.x-a.x,b.y-a.y)*.35);
+    bird={x:a.x+(b.x-a.x)*e,y:a.y+(b.y-a.y)*e-lift};perch.style.transform=`translate(${bird.x}px,${bird.y}px)`;
+    if(u<1&&flying===k)requestAnimationFrame(step);else if(flying===k){flying=null;bird=b;perch.classList.remove('flying');chirp()}})(t0)}
+function chirp(){const c=AC();if(!c)return;const t0=c.currentTime+.02,out=c.createGain();out.gain.value=.6;out.connect(c.destination);
+  [[0,2600,4300,.07],[.1,2900,4600,.06],[.19,3400,2700,.11]].forEach(([d,f1,f2,len])=>{const o=c.createOscillator(),g=c.createGain(),tt=t0+d;o.type='sine';o.frequency.setValueAtTime(f1,tt);o.frequency.exponentialRampToValueAtTime(f2,tt+len);
+    g.gain.setValueAtTime(0,tt);g.gain.linearRampToValueAtTime(.07,tt+.012);g.gain.exponentialRampToValueAtTime(.0005,tt+len);o.connect(g).connect(out);o.start(tt);o.stop(tt+len+.02)})}
+/* first visit to the map: the bird flies in from the sea to Deir al-Balah */
+perch.style.transform='translate(-90px,120px)';bird={x:-90,y:120};
+new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){o.disconnect();flyTo(curPin||'deir')}},{threshold:.35}).observe(mapEl);
+
+function buildAll(){buildWall();buildMap();if(!curPin)pick('deir',true)}
+
+/* ---- rise into place + chat plays when seen ---- */
+const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('on');io.unobserve(en.target)}}),{rootMargin:'0px 0px -10% 0px'}):null;
+function observe(){$$('.pop:not(.on),.shead:not(.on)').forEach(e=>{e.classList.add('pop');io?io.observe(e):e.classList.add('on')})}
+
+
+/* ---- language (shared with the other pages) ---- */
+$$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
+function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
+  $$('[data-ar]').forEach(e=>{e.innerHTML=a?e.dataset.ar:e.dataset.en});
+  $$('main,footer,.info').forEach(e=>e.dir=a?'rtl':'ltr');
+  const lb=$('#langBtn');if(lb)lb.textContent=a?'EN':'ع';
+  buildAll();if(dlg.open)openP(curP);const b=$('#bagn');if(b)b.textContent=ard(bagN)}
+const lb=$('#langBtn');if(lb)lb.onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}catch(e){}};
+buildAll();observe();
+try{if(localStorage.mgLang==='ar')setLang(true)}catch(e){}
+})();
+</script>
+</body>
+</html>

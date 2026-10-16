@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mass &amp; Grass Calendar</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="assets/mg.js"></script>
+<style>
+:root{--gut:clamp(20px,5vw,80px);
+  --field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--sky:#3f6b8a;
+  --soft:#6f604d;--env:#FBF7EE;--sh:rgba(46,36,27,.25);
+  --en:'Anton',Impact,sans-serif;--ar:'Lalezar','IBM Plex Sans Arabic',sans-serif;
+  --body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;--hand:'Caveat','Aref Ruqaa',cursive;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+.d{font-family:var(--en);text-transform:uppercase;letter-spacing:.01em;font-weight:400;line-height:.95}
+.ar-on .d{font-family:var(--ar)!important;letter-spacing:0!important}
+.ar-on [data-ar]{font-family:var(--body)}
+.ar-on .d[data-ar]{font-family:var(--ar)!important}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+header{direction:ltr}
+/* ---------- header ---------- */
+header{position:fixed;inset:0 0 auto;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:14px clamp(16px,3vw,34px);pointer-events:none}
+header>*{pointer-events:auto}
+.logo{width:58px;height:46px;background:var(--env);padding:6px 8px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);transform:rotate(-3deg);display:block}
+.logo img{width:100%;height:100%}
+nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
+nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
+nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+.ar-on nav a{font-family:var(--ar);font-size:16px}
+.tools{display:flex;gap:8px;justify-self:end}
+.chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
+.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
+.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
+.bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
+/* header scales with the screen instead of jumping at a breakpoint */
+header{gap:clamp(8px,1.4vw,14px);padding:clamp(10px,1.4vw,14px) var(--gut)}
+.logo{width:clamp(44px,1.4vw + 38px,58px);height:auto;aspect-ratio:58/46;padding:clamp(4px,.5vw,6px) clamp(5px,.7vw,8px)}
+nav{padding:clamp(3px,.4vw,5px);gap:clamp(2px,.3vw,4px)}
+nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp(7px,1vw,12px) clamp(5px,.5vw,7px)}
+.chip{height:clamp(32px,.6vw + 29.6px,38px);min-width:clamp(32px,.6vw + 29.6px,38px);padding:0 clamp(7px,.8vw,10px);font-size:clamp(12px,.1vw + 11.6px,13px)}
+.tools{gap:clamp(5px,.8vw,8px)}
+@media (max-width:420px){.bag span{display:none}}
+
+/* ---------- footer ---------- */
+footer{background:var(--ink);color:var(--paper);padding:clamp(60px,8vw,100px) var(--gut) 30px;position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:-14px;height:16px;background:linear-gradient(-45deg,var(--ink) 8px,transparent 0),linear-gradient(45deg,var(--ink) 8px,transparent 0);background-size:16px 16px}
+.fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px}
+footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
+.news{display:flex;gap:0;max-width:440px;margin-top:10px}
+.news input{flex:1;min-width:0;border:2px solid var(--paper);background:transparent;color:var(--paper);padding:13px 14px;font:15px var(--body)}
+.news input::placeholder{color:#efe4cf99}
+.news button{border:2px solid var(--paper);background:var(--terra);color:#fff;padding:0 18px;font:17px/1 var(--en);text-transform:uppercase}
+.ar-on .news button{font-family:var(--ar)}
+footer ul{list-style:none;padding:0;display:grid;gap:8px}
+footer ul a{text-decoration:none;opacity:.85}
+footer ul a:hover{opacity:1;text-decoration:underline}
+footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
+.legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
+
+
+
+/* ---------- shared bits ---------- */
+section.pad{padding:clamp(70px,9vw,130px) var(--gut)}
+.kick{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);background:var(--paper);border:1.5px solid var(--ink);padding:6px 9px 5px;transform:rotate(-2deg)}
+.ar-on .kick{font:500 14px/1 var(--body);letter-spacing:0}
+.shead{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:clamp(36px,5vw,60px)}
+.shead h2{font-size:clamp(32px,4.6vw + 14px,88px);margin-top:14px}
+.shead p{max-width:38ch;color:var(--soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:13px 18px 11px;font:17px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;box-shadow:2px 2px 0 rgba(196,89,63,.4);transition:.15s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 rgba(196,89,63,.4)}
+.btn:active{transform:translate(1px,1px);box-shadow:0 0 0 transparent}
+.btn.alt{background:var(--paper);color:var(--ink);box-shadow:2px 2px 0 var(--sh)}
+.btn.terra{background:var(--terra);border-color:var(--ink)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.ar-on .btn{font-family:var(--ar)}
+.chipf{display:inline-block;font:11px/1 var(--mono);letter-spacing:.06em;border:1.5px solid var(--ink);background:var(--paper);padding:5px 7px 4px}
+.pop{opacity:0;translate:0 46px}
+.pop.on{opacity:1;translate:0 0;transition:opacity .5s,translate .8s cubic-bezier(.2,1.25,.3,1);transition-delay:calc(var(--d,0)*90ms)}
+
+
+/* every page's holder is the size reference for the page, so its own padding scales with it */
+.stack,.scene .pg,.tent .face,.pile .mini,.vw .vpg{container-type:inline-size}
+/* ---------- the calendar page itself (used everywhere: wall, desk, fridge, past years, viewer) ---------- */
+.page{position:absolute;inset:0;container-type:inline-size;background:#FBF8F1 url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);overflow:hidden;
+  display:flex;flex-direction:column;padding:8.5cqw 6cqw 4.5cqw;box-shadow:0 1px 0 rgba(46,36,27,.12),0 0 0 1px rgba(46,36,27,.05)}
+.page::before{content:"";position:absolute;left:5%;right:5%;top:2.4cqw;height:2.6cqw;background:radial-gradient(circle at 50% 50%,#3a2f25 0 38%,transparent 42%) 0 0/3.42cqw 100% repeat-x;opacity:.75}
+.page .top{display:flex;justify-content:space-between;align-items:center;font:600 2.3cqw/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-bottom:2.4cqw}
+.page .top b{color:var(--acc);font-weight:600}
+.page .art{position:relative;flex:0 0 46%;min-height:0;background:#fff;padding:1.8cqw;clip-path:var(--deckle);box-shadow:0 0 0 1px rgba(46,36,27,.06)}
+.page .art img{width:100%;height:100%;object-fit:cover;display:block}
+.page .mrow{display:flex;align-items:flex-end;gap:3cqw;margin:2.6cqw 0 1.6cqw}
+.page .mabbr{font:21cqw/.78 var(--en);text-transform:uppercase;color:var(--acc);letter-spacing:-.01em}
+.page .mside{padding-bottom:1cqw;min-width:0}
+.page .mar{display:block;font:6.2cqw/1 var(--ar);color:var(--ink)}
+.page .mtl{display:block;margin-top:1.4cqw;font:600 3.6cqw/1.05 var(--hand);color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.page .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.5cqw 0;font:500 3.3cqw/1 var(--mono);text-align:center;margin-top:auto}
+.page .grid .h{font:600 2.2cqw/1 var(--mono);letter-spacing:.1em;color:var(--soft);padding-bottom:1.2cqw;border-bottom:.35cqw solid var(--ink);margin-bottom:.9cqw}
+.page .grid .h.we{color:var(--acc)}
+.page .grid span{padding:1cqw 0}
+.page .grid .we{color:var(--acc);font-weight:600}
+.page .grid .x{opacity:0}
+.page .grid .today{position:relative;color:#fff}
+.page .grid .today::before{content:"";position:absolute;inset:-.4cqw 18%;border-radius:50%;background:var(--acc);z-index:-1;opacity:.85}
+.page .foot{display:flex;justify-content:space-between;margin-top:2.4cqw;font:500 2cqw/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+/* cover */
+.page.cover .art{flex-basis:58%}
+.page.cover .yr{font:30cqw/.8 var(--en);color:var(--acc);margin-top:3cqw;letter-spacing:-.01em}
+.page.cover .ttl{font:5.4cqw/1 var(--en);text-transform:uppercase;margin-top:1.6cqw}
+.page.cover .sub{font:600 4.4cqw/1.1 var(--hand);color:var(--soft);margin-top:1.4cqw}
+.page.cover .badges{position:absolute;right:5cqw;bottom:6cqw;display:flex;flex-direction:column;align-items:flex-end;gap:1.6cqw}
+.page.cover .badges i{font:normal 2.4cqw/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--acc);color:#fff;padding:1.2cqw 1.8cqw 1cqw;rotate:-3deg}
+.page.cover .badges i:nth-child(2){rotate:2deg;background:var(--ink)}
+
+/* ---------- 1. the calendar on the wall (full screen) ---------- */
+.hang{--ch:min(calc(100svh - 250px),780px);--bg:#E9DCC2;--acc:#C4593F;--fg:#2E241B;position:relative;height:max(100svh,700px);overflow:hidden;background:var(--bg);color:var(--fg);transition:background-color 1.1s ease,color .8s}
+.hang::before{content:"";position:absolute;inset:0;z-index:0;background:url(assets/paper.jpg);mix-blend-mode:multiply;opacity:.4;pointer-events:none}
+.hang::after{content:"";position:absolute;inset:0;z-index:0;background:url(assets/grain.png);mix-blend-mode:multiply;opacity:.4;pointer-events:none}
+#fx{position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none}
+.bigm{position:absolute;z-index:1;left:50%;top:50%;translate:-50% -54%;font:clamp(120px,24vw,420px)/.8 var(--en);text-transform:uppercase;white-space:nowrap;color:var(--fg);opacity:.09;pointer-events:none;letter-spacing:.01em}
+.ar-on .bigm{font-family:var(--ar)}
+.bigm.in{animation:bigIn .9s cubic-bezier(.2,.9,.2,1) both}
+@keyframes bigIn{from{opacity:0;translate:-50% -40%}}
+.hhead{position:absolute;z-index:3;left:var(--gut);top:clamp(96px,13vh,140px);width:min(360px,26vw)}
+.ar-on .hhead{left:auto;right:var(--gut)}
+.hhead h1{font-size:clamp(40px,3.6vw + 12px,86px);margin:12px 0 10px}
+.hhead p{opacity:.8;max-width:30ch;font-size:15px}
+.mnow{margin-top:clamp(18px,4vh,40px);border-top:1.5px solid currentColor;padding-top:14px}
+.mnow small{display:block;font:11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.ar-on .mnow small{font:500 13px var(--body);letter-spacing:0}
+.mnow b{display:block;font:clamp(30px,2vw + 14px,48px)/1 var(--en);text-transform:uppercase;margin-top:8px}
+.mnow span{display:block;font:clamp(20px,1vw + 12px,28px)/1.1 var(--ar);margin-top:4px}
+.mnow em{display:block;font:600 20px/1.15 var(--hand);font-style:normal;opacity:.85;margin-top:8px}
+.mnow .sea{display:inline-block;margin-top:10px;font:11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;border:1.5px solid currentColor;padding:5px 7px 4px}
+.ar-on .mnow .sea{font:500 13px var(--body);letter-spacing:0}
+/* the calendar hanging on its nail */
+.calw{position:absolute;z-index:2;left:50%;top:calc(50% - 26px);translate:-50% -50%;height:var(--ch);aspect-ratio:.707;touch-action:pan-y}
+.nail{position:absolute;left:50%;top:calc(-1 * var(--ch) * .085);width:12px;height:12px;margin-left:-6px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9d4cc,#6b655c 70%);box-shadow:2px 3px 3px rgba(0,0,0,.35);z-index:5}
+.hook{position:absolute;left:50%;top:calc(-1 * var(--ch) * .075);width:calc(var(--ch)*.09);height:calc(var(--ch)*.09);translate:-50% 0;border:2.5px solid #6d6a66;border-bottom:0;border-radius:50% 50% 0 0;z-index:4}
+.spiral{position:absolute;left:4%;right:4%;top:calc(var(--ch)*-.012);height:calc(var(--ch)*.035);z-index:6;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent 0 calc(var(--ch)*.006),#8d8a85 calc(var(--ch)*.006) calc(var(--ch)*.009),#e8e6e2 calc(var(--ch)*.009) calc(var(--ch)*.012),#77736d calc(var(--ch)*.012) calc(var(--ch)*.0145),transparent calc(var(--ch)*.0145) calc(var(--ch)*.0242));
+  -webkit-mask:linear-gradient(90deg,#000 0 44%,transparent 44% 56%,#000 56%);mask:linear-gradient(90deg,#000 0 44%,transparent 44% 56%,#000 56%);filter:drop-shadow(0 2px 1px rgba(0,0,0,.35))}
+.stack{position:absolute;inset:0;user-select:none;-webkit-user-select:none}
+.stack .page{transform-origin:50% 0;will-change:transform;cursor:grab;filter:drop-shadow(0 calc(var(--ch)*.012) calc(var(--ch)*.018) rgba(20,15,10,.22))}
+.stack .page:active{cursor:grabbing}
+.stack .page.gone{visibility:hidden}
+.stack .page.torn{clip-path:var(--tear)}
+.stub{position:absolute;left:0;right:0;top:0;height:calc(var(--ch)*.03);z-index:4;background:#FBF8F1 url(assets/paper.jpg);background-blend-mode:multiply;clip-path:var(--stubclip);opacity:0;transition:opacity .2s;filter:drop-shadow(0 1px 1px rgba(0,0,0,.2))}
+.stub.on{opacity:1}
+.calshadow{position:absolute;inset:3% -2% -3% 2%;background:rgba(20,15,10,.22);filter:blur(16px);z-index:-1;border-radius:4px}
+/* buy card */
+.buy{position:absolute;z-index:3;right:var(--gut);top:50%;translate:0 -50%;width:clamp(240px,20vw,300px);background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(46,36,27,.3);padding:20px 20px 18px;rotate:1.2deg}
+.ar-on .buy{right:auto;left:var(--gut);rotate:-1.2deg}
+.buy .kick{margin-bottom:12px}
+.buy h3{font-size:clamp(28px,1.6vw + 14px,40px)}
+.buy .pr{display:flex;align-items:baseline;gap:8px;margin:10px 0 6px}
+.buy .pr b{font:clamp(40px,2.4vw + 18px,60px)/1 var(--en)}
+.buy .pr small{font:12px var(--mono);letter-spacing:.1em;color:var(--soft);text-transform:uppercase}
+.ar-on .buy .pr small{font:500 14px var(--body);letter-spacing:0}
+.buy ul{list-style:none;padding:0;margin:8px 0 16px;display:grid;gap:5px;font-size:14px;color:var(--soft)}
+.buy ul li::before{content:"✶ ";color:var(--terra)}
+.buy .btn{width:100%}
+.buy .btn+.btn{margin-top:8px}
+/* month strip */
+.mstrip{background:none;border:0;box-shadow:none;padding:0;position:absolute;z-index:3;left:50%;bottom:clamp(14px,3vh,30px);translate:-50% 0;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 2*var(--gut))}
+.mstrip .ms{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding:4px}
+.mstrip .ms::-webkit-scrollbar{display:none}
+.mstrip .ms button{border:0;background:none;padding:6px 7px 5px;font:clamp(15px,.5vw + 11px,20px)/1 var(--en);text-transform:uppercase;color:inherit;opacity:.55;position:relative;flex:none;transition:opacity .2s}
+.ar-on .mstrip .ms button{font-family:var(--ar)}
+.mstrip .ms button:hover{opacity:1}
+.mstrip .ms button[aria-current=true]{opacity:1}
+.mstrip .ms button[aria-current=true]::after{content:"";position:absolute;left:6px;right:6px;bottom:-3px;height:3px;background:currentColor}
+.arw{width:44px;height:44px;flex:none;border:2px solid var(--ink);background:var(--paper);color:var(--ink);display:grid;place-items:center;font:20px/1 var(--mono);box-shadow:2px 2px 0 rgba(46,36,27,.3);transition:.15s}
+.arw:hover{transform:translate(-1px,-1px)}
+.arw:active{transform:translate(1px,1px);box-shadow:none}
+.arw[disabled]{opacity:.35;pointer-events:none}
+.thint{position:absolute;z-index:3;left:50%;top:calc(50% + var(--ch)/2 - 4px);translate:-50% 0;font:600 19px/1 var(--hand);opacity:.75;white-space:nowrap;pointer-events:none;transition:opacity .4s}
+@media (max-width:980px){
+  .hang{height:max(100svh,760px)}
+  .hhead{width:auto;right:var(--gut);top:clamp(74px,10vh,100px)}
+  .hhead h1{font-size:clamp(30px,7vw,48px);margin:8px 0 4px}
+  .hhead p,.mnow small,.mnow em,.mnow .sea{display:none}
+  .mnow{margin-top:8px;padding-top:8px;display:flex;align-items:baseline;gap:10px;border-top-width:1px}
+  .mnow b{font-size:24px;margin:0}.mnow span{font-size:18px;margin:0}
+  .hang{--ch:min(calc(100svh - 410px),calc((100vw - 56px)/.707),620px)}
+  .calw{top:calc(50% + 34px)}
+  .buy{top:auto;bottom:0;left:0;right:0;translate:none;width:auto;rotate:none!important;display:flex;align-items:center;gap:12px;padding:10px var(--gut);border-width:2px 0 0;box-shadow:none}
+  .buy .kick,.buy h3,.buy ul,.buy .btn.alt{display:none}
+  .buy .pr{margin:0}.buy .pr b{font-size:32px}
+  .buy .btn{width:auto;margin-left:auto}
+  .ar-on .buy .btn{margin-left:0;margin-right:auto}
+  .mstrip{bottom:76px}
+  .bigm{font-size:34vw}
+  .thint{display:none}
+}
+
+/* ---------- 2. inside the calendar: colour blocks ---------- */
+.blocks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:2px solid var(--ink)}
+.blk{position:relative;min-height:clamp(220px,24vw,340px);padding:clamp(18px,2vw,28px);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;color:#FAF5E9;border-inline-end:2px solid var(--ink)}
+.blk:last-child{border-inline-end:0}
+.blk b{font:clamp(48px,5vw + 10px,110px)/.85 var(--en);text-transform:uppercase}
+.blk span{font-size:15px;max-width:22ch;position:relative;z-index:1}
+.blk img{position:absolute;right:-6%;bottom:-8%;width:52%;rotate:-8deg;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.2));transition:rotate .5s cubic-bezier(.2,1.4,.4,1),translate .5s}
+.blk:hover img{rotate:4deg;translate:-6px -10px}
+.blk:nth-child(1){background:var(--sage)}.blk:nth-child(2){background:var(--terra)}.blk:nth-child(3){background:var(--ochre);color:var(--ink)}.blk:nth-child(4){background:var(--sky)}
+@media (max-width:860px){.blocks{grid-template-columns:1fr 1fr}.blk:nth-child(2){border-inline-end:0}.blk:nth-child(-n+2){border-bottom:2px solid var(--ink)}}
+
+/* ---------- 3. three ways to hang it ---------- */
+.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4vw,32px)}
+.way{position:relative}
+.scene{position:relative;aspect-ratio:4/5;overflow:hidden;border:2px solid var(--ink);display:grid;place-items:center}
+.scene::after{content:"";position:absolute;inset:0;background:url(assets/grain.png);mix-blend-mode:multiply;opacity:.35;pointer-events:none}
+.scene .pg{position:relative;width:52%;aspect-ratio:.707;--acc:#66805A;filter:drop-shadow(6px 10px 10px rgba(20,15,10,.25));transition:transform .5s cubic-bezier(.2,1.2,.4,1)}
+.way:hover .scene .pg{transform:rotate(-2deg) translateY(-4px)}
+.s-wall{background:#E3D3B4}
+.s-wall .pg::before{content:"";position:absolute;left:50%;top:-9%;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#6b655c;box-shadow:1px 2px 2px rgba(0,0,0,.3)}
+.s-wall .pg::after{content:"";position:absolute;left:6%;right:6%;top:-2%;height:4%;background:repeating-linear-gradient(90deg,transparent 0 3px,#888 3px 5px,#ddd 5px 6px,transparent 6px 10px);z-index:2}
+.s-desk{background:linear-gradient(#EAD9BC 0 62%,#B98B5E 62%)}
+.tent{position:relative;width:62%;aspect-ratio:1.414;transform-style:preserve-3d;perspective:900px;margin-top:8%}
+.tent .face{position:absolute;inset:0;transform-origin:50% 0;transform:rotateX(18deg);filter:drop-shadow(0 14px 10px rgba(20,15,10,.3));transition:transform .6s cubic-bezier(.2,1.2,.4,1)}
+.way:hover .tent .face{transform:rotateX(8deg)}
+.tent .page{padding:5cqw 4cqw 3cqw}
+.tent .page::before{top:1.2cqw}
+.tent .ring{position:absolute;left:8%;right:8%;top:-4%;height:7%;z-index:3;background:repeating-linear-gradient(90deg,transparent 0 3px,#8d8a85 3px 5px,#e8e6e2 5px 6px,transparent 6px 10px)}
+.s-fridge{background:linear-gradient(90deg,#E8ECEC,#F7F8F7 40%,#DDE2E2)}
+.s-fridge::before{content:"";position:absolute;right:12%;top:0;bottom:0;width:10px;background:linear-gradient(90deg,#c9cfcf,#f3f4f4,#c2c8c8)}
+.s-fridge .pg{width:46%;rotate:3deg}
+.s-fridge .mag{position:absolute;left:50%;top:-5%;width:26%;aspect-ratio:1;translate:-50% 0;z-index:3;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ef8c6c,#C4593F 60%,#8f3a26);box-shadow:2px 4px 4px rgba(0,0,0,.3)}
+.way h3{font-size:clamp(24px,1.4vw + 14px,34px);margin:16px 0 4px}
+.way p{color:var(--soft);font-size:15px}
+@media (max-width:860px){.ways{grid-template-columns:1fr}.scene{aspect-ratio:4/3}.scene .pg{width:34%}.tent{width:44%}.s-fridge .pg{width:30%}}
+
+/* ---------- 4. the pages she tore off (past calendars) ---------- */
+#past{background:#2E241B;color:var(--paper);position:relative;overflow:hidden}
+#past::before{content:"";position:absolute;inset:0;background:url(assets/paper.jpg);mix-blend-mode:soft-light;opacity:.25;pointer-events:none}
+#past .shead p{color:#e9dcc2b3}
+.floor{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,4vw,60px)}
+.pile{position:relative;aspect-ratio:1/1.05;border:0;background:none;padding:0;cursor:pointer;color:inherit;text-align:start}
+.pile .mini{position:absolute;width:46%;aspect-ratio:.707;left:var(--x);top:var(--y);rotate:var(--r);transition:left .6s cubic-bezier(.2,1.2,.4,1),top .6s cubic-bezier(.2,1.2,.4,1),rotate .6s cubic-bezier(.2,1.2,.4,1);filter:drop-shadow(3px 6px 6px rgba(0,0,0,.45))}
+.pile .mini .page{clip-path:var(--tear)}
+.pile:hover .mini,.pile:focus-visible .mini{left:var(--x2);top:var(--y2);rotate:var(--r2)}
+.pile:focus-visible{outline:2px solid var(--ochre);outline-offset:8px}
+.pile .tag{position:absolute;z-index:9;left:4%;bottom:2%;background:var(--paper);color:var(--ink);padding:10px 14px 8px;rotate:-4deg;box-shadow:2px 3px 0 rgba(0,0,0,.4)}
+.pile .tag b{display:block;font:clamp(34px,2.4vw + 14px,56px)/.9 var(--en)}
+.pile .tag span{display:block;font:600 18px/1.1 var(--hand);color:var(--soft);margin-top:4px}
+.pile .stamp{position:absolute;z-index:9;right:2%;top:6%;width:30%;aspect-ratio:1;border-radius:50%;border:3px double #E06A4E;color:#E06A4E;display:grid;place-items:center;text-align:center;font:600 clamp(10px,.7vw,13px)/1.15 var(--mono);letter-spacing:.08em;text-transform:uppercase;rotate:14deg;padding:8px;background:rgba(46,36,27,.35)}
+.ar-on .pile .stamp{font:600 13px/1.2 var(--body);letter-spacing:0}
+.pq{margin-top:clamp(40px,6vw,80px);max-width:46ch;margin-inline:auto;text-align:center}
+.pq q{display:block;font:600 clamp(24px,1.6vw + 14px,38px)/1.2 var(--hand);quotes:"“" "”"}
+.pq cite{display:block;margin-top:12px;font:12px var(--mono);letter-spacing:.14em;opacity:.7;font-style:normal}
+@media (max-width:860px){.floor{grid-template-columns:1fr;max-width:420px;margin-inline:auto}}
+
+/* viewer for a past year */
+dialog{margin:auto;border:0;padding:0;background:transparent;width:min(900px,94vw);max-width:none;color:var(--ink)}
+dialog::backdrop{background:#1e1811d9;backdrop-filter:blur(3px)}
+.vw{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);max-height:92svh;overflow:auto}
+.vw .vp{background:#D9C8A6 url(assets/paper.jpg);background-blend-mode:multiply;display:grid;place-items:center;padding:clamp(20px,3vw,40px);border-inline-end:2px solid var(--ink)}
+.vw .vpg{position:relative;width:min(100%,calc(78svh*.707));aspect-ratio:.707;filter:drop-shadow(6px 12px 12px rgba(20,15,10,.25))}
+.vw .vpg .page.swap{animation:vswap .45s cubic-bezier(.2,1.2,.4,1)}
+@keyframes vswap{from{opacity:0;translate:0 20px;rotate:-2deg}}
+.vw .vi{padding:clamp(20px,3vw,34px);display:flex;flex-direction:column;align-items:flex-start}
+.vw h3{font-size:clamp(40px,3vw + 18px,72px);margin:12px 0 6px}
+.vw .vs{font:600 22px/1.15 var(--hand);color:var(--terra)}
+.vw p{color:var(--soft);margin-top:12px;font-size:15px}
+.vw blockquote{margin:16px 0 0;border-inline-start:3px solid var(--terra);padding-inline-start:14px;font:600 21px/1.2 var(--hand);color:var(--ink)}
+.vw .vn{margin-top:auto;padding-top:20px;align-self:stretch;display:flex;justify-content:space-between;align-items:center;font:12px var(--mono);letter-spacing:.1em;color:var(--soft)}
+.x{position:absolute;right:12px;top:12px;z-index:3;width:38px;height:38px;border:1.5px solid var(--ink);background:var(--paper);display:grid;place-items:center;font:600 14px var(--mono)}
+[dir=rtl] .x{right:auto;left:12px}
+@media (max-width:760px){.vw{grid-template-columns:1fr}.vw .vp{border:0;border-bottom:2px solid var(--ink)}.vw .vpg{width:min(100%,calc(46svh*.707))}}
+
+/* ---------- 5. this month on your phone ---------- */
+.wp{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr);gap:clamp(30px,6vw,90px);align-items:center}
+.phone{position:relative;width:min(300px,70vw);aspect-ratio:9/19.5;margin-inline:auto;border-radius:44px;background:#1d1a17;padding:12px;box-shadow:8px 14px 0 rgba(46,36,27,.18),inset 0 0 0 2px #3b352f;rotate:-3deg}
+.phone canvas{width:100%;height:100%;border-radius:34px;display:block;background:#ddd}
+.phone::before{content:"";position:absolute;left:50%;top:22px;width:32%;height:22px;translate:-50% 0;border-radius:20px;background:#1d1a17;z-index:2}
+.phone .clock{position:absolute;left:0;right:0;top:11%;text-align:center;z-index:2;color:#fff;font:300 clamp(44px,5vw,58px)/1 var(--body);text-shadow:0 1px 6px rgba(0,0,0,.25);pointer-events:none}
+.phone .clock small{display:block;font:500 13px/1 var(--body);margin-bottom:6px;opacity:.9}
+.wpc .chips{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 22px}
+.wpc .chips button{border:1.5px solid var(--ink);background:var(--paper);padding:8px 10px 7px;font:15px/1 var(--en);text-transform:uppercase;display:flex;align-items:center;gap:7px;box-shadow:1px 1px 0 var(--sh)}
+.ar-on .wpc .chips button{font-family:var(--ar)}
+.wpc .chips button i{width:12px;height:12px;border-radius:50%;background:var(--c);border:1px solid rgba(0,0,0,.2)}
+.wpc .chips button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.wpc h2{font-size:clamp(32px,4.6vw + 14px,88px);margin:14px 0 10px}
+.wpc p{color:var(--soft);max-width:40ch}
+.wpc .free{display:inline-block;margin-inline-start:10px;font:600 22px/1 var(--hand);color:var(--terra);rotate:-4deg}
+@media (max-width:860px){.wp{grid-template-columns:1fr}.phone{order:2}}
+
+/* ---------- 6. marquee ---------- */
+.marq{background:var(--ochre);border-block:2px solid var(--ink);overflow:hidden;white-space:nowrap;padding:14px 0}
+.marq div{display:inline-flex;gap:40px;animation:marq 32s linear infinite;font:clamp(20px,1.4vw + 12px,32px)/1 var(--en);text-transform:uppercase;color:var(--ink)}
+.marq div span::after{content:"✶";margin-inline-start:40px;color:var(--terra)}
+.ar-on .marq div{font-family:var(--ar)}
+@keyframes marq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.marq div{animation:none}.bigm.in{animation:none}}
+
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
+  <nav>
+    <a href="index.html" data-ar="الرئيسية">Index</a>
+    <a href="shop.html" class="on" data-ar="المتجر">Shop</a>
+    <a href="story.html" data-ar="الحكاية">Story</a>
+  </nav>
+  <div class="tools">
+    <button class="chip" id="langBtn" aria-label="Arabic / English">ع</button>
+        <button class="chip bag" id="bag"><span data-ar="السلة">Bag</span><b id="bagn">0</b></button>
+  </div>
+</header>
+
+<main>
+<!-- 1 · THE CALENDAR ON THE WALL (full screen) -->
+<section class="hang" id="hang" aria-label="Calendar 2027">
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="bigm" id="bigm" aria-hidden="true"></div>
+  <div class="hhead">
+    <span class="kick" data-ar="تقويم ٢٠٢٧ · للطباعة">Calendar 2027 · printable</span>
+    <h1 class="d" data-ar="١٢ شهر مرسومين في غزة">Twelve months painted in Gaza</h1>
+    <p data-ar="شدّ الصفحة يمين أو شمال لتمزعها، وكل شهر بيجيب جوّه معه.">Pull a page left or right to tear it off. Every month brings its own weather.</p>
+    <div class="mnow" id="mnow"></div>
+  </div>
+  <div class="calw" id="calw">
+    <div class="calshadow"></div>
+    <span class="hook"></span><span class="nail"></span>
+    <div class="stack" id="stack"></div>
+    <div class="stub" id="stub"></div>
+    <div class="spiral"></div>
+  </div>
+  <span class="thint" id="thint" data-ar="اسحب الصفحة لتمزعها ↔">drag the page to tear it ↔</span>
+  <aside class="buy" id="buy">
+    <span class="kick" data-ar="التقويم">The calendar</span>
+    <h3 class="d" data-ar="تقويم ٢٠٢٧">Calendar 2027</h3>
+    <div class="pr"><b>€8</b><small data-ar="ملف PDF">PDF</small></div>
+    <ul>
+      <li data-ar="١٢ لوحة مائية وغلاف">12 watercolours and a cover</li>
+      <li data-ar="A3 وA4 جاهز للطباعة">A3 and A4, ready to print</li>
+      <li data-ar="الشهور بالعربي والإنجليزي">Months in Arabic and English</li>
+      <li data-ar="بتحمّله فورًا">Download straight away</li>
+    </ul>
+    <button class="btn terra" id="buyBtn" data-ar="اشترِ التقويم">Buy the calendar</button>
+    <a class="btn alt" href="#ways" data-ar="كيف بتعلّقه">How to hang it</a>
+  </aside>
+  <nav class="mstrip" aria-label="Months"><button class="arw" id="prev" aria-label="Previous month">←</button><div class="ms" id="ms"></div><button class="arw" id="next" aria-label="Next month">→</button></nav>
+</section>
+
+<!-- 2 · INSIDE THE CALENDAR -->
+<section class="pad" id="inside">
+  <div class="shead">
+    <div><span class="kick" data-ar="جوّا التقويم">Inside the calendar</span><h2 class="d" data-ar="سنة كاملة من غزة">A whole year of Gaza</h2></div>
+    <p data-ar="كل شهر لوحة رسمتها فرح، والأيام بالإنجليزي، والشهور بأسمائها الشامية.">Each month is one of Farah's paintings, with the days laid out and the months in English and in their Levantine Arabic names.</p>
+  </div>
+  <div class="blocks">
+    <div class="blk pop" style="--d:0"><b>12</b><span data-ar="لوحة مائية، وحدة لكل شهر، وغلاف.">watercolours, one for every month, plus a cover.</span><img src="assets/s-lemons.webp" alt=""></div>
+    <div class="blk pop" style="--d:1"><b>ع / EN</b><span data-ar="كانون، شباط، آذار… جنب January وFebruary.">Kanun, Shbat, Adhar… beside January and February.</span><img src="assets/s-gaza.webp" alt=""></div>
+    <div class="blk pop" style="--d:2"><b>A3 · A4</b><span data-ar="اطبعه بالبيت أو بأي مطبعة قريبة.">Print it at home or at any print shop near you.</span><img src="assets/s-dove.webp" alt=""></div>
+    <div class="blk pop" style="--d:3"><b data-ar="جمعة">FRI</b><span data-ar="الجمعة والسبت معلّمين، عطلة غزة.">Fridays and Saturdays marked: the Gaza weekend.</span><img src="assets/s-heart.webp" alt=""></div>
+  </div>
+</section>
+
+<!-- 3 · THREE WAYS TO HANG IT -->
+<section class="pad" id="ways" style="padding-top:0">
+  <div class="shead">
+    <div><span class="kick" data-ar="وين بدك">Where you like</span><h2 class="d" data-ar="ثلاث طرق لتعلّقه">Three ways to hang it</h2></div>
+    <p data-ar="ملف واحد فيه الثلاثة. اطبع اللي بناسبك.">One download has all three. Print the one that suits you.</p>
+  </div>
+  <div class="ways" id="waysGrid"></div>
+</section>
+
+<!-- 4 · THE PAGES SHE TORE OFF -->
+<section class="pad" id="past">
+  <div class="shead">
+    <div><span class="kick" data-ar="التقاويم السابقة">Past calendars</span><h2 class="d" data-ar="الصفحات اللي مزعتها">The pages she tore off</h2></div>
+    <p data-ar="كل سنة فرح بتمزع ١٢ صفحة. هاي اللي ضلّت معها. اضغط على أي سنة لتقلّبها.">Every year Farah tears off twelve pages. These are the ones she kept. Tap a year to leaf through it.</p>
+  </div>
+  <div class="floor" id="floor"></div>
+  <div class="pq pop"><q id="pq"></q><cite data-ar="— فرح، عن تقويم ٢٠٢٥">— FARAH, ON THE 2025 CALENDAR</cite></div>
+</section>
+
+<!-- 5 · THIS MONTH ON YOUR PHONE -->
+<section class="pad" id="phone">
+  <div class="wp">
+    <div class="phone"><canvas id="wpc" width="1080" height="2340"></canvas><div class="clock" id="clock"></div></div>
+    <div class="wpc">
+      <span class="kick" data-ar="هدية">A gift</span>
+      <h2 class="d"><span data-ar="الشهر على موبايلك">This month on your phone</span></h2>
+      <p data-ar="اختار شهر، وحمّل خلفية فيها لوحته وأيامه. ببلاش.">Pick a month and download a wallpaper with its painting and its days. <span class="free">free!</span></p>
+      <div class="chips" id="wchips"></div>
+      <button class="btn terra" id="wdl" data-ar="حمّل الخلفية">Download wallpaper</button>
+    </div>
+  </div>
+</section>
+
+<div class="marq" aria-hidden="true"><div id="marq"></div></div>
+</main>
+
+<dialog id="dlg"><div class="vw">
+  <div class="vp"><div class="vpg" id="vpg"></div></div>
+  <div class="vi">
+    <button class="x" id="close" aria-label="Close">✕</button>
+    <span class="kick" id="vk">Past calendar</span>
+    <h3 class="d" id="vt"></h3>
+    <div class="vs" id="vs"></div>
+    <p id="vp"></p>
+    <blockquote id="vq" hidden></blockquote>
+    <div class="vn"><button class="arw" id="vprev" aria-label="Previous page">←</button><span id="vnum"></span><button class="arw" id="vnext" aria-label="Next page">→</button></div>
+  </div>
+</div></dialog>
+
+<footer>
+  <div class="fgrid">
+    <div>
+      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
+    </div>
+    <div><h4 data-ar="المتجر">Shop</h4><ul>
+      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+    <div><h4 data-ar="عنّا">About</h4><ul>
+      <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 Mass &amp; Grass · Gaza, Palestine</span><span data-ar="رُسمت باليد في غزة، بحب.">Painted by hand in Gaza, with love.</span></div>
+</footer>
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let AR=false;const t=(en,ar)=>AR?ar:en;
+const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+
+/* ---- sounds: a soft paper slap and the bird chirp used across the site ---- */
+let actx;const AC=()=>{try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx}catch(e){return null}};
+function slap(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleRate*.08,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,4);
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='lowpass';f.frequency.value=1800;g.gain.value=.22;s.connect(f).connect(g).connect(c.destination);s.start(t0);
+  const o=c.createOscillator(),og=c.createGain();o.frequency.setValueAtTime(150,t0);o.frequency.exponentialRampToValueAtTime(60,t0+.08);og.gain.setValueAtTime(.12,t0);og.gain.exponentialRampToValueAtTime(.001,t0+.09);o.connect(og).connect(c.destination);o.start(t0);o.stop(t0+.1)}
+function peel(){const c=AC();if(!c)return;const t0=c.currentTime+.01,n=c.sampleRate*.22,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(i/n)*(1-i/n)*4;
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='bandpass';f.frequency.setValueAtTime(1200,t0);f.frequency.linearRampToValueAtTime(3800,t0+.22);f.Q.value=1.2;g.gain.value=.12;s.connect(f).connect(g).connect(c.destination);s.start(t0)}
+
+/* ---- bag ---- */
+let bagN=window.MGBag?MGBag.count():0;function addBag(it){bagN=window.MGBag?MGBag.add(it):bagN+1;const b=$('#bagn');if(b){b.textContent=ard(bagN);$('#bag').animate([{transform:'scale(1.25) rotate(-6deg)'},{transform:'none'}],{duration:350})}slap()}
+
+/* ---- the year: [abbr, EN, AR (Levantine), painting, title EN, title AR, place EN, place AR, wall colour, ink colour, season, weather] ---- */
+const Y=2027;
+const M=[
+ ['Jan','January','كانون الثاني','waves','The Waves','الموج','Gaza beach','بحر غزة','#5F7E92','#2F5D7C','winter',{rain:1}],
+ ['Feb','February','شباط','psea','Sea & Clouds','بحر وغيوم','Gaza','غزة','#7E95A4','#3f6b8a','winter',{rain:.45,blossom:.35}],
+ ['Mar','March','آذار','ppoppies','Blue Poppies','شقائق زرقاء','Gaza','غزة','#8EA878','#4F6B3E','spring',{poppy:16,bird:1,petal:.12}],
+ ['Apr','April','نيسان','blueflowers','White Dove','الحمامة البيضاء','Beit Lahia','بيت لاهيا','#A9BE86','#5E7D3F','spring',{petal:.4,bird:1,poppy:7}],
+ ['May','May','أيار','pflower','Big Flower','الزهرة الكبيرة','Gaza','غزة','#D9AE55','#A0522D','spring',{petal:.3,bird:.6,sun:.5}],
+ ['Jun','June','حزيران','hero','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي','#E3B862','#C4593F','summer',{sun:1,glint:.35}],
+ ['Jul','July','تموز','boattop','The Boat','القارب','Gaza port','ميناء غزة','#3F7FA0','#1F4E6B','summer',{sun:.8,wave:1,glint:.2}],
+ ['Aug','August','آب','seafish','Sea Fish','سمك البحر','Al-Shati','الشاطئ','#E59A5C','#B4553E','summer',{sun:1,glint:.55}],
+ ['Sep','September','أيلول','dovegirl','Dove Girl','فتاة الحمام','Deir al-Balah','دير البلح','#C8904F','#8a5a3c','autumn',{leaf:.12,sun:.35}],
+ ['Oct','October','تشرين الأول','deirbalah','Deir al-Balah','دير البلح','Deir al-Balah','دير البلح','#B4553E','#7A3322','autumn',{leaf:.5,olive:.25}],
+ ['Nov','November','تشرين الثاني','alley','The Alley','الزقاق','Old City','البلدة القديمة','#8A5A3C','#5A3725','autumn',{leaf:.3,rain:.3}],
+ ['Dec','December','كانون الأول','sparklers','Sparkler Night','ليلة الشماريخ','Gaza City','مدينة غزة','#2E3B4E','#C4593F','winter',{star:70,spark:.5,rain:.15}]];
+const COVER={bg:'#E9DCC2',acc:'#C4593F',fx:{dust:.25}};
+const SEASON={winter:['Winter · rain on the roofs','الشتا · مطر عالسطوح'],spring:['Spring · the hills turn green','الربيع · الأرض بتخضرّ'],summer:['Summer · the sea is warm','الصيف · البحر دافي'],autumn:['Autumn · olives and dates','الخريف · زيتون وبلح']};
+const DAYS=['Sa','Su','Mo','Tu','We','Th','Fr'],DAYSAR=['سبت','أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة'];
+const img=k=>`assets/${k}.webp`;
+function deckle(seed,amt=1.1){let s=seed*9301+49297;const r=()=>(s=(s*9301+49297)%233280)/233280;const p=[],n=10;
+  for(let i=0;i<n;i++)p.push([i/n*100,r()*amt]);for(let i=0;i<n;i++)p.push([100-r()*amt,i/n*100]);for(let i=0;i<n;i++)p.push([100-i/n*100,100-r()*amt]);for(let i=0;i<n;i++)p.push([r()*amt,100-i/n*100]);
+  return 'polygon('+p.map(([x,y])=>x.toFixed(1)+'% '+y.toFixed(1)+'%').join(',')+')'}
+/* the ragged top a page gets when it is torn off the spiral, and the stub left behind */
+function tearClip(seed){let s=seed*7919+13;const r=()=>(s=(s*9301+49297)%233280)/233280;const p=[];for(let i=0;i<=40;i++)p.push([i/40*100,1.2+r()*2.2]);return 'polygon('+p.map(([x,y])=>x.toFixed(1)+'% '+y.toFixed(1)+'%').join(',')+',100% 100%,0 100%)'}
+function stubClip(){let s=4242;const r=()=>(s=(s*9301+49297)%233280)/233280;const p=[[0,0],[100,0]];for(let i=40;i>=0;i--)p.push([i/40*100,35+r()*55]);return 'polygon('+p.map(([x,y])=>x.toFixed(1)+'% '+y.toFixed(1)+'%').join(',')+')'}
+const lum=h=>{const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (.299*r+.587*g+.114*b)/255};
+/* one calendar page: i=0 is the cover, 1..12 the months */
+function pageHTML(i,y=Y,o={}){
+  if(i===0){const k=o.cover||'house';return `<div class="page cover" style="--acc:${o.acc||'#C4593F'}"><div class="top"><span>Mass &amp; Grass</span><b>${t('Calendar','تقويم')}</b></div>
+    <div class="art" style="--deckle:${deckle(y)}"><img src="${o.coverSrc||img(k)}" alt="" draggable="false"></div>
+    <div class="yr">${y}</div><div class="ttl">${o.ttl||t('Twelve months painted in Gaza','١٢ شهر مرسومين في غزة')}</div><div class="sub">${o.sub||t('watercolours by Farah','ألوان مائية بريشة فرح')}</div>
+    ${o.badges===false?'':`<div class="badges"><i>${t('Arabic & English','عربي وإنجليزي')}</i><i>A3 · A4</i></div>`}</div>`}
+  const m=M[i-1],k=(o.paint&&o.paint[i-1])||m[3],first=new Date(y,i-1,1).getDay(),off=(first+1)%7,n=new Date(y,i,0).getDate(),now=new Date();
+  let g=DAYS.map((d,j)=>`<span class="h${j>=6||j<=0?' we':''}">${AR?DAYSAR[j].slice(0,3):d}</span>`).join('');
+  for(let c=0;c<42;c++){const d=c-off+1,col=c%7,ok=d>=1&&d<=n;if(!ok&&c>=35&&c-off+1>n){g+='<span class="x">0</span>';continue}
+    const today=ok&&now.getFullYear()===y&&now.getMonth()===i-1&&now.getDate()===d;
+    g+=ok?`<span class="${col===0||col===6?'we':''}${today?' today':''}">${AR?ard(d):d}</span>`:'<span class="x">0</span>'}
+  return `<div class="page" style="--acc:${m[9]}"><div class="top"><span>Mass &amp; Grass · ${y}</span><b>${String(i).padStart(2,'0')}</b></div>
+    <div class="art" style="--deckle:${deckle(i*13+y)}"><img src="${img(k)}" alt="" draggable="false" loading="${o.lazy?'lazy':'eager'}"></div>
+    <div class="mrow"><div class="mabbr">${m[0]}</div><div class="mside"><span class="mar">${m[2]}</span><span class="mtl">${o.paint?'':t(m[4]+' · '+m[6],m[5]+' · '+m[7])}</span></div></div>
+    <div class="grid">${g}</div><div class="foot"><span>${m[1]}</span><span>massandgrass</span></div></div>`}
+
+/* ---- 1. the calendar on the wall ---- */
+const hang=$('#hang'),stack=$('#stack'),stub=$('#stub');
+let cur=0,pages=[],busy=0;
+hang.style.setProperty('--stubclip',stubClip());
+function buildCal(){stack.innerHTML=Array.from({length:13},(_,i)=>pageHTML(i)).join('');pages=[...stack.children];
+  pages.forEach((p,i)=>{p.style.setProperty('--tear',tearClip(i+1));p.style.zIndex=50-i;if(i<cur)p.classList.add('gone','torn');p.addEventListener('pointerdown',e=>startDrag(e,p,i))});
+  $('#ms').innerHTML=['Cover',...M.map(m=>m[0])].map((m,i)=>`<button data-i="${i}" aria-current="${i===cur}">${i?(AR?M[i-1][2]:m):t('Cover','الغلاف')}</button>`).join('');
+  theme(cur,true)}
+$('#ms').addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(+b.dataset.i)});
+$('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{if($('#dlg').open||/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;const r=hang.getBoundingClientRect();if(r.bottom<100||r.top>innerHeight-100)return;
+  if(e.key==='ArrowRight'){e.preventDefault();go(cur+1)}else if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1)}});
+function theme(i,first){const m=i?M[i-1]:null,bg=m?m[8]:COVER.bg,acc=m?m[9]:COVER.acc;
+  hang.style.setProperty('--bg',bg);hang.style.setProperty('--acc',acc);hang.style.setProperty('--fg',lum(bg)>.55?'#2E241B':'#FAF5E9');
+  const bm=$('#bigm');bm.textContent=m?(AR?m[2]:m[1]):String(Y);bm.classList.remove('in');void bm.offsetWidth;bm.classList.add('in');
+  $('#mnow').innerHTML=m?`<small>${t('This month','هالشهر')}</small><b>${t(m[1],m[2])}</b><span>${AR?m[1]:m[2]}</span><em>${t(m[4]+', painted in '+m[6],m[5]+'، انرسمت في '+m[7])}</em><span class="sea">${t(...SEASON[m[10]])}</span>`
+    :`<small>${t('The cover','الغلاف')}</small><b>${Y}</b><em>${t('Home, painted in az-Zawayda','البيت، انرسمت في الزوايدة')}</em>`;
+  $$('#ms button').forEach(b=>b.setAttribute('aria-current',+b.dataset.i===i));const cb=$(`#ms button[data-i="${i}"]`);if(cb){const ms=$('#ms');ms.scrollTo({left:cb.offsetLeft-ms.clientWidth/2+cb.offsetWidth/2,behavior:first?'auto':'smooth'})}
+  $('#prev').disabled=i===0;$('#next').disabled=i===12;stub.classList.toggle('on',i>0);
+  setWeather(m?m[11]:COVER.fx,m?m[10]:'cover');if(!first&&m&&m[11].bird)setTimeout(chirp,500)}
+/* tear: the page tugs, rips from the spiral and drops away, turning as it falls */
+function fall(p,dir,from){p.classList.add('torn');rip();busy++;
+  const ch=$('#calw').clientHeight,start=from||'translate(0,0) rotate(0deg)';
+  const a=p.animate([{transform:start,offset:0},{transform:`translate(${dir*-4}px,${-ch*.01}px) rotate(${dir*-1.5}deg)`,offset:.1},{transform:`translate(${dir*ch*.05}px,${ch*.05}px) rotate(${dir*6}deg)`,offset:.28},
+    {transform:`translate(${dir*ch*.45}px,${innerHeight*1.1}px) rotate(${dir*34}deg)`,offset:1}],{duration:1450,easing:'cubic-bezier(.5,0,.75,.35)'});
+  a.onfinish=()=>{p.classList.add('gone');p.style.transform='';busy--};return a}
+function rise(p){p.classList.remove('gone');busy++;const dir=Math.random()<.5?-1:1;
+  const a=p.animate([{transform:`translate(${dir*120}px,${innerHeight*1.05}px) rotate(${dir*30}deg)`},{transform:`translate(0,-14px) rotate(${dir*-2}deg)`,offset:.8},{transform:'translate(0,0) rotate(0deg)'}],{duration:850,easing:'cubic-bezier(.2,.9,.3,1.1)'});
+  a.onfinish=()=>{p.classList.remove('torn');busy--};peel();return a}
+function go(n,dir=1,from){n=Math.max(0,Math.min(12,n));if(n===cur)return;$('#thint').style.opacity=0;
+  if(n>cur){const list=pages.slice(cur,n);list.forEach((p,j)=>{if(j<list.length-3){p.classList.add('gone','torn');return}setTimeout(()=>fall(p,j===list.length-1?dir:(j%2?1:-1),j===list.length-1?from:null),Math.max(0,j-(list.length-3))*140)})}
+  else{for(let j=cur-1;j>=n;j--){const p=pages[j];if(j>n)p.classList.remove('gone','torn');else rise(p)}}
+  cur=n;theme(cur)}
+/* drag the page: it swings from the spiral; pull far enough and it tears off */
+let dg=null;
+function startDrag(e,p,i){if(i!==cur||e.button>0)return;AC();dg={p,x:e.clientX,y:e.clientY,dx:0,on:false,id:e.pointerId}}
+addEventListener('pointermove',e=>{if(!dg||e.pointerId!==dg.id)return;const dx=e.clientX-dg.x,dy=e.clientY-dg.y;
+  if(!dg.on){if(Math.abs(dx)<6)return;if(Math.abs(dy)>Math.abs(dx)){dg=null;return}dg.on=true;try{dg.p.setPointerCapture(e.pointerId)}catch(_){}}
+  dg.dx=dx;dg.p.style.transform=`translate(${dx*.35}px,${Math.abs(dx)*.04}px) rotate(${dx*.045}deg)`});
+addEventListener('pointerup',e=>{if(!dg||e.pointerId!==dg.id)return;const {p,dx,on}=dg;dg=null;if(!on)return;const tr=p.style.transform;
+  if(Math.abs(dx)>80&&cur<12){p.style.transform='';go(cur+1,Math.sign(dx),tr)}
+  else{p.animate([{transform:tr},{transform:'none'}],{duration:450,easing:'cubic-bezier(.2,1.5,.4,1)'});p.style.transform='';if(Math.abs(dx)>80&&cur===12)peel()}});
+addEventListener('pointercancel',()=>{if(dg){dg.p.style.transform='';dg=null}});
+$('#buyBtn').onclick=()=>{addBag({k:'cal',kind:'calendar',t:'Calendar 2027',ta:'تقويم ٢٠٢٧',p:8,img:'assets/house.webp'});$('#buyBtn').textContent=t('Added ✓','انضاف ✓')};
+
+/* ---- sounds: paper rip + the bird ---- */
+function rip(){const c=AC();if(!c)return;const t0=c.currentTime+.01,d=.42,n=Math.floor(c.sampleRate*d),b=c.createBuffer(1,n,c.sampleRate),x=b.getChannelData(0);
+  for(let i=0;i<n;i++){const u=i/n,crack=Math.random()<.04?1:.35;x[i]=(Math.random()*2-1)*crack*Math.pow(1-u,1.4)*Math.min(1,u*30)}
+  const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='bandpass';f.Q.value=.8;f.frequency.setValueAtTime(900,t0);f.frequency.exponentialRampToValueAtTime(3200,t0+d);g.gain.value=.28;
+  s.connect(f).connect(g).connect(c.destination);s.start(t0)}
+let lastChirp=0;
+function chirp(){const c=AC();if(!c||performance.now()-lastChirp<2500)return;lastChirp=performance.now();const t0=c.currentTime+.02,out=c.createGain();out.gain.value=.5;out.connect(c.destination);
+  [[0,2600,4300,.07],[.1,2900,4600,.06],[.19,3400,2700,.11]].forEach(([d,f1,f2,len])=>{const o=c.createOscillator(),g=c.createGain(),tt=t0+d;o.type='sine';o.frequency.setValueAtTime(f1,tt);o.frequency.exponentialRampToValueAtTime(f2,tt+len);
+    g.gain.setValueAtTime(0,tt);g.gain.linearRampToValueAtTime(.07,tt+.012);g.gain.exponentialRampToValueAtTime(.0005,tt+len);o.connect(g).connect(out);o.start(tt);o.stop(tt+len+.02)})}
+
+/* ---- the weather behind the calendar: rain, almond blossom, anemones, birds, sun, sea, leaves, stars ---- */
+const cv=$('#fx'),cx=cv.getContext('2d'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let W=0,H=0,dpr=1,P=[],wx={},layers={sun:0,wave:0,star:0},sunT=0,waveT=0,starT=0,poppies=[],stars=[],lastT=performance.now(),seen=true,birdAt=0;
+const BIRD=['bird0','bird1','bird2'].map(k=>{const i=new Image();i.src=`assets/${k}.webp`;return i});
+function sizeFx(){dpr=Math.min(2,devicePixelRatio||1);W=hang.clientWidth;H=hang.clientHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
+  stars=Array.from({length:90},()=>({x:Math.random()*W,y:Math.random()*H*.7,r:Math.random()*1.6+.4,p:Math.random()*6}))}
+function setWeather(fx){wx=fx||{};sunT=wx.sun||0;waveT=wx.wave?1:0;starT=wx.star?1:0;
+  poppies.forEach(p=>p.dead=true);
+  if(wx.poppy){for(let i=0;i<wx.poppy;i++){const side=i%2?Math.random()*.32:.68+Math.random()*.32;poppies.push({x:side*W,h:H*(.08+Math.random()*.2),g:0,d:i*.09+Math.random()*.2,r:9+Math.random()*9,sw:Math.random()*6,dead:false,a:1})}}
+  if(reduce)drawStill()}
+const R=Math.random;
+function spawn(dt){const k=dt/16.7;
+  if(wx.rain&&R()<wx.rain*2.2*k)for(let j=0;j<2;j++)P.push({t:'rain',x:R()*(W+200)-100,y:-20,vx:-2.2,vy:13+R()*6,l:14+R()*10,a:.25+R()*.25});
+  if(wx.blossom&&R()<wx.blossom*.5*k)P.push({t:'pet',x:R()*W,y:-10,vx:.6+R(),vy:.7+R()*.6,r:4+R()*3,rot:R()*6,vr:(R()-.5)*.06,c:R()<.5?'#FBE3E8':'#FFFFFF',a:.9});
+  if(wx.petal&&R()<wx.petal*.5*k)P.push({t:'pet',x:-10,y:R()*H*.8,vx:1+R()*1.2,vy:(R()-.3)*.6,r:4+R()*4,rot:R()*6,vr:(R()-.5)*.08,c:['#F6A6B2','#FBE3E8','#F2C94C','#ffffff'][R()*4|0],a:.9});
+  if(wx.leaf&&R()<wx.leaf*.45*k)P.push({t:'leaf',x:R()*W,y:-30,vx:(R()-.3)*.8,vy:1+R()*1.1,s:10+R()*12,rot:R()*6,vr:(R()-.5)*.05,ph:R()*6,c:['#D9A441','#C4593F','#9a5b32','#E3B35A','#B5651D'][R()*5|0],a:1});
+  if(wx.olive&&R()<wx.olive*.4*k)P.push({t:'olive',x:R()*W,y:-30,vx:(R()-.3)*.6,vy:1.2+R(),s:14+R()*8,rot:R()*6,vr:(R()-.5)*.05,ph:R()*6,c:R()<.7?'#7C8F5A':'#4b5a33',a:1});
+  if(wx.glint&&R()<wx.glint*.6*k)P.push({t:'gl',x:R()*W,y:H*(.5+R()*.5),vy:-(.3+R()*.5),r:1+R()*2.2,life:1,a:1});
+  if(wx.spark&&R()<wx.spark*1.4*k)P.push({t:'sp',x:W*(.08+R()*.18),y:H*(.62+R()*.1),vx:(R()-.5)*2.4,vy:-(1+R()*2.2),life:1,a:1});
+  if(wx.dust&&R()<wx.dust*.3*k)P.push({t:'gl',x:R()*W,y:R()*H,vy:-.15,r:1+R()*1.4,life:1,a:.5,dust:1});
+  if(wx.bird&&performance.now()>birdAt){birdAt=performance.now()+3500+R()*5000/(wx.bird||1);const s=40+R()*30;P.push({t:'bird',x:-s,y:H*(.1+R()*.3),vx:2.2+R()*1.4,s,ph:R()*6,a:1});if(R()<.5)setTimeout(chirp,600)}
+  if(P.length>260)P.splice(0,P.length-260)}
+function leafPath(s,narrow){cx.beginPath();cx.moveTo(-s,0);cx.quadraticCurveTo(0,-s*(narrow?.28:.6),s,0);cx.quadraticCurveTo(0,s*(narrow?.28:.6),-s,0);cx.fill();cx.strokeStyle='rgba(0,0,0,.18)';cx.lineWidth=1;cx.beginPath();cx.moveTo(-s,0);cx.lineTo(s*.9,0);cx.stroke()}
+function frame(now){requestAnimationFrame(frame);const dt=Math.min(50,now-lastT);lastT=now;if(!seen||reduce||document.hidden)return;
+  cx.clearRect(0,0,W,H);const k=dt/16.7;
+  layers.sun+=(sunT-layers.sun)*.03*k;layers.wave+=(waveT-layers.wave)*.03*k;layers.star+=(starT-layers.star)*.03*k;
+  if(layers.sun>.01){const x=W*.84,y=H*.2,g=cx.createRadialGradient(x,y,0,x,y,H*.32);g.addColorStop(0,`rgba(255,246,214,${.75*layers.sun})`);g.addColorStop(.25,`rgba(255,236,190,${.35*layers.sun})`);g.addColorStop(1,'rgba(255,236,190,0)');cx.fillStyle=g;cx.fillRect(0,0,W,H);
+    cx.save();cx.translate(x,y);cx.rotate(now/9000);cx.strokeStyle=`rgba(255,248,225,${.25*layers.sun})`;cx.lineWidth=2;for(let i=0;i<14;i++){cx.rotate(Math.PI*2/14);cx.beginPath();cx.moveTo(H*.07,0);cx.lineTo(H*.12+Math.sin(now/600+i)*8,0);cx.stroke()}cx.restore()}
+  if(layers.star>.01){stars.forEach(s=>{const a=(.4+.6*Math.abs(Math.sin(now/900+s.p)))*layers.star;cx.fillStyle=`rgba(255,244,214,${a})`;cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill()})}
+  if(layers.wave>.01){for(let w=0;w<4;w++){cx.strokeStyle=`rgba(250,245,233,${(.35-w*.06)*layers.wave})`;cx.lineWidth=2;cx.beginPath();const yb=H-30-w*26;for(let x=0;x<=W;x+=12){const y=yb+Math.sin(x/70+now/700+w)*6+Math.sin(x/23-now/400)*2;x?cx.lineTo(x,y):cx.moveTo(x,y)}cx.stroke()}}
+  spawn(dt);
+  for(let i=P.length-1;i>=0;i--){const p=P[i];
+    if(p.t==='rain'){p.x+=p.vx*k;p.y+=p.vy*k;cx.strokeStyle=`rgba(235,242,248,${p.a})`;cx.lineWidth=1.2;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p.x+p.vx*1.3,p.y+p.l);cx.stroke();if(p.y>H)P.splice(i,1);continue}
+    if(p.t==='pet'){p.x+=(p.vx+Math.sin(now/500+p.r)*.4)*k;p.y+=(p.vy+Math.sin(now/700+p.rot)*.3)*k;p.rot+=p.vr*k;cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot);cx.fillStyle=p.c;cx.globalAlpha=p.a;cx.beginPath();cx.ellipse(0,0,p.r,p.r*.55,0,0,7);cx.fill();cx.restore();if(p.x>W+20||p.y>H+20)P.splice(i,1);continue}
+    if(p.t==='leaf'||p.t==='olive'){p.ph+=.03*k;p.x+=(p.vx+Math.sin(p.ph)*1.2)*k;p.y+=p.vy*k;p.rot+=(p.vr+Math.cos(p.ph)*.02)*k;cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot);cx.scale(1,Math.abs(Math.cos(p.ph*.7))*.6+.4);cx.fillStyle=p.c;leafPath(p.s,p.t==='olive');cx.restore();if(p.y>H+40)P.splice(i,1);continue}
+    if(p.t==='gl'){p.y+=p.vy*k;p.life-=(p.dust?.002:.006)*k;cx.fillStyle=`rgba(255,250,232,${Math.max(0,p.life)*p.a})`;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill();if(p.life<=0)P.splice(i,1);continue}
+    if(p.t==='sp'){p.x+=p.vx*k;p.y+=p.vy*k;p.vy+=.06*k;p.life-=.02*k;cx.fillStyle=`rgba(255,${200+R()*55|0},120,${Math.max(0,p.life)})`;cx.fillRect(p.x,p.y,2.2,2.2);if(p.life<=0)P.splice(i,1);continue}
+    if(p.t==='bird'){p.x+=p.vx*k;p.ph+=.05*k;const fr=BIRD[(now/120|0)%3];if(fr.complete&&fr.naturalWidth){cx.save();cx.globalAlpha=.95;cx.drawImage(fr,p.x,p.y+Math.sin(p.ph)*8,p.s,p.s);cx.restore()}if(p.x>W+80)P.splice(i,1);continue}}
+  /* anemones grow up from the bottom edge in spring, and wilt when the month moves on */
+  for(let i=poppies.length-1;i>=0;i--){const f=poppies[i];if(f.dead){f.a-=.02*k;if(f.a<=0){poppies.splice(i,1);continue}}else{f.d-=dt/1000;if(f.d<0)f.g=Math.min(1,f.g+.012*k)}
+    if(f.g<=0)continue;const e=1-Math.pow(1-f.g,3),top=H-f.h*e,sway=Math.sin(now/900+f.sw)*4;cx.save();cx.globalAlpha=f.a;cx.strokeStyle='#3f5a2c';cx.lineWidth=2.2;cx.beginPath();cx.moveTo(f.x,H);cx.quadraticCurveTo(f.x+sway*2,H-f.h*.5*e,f.x+sway,top);cx.stroke();
+    const r=f.r*Math.max(0,(e-.55)/.45);if(r>0){cx.translate(f.x+sway,top);for(let j=0;j<6;j++){cx.rotate(Math.PI/3);cx.fillStyle=j%2?'#D62D2D':'#C21F25';cx.beginPath();cx.ellipse(r*.55,0,r*.62,r*.42,0,0,7);cx.fill()}cx.fillStyle='#1d1a1a';cx.beginPath();cx.arc(0,0,r*.28,0,7);cx.fill()}cx.restore()}}
+function drawStill(){cx.clearRect(0,0,W,H)}
+new IntersectionObserver(es=>{seen=es[0].isIntersecting},{threshold:0}).observe(hang);
+addEventListener('resize',()=>{sizeFx();placeWays()});
+sizeFx();requestAnimationFrame(frame);
+
+/* ---- 3. three ways to hang it ---- */
+function placeWays(){}
+function buildWays(){const m=M[9];
+  $('#waysGrid').innerHTML=[
+   ['s-wall',`<div class="pg">${pageHTML(10)}</div>`,t('On the wall','عالحيط'),t('A3, one page a month. Two holes at the top, or one nail.','A3، صفحة لكل شهر. خرمين فوق أو مسمار واحد.')],
+   ['s-desk',`<div class="tent"><div class="face"><span class="ring"></span>${landscape(6)}</div></div>`,t('On the desk','عالمكتب'),t('A4 folded into a little tent, landscape, beside your keyboard.','A4 مطوي زي الخيمة، بالعرض، جنب الكيبورد.')],
+   ['s-fridge',`<div class="pg"><span class="mag"></span>${pageHTML(4)}</div>`,t('On the fridge','عالثلاجة'),t('One month at a time, held up by a magnet. Print it when the month starts.','شهر بشهر، بمغناطيس. اطبعه أول ما يبلّش الشهر.')]
+  ].map(([c,inner,h,p],i)=>`<div class="way pop" style="--d:${i}"><div class="scene ${c}">${inner}</div><h3 class="d">${h}</h3><p>${p}</p></div>`).join('')}
+function landscape(i){const m=M[i-1];return `<div class="page" style="--acc:${m[9]};flex-direction:row;gap:4cqw"><div class="art" style="flex:0 0 46%;--deckle:${deckle(i*7)}"><img src="${img(m[3])}" alt=""></div>
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0"><div class="mabbr" style="font:15cqw/.8 var(--en);color:var(--acc)">${m[0]}</div><span class="mar" style="font:4.4cqw/1 var(--ar);margin-top:1.4cqw">${m[2]}</span>${pageHTML(i).match(/<div class="grid">[\s\S]*?<\/div>/)[0].replace('class="grid"','class="grid" style="font-size:2.4cqw"')}</div></div>`}
+
+/* ---- 4. the pages she tore off ---- */
+const PAST=[
+ {y:2024,sub:['Painted at home, al-Jalaa','انرسم بالبيت، الجلاء'],cover:'guitar',acc:'#3f6b8a',paint:['guitar','pmoon','hill','house','alley','boatman','waves','pflower','ppoppies','pcartgirl','pmoonsleep','ptree'],
+  note:['The last calendar Farah painted at home before the war.','آخر تقويم رسمته فرح بالبيت قبل الحرب.']},
+ {y:2025,sub:['Painted in displacement, az-Zawayda','انرسم بالنزوح، الزوايدة'],coverSrc:'assets/cal2025.jpg',acc:'#C4593F',paint:['house','dovegirl','deirbalah','hill','hero','waves','seafish','boattop','psea','pwhale','plemons','sparklers'],stamp:['Painted in displacement','انرسم بالنزوح'],
+  note:['A record of every place Farah was displaced to. It reached people in many countries and was shown in several exhibitions.','توثيق لكل مكان نزحت إله فرح. وصل لناس بدول كثيرة وانعرض بعدة معارض.'],quote:true},
+ {y:2026,sub:['Back home, al-Jalaa','رجعة للبيت، الجلاء'],cover:'pmoon',acc:'#66805A',paint:['pmoon','pelephant','ptree','pcartgirl','pflower','ppoppies','blueflowers','pwaves','pboat','pcart','pmoonsleep','sparklers'],
+  note:['Painted after going back home, in the small office by al-Saraya.','انرسم بعد الرجعة للبيت، بالمكتب الصغير عند السرايا.']}];
+const QUOTE=["It was the most moving calendar I ever made, because it wasn't imagined or drawn from memories of years gone by. It was real.",'كان أكثر تقويم مؤثّر صنعته، لأنه لم يكن متخيَّلًا ولا مستوحى من ذكريات سنوات مضت، بل كان حقيقيًا.'];
+function buildPast(){const spots=[[4,6,-9,0,0,-16],[36,2,6,46,0,10],[18,30,-3,22,34,-4],[48,26,11,54,36,18],[28,12,2,30,10,0]];
+  $('#floor').innerHTML=PAST.map((p,pi)=>`<button class="pile pop" style="--d:${pi}" data-i="${pi}" aria-label="${p.y}">${[0,3,7,10,1].map((pg,j)=>{const s=spots[j];
+    return `<div class="mini" style="--x:${s[0]}%;--y:${s[1]}%;--r:${s[2]}deg;--x2:${s[3]}%;--y2:${s[4]}%;--r2:${s[5]}deg;--tear:${tearClip(pg+pi*20)};z-index:${j}">${pageHTML(pg,p.y,{paint:p.paint,cover:p.cover,coverSrc:p.coverSrc,acc:p.acc,lazy:1,badges:false,ttl:t('Calendar','تقويم'),sub:t(...p.sub)})}</div>`}).join('')}
+    <span class="tag"><b>${p.y}</b><span>${t(...p.sub)}</span></span>${p.stamp?`<span class="stamp">${t(...p.stamp)}</span>`:''}</button>`).join('');
+  $('#pq').textContent=t(...QUOTE)}
+$('#floor').addEventListener('click',e=>{const b=e.target.closest('.pile');if(b)openYear(+b.dataset.i)});
+const dlg=$('#dlg');let vy=0,vi=0;
+function openYear(i,page=0,swap){vy=i;vi=(page+13)%13;const p=PAST[i];
+  $('#vpg').innerHTML=pageHTML(vi,p.y,{paint:p.paint,cover:p.cover,coverSrc:p.coverSrc,acc:p.acc,badges:false,ttl:t('Calendar','تقويم'),sub:t(...p.sub)});if(swap)$('#vpg .page').classList.add('swap');
+  $('#vk').textContent=t('Past calendar','تقويم سابق');$('#vt').textContent=p.y;$('#vs').textContent=t(...p.sub);$('#vp').textContent=t(...p.note);
+  const q=$('#vq');q.hidden=!p.quote;q.textContent=p.quote?t(...QUOTE):'';
+  $('#vnum').textContent=vi?`${t(M[vi-1][1],M[vi-1][2])} · ${ard(vi)} / ${ard(12)}`:t('Cover','الغلاف');
+  dlg.dir=AR?'rtl':'ltr';if(!dlg.open){dlg.showModal();peel()}}
+$('#close').onclick=()=>dlg.close();dlg.onclick=e=>{if(e.target===dlg)dlg.close()};
+$('#vprev').onclick=()=>{openYear(vy,vi-1,1);peel()};$('#vnext').onclick=()=>{openYear(vy,vi+1,1);rip()};
+dlg.addEventListener('keydown',e=>{if(e.key==='ArrowRight')openYear(vy,vi+1,1);else if(e.key==='ArrowLeft')openYear(vy,vi-1,1)});
+
+/* ---- 5. this month on your phone ---- */
+const wc=$('#wpc'),wg=wc.getContext('2d');let wm=new Date().getMonth()+1;const paperImg=new Image();paperImg.src='assets/paper.jpg';
+function buildWp(){$('#wchips').innerHTML=M.map((m,i)=>`<button data-i="${i+1}" style="--c:${m[8]}" aria-pressed="${i+1===wm}"><i></i>${AR?m[2]:m[0]}</button>`).join('');drawWp()}
+$('#wchips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;wm=+b.dataset.i;$$('#wchips button').forEach(x=>x.setAttribute('aria-pressed',x===b));drawWp();peel()});
+async function drawWp(){const m=M[wm-1],w=wc.width,h=wc.height,dark=lum(m[8])<.55,fg=dark?'#FAF5E9':'#2E241B';
+  const im=new Image();im.src=img(m[3]);try{await Promise.all([im.decode(),document.fonts.load('100px Anton'),document.fonts.load('60px Lalezar'),document.fonts.load('40px "IBM Plex Mono"')])}catch(e){}
+  if(wm!==+M.indexOf(m)+1)return;wg.fillStyle=m[8];wg.fillRect(0,0,w,h);
+  if(paperImg.complete&&paperImg.naturalWidth){wg.save();wg.globalCompositeOperation='multiply';wg.globalAlpha=.35;wg.fillStyle=wg.createPattern(paperImg,'repeat');wg.fillRect(0,0,w,h);wg.restore()}
+  const bx=110,by=h*.33,bw=w-220,bh=bw*.78;wg.save();wg.shadowColor='rgba(0,0,0,.28)';wg.shadowBlur=40;wg.shadowOffsetY=18;wg.fillStyle='#FBF8F1';wg.fillRect(bx,by,bw,bh);wg.restore();
+  const p=28,ir=im.naturalWidth/im.naturalHeight||1.3,tw=bw-2*p,th=bh-2*p;let sw=im.naturalWidth,sh=im.naturalHeight,sx=0,sy=0;if(ir>tw/th){sw=sh*tw/th;sx=(im.naturalWidth-sw)/2}else{sh=sw*th/tw;sy=(im.naturalHeight-sh)/2}
+  try{wg.drawImage(im,sx,sy,sw,sh,bx+p,by+p,tw,th)}catch(e){}
+  const ty=by+bh+70;wg.fillStyle=fg;wg.font='230px Anton';wg.textBaseline='top';wg.fillText(m[0].toUpperCase(),bx,ty);
+  const mw=wg.measureText(m[0].toUpperCase()).width;wg.font='76px Lalezar';wg.textAlign='left';wg.fillText(m[2],bx+mw+40,ty+40);wg.font='38px "IBM Plex Mono"';wg.globalAlpha=.75;wg.fillText(String(Y),bx+mw+44,ty+150);wg.globalAlpha=1;
+  const gy=ty+290,cw=bw/7,first=new Date(Y,wm-1,1).getDay(),off=(first+1)%7,n=new Date(Y,wm,0).getDate();wg.textAlign='center';
+  wg.font='600 30px "IBM Plex Mono"';DAYS.forEach((d,j)=>{wg.globalAlpha=j===0||j===6?1:.65;wg.fillText(d.toUpperCase(),bx+cw*j+cw/2,gy)});wg.globalAlpha=1;
+  wg.fillRect(bx,gy+50,bw,4);wg.font='500 44px "IBM Plex Mono"';for(let d=1;d<=n;d++){const c=d+off-1,col=c%7,row=c/7|0;wg.globalAlpha=col===0||col===6?1:.85;wg.fillText(String(d),bx+cw*col+cw/2,gy+80+row*78)}wg.globalAlpha=1;
+  wg.font='500 28px "IBM Plex Mono"';wg.globalAlpha=.6;wg.fillText('MASS & GRASS · '+t(m[4]+', '+m[6],m[5]+'، '+m[7]),w/2,h-150);wg.globalAlpha=1;
+  const d=new Date();$('#clock').innerHTML=`<small>${d.toLocaleDateString(AR?'ar':'en-GB',{weekday:'long',day:'numeric',month:'long'})}</small>${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+$('#wdl').onclick=()=>{const a=document.createElement('a');a.download=`mass-grass-${M[wm-1][1].toLowerCase()}-${Y}.jpg`;a.href=wc.toDataURL('image/jpeg',.92);document.body.appendChild(a);a.click();a.remove();slap()};
+
+/* ---- 6. marquee ---- */
+function buildMarq(){const s=[t('Calendar 2027','تقويم ٢٠٢٧'),t('Twelve months painted in Gaza','١٢ شهر مرسومين في غزة'),t('Print it at home','اطبعه بالبيت'),t('A new painting every month','لوحة جديدة كل شهر')];
+  $('#marq').innerHTML=[...s,...s,...s,...s].map(x=>`<span>${x}</span>`).join('')}
+
+function buildAll(){buildCal();buildWays();buildPast();buildWp();buildMarq()}
+
+/* ---- rise into place + chat plays when seen ---- */
+const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('on');io.unobserve(en.target)}}),{rootMargin:'0px 0px -10% 0px'}):null;
+function observe(){$$('.pop:not(.on),.shead:not(.on)').forEach(e=>{e.classList.add('pop');io?io.observe(e):e.classList.add('on')})}
+
+
+/* ---- language (shared with the other pages) ---- */
+$$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
+function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
+  $$('[data-ar]').forEach(e=>{e.innerHTML=a?e.dataset.ar:e.dataset.en});
+  $$('main,footer,.info').forEach(e=>e.dir=a?'rtl':'ltr');
+  const lb=$('#langBtn');if(lb)lb.textContent=a?'EN':'ع';
+  buildAll();if(dlg.open)openYear(vy,vi);const b=$('#bagn');if(b)b.textContent=ard(bagN)}
+const lb=$('#langBtn');if(lb)lb.onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}catch(e){}};
+buildAll();observe();
+try{if(localStorage.mgLang==='ar')setLang(true)}catch(e){}
+})();
+</script>
+</body>
+</html>
