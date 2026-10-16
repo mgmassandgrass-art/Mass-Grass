@@ -211,6 +211,7 @@ $('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}cat
 
 
 let U=MGUser.get();if(!U){location.replace('account.html?next=profile.html')}
+MGUser.ready.then(()=>{if(!MGUser.get())location.replace('account.html?next=profile.html')});
 let tab=location.hash.slice(1)||'files';
 const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بوست كارد · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ستكرات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
 const src=x=>x.img||(x.k?`assets/${x.k}.webp`:'assets/hero.webp');
@@ -253,8 +254,8 @@ window.render=()=>{if(!U)return;
   $$('[data-dl]').forEach(b=>b.onclick=()=>{b.textContent='✓';b.disabled=true});
   const sb=$('#subb');if(sb)sb.onclick=subscribe;
   const cn=$('#cancel');if(cn)cn.onclick=()=>sheet(`<h3>${t('Cancel it?','تلغي الاشتراك؟')}</h3><p class="lead">${t('You keep every painting you received. No more charges after this month.','بتضل معك كل اللوحات اللي وصلتك، وما في دفع بعد هالشهر.')}</p><div class="active"><button class="btn terra" id="yes">${t('Yes, cancel','آه، ألغِ')}</button><button class="btn alt" id="no">${t('Keep it','خلّيه')}</button></div>`,()=>{$('#yes').onclick=()=>{U.sub={on:false,since:U.sub.since,ended:new Date().toISOString()};save();closeSheet();render()};$('#no').onclick=closeSheet});
-  const sf=$('#setf');if(sf)sf.onsubmit=e=>{e.preventDefault();U.name=$('#snm').value.trim()||U.name;U.country=$('#sct').value.trim();U.news=$('#snews').checked;save();render();$('#saved').textContent=t('Saved ✓','انحفظ ✓')};
-  const dl=$('#del');if(dl)dl.onclick=()=>sheet(`<h3>${t('Delete your account?','تحذف حسابك؟')}</h3><p class="lead">${t('This can’t be undone.','ما في رجعة.')}</p><div class="active"><button class="btn terra" id="yes">${t('Delete','احذف')}</button><button class="btn alt" id="no">${t('Cancel','إلغاء')}</button></div>`,()=>{$('#yes').onclick=()=>{try{const a=JSON.parse(localStorage.mgUsers||'{}');delete a[U.email];localStorage.mgUsers=JSON.stringify(a);localStorage.mgOrders=JSON.stringify(JSON.parse(localStorage.mgOrders||'[]').filter(o=>o.em!==U.email))}catch(e){}MGUser.out();location.href='index.html'};$('#no').onclick=closeSheet});
+  const sf=$('#setf');if(sf)sf.onsubmit=e=>{e.preventDefault();U.name=$('#snm').value.trim()||U.name;MGUser.api('PATCH','/api/me',{name:U.name});U.country=$('#sct').value.trim();U.news=$('#snews').checked;save();render();$('#saved').textContent=t('Saved ✓','انحفظ ✓')};
+  const dl=$('#del');if(dl)dl.onclick=()=>sheet(`<h3>${t('Delete your account?','تحذف حسابك؟')}</h3><p class="lead">${t('This can’t be undone.','ما في رجعة.')}</p><div class="active"><button class="btn terra" id="yes">${t('Delete','احذف')}</button><button class="btn alt" id="no">${t('Cancel','إلغاء')}</button></div>`,()=>{$('#yes').onclick=()=>{MGUser.api('DELETE','/api/me');try{const a=JSON.parse(localStorage.mgUsers||'{}');delete a[U.email];localStorage.mgUsers=JSON.stringify(a);localStorage.mgOrders=JSON.stringify(JSON.parse(localStorage.mgOrders||'[]').filter(o=>o.em!==U.email))}catch(e){}MGUser.out();location.href='index.html'};$('#no').onclick=closeSheet});
 };
 function sheet(html,bind){$('#shb').innerHTML=html;$('#sh').classList.add('on');bind&&bind()}
 function closeSheet(){$('#sh').classList.remove('on')}

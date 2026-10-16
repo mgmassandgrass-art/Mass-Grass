@@ -184,10 +184,16 @@ $('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}cat
 
 
 const q=new URLSearchParams(location.search),next=q.get('next')||'profile.html';
-if(MGUser.get())location.replace(next);
+MGUser.ready.then(()=>{if(MGUser.get())location.replace(next)});
+const ERR={email_invalid:['That email doesn’t look right.','الإيميل مش مزبوط.'],name_required:['Tell us your name.','اكتب اسمك.'],password_short:['Use 8 characters or more for the password.','كلمة السر لازم تكون ٨ أحرف أو أكثر.'],email_taken:['There is already an account with this email. Sign in instead.','في حساب على هالإيميل. ادخل منه.'],bad_credentials:['Email or password is wrong.','الإيميل أو كلمة السر غلط.'],rate_limited:['Too many tries. Please wait a little.','محاولات كتير. استنى شوي.'],token_invalid:['This link has expired. Ask for a new one.','الرابط انتهت صلاحيته. اطلب رابط جديد.'],google_not_configured:['Google sign-in is not ready yet.','الدخول بجوجل مش جاهز بعد.'],state:['Sign-in was interrupted. Try again.','انقطع الدخول. جرّب مرة ثانية.'],google:['Google sign-in failed. Try again.','فشل الدخول بجوجل. جرّب مرة ثانية.'],cancelled:['Sign-in was cancelled.','انلغى الدخول.'],offline:['The server is not connected yet.','السيرفر مش متصل بعد.']};
+const errMsg=c=>{const m=ERR[c]||ERR.offline;return t(m[0],m[1])};
+const resetTok=q.get('reset');
 let mode=q.get('mode')==='signup'?'up':'in',msg='';
+if(q.get('error'))setTimeout(()=>{msg=errMsg(q.get('error'));render()},0);
 const G=`<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.8 6C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.2.8-4.7l-7.8-6C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.2-8.5 2.2-6.3 0-11.6-4.1-13.5-9.8l-7.8 6C6.6 42.6 14.6 48 24 48z"/></svg>`;
 window.render=()=>{
+  if(resetTok){$('#card').innerHTML=`<form class="af" id="rf" novalidate><label class="f">${t('New password','كلمة سر جديدة')}<input id="npw" type="password" autocomplete="new-password" maxlength="100" placeholder="${t('8 characters or more','٨ أحرف أو أكثر')}" dir="ltr"></label><span class="err" id="err" role="alert"></span><div class="row"><button class="btn terra" type="submit">${t('Save password','احفظ كلمة السر')} →</button></div></form>`;
+    $('#rf').onsubmit=async e=>{e.preventDefault();const r=await MGUser.api('POST','/api/reset',{token:resetTok,password:$('#npw').value});if(!r.ok)return $('#err').textContent=errMsg(r.offline?'offline':r.data&&r.data.error);location.href='account.html'};return}
   $('#card').innerHTML=`<div class="tabs2" role="tablist"><button role="tab" aria-selected="${mode==='in'}" data-m="in">${t('Sign in','دخول')}</button><button role="tab" aria-selected="${mode==='up'}" data-m="up">${t('Create account','حساب جديد')}</button></div>
    <button class="gbtn" id="gbtn" type="button">${G}${t('Continue with Google','كمّل بحساب جوجل')}</button>
    <div class="or">${t('or with email','أو بالإيميل')}</div>
@@ -198,31 +204,24 @@ window.render=()=>{
     ${mode==='up'?`<label class="chk"><input type="checkbox" id="ag"><span>${t('I agree to the <a href="terms.html">terms and privacy policy</a>.','موافق على <a href="terms.html">الشروط وسياسة الخصوصية</a>.')}</span></label>`:''}
     <span class="err" id="err" role="alert">${msg}</span>
     <div class="row"><button class="btn terra" type="submit">${mode==='up'?t('Create my account','اعمل حسابي'):t('Sign in','ادخل')} →</button>${mode==='in'?`<button class="link" type="button" id="fg">${t('Forgot your password?','نسيت كلمة السر؟')}</button>`:''}</div>
-    <p class="note">${t('Prototype: accounts live in this browser only. The real site signs you in on our server.','نموذج تجريبي: الحسابات محفوظة بهالمتصفح بس. بالموقع الحقيقي الدخول عن طريق السيرفر.')}</p>
    </form>`;
   msg='';
   $$('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;render()});
   $('#gbtn').onclick=google;
-  const fg=$('#fg');if(fg)fg.onclick=()=>{const em=$('#em').value.trim();$('#err').innerHTML=/.+@.+\..+/.test(em)?`<span class="ok">${t('If there is an account for '+esc(em)+', a reset link is on its way.','إذا في حساب على '+esc(em)+'، رابط تغيير كلمة السر بالطريق.')}</span>`:t('Write your email first.','اكتب إيميلك أول.')};
+  const fg=$('#fg');if(fg)fg.onclick=async()=>{const em=$('#em').value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){$('#err').textContent=t('Write your email first.','اكتب إيميلك أول.');return}
+    const r=await MGUser.api('POST','/api/forgot',{email:em});$('#err').innerHTML=r.ok?`<span class="ok">${t('If there is an account for '+esc(em)+', a reset link is on its way.','إذا في حساب على '+esc(em)+'، رابط تغيير كلمة السر بالطريق.')}</span>`:esc(errMsg(r.offline?'offline':r.data&&r.data.error))};
   $('#af').onsubmit=async e=>{e.preventDefault();const em=$('#em').value.trim().toLowerCase(),pw=$('#pw').value,err=s=>{$('#err').textContent=s};
     $$('.f input').forEach(i=>i.classList.remove('bad'));
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){$('#em').classList.add('bad');return err(t('That email doesn’t look right.','الإيميل مش مزبوط.'))}
     if(mode==='up'){const nm=$('#nm').value.trim();if(!nm){$('#nm').classList.add('bad');return err(t('Tell us your name.','اكتب اسمك.'))}
       if(pw.length<8){$('#pw').classList.add('bad');return err(t('Use 8 characters or more for the password.','كلمة السر لازم تكون ٨ أحرف أو أكثر.'))}
       if(!$('#ag').checked)return err(t('Please agree to the terms first.','وافق على الشروط أول.'));
-      if(MGUser.find(em))return err(t('There is already an account with this email. Sign in instead.','في حساب على هالإيميل. ادخل منه.'));
-      MGUser.set({name:nm,email:em,pw:await MGUser.hash(pw),via:'email',joined:new Date().toISOString()});location.href=next}
-    else{const u=MGUser.find(em);if(!u||u.pw!==await MGUser.hash(pw)){$('#pw').classList.add('bad');return err(t('Email or password is wrong.','الإيميل أو كلمة السر غلط.'))}
-      MGUser.set(u);location.href=next}};
+      const r=await MGUser.api('POST','/api/signup',{name:nm,email:em,password:pw});
+      if(!r.ok)return err(errMsg(r.offline?'offline':r.data&&r.data.error));await MGUser.sync();location.href=next}
+    else{const r=await MGUser.api('POST','/api/login',{email:em,password:pw});
+      if(!r.ok){$('#pw').classList.add('bad');return err(errMsg(r.offline?'offline':r.data&&r.data.error))}await MGUser.sync();location.href=next}};
 };
-function google(){$('#gsb').innerHTML=`<h3>${G} ${t('Sign in with Google','الدخول بجوجل')}</h3><p class="note">${t('On the real site Google’s own window opens here. For this prototype, type the Gmail you’d use:','بالموقع الحقيقي بتفتح نافذة جوجل هون. بهالنموذج اكتب الجيميل اللي بتستخدمه:')}</p>
-   <label class="f">Gmail<input id="gem" type="email" placeholder="you@gmail.com" dir="ltr"></label><span class="err" id="gerr"></span>
-   <div class="row"><button class="btn terra" id="gok">${t('Continue','كمّل')}</button><button class="btn alt" id="gno">${t('Cancel','إلغاء')}</button></div>`;
-  $('#gs').classList.add('on');setTimeout(()=>$('#gem').focus(),30);
-  $('#gno').onclick=()=>$('#gs').classList.remove('on');
-  $('#gok').onclick=()=>{const em=$('#gem').value.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){$('#gerr').textContent=t('That email doesn’t look right.','الإيميل مش مزبوط.');return}
-    const old=MGUser.find(em);const nm=em.split('@')[0].replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-    MGUser.set(Object.assign({name:nm,email:em,via:'google',joined:new Date().toISOString()},old||{}));location.href=next}}
+function google(){location.href='/api/auth/google?next='+encodeURIComponent(next)}
 addEventListener('keydown',e=>{if(e.key==='Escape')$('#gs').classList.remove('on')});
 
 let saved=false;try{saved=localStorage.mgLang==='ar'}catch(e){}

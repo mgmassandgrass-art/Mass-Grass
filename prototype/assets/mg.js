@@ -343,16 +343,19 @@ function compose(k,ti,ta){if(typeof k==='string'){let i=PCS.findIndex(p=>p[0]===
   if(!d.open)d.showModal()}
 window.MGCompose=compose;
 
-/* ---------- 6. accounts (prototype: kept in this browser; the real site uses a server + Google sign-in) ---------- */
+/* ---------- 6. accounts: the server (/api) is the source of truth; localStorage.mgUser is only a display cache ---------- */
 const LS={get(k,d){try{return JSON.parse(localStorage[k]||'null')??d}catch(e){return d}},set(k,v){try{localStorage[k]=JSON.stringify(v)}catch(e){}}};
 const USER={get(){return LS.get('mgUser',null)},
   set(u){LS.set('mgUser',u);const all=LS.get('mgUsers',{});if(u)all[u.email]=Object.assign(all[u.email]||{},u);LS.set('mgUsers',all);paintAcct()},
   find(em){return LS.get('mgUsers',{})[em]||null},
-  out(){LS.set('mgUser',null);paintAcct()},
-  async hash(pw){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('mg:'+pw));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return 'x'+pw.length}},
+  out(){LS.set('mgUser',null);paintAcct();return this.api('POST','/api/logout')},
+  async api(method,path,body){try{const r=await fetch(path,{method,credentials:'same-origin',headers:body?{'content-type':'application/json'}:{},body:body?JSON.stringify(body):undefined});
+    const ct=r.headers.get('content-type')||'';if(!ct.includes('json'))return {ok:false,status:r.status,offline:true,data:null};return {ok:r.ok,status:r.status,data:await r.json()}}catch(e){return {ok:false,status:0,offline:true,data:null}}},
+  async sync(){const r=await this.api('GET','/api/me');if(r.offline)return;const cur=LS.get('mgUser',null),u=r.data&&r.data.user;
+    if(!u){if(cur)LS.set('mgUser',null)}else LS.set('mgUser',Object.assign({},cur&&cur.email===u.email?cur:{},u));paintAcct()},
   orders(){const u=this.get();return LS.get('mgOrders',[]).filter(o=>!u||o.em===u.email)},
   addOrder(o){const a=LS.get('mgOrders',[]);a.unshift(o);LS.set('mgOrders',a)}};
-window.MGUser=USER;
+window.MGUser=USER;USER.ready=USER.sync();
 function paintAcct(){const u=USER.get();document.querySelectorAll('.mgacct').forEach(a=>{a.href=u?'profile.html':'account.html';a.setAttribute('aria-label',u?t('Your profile','بروفايلك'):t('Sign in','سجّل دخول'));
   a.innerHTML=u?(u.photo?`<img src="${u.photo}" alt="">`:`<b>${esc((u.name||u.email||'?').trim()[0].toUpperCase())}</b>`):'<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>'})}
 function addAcct(){const tools=document.querySelector('header .tools');if(tools&&!tools.querySelector('.mgacct')){const a=document.createElement('a');a.className='chip mgacct';const bag=tools.querySelector('#bag,.bag');tools.insertBefore(a,bag||null)}

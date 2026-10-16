@@ -1,0 +1,21 @@
+name = "mass-grass-api"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# Serve the API on the same origin as the site (cookies stay first-party).
+routes = [
+  { pattern = "www.massandgrass.com/api/*", zone_name = "massandgrass.com" }
+]
+
+[vars]
+SITE_ORIGIN = "https://www.massandgrass.com"
+MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mass-grass"
+database_id = "REPLACE_WITH_ID_FROM_wrangler_d1_create"
+migrations_dir = "migrations"
+
+# Secrets (set with `wrangler secret put NAME`, never committed):
+#   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, RESEND_API_KEY
