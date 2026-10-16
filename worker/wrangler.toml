@@ -1,11 +1,17 @@
-name = "mass-grass-api"
+name = "mass-grass"
 main = "src/index.js"
 compatibility_date = "2025-09-01"
 
-# Serve the API on the same origin as the site (cookies stay first-party).
+# Production: the prototype site and the API on one origin (cookies stay first-party).
+# The route sits in front of the old Pages site; delete the route to bring the old site back.
 routes = [
-  { pattern = "www.massandgrass.com/api/*", zone_name = "massandgrass.com" }
+  { pattern = "www.massandgrass.com/*", zone_name = "massandgrass.com" }
 ]
+
+[assets]
+directory = "../prototype"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
 
 [vars]
 SITE_ORIGIN = "https://www.massandgrass.com"
