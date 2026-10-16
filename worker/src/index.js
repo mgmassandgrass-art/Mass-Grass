@@ -189,7 +189,7 @@ async function changePassword(env, req, u) {
 
 // ---------- Google OAuth (authorization code flow) ----------
 async function googleStart(env, req, url) {
-  if (!env.GOOGLE_CLIENT_ID) return fail('google_not_configured', 503);
+  if (!env.GOOGLE_CLIENT_ID) return new Response(null, { status: 302, headers: { location: `${env.SITE_ORIGIN}/account.html?error=google_not_configured` } });
   const state = token(), next = safeNext(url.searchParams.get('next'));
   const q = new URLSearchParams({
     client_id: env.GOOGLE_CLIENT_ID, redirect_uri: `${env.SITE_ORIGIN}/api/auth/google/callback`,
@@ -262,6 +262,13 @@ async function api(req, env, url, p) {
   if (p === '/api/auth/google/callback' && req.method === 'GET') return googleCallback(env, req, url);
   if (p === '/api/me' && req.method === 'GET') return me(env, req);
   if (p === '/api/catalog' && req.method === 'GET') return json(await catalog(env));
+  if (p === '/api/subscribe' && req.method === 'POST') {
+    if (!(await limit(env, req, 'sub', 10, 3600))) return fail('rate_limited', 429);
+    const b = await readJson(req), email = clean(b?.email, 120).toLowerCase();
+    if (!EMAIL.test(email)) return fail('email_invalid');
+    await env.DB.prepare('INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?,?,?)').bind(email, 'footer', Date.now()).run();
+    return json({ ok: true });
+  }
   const u = await currentUser(env, req);
   if (p === '/api/orders' && req.method === 'POST') {
     if (!(await limit(env, req, 'order', 30, 3600))) return fail('rate_limited', 429);

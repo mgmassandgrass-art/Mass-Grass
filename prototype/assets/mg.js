@@ -411,12 +411,18 @@ function fillBag(){const a=BAG.get(),n=a.length;
 window.MGBag.open=bagDrawer;window.MGBag.close=closeBag;
 document.addEventListener('click',e=>{const b=e.target.closest('#bag,.bag');if(!b||b.closest('.mgbagd'))return;if(/checkout\.html/.test(location.pathname))return;e.preventDefault();e.stopPropagation();bagDrawer()},true);
 
-function init(){buildMenu();addAcct();curSelect();convAll(document.body);BAG.show(false)}
+/* newsletter forms in every footer: saved on the server */
+function newsForms(){document.querySelectorAll('footer form.news').forEach(f=>{f.removeAttribute('onsubmit');f.onsubmit=async e=>{e.preventDefault();
+  const i=f.querySelector('input'),b=f.querySelector('button'),em=(i.value||'').trim();let m=f.querySelector('.mgnm');if(!m){m=document.createElement('span');m.className='mgnm';m.setAttribute('role','status');f.appendChild(m)}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){m.textContent=t('That email doesn’t look right.','الإيميل مش مزبوط.');i.focus();return}
+  b.disabled=true;const r=await USER.api('POST','/api/subscribe',{email:em});b.disabled=false;
+  if(r.ok){b.textContent='✓';i.value='';m.textContent=t('Thank you. The first painting reaches you next month.','شكرًا إلك. أول لوحة بتوصلك الشهر الجاي.')}else m.textContent=t('Something went wrong. Please try again.','صار خطأ. جرّب مرة ثانية.')}})}
+function init(){buildMenu();addAcct();curSelect();newsForms();convAll(document.body);BAG.show(false)}
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();
 })();
 /* mobile hardening: no sideways scroll, 44px touch targets */
 (function(){const st=document.createElement('style');
-st.textContent='html body{overflow-x:clip}@media(pointer:coarse){.mg-hit{position:relative}.mg-hit::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}}';
+st.textContent='footer h2{line-height:1.05;font-family:var(--en,Anton,Impact,sans-serif);font-weight:400;text-transform:uppercase;letter-spacing:.01em}html[lang=ar] footer h2{font-family:var(--ar,Lalezar,sans-serif);text-transform:none}footer .legal .mgcurl{color:rgba(250,245,233,.8)}footer .legal{opacity:1;color:rgba(250,245,233,.65);align-items:center}footer .legal .mgcur{color:#FAF5E9;border-color:rgba(250,245,233,.55);padding:6px 10px;cursor:pointer}footer .news input{background:transparent!important;color:#FAF5E9!important;border:2px solid #FAF5E9!important}footer .news input::placeholder{color:rgba(250,245,233,.55)}footer .news button{cursor:pointer}footer .news .mgnm{flex-basis:100%;font-size:13px;margin-top:8px;color:#FAF5E9;opacity:.85}footer .news{flex-wrap:wrap}@media(max-width:640px){footer .legal{flex-direction:column;align-items:flex-start;gap:14px}}html body{overflow-x:clip}@media(pointer:coarse){.mg-hit{position:relative}.mg-hit::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}}';
 document.head.appendChild(st);
 function hit(){if(!matchMedia('(pointer:coarse)').matches)return;document.querySelectorAll('a,button').forEach(e=>{const r=e.getBoundingClientRect();if(r.width&&(r.width<44||r.height<44)){if(getComputedStyle(e).position==='static'&&getComputedStyle(e,'::after').content==='none')e.classList.add('mg-hit')}})}
 addEventListener('load',()=>setTimeout(hit,600));})();

@@ -75,6 +75,7 @@ export async function createOrder(env, req, user) {
   const id = 'MG-' + crypto.randomUUID().slice(0, 8).toUpperCase();
   await env.DB.prepare('INSERT INTO orders(id,user_id,email,name,items,total_cents,news,created_at) VALUES(?,?,?,?,?,?,?,?)')
     .bind(id, user ? user.id : null, email, clean(b.name, 60), JSON.stringify(items), total, b.news ? 1 : 0, Date.now()).run();
+  if (b.news) await env.DB.prepare('INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?,?,?)').bind(email, 'checkout', Date.now()).run();
   if (!env.PAYPAL_CLIENT_ID) return json({ id, total: total / 100, payments: 'off' }, 201);
   const r = await pp(env, '/v2/checkout/orders', {
     intent: 'CAPTURE',
@@ -208,6 +209,14 @@ export async function admin(env, req, url, p) {
     if (!u) return fail('not_found', 404);
     if (u.role === 'admin') return fail('cannot_delete_admin', 400);
     await env.DB.prepare('DELETE FROM users WHERE id=?').bind(id).run();
+    return json({ ok: true });
+  }
+  if (p === '/api/admin/subscribers' && m === 'GET') {
+    const { results } = await env.DB.prepare('SELECT email, source, created_at FROM subscribers ORDER BY created_at DESC LIMIT 5000').all();
+    return json({ subscribers: results.map((r) => ({ ...r, date: new Date(r.created_at).toISOString() })) });
+  }
+  if (p === '/api/admin/subscribers' && m === 'DELETE') {
+    await env.DB.prepare('DELETE FROM subscribers WHERE email=?').bind(clean(url.searchParams.get('email'), 120)).run();
     return json({ ok: true });
   }
   if (p === '/api/admin/orders' && m === 'GET') {

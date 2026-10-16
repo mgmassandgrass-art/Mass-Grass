@@ -535,7 +535,7 @@ let AR=false;
 /* ---- data ---- */
 const S=[['coast','Gaza Coast','ساحل غزة',1],['pmoon','Moon Swing','أرجوحة القمر',0],['boattop','The Boat','القارب',0],['plemons','Lemons','ليمون',1],['alley','The Alley','الزقاق',0],['pwhale','Girl & Whale','فتاة والحوت',1],['sparklers','Sparkler Night','ليلة الشماريخ',0],['blueflowers','White Dove','الحمامة البيضاء',1],['pelephant','Elephant on a Bike','فيل على دراجة',0],['waves','Waves','موج',1],['dovegirl','Dove Girl','فتاة الحمام',1],['ptree','Little Tree','شجرة صغيرة',0],['house','Home','البيت',1],['pcartgirl','Girl with Cart','فتاة والعربة',1],['seafish','Sea Fish','سمك البحر',0],['ppoppies','Blue Poppies','شقائق زرقاء',1],['guitar','Guitar Girl','فتاة الجيتار',0],['psea','Sea & Clouds','بحر وغيوم',0],['hill','Hill & Boat','التلة والقارب',0],['pflower','Big Flower','الزهرة الكبيرة',1],['deirbalah','Deir al-Balah','دير البلح',0],['pmoonsleep','Moon Sleeper','نائمة على القمر',0],['boatman','The Boatman','المراكبي',1],['pwaves','Waves & Rocks','موج وصخور',1],['pcart','The Cart','العربة',0],['pboat','Fishing Boat','قارب الصيد',1]];
 ((window.MGCAT||{}).products||[]).filter(p=>p.kind==='painting'&&p.extra&&p.extra.home&&!S.some(x=>x[0]===p.id)).forEach(p=>S.push([p.id,p.title_en,p.title_ar,p.is_new?1:0]));
-const P=[['digital','Digital file','ملف رقمي',3],['postcard','Postcard','بوست كارد',4],['sticker','Sticker','ستكر',3],['print','Art print','طبعة فنية',18],['tote','Tote bag','شنطة قماش',0],['mug','Mug','مج',0],['tee','Tee','بلوزة',0]]; // price 0 = coming soon
+const P=[['digital','Digital file','ملف رقمي',3],['postcard','Postcard','بوست كارد',4],['sticker','Sticker','ستكر',3],['tote','Tote bag','شنطة قماش',0],['mug','Mug','مج',0],['tee','Tee','بلوزة',0]]; // price 0 = coming soon
 const ar=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const pad=n=>String(n).padStart(2,'0');
 const face=(k,i,t)=>`<div class="face"><img src="assets/${k}.webp" alt="${t}" draggable="false" loading="lazy"><span class="lb">PALESTINE</span><span class="dn">M&amp;G</span><span class="tt">${t} · ${pad(i+1)}</span></div>`;
@@ -721,22 +721,22 @@ function buildSheets(){
 const BS=[ // [painting, EN, AR, category EN, AR, price €, sold, sale %, new?]
  ['hero','Gaza Coast','ساحل غزة','Postcard','بوست كارد',4,212,0,1],
  ['sparklers','Sparkler Night','ليلة الشماريخ','Sticker pack','ستكرات',3,184,20,0],
- ['guitar','Guitar Girl','فتاة الجيتار','Art print','طبعة فنية',12,163,0,0],
- ['dovegirl','Dove Girl','فتاة الحمام','Art print','طبعة فنية',12,151,0,1],
+ ['guitar','Guitar Girl','فتاة الجيتار','Painting','لوحة',12,163,0,0],
+ ['dovegirl','Dove Girl','فتاة الحمام','Painting','لوحة',12,151,0,1],
  ['alley','The Alley','الزقاق','Postcard','بوست كارد',4,128,15,0],
  ['house','Home','البيت','Calendar 2027','تقويم ٢٠٢٧',8,97,0,0],
  ['blueflowers','White Dove','الحمامة البيضاء','Postcard','بوست كارد',2,91,0,0],
- ['pmoon','Moon Swing','أرجوحة القمر','Art print','طبعة فنية',12,88,0,1],
- ['seafish','Sea Fish','سمك البحر','Art print','طبعة فنية',12,79,10,0],
+ ['pmoon','Moon Swing','أرجوحة القمر','Painting','لوحة',12,88,0,1],
+ ['seafish','Sea Fish','سمك البحر','Painting','لوحة',12,79,10,0],
  ['boattop','The Boat','القارب','Postcard','بوست كارد',2,74,0,0],
- ['ppoppies','Blue Poppies','شقائق زرقاء','Art print','طبعة فنية',12,66,0,0],
- ['pelephant','Elephant on a Bike','فيل على دراجة','Art print','طبعة فنية',12,58,0,1]];
+ ['ppoppies','Blue Poppies','شقائق زرقاء','Painting','لوحة',12,66,0,0],
+ ['pelephant','Elephant on a Bike','فيل على دراجة','Painting','لوحة',12,58,0,1]];
 if(window.MGCAT&&MGCAT.products){const PR=MGCAT.prices||{},CK={painting:['Painting','لوحة'],postcard:['Postcard','بوست كارد'],sticker:['Sticker','ستكر']};
   const live=MGCAT.products.filter(p=>p.sold>0).sort((a,b)=>b.sold-a.sold).slice(0,BS.length).map(p=>[p.id,p.title_en,p.title_ar,CK[p.kind][0],CK[p.kind][1],p.price??PR[p.kind],p.sold,p.sale||0,p.is_new?1:0]);
   if(live.length)BS.splice(0,BS.length,...live)}
 const PLACE={hero:['Al-Mawasi','المواصي'],sparklers:['Gaza City','مدينة غزة'],guitar:['Tel al-Hawa','تل الهوا'],dovegirl:['Deir al-Balah','دير البلح'],alley:['Old City','البلدة القديمة'],house:['Az-Zawayda','الزوايدة'],blueflowers:['Beit Lahia','بيت لاهيا'],seafish:['Al-Shati','الشاطئ'],boattop:['Gaza port','ميناء غزة'],waves:['Gaza beach','بحر غزة'],hill:['Khan Younis','خان يونس'],deirbalah:['Deir al-Balah','دير البلح'],coast:['Al-Mawasi','المواصي']};
 const BIG=['dovegirl','guitar','hill','house','seafish','sparklers','deirbalah'];
-const KIND={Postcard:'postcard','Sticker pack':'sticker',Wallpaper:'painting','Art print':'painting','Calendar 2027':'calendar',postcards:'postcard',stickers:'sticker',calendar:'calendar',paintings:'painting'};
+const KIND={Painting:'painting',Sticker:'sticker',Postcard:'postcard','Sticker pack':'sticker',Wallpaper:'painting','Art print':'painting','Calendar 2027':'calendar',postcards:'postcard',stickers:'sticker',calendar:'calendar',paintings:'painting'};
 const FORMOF={};
 function openProduct(k,en,arT,kindKey,i){const pl=PLACE[k]||['Gaza','غزة'],kind=KIND[kindKey]||'painting';
   window.MGProduct&&MGProduct.open({key:k,title:en,titleAr:arT,place:pl[0],placeAr:pl[1],kind,form:FORMOF[kindKey],no:i!=null?i+1:null,big:BIG.includes(k)?`assets/${k}.jpg`:null,

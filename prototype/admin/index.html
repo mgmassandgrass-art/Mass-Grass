@@ -68,7 +68,7 @@ dialog form{padding:20px;display:grid;gap:12px;overflow:auto;max-height:92vh}
   <h1>لوحة التحكم</h1>
   <nav id="nav">
     <button data-v="home">الرئيسية</button><button data-v="products">المنتجات</button><button data-v="prices">الأسعار والإعدادات</button>
-    <button data-v="customers">الزبائن</button><button data-v="orders">الطلبات</button><button data-v="me">حسابي</button>
+    <button data-v="customers">الزبائن</button><button data-v="orders">الطلبات</button><button data-v="subs">النشرة البريدية</button><button data-v="me">حسابي</button>
   </nav>
   <a class="tag" href="../" target="_blank">الموقع ↗</a>
 </header>
@@ -127,6 +127,10 @@ async orders(){const d=await api('GET','orders');const f=sessionStorage.mgAdminO
    ${list.map(o=>`<tr><td dir="ltr">${esc(o.id)}</td><td>${date(o.date)}</td><td>${esc(o.name)}<br><small dir="ltr">${esc(o.email)}</small></td>
    <td>${o.items.map(i=>`${esc(i.ta||i.t||i.k)} <small>(${esc(KIND[i.kind]||i.kind)})</small>${i.gift?` → هدية لـ ${esc(i.gift.to)}`:''}`).join('<br>')}</td><td>${money(o.total)}</td>
    <td><select data-o="${esc(o.id)}">${Object.entries(S).map(([k,v])=>`<option value="${k}" ${k===o.status?'selected':''}>${v}</option>`).join('')}</select></td></tr>`).join('')||'<tr><td colspan="6" class="muted">ما في طلبات لهلأ.</td></tr>'}</table></div>`},
+async subs(){const d=await api('GET','subscribers');const S={footer:'الفوتر',checkout:'عند الشراء'};
+  const csv='data:text/csv;charset=utf-8,'+encodeURIComponent('email,source,date\n'+d.subscribers.map(s=>`${s.email},${s.source},${s.date}`).join('\n'));
+  return `<div class="row"><h2 style="margin:0 0 0 auto">النشرة البريدية (${d.subscribers.length})</h2><a class="btn alt" download="subscribers.csv" href="${csv}">تنزيل CSV</a></div>
+   <div class="tw"><table><tr><th>الإيميل</th><th>من وين</th><th>التاريخ</th><th></th></tr>${d.subscribers.map(s=>`<tr><td dir="ltr">${esc(s.email)}</td><td>${S[s.source]||esc(s.source)}</td><td>${date(s.date)}</td><td><button class="btn red" data-sd="${esc(s.email)}">حذف</button></td></tr>`).join('')||'<tr><td colspan="4" class="muted">ما في مشتركين لهلأ.</td></tr>'}</table></div>`},
 async me(){const r=await fetch('/api/me').then(r=>r.json());
   return `<h2>حسابي</h2><div class="card" style="max-width:480px;display:grid;gap:12px"><p>داخل باسم <b dir="ltr">${esc(r.user&&r.user.email)}</b></p>
    <form id="pf" style="display:grid;gap:10px"><label>كلمة السر الحالية<input type="password" id="op" autocomplete="current-password"></label>
@@ -155,6 +159,7 @@ function bind(){
     new FormData(sf).forEach((v,k)=>{const[g,n]=k.split('.');const G={p:'prices',r:'rates',l:'links'}[g];if(v!=='')b[G][n]=g==='l'?v:+v});await api('PUT','settings',b);toast('انحفظ ✓')};
   const pf=$('#pf');if(pf)pf.onsubmit=async e=>{e.preventDefault();const r=await fetch('/api/me/password',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({old:$('#op').value,password:$('#np').value})});
     const d=await r.json().catch(()=>({}));toast(r.ok?'تغيّرت كلمة السر ✓':d.error==='password_short'?'لازم ١٠ أحرف أو أكثر':d.error==='bad_credentials'?'كلمة السر الحالية غلط':'صار خطأ');if(r.ok)pf.reset()};
+  $$('[data-sd]').forEach(b=>b.onclick=async()=>{if(!confirm('تشيل '+b.dataset.sd+' من النشرة؟'))return;await api('DELETE','subscribers?email='+encodeURIComponent(b.dataset.sd));show('subs')});
   const lo=$('#lo');if(lo)lo.onclick=async()=>{await fetch('/api/logout',{method:'POST'});localStorage.removeItem('mgUser');location.href='/'};
 }
 
