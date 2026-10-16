@@ -198,18 +198,77 @@ async function run(env, origin, name, a) {
   throw new Error('unknown tool ' + name);
 }
 
+// ---------- models ----------
+async function callClaude(env, sys2, messages) {
+  const r = await fetch(env.ANTHROPIC_URL || 'https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+    body: JSON.stringify({ model: env.AGENT_MODEL || 'claude-sonnet-5-5', max_tokens: 8000,
+      system: [{ type: 'text', text: SYSTEM, cache_control: { type: 'ephemeral' } }, { type: 'text', text: sys2 }], tools: TOOLS, messages }),
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error((d.error && d.error.message) || 'anthropic ' + r.status);
+  return d;
+}
+
+// Free model on Cloudflare Workers AI (no key needed). History stays in Anthropic format and is converted here.
+const WAI_TOOLS = () => TOOLS.map((t) => ({ type: 'function', function: { name: t.name, description: t.description, parameters: t.input_schema } }));
+function toOpenAI(sys, messages, textual) {
+  const out = [{ role: 'system', content: sys }];
+  for (const m of messages) {
+    const txt = m.content.filter((c) => c.type === 'text').map((c) => c.text).join('\n');
+    if (m.role === 'user') {
+      for (const t of m.content.filter((c) => c.type === 'tool_result'))
+        out.push(textual ? { role: 'user', content: `Result of tool call ${t.tool_use_id}:\n${t.content}` } : { role: 'tool', tool_call_id: t.tool_use_id, content: String(t.content) });
+      if (txt) out.push({ role: 'user', content: txt });
+    } else {
+      const calls = m.content.filter((c) => c.type === 'tool_use');
+      if (textual) out.push({ role: 'assistant', content: [txt, ...calls.map((c) => `Calling tool ${c.name} (${c.id}) with ${JSON.stringify(c.input)}`)].filter(Boolean).join('\n') || '…' });
+      else out.push({ role: 'assistant', content: txt, ...(calls.length ? { tool_calls: calls.map((c) => ({ id: c.id, type: 'function', function: { name: c.name, arguments: JSON.stringify(c.input || {}) } })) } : {}) });
+    }
+  }
+  // Some models need user/assistant to alternate: merge neighbours with the same role.
+  return out.reduce((a, x) => { const l = a[a.length - 1]; if (l && l.role === x.role && x.role === 'user') l.content += '\n\n' + x.content; else a.push(x); return a; }, []);
+}
+async function callWorkersAI(env, sys2, messages) {
+  const model = env.WAI_MODEL || '@cf/meta/llama-4-scout-17b-16e-instruct';
+  const sys = SYSTEM + '\n\n' + sys2 + '\nCall tools through the function-calling interface. After the tools you need, answer the owner in Arabic.';
+  let out;
+  try { out = await env.AI.run(model, { messages: toOpenAI(sys, messages, false), tools: WAI_TOOLS(), max_tokens: 3000, temperature: 0.2 }); }
+  catch (e) { out = await env.AI.run(model, { messages: toOpenAI(sys, messages, true), tools: WAI_TOOLS(), max_tokens: 3000, temperature: 0.2 }); }
+  let text = '', calls = [];
+  if (out && out.choices) { const m = out.choices[0].message || {}; text = m.content || ''; calls = (m.tool_calls || []).map((c) => ({ name: c.function.name, args: c.function.arguments })); }
+  else { text = (out && out.response) || ''; calls = ((out && out.tool_calls) || []).map((c) => ({ name: c.name, args: c.arguments })); }
+  if (typeof text !== 'string') text = JSON.stringify(text);
+  // Some models write the call as JSON text instead of using tool_calls.
+  if (!calls.length) {
+    const m = text.match(/\{[\s\S]*"name"\s*:\s*"(\w+)"[\s\S]*\}/);
+    if (m && TOOLS.some((t) => t.name === m[1])) { try { const j = JSON.parse(m[0]); calls = [{ name: j.name, args: j.parameters || j.arguments || {} }]; text = text.replace(m[0], '').trim(); } catch {} }
+  }
+  const content = [];
+  if (text.trim()) content.push({ type: 'text', text: text.trim() });
+  for (const c of calls) {
+    let input = c.args;
+    if (typeof input === 'string') { try { input = JSON.parse(input); } catch { input = {}; } }
+    content.push({ type: 'tool_use', id: 't' + crypto.randomUUID().replace(/-/g, '').slice(0, 16), name: c.name, input: input || {} });
+  }
+  if (!content.length) content.push({ type: 'text', text: '…' });
+  return { content, usage: out && out.usage };
+}
+
 // ---------- the conversation loop (one model call per request; the panel calls again while tools run) ----------
 const SYSTEM = KNOW + '\n\n## Files you can edit\n' + MANIFEST.files.map((f) => `- ${f.path} (${f.lines} lines)`).join('\n');
 
-function trimHistory(m) {
+function trimHistory(m, small) {
   // Keep the conversation bounded: drop the oldest turns, always starting at a plain user message.
-  let msgs = m.slice(-40);
+  let msgs = m.slice(small ? -24 : -40);
+  if (small) msgs = msgs.map((x, i) => (i >= msgs.length - 3 || x.role !== 'user' ? x : { ...x, content: x.content.map((c) => (c.type === 'tool_result' ? { ...c, content: cut(String(c.content), 800) } : c)) }));
   while (msgs.length && !(msgs[0].role === 'user' && msgs[0].content.every((c) => c.type !== 'tool_result'))) msgs = msgs.slice(1);
   return msgs;
 }
 
 export async function agentStep(env, req, origin) {
-  if (!env.ANTHROPIC_API_KEY) return fail('agent_not_configured', 503);
+  if (!env.ANTHROPIC_API_KEY && !env.AI) return fail('agent_not_configured', 503);
   const b = await readJson(req);
   if (!b) return fail('bad_request');
   let th = b.thread ? await env.DB.prepare('SELECT * FROM agent_threads WHERE id=?').bind(clean(b.thread, 40)).first() : null;
@@ -231,15 +290,10 @@ export async function agentStep(env, req, origin) {
   const last = messages[messages.length - 1];
   if (!last || last.role !== 'user') return json({ thread: th.id, done: true, events: [] });
 
-  const r = await fetch(env.ANTHROPIC_URL || 'https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify({ model: env.AGENT_MODEL || 'claude-sonnet-5-5', max_tokens: 8000,
-      system: [{ type: 'text', text: SYSTEM, cache_control: { type: 'ephemeral' } }, { type: 'text', text: `Today: ${new Date().toISOString().slice(0, 10)}. Unpublished drafts: ${(await drafts(env)).map((d) => d.path).join(', ') || 'none'}.` }],
-      tools: TOOLS, messages: trimHistory(messages) }),
-  });
-  const d = await r.json().catch(() => ({}));
-  if (!r.ok) { console.error('anthropic', r.status, JSON.stringify(d).slice(0, 500)); return fail('model_error', 502, { detail: d.error && d.error.message }); }
+  const sys2 = `Today: ${new Date().toISOString().slice(0, 10)}. Unpublished drafts: ${(await drafts(env)).map((x) => x.path).join(', ') || 'none'}.`;
+  let d;
+  try { d = env.ANTHROPIC_API_KEY ? await callClaude(env, sys2, trimHistory(messages)) : await callWorkersAI(env, sys2, trimHistory(messages, true)); }
+  catch (e) { console.error('model', e.message); return fail('model_error', 502, { detail: e.message }); }
   messages.push({ role: 'assistant', content: d.content });
   const events = [];
   for (const c of d.content) if (c.type === 'text' && c.text.trim()) events.push({ type: 'text', text: c.text });

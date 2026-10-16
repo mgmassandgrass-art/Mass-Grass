@@ -262,7 +262,7 @@ async function send(){if(BUSY)return;const tx=$('#tx'),text=tx.value.trim();if(!
   const wait=document.createElement('div');wait.className='tl';wait.textContent='… عم يشتغل';
   try{for(let i=0;i<25;i++){$('#log').appendChild(wait);const r=await api('POST','agent',body);wait.remove();TH=r.thread;sessionStorage.mgTh=TH;
       r.events.forEach(e=>line(e.type==='text'?{role:'agent',text:e.text}:{role:'tool',...e}));if(r.done)break;body={thread:TH}}}
-  catch(e){wait.remove();line({role:'agent',text:e.message==='agent_not_configured'?'المساعد مش مفعّل بعد: لازم مفتاح Anthropic API.':'صار خطأ: '+e.message})}
+  catch(e){wait.remove();line({role:'agent',text:e.message==='agent_not_configured'?'المساعد مش مفعّل بعد.':e.message==='model_error'?'المساعد ما ردّ هالمرة (ممكن خلصت الحصة المجانية لليوم، بتتجدد كل يوم). جرّب كمان شوي.':'صار خطأ: '+e.message})}
   BUSY=false;$('#send').disabled=false;refreshDrafts()}
 async function refreshDrafts(){try{const d=await api('GET','drafts');const b=$('#dbar');b.classList.toggle('on',d.drafts.length>0);$('#dtext').textContent=`في ${d.drafts.length} ملف معدّل بانتظار النشر: ${d.drafts.map(x=>x.path).join('، ')}`}catch(e){}}
 $('#dpub').onclick=async()=>{if(!confirm('تنشر التعديلات على الموقع للزوار؟'))return;const n=prompt('وصف قصير للتعديل (اختياري)')||'';const r=await api('POST','drafts',{note:n});toast('انتشر: '+r.published.join('، '));refreshDrafts()};

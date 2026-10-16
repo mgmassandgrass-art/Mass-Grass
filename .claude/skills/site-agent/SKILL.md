@@ -26,7 +26,11 @@ Worker with tools; it is separate from Claude Code sessions and can only touch t
   served at `/assets/u-xxxxxxxx.webp`. Images are passed to the model by URL.
 
 ## Config
-- Secret `ANTHROPIC_API_KEY` (`wrangler secret put ANTHROPIC_API_KEY`); var `AGENT_MODEL` in `wrangler.toml`.
+- Default model: free Cloudflare Workers AI (`[ai] binding = "AI"`, var `WAI_MODEL`, default `@cf/meta/llama-4-scout-17b-16e-instruct`).
+  `callWorkersAI` converts the stored Anthropic-format history to OpenAI-style messages and back; if the model
+  rejects native tool messages it retries with a text encoding, and it parses tool calls written as JSON text.
+  The free allowance is daily (Workers AI neurons); when it runs out the panel says so.
+- Optional: secret `ANTHROPIC_API_KEY` switches to Claude (`AGENT_MODEL`), much stronger for big page edits.
 - `ANTHROPIC_URL` overrides the endpoint for local tests (a scripted mock server; see git history of this skill's commit).
 
 ## Adding a tool

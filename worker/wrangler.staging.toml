@@ -10,6 +10,9 @@ directory = "../prototype"
 binding = "ASSETS"
 run_worker_first = ["/*", "!/fonts/*"]
 
+[ai]
+binding = "AI"
+
 [vars]
 AGENT_MODEL = "claude-sonnet-5-5"
 ADMIN_EMAIL = "info@massandgrass.com"
