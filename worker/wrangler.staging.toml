@@ -1,5 +1,6 @@
 # Staging: the whole prototype + API on one workers.dev address (nothing touches www.massandgrass.com).
 name = "mass-grass-staging"
+account_id = "8408909aa435938fe4a7bc63fa67da08"
 main = "src/index.js"
 compatibility_date = "2025-09-01"
 workers_dev = true
