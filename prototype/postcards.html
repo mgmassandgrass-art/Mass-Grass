@@ -50,6 +50,8 @@ nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
 .bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
 /* header scales with the screen instead of jumping at a breakpoint */
 header{gap:clamp(8px,1.4vw,14px);padding:clamp(10px,1.4vw,14px) var(--gut)}
+#write{overflow-x:clip}
+@media(max-width:420px){header{grid-template-columns:auto 1fr auto;gap:6px;padding-inline:12px}header nav{justify-self:center}header nav a{padding-inline:6px}}
 .logo{width:clamp(44px,1.4vw + 38px,58px);height:auto;aspect-ratio:58/46;padding:clamp(4px,.5vw,6px) clamp(5px,.7vw,8px)}
 nav{padding:clamp(3px,.4vw,5px);gap:clamp(2px,.3vw,4px)}
 nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp(7px,1vw,12px) clamp(5px,.5vw,7px)}
