@@ -5,7 +5,8 @@ compatibility_date = "2025-09-01"
 # Production: the prototype site and the API on one origin (cookies stay first-party).
 # The route sits in front of the old Pages site; delete the route to bring the old site back.
 routes = [
-  { pattern = "www.massandgrass.com/*", zone_name = "massandgrass.com" }
+  { pattern = "www.massandgrass.com/*", zone_name = "massandgrass.com" },
+  { pattern = "massandgrass.com/*", zone_name = "massandgrass.com" }
 ]
 
 [assets]

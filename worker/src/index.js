@@ -309,6 +309,8 @@ async function api(req, env, url, p) {
 export default {
   async fetch(req, env0) {
     const url = new URL(req.url);
+    // massandgrass.com (no www) sends everyone to the one real address.
+    if (url.hostname === 'massandgrass.com') return Response.redirect(`https://www.massandgrass.com${url.pathname}${url.search}`, 301);
     const env = { ...env0, SITE_ORIGIN: url.origin }; // same origin as the page: production host or the staging workers.dev host
     const p = url.pathname.replace(/\/+$/, '') || '/';
     try {
