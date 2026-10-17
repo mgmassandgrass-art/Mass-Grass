@@ -197,7 +197,8 @@ async function googleStart(env, req, url) {
 
 async function googleCallback(env, req, url) {
   const back = (e) => new Response(null, { status: 302, headers: { location: `${env.SITE_ORIGIN}/account.html?error=${e}` } });
-  const [state, next] = (cookies(req)['__Host-mgo'] || '').split('.');
+  const raw = cookies(req)['__Host-mgo'] || '', dot = raw.indexOf('.');
+  const state = dot > 0 ? raw.slice(0, dot) : raw, next = dot > 0 ? raw.slice(dot + 1) : '';
   if (!state || state !== url.searchParams.get('state')) return back('state');
   const code = url.searchParams.get('code');
   if (!code) return back('cancelled');
@@ -218,7 +219,13 @@ async function googleCallback(env, req, url) {
       .bind(id, email, clean(idt.name || email.split('@')[0], 60), idt.picture || null, idt.sub, Date.now()).run();
     u = { id };
   } else if (!u.google_sub) {
-    await env.DB.prepare('UPDATE users SET google_sub=? WHERE id=?').bind(idt.sub, u.id).run(); // verified email matches
+    // Google proved this email belongs to them. A password set at signup was never verified, so drop it and end its
+    // sessions: whoever registered the email first cannot keep a way in. (The admin account is created by us, so it keeps its password.)
+    if (u.role === 'admin') await env.DB.prepare('UPDATE users SET google_sub=? WHERE id=?').bind(idt.sub, u.id).run();
+    else await env.DB.batch([
+      env.DB.prepare('UPDATE users SET google_sub=?, pw_hash=NULL, pw_salt=NULL WHERE id=?').bind(idt.sub, u.id),
+      env.DB.prepare('DELETE FROM sessions WHERE user_id=?').bind(u.id),
+    ]);
   }
   const cookie = await startSession(env, u.id);
   const h = new Headers({ location: `${env.SITE_ORIGIN}/${safeNext(decodeURIComponent(next || ''))}` });
