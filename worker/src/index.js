@@ -1,6 +1,7 @@
 // Mass & Grass API: accounts and sign-in (step 1). Orders, PayPal and files come next.
 import { json, fail, readJson, clean } from './util.js';
 import { filesAdmin, download } from './files.js';
+import { sendMail, layout, contactEmail } from './mail.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin } from './shop.js';
 
@@ -69,15 +70,6 @@ async function currentUser(env, req) {
   ).bind(await sha256(t), Date.now()).first();
 }
 
-async function sendMail(env, to, subject, html) {
-  if (!env.RESEND_API_KEY) { console.log('[mail not configured]', to, subject, html); return false; }
-  const r = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ from: env.MAIL_FROM, to, subject, html }),
-  });
-  return r.ok;
-}
 
 const safeNext = (n) => (typeof n === 'string' && /^([a-z0-9_-]+\.html(\?[\w=&.%-]*)?|admin\/)$/i.test(n) ? n : 'profile.html');
 
@@ -152,8 +144,8 @@ async function forgot(env, req) {
     const t = token();
     await env.DB.prepare('INSERT INTO reset_tokens(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await sha256(t), u.id, Date.now() + 3600e3).run();
     const link = `${env.SITE_ORIGIN}/account.html?reset=${t}`;
-    await sendMail(env, email, 'Reset your Mass & Grass password · تغيير كلمة السر',
-      `<p>Open this link to choose a new password (valid for one hour):</p><p><a href="${link}">${link}</a></p><p dir="rtl">افتحوا الرابط لاختيار كلمة سر جديدة (صالح لمدة ساعة).</p><p>If you didn't ask for this, ignore this email.</p>`);
+    await sendMail(env, email, 'Reset your Mass & Grass password · تغيير كلمة السر', layout(
+      `<p>Open this link to choose a new password (valid for one hour):</p><p><a href="${link}" style="display:inline-block;background:#2E241B;color:#FAF5E9;padding:10px 16px;text-decoration:none;font:600 13px monospace">Choose a new password</a></p><p dir="rtl" style="text-align:right">افتح الرابط لتختار كلمة سر جديدة (صالح لمدة ساعة).</p><p style="color:#6f604d;font-size:13px">If you didn't ask for this, ignore this email.</p>`));
   }
   return json({ ok: true }); // same answer whether or not the account exists
 }
@@ -266,6 +258,14 @@ async function api(req, env, url, p) {
   if (p === '/api/auth/google/callback' && req.method === 'GET') return googleCallback(env, req, url);
   if (p === '/api/me' && req.method === 'GET') return me(env, req);
   if (p === '/api/catalog' && req.method === 'GET') return json(await catalog(env));
+  if (p === '/api/contact' && req.method === 'POST') {
+    if (!(await limit(env, req, 'contact', 5, 3600))) return fail('rate_limited', 429);
+    const b = await readJson(req), email = clean(b?.email, 120).toLowerCase(), message = String(b?.message || '').slice(0, 3000).trim();
+    if (!EMAIL.test(email)) return fail('email_invalid');
+    if (message.length < 5) return fail('message_short');
+    const ok = await contactEmail(env, { email, name: clean(b.name, 60), topic: clean(b.topic, 80), message });
+    return ok ? json({ ok: true }) : fail('mail_failed', 502);
+  }
   if (p === '/api/subscribe' && req.method === 'POST') {
     if (!(await limit(env, req, 'sub', 10, 3600))) return fail('rate_limited', 429);
     const b = await readJson(req), email = clean(b?.email, 120).toLowerCase();

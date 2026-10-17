@@ -1,6 +1,7 @@
 // Catalog, orders, PayPal and the admin API.
 import { json, fail, readJson, clean } from './util.js';
 import { orderFiles } from './files.js';
+import { orderPaidEmails } from './mail.js';
 
 const KINDS = ['painting', 'postcard', 'sticker'];
 const ORDER_KINDS = [...KINDS, 'calendar', 'pack'];
@@ -113,11 +114,13 @@ export async function captureOrder(env, id, access) {
 
 async function markPaid(env, o) {
   const items = JSON.parse(o.items);
-  await env.DB.batch([
+  const res = await env.DB.batch([
     env.DB.prepare("UPDATE orders SET status='paid', paid_at=? WHERE id=? AND status<>'paid'").bind(Date.now(), o.id),
     ...items.filter((x) => KINDS.includes(x.kind)).map((x) => env.DB.prepare('UPDATE products SET sold=sold+1 WHERE id=? AND kind=?').bind(x.k, x.kind)),
   ]);
   dropCache();
+  // Only the request that actually flipped the order to paid sends the e-mails.
+  if (res[0].meta.changes) { try { await orderPaidEmails(env, { ...o, status: 'paid' }); } catch (e) { console.error('mail', e.message); } }
 }
 
 export async function myOrders(env, u) {

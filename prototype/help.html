@@ -192,7 +192,10 @@ window.render=()=>{
   $('#cf').onsubmit=e=>{e.preventDefault();const em=$('#e').value.trim(),m=$('#m').value.trim();
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){$('#e').classList.add('bad');$('#er').textContent=t('We need your email to reply.','بدنا إيميلك عشان نرد.');return}
     if(m.length<5){$('#m').classList.add('bad');$('#er').textContent=t('Write a few words.','اكتب كم كلمة.');return}
-    $('#cf').innerHTML=`<span class="kick">${t('Sent','انبعتت')}</span><h2 class="d">${t('Thank you','شكرًا')}</h2><p class="ok">${t('We got it, and we’ll write back within two days.','وصلتنا، وبنرد عليك خلال يومين.')}</p><p class="note">${t('Prototype: messages aren’t sent yet.','نموذج: الرسائل ما بتنبعت لهلأ.')}</p>`}};
+    const sb=$('#cf button[type=submit]');sb.disabled=true;
+    MGUser.api('POST','/api/contact',{name:$('#n').value.trim(),email:em,topic:$('#s').value,message:m}).then(r=>{sb.disabled=false;
+      if(!r.ok){$('#er').textContent=r.data&&r.data.error==='rate_limited'?t('Too many messages. Try again later.','رسائل كتير. جرّب بعدين.'):t('It did not go through. Write to info@massandgrass.com.','ما انبعتت. راسلنا على info@massandgrass.com.');return}
+      $('#cf').innerHTML=`<span class="kick">${t('Sent','انبعتت')}</span><h2 class="d">${t('Thank you','شكرًا')}</h2><p class="ok">${t('We got it, and we’ll write back within two days.','وصلتنا، وبنرد عليك خلال يومين.')}</p>`})}};
 
 let saved=false;try{saved=localStorage.mgLang==='ar'}catch(e){}
 setLang(saved);
