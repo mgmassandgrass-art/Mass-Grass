@@ -179,3 +179,8 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - Checkout: `/api/orders` prices every line on the server; PayPal (redirect flow) switches on once the
   `PAYPAL_CLIENT_ID` / `PAYPAL_SECRET` secrets exist (`PAYPAL_ENV=live` for real money). Until then checkout says payments open soon.
 - Staging copy: https://mass-grass-staging.mg-massandgrass.workers.dev (same database).
+- Deploy from a cloud session: the Cloudflare token is a network secret on the environment (injected by the proxy
+  for `api.cloudflare.com`, path prefixes `/client/v4/accounts/<id>/workers/s` and `/client/v4/zones`; the asset
+  upload path must stay outside them because it uses its own upload token). Run
+  `cd worker && CLOUDFLARE_API_TOKEN=placeholder npm run deploy`; a trailing 400 on `/workers/workers/...` after
+  "Deployed" is harmless. Never paste tokens into the chat.
