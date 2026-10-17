@@ -780,6 +780,7 @@ function inView(el){const r=el.getBoundingClientRect();return r.top<innerHeight*
 function introP(){const r=intro.getBoundingClientRect();return clamp(-r.top/(r.height-innerHeight))}
 const gimg=$('#gimg'),GB=['assets/bird0.webp','assets/bird1.webp','assets/bird2.webp'];let gF=0,gFr=0;GB.forEach(u=>{const i=new Image();i.src=u});
 let gx=innerWidth*.86,gy=innerHeight*.2,gS=-1,gT;
+new MutationObserver(()=>{gS=-1}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']}); // the tip follows the language
 function guideFrame(now){if(document.getElementById('splash'))return;
   const i=GS.findIndex(g=>g[0]()),g=GS[i];
   if(i!==gS){gS=i;guide.classList.remove('talk');clearTimeout(gT);gT=setTimeout(()=>{gtip.textContent=AR?g[4]:g[3];guide.classList.add('talk');gT=setTimeout(()=>guide.classList.remove('talk'),innerWidth<700?2600:4200)},900)}
