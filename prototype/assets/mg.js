@@ -362,7 +362,7 @@ const USER={get(){return LS.get('mgUser',null)},
     const ct=r.headers.get('content-type')||'';if(!ct.includes('json'))return {ok:false,status:r.status,offline:true,data:null};return {ok:r.ok,status:r.status,data:await r.json()}}catch(e){return {ok:false,status:0,offline:true,data:null}}},
   async sync(){const r=await this.api('GET','/api/me');if(r.offline)return;const cur=LS.get('mgUser',null),u=r.data&&r.data.user;
     if(!u){if(cur)LS.set('mgUser',null);LS.set('mgOrders',[])}else{LS.set('mgUser',Object.assign({},cur&&cur.email===u.email?cur:{},u));
-      const o=await this.api('GET','/api/me/orders');if(o.ok)LS.set('mgOrders',o.data.orders.map(x=>({no:x.id,em:u.email,tot:x.total,date:x.date,items:x.items.map(i=>Object.assign({p:i.cents/100},i))})))}paintAcct()},
+      const o=await this.api('GET','/api/me/orders');if(o.ok)LS.set('mgOrders',o.data.orders.map(x=>({no:x.id,em:u.email,tot:x.total,date:x.date,items:x.items.map(i=>Object.assign({p:i.cents/100,files:(x.files||[]).filter(f=>i.kind==='pack'?f.kind==='sticker'&&(i.pack||[]).includes(f.product_id):i.kind==='calendar'?f.kind==='calendar':f.kind===i.kind&&f.product_id===i.k)},i))})))}paintAcct()},
   orders(){const u=this.get();return LS.get('mgOrders',[]).filter(o=>!u||o.em===u.email)},
   addOrder(){}};
 window.MGUser=USER;USER.ready=USER.sync();

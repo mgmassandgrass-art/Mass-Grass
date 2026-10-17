@@ -110,7 +110,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let LANG=(()=>{try{return localStorage.mgAdminLang||'ar'}catch(e){return 'ar'}})();
 const T=(ar,en)=>LANG==='ar'?ar:en;
-const ERR={last_item:['لازم يضل منتج واحد ظاهر على الأقل من هالنوع.','At least one product of this kind must stay visible.'],exists:['هالمنتج موجود.','This product already exists.'],title_required:['العنوان بالإنجليزي إجباري.','The English title is required.'],
+const ERR={bad_type:['نوع الملف مش مسموح (PDF، PNG، JPG، WEBP، ZIP).','File type not allowed (PDF, PNG, JPG, WEBP, ZIP).'],empty:['الملف فاضي.','The file is empty.'],last_item:['لازم يضل منتج واحد ظاهر على الأقل من هالنوع.','At least one product of this kind must stay visible.'],exists:['هالمنتج موجود.','This product already exists.'],title_required:['العنوان بالإنجليزي إجباري.','The English title is required.'],
   too_big:['الصورة كبيرة كتير.','The image is too big.'],bad_price:['السعر مش مزبوط.','The price is not valid.'],in_use:['الصورة مستخدمة، ما بتنحذف.','The image is in use.'],system_page:['هاي صفحة أساسية وما بتنخفى.','This page cannot be hidden.'],
   changed_meanwhile:['الصفحة تغيّرت بنفس الوقت. حدّث وجرّب مرة ثانية.','The page changed meanwhile. Reload and try again.'],password_short:['لازم ١٠ أحرف أو أكثر.','Use 10 characters or more.'],bad_credentials:['كلمة السر الحالية غلط.','The current password is wrong.']};
 const errText=c=>ERR[c]?T(...ERR[c]):T('صار خطأ: ','Error: ')+c;
@@ -122,7 +122,8 @@ const money=n=>'€'+(+n).toFixed(2).replace(/\.00$/,'');
 const date=d=>new Date(d).toLocaleString(LANG==='ar'?'ar-EG-u-nu-latn':'en-GB',{dateStyle:'medium',timeStyle:'short'});
 const MENU=[['home','◧','الرئيسية','Overview'],['products','▦','المنتجات','Products'],['pages','▤','الصفحات','Pages'],['library','▣','مكتبة الصور','Image library'],
   ['prices','€','الأسعار والإعدادات','Prices & settings'],['orders','☰','الطلبات','Orders'],['customers','☺','الزبائن','Customers'],['subs','✉','النشرة البريدية','Newsletter'],['me','⚿','حسابي','My account']];
-let view=location.hash.slice(1).split('/')[0]||'home',PRICES={},PRODUCTS=[];
+let view=location.hash.slice(1).split('/')[0]||'home',PRICES={},PRODUCTS=[],FILES={};
+const kindTabs=f=>`<div class="tabs">${Object.entries(KIND).map(([k,v])=>`<button data-k="${k}" aria-current="${k===f}">${T(v[0],v[1])} (${PRODUCTS.filter(p=>p.kind===k).length})</button>`).join('')}<button data-k="calendar" aria-current="${f==='calendar'}">${T('التقويم','Calendar')}</button></div>`;
 const st=(k,v)=>{try{if(v===undefined)return sessionStorage[k]||'';sessionStorage[k]=v}catch(e){return ''}};
 
 function chrome(){document.documentElement.lang=LANG;document.documentElement.dir=LANG==='ar'?'rtl':'ltr';
@@ -141,14 +142,17 @@ async home(){const s=await api('GET','stats');
    <div class="card"><b>${s.orders}</b><span>${T('طلب مدفوع','paid orders')}</span></div><div class="card"><b>${money(s.revenue)}</b><span>${T('مجموع المبيعات','total sales')}</span></div></div>`},
 
 async products(){const d=await api('GET','products');PRODUCTS=d.products;PRICES=(await api('GET','settings')).prices;
+  FILES={};(await api('GET','files')).files.forEach(x=>FILES[x.kind+':'+x.product_id]=x.n);
   const f=st('pk')||'painting',q=(st('pq')||'').toLowerCase();
+  if(f==='calendar')return head('المنتجات','Products')+kindTabs(f)+`<div class="card" style="max-width:640px"><h2 class="h" style="margin-top:0">${T('ملفات التقويم الحالي','Files of the current calendar')}</h2><p class="muted">${T('اللي بيشتري التقويم بيحمّل هالملفات (مثلًا PDF بحجم A3 وA4).','Buyers of the calendar download these (e.g. A3 and A4 PDFs).')}</p><div id="fbox" data-fk="calendar" data-fp="current"></div></div>`;
   const list=PRODUCTS.filter(p=>p.kind===f&&(!q||(p.title_en+p.title_ar+p.id).toLowerCase().includes(q)));
   return head('المنتجات','Products','كل اللي بتضيفه بيظهر بالموقع خلال ثواني، وكل اللي بتخفيه أو تحذفه بيختفي.','What you add appears on the site within seconds; what you hide or delete disappears.')+
-   `<div class="tabs">${Object.entries(KIND).map(([k,v])=>`<button data-k="${k}" aria-current="${k===f}">${T(v[0],v[1])} (${PRODUCTS.filter(p=>p.kind===k).length})</button>`).join('')}</div>
+   kindTabs(f)+`
    <div class="row"><input id="q" placeholder="${T('بحث…','Search…')}" value="${esc(q)}" style="max-width:260px" class="grow"><button class="btn" id="add">+ ${T('منتج جديد','New product')}</button></div>
    <div class="grid">${list.map(p=>`<div class="pc ${p.hidden?'off':''}"><div class="im"><img src="../assets/${esc(p.id)}.webp" alt="" loading="lazy"></div>
      <div class="bd"><h3>${esc(LANG==='ar'?p.title_ar||p.title_en:p.title_en)}</h3><small>${esc(LANG==='ar'?p.place_ar:p.place_en)}</small>
      <div>${p.sale?`<span class="badge sale">-${p.sale}%</span>`:''}${p.is_new?`<span class="badge new">${T('جديد','New')}</span>`:''}${p.hidden?`<span class="badge hid">${T('مخفي','Hidden')}</span>`:`<span class="badge ok">${T('ظاهر','Visible')}</span>`}</div>
+     <div>${FILES[p.kind+':'+p.id]?`<span class="badge ok">${T('ملفات','Files')}: ${FILES[p.kind+':'+p.id]}</span>`:`<span class="badge sale">${T('بدون ملفات للبيع','No files to sell')}</span>`}</div>
      <small>${money(p.price??PRICES[p.kind]??0)}${p.price==null?' · '+T('السعر الافتراضي','default price'):''} · ${T('مبيعات','sold')} ${p.sold}</small></div>
      <div class="ac"><button class="btn alt sm" data-e="${esc(p.id)}">${T('تعديل','Edit')}</button><button class="btn alt sm" data-h="${esc(p.id)}">${p.hidden?T('إظهار','Show'):T('إخفاء','Hide')}</button><button class="btn red sm" data-d="${esc(p.id)}">${T('حذف','Delete')}</button></div></div>`).join('')||`<p class="muted">${T('ما في منتجات هون.','No products here.')}</p>`}</div>`},
 
@@ -220,6 +224,7 @@ function toWebp(file){return new Promise((ok,no)=>{const im=new Image();im.onloa
 const safe=fn=>async(...a)=>{try{await fn(...a)}catch(e){toast(errText(e.message))}};
 
 function bind(){
+  fileBox();
   $$('[data-k]').forEach(b=>b.onclick=()=>{st('pk',b.dataset.k);show('products')});
   const q=$('#q');if(q)q.onchange=()=>{st('pq',q.value);show('products')};
   const add=$('#add');if(add)add.onclick=()=>edit(null);
@@ -249,6 +254,18 @@ function bind(){
   const lo=$('#lo');if(lo)lo.onclick=async()=>{await fetch('/api/logout',{method:'POST'});try{localStorage.removeItem('mgUser')}catch(e){}location.href='/'};
 }
 
+// ---------- files sold with a product ----------
+async function fileBox(){const box=$('#fbox');if(!box)return;const kind=box.dataset.fk,pid=box.dataset.fp;
+  const kb=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.round(n/1024)+' KB';
+  let list=[];try{list=(await api('GET',`files?kind=${kind}&pid=${encodeURIComponent(pid)}`)).files}catch(e){box.innerHTML=`<p class="err">${esc(errText(e.message))}</p>`;return}
+  box.innerHTML=`<div style="display:grid;gap:6px;margin:10px 0">${list.map(f=>`<div class="row" style="margin:0"><span class="grow" dir="ltr">📄 ${esc(f.name)} <small class="muted">${kb(f.size)}</small></span><button type="button" class="btn red sm" data-fd="${f.id}">${T('حذف','Delete')}</button></div>`).join('')||`<p class="muted">${T('ما في ملفات لهلأ.','No files yet.')}</p>`}</div>
+   <label class="btn alt sm" style="cursor:pointer;width:max-content">+ ${T('ارفع ملفات (PDF، PNG، ZIP · حتى 45 MB)','Upload files (PDF, PNG, ZIP · up to 45 MB)')}<input type="file" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.webp,.zip"></label><p class="muted" id="fst"></p>`;
+  box.querySelector('input[type=file]').onchange=async e=>{const fs=[...e.target.files];for(let i=0;i<fs.length;i++){const f=fs[i];$('#fst').textContent=T(`عم يرفع ${i+1} من ${fs.length}: ${f.name}`,`Uploading ${i+1} of ${fs.length}: ${f.name}`);
+      if(f.size>45*1048576){toast(errText('too_big')+' '+f.name);continue}
+      try{await api('POST',`files?kind=${kind}&pid=${encodeURIComponent(pid)}&name=${encodeURIComponent(f.name)}`,f,f.type||'application/octet-stream')}catch(err){toast(errText(err.message)+' '+f.name)}}
+    toast(T('انرفعت الملفات ✓','Files uploaded ✓'));fileBox()};
+  box.querySelectorAll('[data-fd]').forEach(b=>b.onclick=safe(async()=>{if(!confirm(T('تحذف الملف؟ اللي اشتروا قبل ما بيقدروا يحمّلوه بعدها.','Delete this file? Earlier buyers can no longer download it.')))return;await api('DELETE','files?id='+b.dataset.fd);fileBox()}))}
+
 // ---------- product editor ----------
 function edit(p){const isNew=!p,kind=p?p.kind:(st('pk')||'painting');p=p||{kind,title_en:'',title_ar:'',place_en:'Gaza',place_ar:'غزة',story_en:'',story_ar:'',price:null,sale:0,is_new:true,hidden:false,extra:{}};
   const maps=['beitlahia','gaza','zawayda','deir','khan','mawasi'];let up=null;
@@ -266,9 +283,10 @@ function edit(p){const isNew=!p,kind=p?p.kind:(st('pk')||'painting');p=p||{kind,
    <label class="chk"><input type="checkbox" id="nw" ${p.is_new?'checked':''}> ${T('علامة "جديد"','"New" badge')}</label>
    ${kind==='painting'?`<label class="chk"><input type="checkbox" id="hm" ${p.extra.home?'checked':''}> ${T('اعرضها على طاولة فرح بالصفحة الرئيسية','Show on Farah’s table on the home page')}</label>`:''}
    <label class="chk"><input type="checkbox" id="hd" ${p.hidden?'checked':''}> ${T('مخفي من الموقع','Hidden from the site')}</label>
+   <div class="card" style="box-shadow:none"><b>${T('ملفات البيع (بيحمّلها الزبون بعد الدفع)','Files sold (downloaded after payment)')}</b>${isNew?`<p class="muted">${T('احفظ المنتج أول، وبعدين ارفع ملفاته.','Save the product first, then upload its files.')}</p>`:`<div id="fbox" data-fk="${kind}" data-fp="${esc(p.id)}"></div>`}</div>
    <p class="err" id="er"></p>
    <div class="row"><button class="btn" id="sv" value="save">${T('احفظ','Save')}</button><button class="btn alt" value="cancel" formnovalidate>${T('إلغاء','Cancel')}</button></div></form>`;
-  d.showModal();
+  d.onclose=()=>{d.innerHTML='';if(view==='products')show('products')};d.showModal();fileBox();
   $('#fi').onchange=async()=>{try{up=await toWebp($('#fi').files[0]);$('#pv').innerHTML=`<img src="${URL.createObjectURL(up.b)}" alt="">`}catch(e){$('#er').textContent=T('ما قدرنا نقرأ الصورة','Could not read the image')}};
   $('#ef').onsubmit=async e=>{if(e.submitter&&e.submitter.value==='cancel')return;e.preventDefault();const sv=$('#sv');sv.disabled=true;$('#er').textContent='';
     try{if(isNew&&!up)throw new Error(T('اختار صورة أول','Choose an image first'));

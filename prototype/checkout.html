@@ -216,7 +216,7 @@ function render(){
     const go=$('#go');go.disabled=true;go.innerHTML=t('Sealing…','عم نختمها…');
     const r=await MGUser.api('POST','/api/orders',{email:em,name:$('#nm').value.trim(),news:form.news,items:B.get()});
     const fail=m=>{go.disabled=false;go.innerHTML=t('Pay','ادفع');$('#err').textContent=m};
-    if(r.ok&&r.data.approve){try{sessionStorage.mgPending=JSON.stringify({id:r.data.id,em})}catch(e){}location.href=r.data.approve;return}
+    if(r.ok&&r.data.approve){try{sessionStorage.mgPending=JSON.stringify({id:r.data.id,access:r.data.access,em})}catch(e){}location.href=r.data.approve;return}
     if(r.ok&&r.data.payments==='off')return fail(t('Card and PayPal payments open very soon. Nothing was charged.','الدفع بالبطاقة وباي بال بيفتح قريبًا جدًا. ما انخصم اشي.'));
     if(r.data&&r.data.error==='item_unavailable')return fail(t('One of the pieces in your bag is no longer for sale. Remove it and try again.','في قطعة بالسلة ما عادت للبيع. شيلها وجرّب مرة ثانية.'));
     fail(t('Something went wrong. Please try again.','صار خطأ. جرّب مرة ثانية.'))};
@@ -225,22 +225,24 @@ function render(){
 function done(o){
   const d=new Date(o.date),dd=`${String(d.getDate()).padStart(2,'0')}·${String(d.getMonth()+1).padStart(2,'0')}·${String(d.getFullYear()).slice(2)}`;
   const a=o.items.map(i=>Object.assign({p:i.cents/100},i));
-  const D={a,em:o.email,no:o.id,tot:o.total,dd};try{sessionStorage.mgLast=JSON.stringify(D)}catch(e){}B.clear();if(window.MGUser)MGUser.sync();showDone(D)}
+  const D={a,em:o.email,no:o.id,tot:o.total,dd,files:o.files||[]};try{sessionStorage.mgLast=JSON.stringify(D)}catch(e){}B.clear();if(window.MGUser)MGUser.sync();showDone(D)}
 (async()=>{const q=new URLSearchParams(location.search);
   if(q.get('order')){$('#wrap').innerHTML=`<div class="box empty" style="grid-column:1/-1"><p>${t('Confirming your payment…','عم نأكد الدفع…')}</p></div>`;
-    const r=await MGUser.api('POST','/api/orders/'+encodeURIComponent(q.get('order'))+'/capture');history.replaceState(null,'','checkout.html');
+    let pend={};try{pend=JSON.parse(sessionStorage.mgPending||'{}')}catch(e){}
+    const r=await MGUser.api('POST','/api/orders/'+encodeURIComponent(q.get('order'))+'/capture',{access:pend.id===q.get('order')?pend.access:''});history.replaceState(null,'','checkout.html');
     if(r.ok)return done(r.data.order);render();$('#err')&&($('#err').textContent=t('The payment was not completed. Nothing was charged.','الدفع ما كمل. ما انخصم اشي.'))}
   else if(q.get('cancelled')){history.replaceState(null,'','checkout.html');setTimeout(()=>{$('#err')&&($('#err').textContent=t('Payment cancelled. Your bag is still here.','انلغى الدفع. سلتك لسا هون.'))},50)}})();
+/* the files of one bag line: its own product, the six stickers of a pack, or the current calendar */
+function filesFor(x,files){files=files||[];if(x.pack)return files.filter(f=>f.kind==='sticker'&&x.pack.includes(f.product_id));if(x.kind==='calendar')return files.filter(f=>f.kind==='calendar');return files.filter(f=>f.kind===x.kind&&f.product_id===x.k)}
 function showDone(o){
   $('#pay').hidden=true;const D=$('#done');D.classList.add('on');
   D.innerHTML=`<div class="top"><div class="pmk">GAZA<br>${o.dd}<br>${o.no}</div>
     <div><span class="kick">${t('Order','طلب')} ${o.no}</span><h1>${t('Sealed in <em>Gaza</em>','انختمت من <em>غزة</em>')}</h1>
     <p class="lead">${t(`Thank you. Your files are below, and a copy is on its way to ${esc(o.em)}.`,`شكرًا إلك. ملفاتك تحت، ونسخة منها في طريقها لـ${esc(o.em)}.`)}</p></div></div>
     <div class="dl">${o.a.map(x=>`<div class="row"><span class="th"><img src="${esc(src(x))}" alt=""></span><div><h3 style="font:18px/1.05 var(--en);text-transform:uppercase">${esc(nm(x))}</h3><small class="note">${esc(kd(x))}${x.gift?' · '+t('sent to ','انبعتت لـ')+esc(x.gift.to):''}</small></div>
-      <div class="b">${x.gift?`<span class="note">✉ ${t('On its way','في الطريق')}</span>`:(x.kind==='sticker'?`<button class="btn alt" data-dl>PNG</button><button class="btn alt" data-dl>WhatsApp</button>`:`<button class="btn alt" data-dl>PDF</button><button class="btn alt" data-dl>PNG</button>`)}</div></div>`).join('')}</div>
+      <div class="b">${x.gift?`<span class="note">✉ ${t('On its way','في الطريق')}</span>`:filesFor(x,o.files).map(f=>`<a class="btn alt" href="${esc(f.url)}" download>${esc(f.name.split('.').pop().toUpperCase())} ↓</a>`).join('')||`<span class="note">${t('Your files are being prepared; they will appear in your profile.','ملفاتك عم تتجهّز، وبتظهر ببروفايلك.')}</span>`}</div></div>`).join('')}</div>
     <p class="note" style="margin-top:12px">${t('Your files will reach your email and your profile shortly.','ملفاتك رح توصل على إيميلك وبروفايلك قريبًا.')}</p>
     <div class="next"><a class="btn terra" href="postcards.html#write">${t('Send a free postcard','ابعت بوست كارد ببلاش')} ✉</a><a class="btn alt" href="shop.html">${t('Back to the shop','رجوع للمتجر')}</a></div>`;
-  D.querySelectorAll('[data-dl]').forEach(b=>b.onclick=()=>{b.textContent='✓';b.disabled=true});
   scrollTo(0,0)}
 
 $('#bag').onclick=e=>{e.preventDefault();(document.querySelector('.sum')||document.body).scrollIntoView({behavior:'smooth'})};

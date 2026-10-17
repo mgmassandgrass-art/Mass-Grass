@@ -1,5 +1,6 @@
 // Catalog, orders, PayPal and the admin API.
 import { json, fail, readJson, clean } from './util.js';
+import { orderFiles } from './files.js';
 
 const KINDS = ['painting', 'postcard', 'sticker'];
 const ORDER_KINDS = [...KINDS, 'calendar', 'pack'];
@@ -74,10 +75,12 @@ export async function createOrder(env, req, user) {
       gift: it.gift ? { to: clean(it.gift.to, 60), em: clean(it.gift.em, 120), m: clean(it.gift.m, 500) } : undefined, cents: c });
   }
   const id = 'MG-' + crypto.randomUUID().slice(0, 8).toUpperCase();
-  await env.DB.prepare('INSERT INTO orders(id,user_id,email,name,items,total_cents,news,created_at) VALUES(?,?,?,?,?,?,?,?)')
-    .bind(id, user ? user.id : null, email, clean(b.name, 60), JSON.stringify(items), total, b.news ? 1 : 0, Date.now()).run();
+  // The order secret: only the buyer's browser (and later their email) gets it; downloads need it.
+  const access = [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, '0')).join('');
+  await env.DB.prepare('INSERT INTO orders(id,user_id,email,name,items,total_cents,news,created_at,access) VALUES(?,?,?,?,?,?,?,?,?)')
+    .bind(id, user ? user.id : null, email, clean(b.name, 60), JSON.stringify(items), total, b.news ? 1 : 0, Date.now(), access).run();
   if (b.news) await env.DB.prepare('INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?,?,?)').bind(email, 'checkout', Date.now()).run();
-  if (!env.PAYPAL_CLIENT_ID) return json({ id, total: total / 100, payments: 'off' }, 201);
+  if (!env.PAYPAL_CLIENT_ID) return json({ id, access, total: total / 100, payments: 'off' }, 201);
   const r = await pp(env, '/v2/checkout/orders', {
     intent: 'CAPTURE',
     purchase_units: [{ reference_id: id, custom_id: id, description: 'Mass & Grass digital files', amount: { currency_code: 'EUR', value: (total / 100).toFixed(2) } }],
@@ -87,15 +90,17 @@ export async function createOrder(env, req, user) {
   if (!r.ok) { console.error('paypal create', r.status, JSON.stringify(r.data)); return fail('payment_error', 502); }
   await env.DB.prepare('UPDATE orders SET paypal_id=? WHERE id=?').bind(r.data.id, id).run();
   const approve = (r.data.links || []).find((l) => l.rel === 'payer-action' || l.rel === 'approve');
-  return json({ id, total: total / 100, approve: approve && approve.href }, 201);
+  return json({ id, access, total: total / 100, approve: approve && approve.href }, 201);
 }
 
 const orderOut = (o) => ({ id: o.id, email: o.email, name: o.name, items: JSON.parse(o.items), total: o.total_cents / 100, currency: o.currency, status: o.status, date: new Date(o.created_at).toISOString() });
 
-export async function captureOrder(env, id) {
+const withFiles = async (env, o) => ({ ...orderOut(o), files: await orderFiles(env, o) });
+
+export async function captureOrder(env, id, access) {
   const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first();
-  if (!o) return fail('not_found', 404);
-  if (o.status === 'paid') return json({ order: orderOut(o) });
+  if (!o || !o.access || o.access !== access) return fail('not_found', 404);
+  if (o.status === 'paid') return json({ order: await withFiles(env, o) });
   if (!o.paypal_id || !env.PAYPAL_CLIENT_ID) return fail('not_paid', 402);
   const r = await pp(env, `/v2/checkout/orders/${o.paypal_id}/capture`);
   const done = r.ok && r.data.status === 'COMPLETED' || r.data?.details?.[0]?.issue === 'ORDER_ALREADY_CAPTURED';
@@ -103,7 +108,7 @@ export async function captureOrder(env, id) {
   const amt = r.data?.purchase_units?.[0]?.payments?.captures?.[0]?.amount;
   if (amt && Math.round(parseFloat(amt.value) * 100) !== o.total_cents) { console.error('amount mismatch', id); return fail('amount_mismatch', 409); }
   await markPaid(env, o);
-  return json({ order: orderOut({ ...o, status: 'paid' }) });
+  return json({ order: await withFiles(env, { ...o, status: 'paid' }) });
 }
 
 async function markPaid(env, o) {
@@ -116,8 +121,9 @@ async function markPaid(env, o) {
 }
 
 export async function myOrders(env, u) {
-  const { results } = await env.DB.prepare("SELECT * FROM orders WHERE (user_id=? OR email=?) AND status='paid' ORDER BY created_at DESC LIMIT 200").bind(u.id, u.email).all();
-  return json({ orders: results.map(orderOut) });
+  // Only orders placed while signed in: emails are not verified, so an email match alone proves nothing.
+  const { results } = await env.DB.prepare("SELECT * FROM orders WHERE user_id=? AND status='paid' ORDER BY created_at DESC LIMIT 200").bind(u.id).all();
+  return json({ orders: await Promise.all(results.map((o) => withFiles(env, o))) });
 }
 
 // ---------- images (uploaded from the admin, kept in D1, served at /assets/<key>.webp) ----------

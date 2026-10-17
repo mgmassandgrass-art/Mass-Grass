@@ -1,5 +1,6 @@
 // Mass & Grass API: accounts and sign-in (step 1). Orders, PayPal and files come next.
 import { json, fail, readJson, clean } from './util.js';
+import { filesAdmin, download } from './files.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin } from './shop.js';
 
@@ -278,11 +279,15 @@ async function api(req, env, url, p) {
     return createOrder(env, req, u);
   }
   const cap = p.match(/^\/api\/orders\/(MG-[A-F0-9]{8})\/capture$/);
-  if (cap && req.method === 'POST') return captureOrder(env, cap[1]);
+  if (cap && req.method === 'POST') { const b = await readJson(req); return captureOrder(env, cap[1], String(b?.access || '')); }
+  const dl = p.match(/^\/api\/dl\/([a-f0-9]{20})$/);
+  if (dl && req.method === 'GET') return download(env, dl[1], url);
   if (p.startsWith('/api/admin/')) {
     if (!isAdmin(env, u)) return fail('not_found', 404);
     const r = await siteAdmin(env, req, url, p);
     if (r) return r;
+    const fr = await filesAdmin(env, req, url, p);
+    if (fr) return fr;
     return admin(env, req, url, p);
   }
   if (!u) return fail('unauthorized', 401);
