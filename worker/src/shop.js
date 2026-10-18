@@ -34,6 +34,8 @@ function linePrice(cat, it) {
   const kind = it.pack ? 'pack' : it.kind;
   if (!ORDER_KINDS.includes(kind)) return null;
   const base = cat.prices[kind];
+  // A pack holds up to 6 visible stickers: hidden or deleted ones (and their files) are not for sale.
+  if (kind === 'pack' && !(Array.isArray(it.pack) && it.pack.length && it.pack.length <= 6 && it.pack.every((k) => cat.products.some((x) => x.kind === 'sticker' && x.id === k)))) return null;
   if (kind === 'pack' || kind === 'calendar') return base > 0 ? Math.round(base * 100) : null;
   const p = cat.products.find((x) => x.id === it.k && x.kind === kind);
   if (!p) return null;
@@ -52,9 +54,9 @@ async function ppToken(env) {
   if (!r.ok) throw new Error('paypal auth ' + r.status);
   return (await r.json()).access_token;
 }
-async function pp(env, path, body) {
+async function pp(env, path, body, method = 'POST') {
   const r = await fetch(`${ppBase(env)}${path}`, {
-    method: 'POST', body: body ? JSON.stringify(body) : undefined,
+    method, body: body ? JSON.stringify(body) : undefined,
     headers: { authorization: `Bearer ${await ppToken(env)}`, 'content-type': 'application/json' },
   });
   return { ok: r.ok, status: r.status, data: await r.json().catch(() => ({})) };
@@ -102,12 +104,14 @@ export async function captureOrder(env, id, access) {
   const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first();
   if (!o || !o.access || o.access !== access) return fail('not_found', 404);
   if (o.status === 'paid') return json({ order: await withFiles(env, o) });
-  if (!o.paypal_id || !env.PAYPAL_CLIENT_ID) return fail('not_paid', 402);
-  const r = await pp(env, `/v2/checkout/orders/${o.paypal_id}/capture`);
-  const done = r.ok && r.data.status === 'COMPLETED' || r.data?.details?.[0]?.issue === 'ORDER_ALREADY_CAPTURED';
-  if (!done) return fail('not_paid', 402);
-  const amt = r.data?.purchase_units?.[0]?.payments?.captures?.[0]?.amount;
-  if (amt && Math.round(parseFloat(amt.value) * 100) !== o.total_cents) { console.error('amount mismatch', id); return fail('amount_mismatch', 409); }
+  if (o.status !== 'pending' || !o.paypal_id || !env.PAYPAL_CLIENT_ID) return fail('not_paid', 402); // cancelled/refunded stay so
+  let r = await pp(env, `/v2/checkout/orders/${o.paypal_id}/capture`);
+  // Captured before (e.g. a second tab): read the order back, so the capture's state and amount are always checked.
+  if (!r.ok && r.data?.details?.[0]?.issue === 'ORDER_ALREADY_CAPTURED') r = await pp(env, `/v2/checkout/orders/${o.paypal_id}`, null, 'GET');
+  const capt = r.data?.purchase_units?.[0]?.payments?.captures?.[0];
+  if (!r.ok || r.data.status !== 'COMPLETED' || !capt || capt.status !== 'COMPLETED') return fail('not_paid', 402);
+  const amt = capt.amount || {};
+  if (amt.currency_code !== 'EUR' || Math.round(parseFloat(amt.value) * 100) !== o.total_cents) { console.error('amount mismatch', id); return fail('amount_mismatch', 409); }
   await markPaid(env, o);
   return json({ order: await withFiles(env, { ...o, status: 'paid' }) });
 }

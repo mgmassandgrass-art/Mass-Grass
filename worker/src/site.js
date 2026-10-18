@@ -37,7 +37,7 @@ async function save(env, path, content, note) {
 const RE_ATTR = /(<([a-z][a-z0-9]*)\b[^>]*?\sdata-ar=")([^"]*)("[^>]*>)([^<]*)(<\/\2>)/g;
 const RE_T = /\bt\(\s*'((?:[^'\\\n]|\\.)*)'\s*,\s*'((?:[^'\\\n]|\\.)*)'\s*\)/g;
 const unJs = (s) => s.replace(/\\(.)/g, '$1');
-const toJs = (s) => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ');
+const toJs = (s) => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/[\r\n\u2028\u2029]/g, ' ');
 const unHtml = (s) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 const toHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const editable = (en, ar) => (en.trim() || ar.trim()) && !/\$\{|<[a-z/]/i.test(en + ar) && (en + ar).length < 600;
@@ -132,6 +132,8 @@ export async function siteAdmin(env, req, url, p) {
     const b = await readJson(req);
     if (!b || !PAGES.includes(b.path) || !Array.isArray(b.changes)) return fail('bad_request');
     const ch = b.changes.slice(0, 500).map((c) => ({ id: String(c.id), old_en: String(c.old_en ?? ''), old_ar: String(c.old_ar ?? ''), en: String(c.en ?? '').slice(0, 600), ar: String(c.ar ?? '').slice(0, 600) }));
+    // Texts stay plain text: a tag in a t('…') pair would land inside the page's <script> as HTML (e.g. </script>).
+    if (ch.some((c) => /<[a-z/!?]/i.test(c.en + c.ar))) return fail('bad_text');
     const { html, n } = applyTexts(await current(env, origin, b.path), ch);
     if (n !== ch.length) return fail('changed_meanwhile', 409, { applied: n });
     await save(env, b.path, html, b.note || 'texts');
@@ -160,6 +162,7 @@ export async function siteAdmin(env, req, url, p) {
       rules.hidden = rules.hidden.filter((x) => x !== b.path).concat(b.hidden ? [b.path] : []);
     }
     if (b.section) {
+      if (typeof b.section !== 'string' || !/^[a-zA-Z][\w-]*$/.test(b.section)) return fail('bad_request'); // goes into a <style> on every page
       const s = (rules.sections[b.path] || []).filter((x) => x !== b.section);
       rules.sections[b.path] = b.sectionHidden ? s.concat([b.section]) : s;
     }

@@ -306,13 +306,34 @@ async function api(req, env, url, p) {
   return fail('not_found', 404);
 }
 
+// Security headers on every answer (the same as prototype/_headers, which does not cover responses the Worker builds).
+const SEC = {
+  'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'referrer-policy': 'strict-origin-when-cross-origin',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(self)',
+  'strict-transport-security': 'max-age=31536000; includeSubDomains',
+  'content-security-policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self' data: blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+};
+function secure(res) {
+  if (res.status === 101) return res;
+  const h = new Headers(res.headers);
+  for (const [k, v] of Object.entries(SEC)) if (!h.has(k)) h.set(k, v);
+  return new Response(res.body, { status: res.status, statusText: res.statusText, headers: h });
+}
+
 export default {
   async fetch(req, env0) {
+    return secure(await handle(req, env0));
+  },
+};
+
+async function handle(req, env0) {
     const url = new URL(req.url);
     // massandgrass.com (no www) sends everyone to the one real address.
     if (url.hostname === 'massandgrass.com') return Response.redirect(`https://www.massandgrass.com${url.pathname}${url.search}`, 301);
     const env = { ...env0, SITE_ORIGIN: url.origin }; // same origin as the page: production host or the staging workers.dev host
-    const p = url.pathname.replace(/\/+$/, '') || '/';
+    let path = url.pathname;
+    try { path = decodeURIComponent(path); } catch {} // '/%61dmin/' must meet the same checks as '/admin/' (the asset server decodes it)
+    const p = path.replace(/\/+$/, '') || '/';
     try {
       if (p.startsWith('/api/')) return await api(req, env, url, p);
       if (p === '/admin' || p.startsWith('/admin/')) {
@@ -353,5 +374,4 @@ export default {
       console.error(e);
       return p.startsWith('/api/') ? fail('server_error', 500) : new Response('Server error', { status: 500 });
     }
-  },
-};
+}
