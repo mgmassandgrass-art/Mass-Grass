@@ -184,3 +184,6 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   upload path must stay outside them because it uses its own upload token). Run
   `cd worker && CLOUDFLARE_API_TOKEN=placeholder npm run deploy`; a trailing 400 on `/workers/workers/...` after
   "Deployed" is harmless. Never paste tokens into the chat.
+- Coming-soon gate: `SOON = "1"` in `worker/wrangler.toml` serves `prototype/soon.html` (assets in `prototype/soon-assets/`)
+  for every page; the signed-in admin still sees the whole site (sign in at `/account.html`). The soon page's e-mail form
+  posts to `/api/subscribe` (source `soon`). To launch: set `SOON = "0"` (or remove it) and deploy.

@@ -18,6 +18,7 @@ run_worker_first = ["/*", "!/fonts/*"]
 [vars]
 ADMIN_EMAIL = "info@massandgrass.com"
 SITE_ORIGIN = "https://www.massandgrass.com"
+SOON = "1"
 MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
 
 [[d1_databases]]

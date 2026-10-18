@@ -277,7 +277,7 @@ async function api(req, env, url, p) {
     if (!(await limit(env, req, 'sub', 10, 3600))) return fail('rate_limited', 429);
     const b = await readJson(req), email = clean(b?.email, 120).toLowerCase();
     if (!EMAIL.test(email)) return fail('email_invalid');
-    await env.DB.prepare('INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?,?,?)').bind(email, 'footer', Date.now()).run();
+    await env.DB.prepare('INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?,?,?)').bind(email, b?.source === 'soon' ? 'soon' : 'footer', Date.now()).run();
     return json({ ok: true });
   }
   const u = await currentUser(env, req);
@@ -345,6 +345,13 @@ async function handle(req, env0) {
         const r = await env.ASSETS.fetch(req);
         const h = new Headers(r.headers); h.set('cache-control', 'no-store'); h.set('x-robots-tag', 'noindex');
         return new Response(r.body, { status: r.status, headers: h });
+      }
+      // Before launch (SOON=1) everyone sees the coming-soon page; the signed-in admin still sees the whole site.
+      if (env.SOON === '1' && !/^\/(soon-assets|fonts|assets)\//.test(p) && p !== '/account.html' && p !== '/account' && !/\.(webp|jpg|png|svg|ico|woff2|txt|xml)$/.test(p)
+          && !isAdmin(env, await currentUser(env, req))) {
+        const r = await env.ASSETS.fetch(new Request(`${url.origin}/soon`));
+        const h = new Headers(r.headers); h.set('cache-control', 'no-store'); h.delete('etag');
+        return new Response(r.body, { status: 200, headers: h });
       }
       const notFound = async () => {
         const nf = await env.ASSETS.fetch(new Request(`${url.origin}/404.html`));
