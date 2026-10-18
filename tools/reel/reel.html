@@ -1,0 +1,569 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Painting Reel</title>
+<style>html,body{margin:0;background:#111}canvas{display:block;width:540px;height:960px}</style>
+</head><body><canvas id="c" width="1080" height="1920"></canvas>
+<script>
+// "The snow globe" reel. Farah's figures leave their paintings one after another and join a
+// procession that only ever moves right-to-left, led by the bus, until it reaches the logo.
+// render(t) is deterministic; tools/reel/capture.py steps it frame by frame (with motion blur)
+// and window.EVENTS feeds tools/reel/sound.py so every sound lands on its action.
+const W = 1080, H = 1920, DUR = 30;
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const IMG = {};
+let MAN;
+const A = new URLSearchParams(location.search).get('assets') || 'a';
+
+const load = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
+
+// ---------- maths ----------
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, u) => a + (b - a) * u;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const easeIO = u => u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+const easeOut = u => 1 - Math.pow(1 - u, 3);
+const easeOutExpo = u => u >= 1 ? 1 : 1 - Math.pow(2, -10 * u);
+const D2R = Math.PI / 180;
+function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+// damped spring settling from 1 to 0 (used for landings and wobbles)
+const spring = (u, f = 3, d = 5) => u <= 0 ? 0 : Math.exp(-d * u) * Math.cos(2 * Math.PI * f * u);
+
+// ---------- table: one line of prints, read right-to-left ----------
+const PR = {
+  globe:  { x: 0,     y: -60,  w: 800, r: -2 },
+  bike:   { x: -1000, y: 40,   w: 680, r: 3 },
+  sea:    { x: -1950, y: -110, w: 600, r: -3 },
+  boatp:  { x: -2900, y: 60,   w: 680, r: 2 },
+  flower: { x: -3850, y: -60,  w: 700, r: -2 },
+  blue:   { x: -4800, y: 70,   w: 700, r: 3 },
+  woman:  { x: -5750, y: -70,  w: 680, r: -2 },
+  moon:   { x: -6700, y: 50,   w: 600, r: 2 },
+};
+const ROAD = 560, SKY = -640, BORDER = 16;
+// cut-outs grow a little once they are out of the paper, so they read as toys on the table
+const ELS = { bus: 1.55, boat: 1.45, whale: 1.35, girl: 1.7, dove: 1.15, dove1: 1.3, dove2: 1.3, dove3: 1.3 };
+const XEND = -7760, CAMLEAD = 160;           // bus stops here; the camera keeps it a little right of centre
+const LOGO = { x: XEND - CAMLEAD, y: -60, w: 760 };
+
+const pscale = k => PR[k].w / MAN.prints[k].w;
+function pp(k, ix, iy) {
+  const p = PR[k], s = pscale(k), m = MAN.prints[k];
+  const lx = (ix - m.w / 2) * s, ly = (iy - m.h / 2) * s, a = p.r * D2R;
+  return [p.x + lx * Math.cos(a) - ly * Math.sin(a), p.y + lx * Math.sin(a) + ly * Math.cos(a)];
+}
+const pf = (k, fx, fy) => pp(k, fx * MAN.prints[k].w, fy * MAN.prints[k].h);
+const HOME = {};
+
+// ---------- the bus: hop out, then one long drive with a trapezoid speed profile ----------
+const T = { shake: [.12, .85], engine: 1.1, antic: 1.8, hop: 2.0, land: 2.55, stop: 22.9 };
+let X0;
+function drive(u) {
+  const a = .06, b = .08, v = 1 / (1 - a / 2 - b / 2);
+  if (u < a) return v * u * u / (2 * a);
+  if (u < 1 - b) return v * (a / 2 + (u - a));
+  const w = 1 - u; return 1 - v * w * w / (2 * b);
+}
+function bx(t) {
+  if (t < T.land) return t < T.hop ? HOME.bus[0] : lerp(HOME.bus[0], X0, (t - T.hop) / (T.land - T.hop));
+  return X0 + (XEND - X0) * drive(clamp((t - T.land) / (T.stop - T.land)));
+}
+function tAtBus(x) {  // first time the bus reaches world x
+  let a = T.land, b = T.stop;
+  for (let i = 0; i < 50; i++) { const m = (a + b) / 2; if (bx(m) > x) a = m; else b = m; }
+  return (a + b) / 2;
+}
+const boatX = t => bx(t) - 480;
+
+// ---------- the procession: every beat is timed from where the bus is ----------
+const B = {}; let EVENTS = [];
+function plan() {
+  for (const n of Object.keys(MAN.els)) HOME[n] = home(n);
+  X0 = HOME.bus[0] - 280;
+  B.honk = tAtBus(PR.bike.x + 230);
+  B.wStart = B.honk + .18; B.wAntic = B.wStart + .5; B.wLeap = B.wAntic + .2; B.wDive = B.wLeap + 1.55;
+  B.dive = pf('sea', .5, .8);
+  B.dropLand = B.wDive + 1.2;
+  B.bWake = B.dropLand + .05; B.bAntic = B.bWake + .4; B.bLeap = B.bAntic + .18; B.bLand = B.bLeap + .55;
+  B.gPass = tAtBus(HOME.girl[0] - 40 + 480);
+  B.gAntic = B.gPass - .6; B.gLeap = B.gAntic + .16; B.gLand = B.gLeap + .45;
+  B.dPass = tAtBus(HOME.dove[0] - 160 + 480);
+  B.dWake = B.dPass - 1.0; B.dAntic = B.dPass - .55; B.dLeap = B.dAntic + .18; B.pick = B.dLeap + .55;
+  B.pickY = ROAD - 150;
+  B.moon = tAtBus(PR.moon.x + 260);
+  B.fin = T.stop;
+  B.logo = B.fin + .2;
+  B.wBack = B.fin + 1.35; B.wBackLand = B.wBack + 1.15;
+  B.snow = B.fin + 3.0;
+  // the small doves wake once the big dove has gone past, so they only ever fly forward
+  B.small = SLOTS.map((s, i) => {
+    const n = 'dove' + (i + 1), hx = HOME[n][0];
+    let a = B.pick, b = B.fin;
+    for (let k = 0; k < 50; k++) { const m = (a + b) / 2; if (flight(m + .9).x + s[0] > hx - 60) a = m; else b = m; }
+    const wake = b - .55 + i * .12;
+    return { wake, antic: wake + .3, leap: wake + .48, join: wake + 1.38, land: B.fin + .25 + i * .18 };
+  });
+  EVENTS = [
+    ['shake', T.shake[0]], ['engine', T.engine], ['peel', T.hop, 'bus'], ['land', T.land, 'bus'], ['drive', T.land, T.stop],
+    ['honk', B.honk], ['startle', B.wStart], ['peel', B.wLeap, 'whale'], ['whoosh', B.wLeap + .1], ['splash', B.wDive],
+    ['drops', B.dropLand], ['peel', B.bLeap, 'boat'], ['land', B.bLand, 'boat'], ['hop', B.gLeap], ['land', B.gLand, 'girl'],
+    ['peel', B.dLeap, 'dove'], ['whoosh', B.dLeap + .15], ['pick', B.pick], ['flap', B.pick, B.fin + .1],
+    ...B.small.map((s, i) => ['peel', s.leap, 'dove' + (i + 1)]),
+    ['night', B.moon - 1.6], ['flicker', B.moon - .5], ['flicker', B.moon - .3], ['moon', B.moon],
+    ['brake', B.fin - .5], ['stop', B.fin], ['dawn', B.fin - .4], ['logo', B.logo], ['land', B.fin + .1, 'dove'],
+    ...B.small.map((s, i) => ['land', s.land, 'dove' + (i + 1)]),
+    ['whoosh', B.wBack], ['land', B.wBackLand, 'whale'], ['snow', B.snow],
+  ].map(e => ({ type: e[0], t: e[1], end: typeof e[2] === 'number' ? e[2] : undefined, who: typeof e[2] === 'string' ? e[2] : undefined }));
+  EVENTS.forEach(e => { const c = camAt(e.t), x = e.who ? st(e.who, e.t).x : c.x; e.pan = clamp((x - c.x) * c.z / (W / 2), -1, 1); });
+  window.EVENTS = EVENTS;
+}
+function home(n) { const e = MAN.els[n]; return pp(e.print, e.x + e.w / 2, e.y + e.h / 2); }
+
+// flight path of the big dove after it picks the girl up
+function flight(t) {
+  const u = seg(t, B.pick, B.pick + 1.1), lead = Math.min(420, 170 * Math.max(0, t - B.pick));
+  return { x: boatX(t) - 40 - lead, y: lerp(B.pickY - 40, SKY, easeIO(u)) + 26 * Math.sin(2.3 * t) * u };
+}
+const SLOTS = [[270, -110], [440, 70], [310, 210]];
+const FIN = { bus: [XEND, ROAD], boat: [XEND - 480, ROAD + 10], dove: [LOGO.x - 70, LOGO.y - 470],
+  small: [[LOGO.x - 500, LOGO.y - 250], [LOGO.x - 540, LOGO.y + 200], [LOGO.x - 330, LOGO.y - 640]], whale: [LOGO.x + 440, LOGO.y - 560] };
+
+// projectile between two points (x linear, y parabola with extra apex height h)
+function arc(p0, p1, h, u) { return [lerp(p0[0], p1[0], u), lerp(p0[1], p1[1], u) - h * 4 * u * (1 - u)]; }
+// anticipation squash then launch stretch; returns [sx, sy]
+function squash(t, antic, leap) {
+  if (t >= antic && t < leap) { const u = easeOut(seg(t, antic, leap)); return [1 + .1 * u, 1 - .16 * u]; }
+  if (t >= leap) { const u = t - leap; const k = Math.exp(-7 * u); return [1 - .08 * k, 1 + .14 * k]; }
+  return [1, 1];
+}
+function land(t, tl, amt = .16) { if (t < tl) return [1, 1]; const s = spring(t - tl, 2.6, 6) * amt; return [1 + s * .7, 1 - s]; }
+const wiggle = (t, t0, dur = .45, amp = 7) => { const u = seg(t, t0, t0 + dur); return u > 0 && u < 1 ? amp * Math.sin(u * 34) * (1 - u) : 0; };
+// lean into the direction of travel
+function lean(fn, t, max = 28, base = 180) {
+  const a = fn(t - .02), b = fn(t + .02); const dx = b[0] - a[0], dy = b[1] - a[1];
+  if (Math.hypot(dx, dy) < .5) return 0;
+  let ang = Math.atan2(dy, dx) / D2R - base; while (ang > 180) ang -= 360; while (ang < -180) ang += 360;
+  return clamp(ang, -max, max);
+}
+
+// ---------- element states ----------
+// {x, y, r, sx, sy, lift, a, out}; sx < 0 mirrors (the figure turns to face left)
+function st(n, t) {
+  const S = { x: HOME[n][0], y: HOME[n][1], r: 0, sx: 1, sy: 1, lift: 0, a: 1, out: false };
+  if (n === 'bus') {
+    if (t < T.antic) {
+      if (t > T.engine) { S.y -= 7 * Math.abs(Math.sin((t - T.engine) * 14)); S.r = 1.5 * Math.sin((t - T.engine) * 23); S.out = true; }
+      return S;
+    }
+    S.out = true;
+    const [qx, qy] = squash(t, T.antic, T.hop);
+    if (t < T.land) {
+      const u = seg(t, T.hop, T.land), p = arc(HOME.bus, [X0, ROAD], 230, u);
+      Object.assign(S, { x: p[0], y: p[1], r: -10 * Math.sin(Math.PI * u), sx: qx, sy: qy, lift: .5 + Math.sin(Math.PI * u) });
+      return S;
+    }
+    const [lx, ly] = land(t, T.land), [bx2, by2] = land(t, T.stop, .1);
+    const moving = t < T.stop, sp = moving ? 1 : 0;
+    S.x = bx(t); S.y = ROAD - (moving ? 5 * Math.abs(Math.sin(t * 9.5)) : 0);
+    S.r = moving ? 1.3 * Math.sin(t * 6.7) : 2.5 * spring(t - T.stop, 2, 5);
+    if (t > B.honk && t < B.honk + .5) { const u = seg(t, B.honk, B.honk + .5); S.sy = 1 + .08 * Math.sin(u * Math.PI * 4) * (1 - u); S.sx = 2 - S.sy; }
+    if (t > T.stop - .5 && t < T.stop) S.r = -2 * seg(t, T.stop - .5, T.stop);
+    S.sx *= lx * bx2; S.sy *= ly * by2; S.lift = .45 + 0 * sp;
+    return S;
+  }
+  if (n === 'whale') {
+    if (t < B.wStart) return S;
+    S.out = true;
+    if (t < B.wLeap) { S.r = wiggle(t, B.wStart, .5, 8); const [qx, qy] = squash(t, B.wAntic, B.wLeap); S.sx = qx; S.sy = qy; return S; }
+    const path = tt => arc(HOME.whale, B.dive, 560, seg(tt, B.wLeap, B.wDive));
+    if (t < B.wDive) {
+      const u = seg(t, B.wLeap, B.wDive), p = path(t), turn = easeIO(seg(t, B.wLeap, B.wLeap + .35));
+      const [qx, qy] = squash(t, B.wAntic, B.wLeap);
+      Object.assign(S, { x: p[0], y: p[1], sx: lerp(1, -1, turn) * qx * (1 + .35 * Math.sin(Math.PI * u)), sy: qy * (1 + .35 * Math.sin(Math.PI * u)),
+        r: lean(path, t, 50), lift: 1.4 * Math.sin(Math.PI * u) + .4 });
+      return S;
+    }
+    if (t < B.wBack) {
+      const u = seg(t, B.wDive, B.wDive + .22);
+      Object.assign(S, { x: B.dive[0], y: B.dive[1] + 30 * u, sx: -(1 - .8 * u), sy: 1 - .8 * u, r: -50, a: 1 - u, lift: 0 });
+      return S;
+    }
+    // finale: it leaps back in from the sea behind us
+    const c = camAt(B.wBack), start = [c.x + 820, ROAD - 420];
+    const path2 = tt => arc(start, FIN.whale, 520, seg(tt, B.wBack, B.wBackLand));
+    const u = seg(t, B.wBack, B.wBackLand), p = path2(t), [lx, ly] = land(t, B.wBackLand, .2);
+    Object.assign(S, { x: p[0], y: p[1], sx: -lx * (1 + .25 * Math.sin(Math.PI * u)), sy: ly * (1 + .25 * Math.sin(Math.PI * u)),
+      r: t < B.wBackLand ? lean(path2, t, 35) : 3 * Math.sin(t * 2), lift: t < B.wBackLand ? 1.2 * Math.sin(Math.PI * u) + .45 : .45 });
+    return S;
+  }
+  if (n === 'boat') {
+    if (t < B.bWake) return S;
+    S.out = true;
+    if (t < B.bLeap) { S.r = wiggle(t, B.bWake, .45, 6); const [qx, qy] = squash(t, B.bAntic, B.bLeap); S.sx = qx; S.sy = qy; return S; }
+    const turn = easeIO(seg(t, B.bLeap, B.bLeap + .45));
+    const bob = Math.sin(t * 2.4);
+    if (t < B.bLand) {
+      const u = seg(t, B.bLeap, B.bLand), p = arc(HOME.boat, [boatX(B.bLand), ROAD + 10], 160, u), [qx, qy] = squash(t, B.bAntic, B.bLeap);
+      Object.assign(S, { x: p[0], y: p[1], sx: lerp(1, -1, turn) * qx, sy: qy, r: lerp(0, -31, turn), lift: .45 + Math.sin(Math.PI * u) });
+      return S;
+    }
+    const [lx, ly] = land(t, B.bLand), moving = t < T.stop;
+    Object.assign(S, { x: boatX(t), y: ROAD + 10 + (moving ? 9 * bob : 4 * Math.sin(t * 1.6)), sx: -lx, sy: ly,
+      r: -31 + (moving ? 4 * Math.sin(t * 2.4 + 1) : 2.5 * Math.sin(t * 1.6)), lift: .45 });
+    return S;
+  }
+  if (n === 'girl') {
+    if (t < B.gAntic - .3) return S;
+    S.out = true;
+    if (t < B.gLeap) { S.r = wiggle(t, B.gAntic - .3, .3, 5); const [qx, qy] = squash(t, B.gAntic, B.gLeap); S.sx = qx; S.sy = qy; return S; }
+    const sc = 1.25;
+    if (t < B.gLand) {
+      const b = st('boat', B.gLand), u = seg(t, B.gLeap, B.gLand), p = arc(HOME.girl, [b.x, b.y - 80], 170, u), [qx, qy] = squash(t, B.gAntic, B.gLeap);
+      Object.assign(S, { x: p[0], y: p[1], sx: qx * lerp(1, sc, u), sy: qy * lerp(1, sc, u), r: -12 * Math.sin(Math.PI * u), lift: .45 + Math.sin(Math.PI * u) });
+      return S;
+    }
+    if (t < B.pick) {
+      const b = st('boat', t), [lx, ly] = land(t, B.gLand, .18);
+      Object.assign(S, { x: b.x, y: b.y - 80, sx: sc * lx, sy: sc * ly, r: 3 * Math.sin(t * 2.4 + 1), lift: .5 });
+      return S;
+    }
+    const d = st('dove', t), on = easeOut(seg(t, B.pick, B.pick + .25)), b = st('boat', t);
+    const k = lerp(1, d.k || 1, 1);
+    Object.assign(S, { x: lerp(b.x, d.x + 50 * k * ELS.dove, on), y: lerp(b.y - 80, d.y - 95 * k * ELS.dove, on), sx: sc * k, sy: sc * k, r: d.r * .6, lift: d.lift + .1 });
+    return S;
+  }
+  if (n === 'dove') {
+    if (t < B.dWake) return S;
+    S.out = true;
+    if (t < B.dLeap) { S.r = wiggle(t, B.dWake, .5, 4); const [qx, qy] = squash(t, B.dAntic, B.dLeap); S.sx = qx; S.sy = qy; return S; }
+    const flap = (t2) => .78 + .22 * Math.cos((t2 - B.dLeap) * Math.PI * 2 * 2.3);
+    let p, k = 1;
+    if (t < B.pick) {
+      // swoop: down to the girl in the boat
+      const g = st('boat', B.pick), u = seg(t, B.dLeap, B.pick);
+      p = arc(HOME.dove, [g.x - 50, g.y + 15], -120, easeIO(u));
+      k = lerp(1, .92, u);
+    } else if (t < B.fin - 1.1) {
+      const f = flight(t); p = [f.x, f.y]; k = .92;
+    } else {
+      const f = flight(t), u = easeIO(seg(t, B.fin - 1.1, B.fin + .1));
+      p = [lerp(f.x, FIN.dove[0], u), lerp(f.y, FIN.dove[1], u)]; k = lerp(.92, 1.25, u);
+    }
+    const [lx, ly] = land(t, B.fin + .1, .12);
+    const flying = t < B.fin + .1;
+    const fn = tt => { const s2 = tt < B.pick ? arc(HOME.dove, [st('boat', B.pick).x - 45, st('boat', B.pick).y - 15], -120, easeIO(seg(tt, B.dLeap, B.pick))) : (tt < B.fin - 1.1 ? [flight(tt).x, flight(tt).y] : p); return s2; };
+    Object.assign(S, { x: p[0], y: p[1], k, sx: k * lx, sy: k * ly * (flying ? flap(t) : .97 + .03 * Math.sin(t * 2.2)),
+      r: flying ? 6 + lean(fn, t, 14) * .6 : 4, lift: flying ? 1.3 : .6 });
+    return S;
+  }
+  const i = ['dove1', 'dove2', 'dove3'].indexOf(n);
+  if (i >= 0) {
+    const s = B.small[i];
+    if (t < s.wake) return S;
+    S.out = true;
+    if (t < s.leap) { S.r = wiggle(t, s.wake, .3, 6); const [qx, qy] = squash(t, s.antic, s.leap); S.sx = qx; S.sy = qy; return S; }
+    const slot = tt => { const d = st('dove', tt); return [d.x + SLOTS[i][0] * (d.k || 1), d.y + SLOTS[i][1] * (d.k || 1)]; };
+    const flip = -1;  // the small doves face right in the painting; they turn to face the way they fly
+    const turn = easeIO(seg(t, s.leap, s.leap + .35));
+    let p;
+    if (t < s.join) { const u = easeIO(seg(t, s.leap, s.join)), q = slot(t); p = arc(HOME[n], q, 90, u); }
+    else if (t < s.land - 1.0) p = slot(t);
+    else { const u = easeIO(seg(t, s.land - 1.0, s.land)), q = slot(t); p = [lerp(q[0], FIN.small[i][0], u), lerp(q[1], FIN.small[i][1], u)]; }
+    const flying = t < s.land, [lx, ly] = land(t, s.land, .14);
+    const fl = flying ? .76 + .24 * Math.cos((t - s.leap) * Math.PI * 2 * 3.1 + i) : .97 + .03 * Math.sin(t * 2 + i);
+    const k = t < s.join ? 1 : (flying ? 1.05 : 1.15);
+    Object.assign(S, { x: p[0], y: p[1], sx: lerp(1, flip, turn) * k * lx, sy: k * ly * fl, r: flying ? 4 * Math.sin(t * 3 + i) : 0, lift: flying ? 1.2 : .55 });
+    return S;
+  }
+  return S;
+}
+
+// ---------- camera: one direction, then a gentle pull back at the logo ----------
+function camAt(t) {
+  const follow = easeIO(seg(t, 2.0, 3.4));
+  let x = lerp(PR.globe.x, bx(t) - CAMLEAD, follow);
+  let z = lerp(1.45, .88, easeIO(seg(t, 1.9, 3.3)));
+  z = lerp(z, .78, easeIO(seg(t, B.fin - 1.2, B.fin + 1.4)));
+  let y = lerp(PR.globe.y, 0, follow);
+  y = lerp(y, -10, easeIO(seg(t, B.fin - 1.2, B.fin + 1.4)));
+  return { x, y, z };
+}
+
+// ---------- prints with holes ----------
+const holeCache = {};
+function printCanvas(k, outs) {
+  const key = k + ':' + outs.join(',');
+  if (holeCache[key]) return holeCache[key];
+  const m = MAN.prints[k], b = BORDER / pscale(k);
+  const c = document.createElement('canvas'); c.width = m.w + 2 * b; c.height = m.h + 2 * b;
+  const g = c.getContext('2d');
+  g.fillStyle = '#fbfaf6'; g.fillRect(0, 0, c.width, c.height);
+  g.drawImage(IMG['p_' + k], b, b);
+  if (outs.length) {
+    g.globalCompositeOperation = 'destination-out';
+    outs.forEach(n => { const e = MAN.els[n]; g.drawImage(IMG['h_' + n], b + e.x, b + e.y); });
+    const sh = document.createElement('canvas'); sh.width = c.width; sh.height = c.height;
+    const sg = sh.getContext('2d');
+    sg.shadowColor = 'rgba(40,30,20,.6)'; sg.shadowBlur = 14; sg.shadowOffsetX = 6; sg.shadowOffsetY = 10;
+    sg.drawImage(c, 0, 0);
+    sg.shadowColor = 'transparent'; sg.globalCompositeOperation = 'destination-in';
+    outs.forEach(n => { const e = MAN.els[n]; sg.drawImage(IMG['h_' + n], b + e.x, b + e.y); });
+    g.globalCompositeOperation = 'source-over'; g.drawImage(sh, 0, 0);
+  }
+  return (holeCache[key] = c);
+}
+
+// ---------- drawing ----------
+let cam;
+const toScreen = () => ctx.setTransform(cam.z, 0, 0, cam.z, W / 2 - cam.x * cam.z, H / 2 - cam.y * cam.z);
+const scr = (x, y) => [W / 2 + (x - cam.x) * cam.z, H / 2 + (y - cam.y) * cam.z];
+
+function drawTable() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#efe8dc'; ctx.fillRect(0, 0, W, H);
+  toScreen(); ctx.save(); ctx.scale(.9, .9);
+  ctx.fillStyle = ctx.createPattern(IMG.paper, 'repeat');
+  const v = 1 / cam.z / .9; ctx.fillRect(cam.x / .9 - W / 2 * v - 10, cam.y / .9 - H / 2 * v - 10, W * v + 20, H * v + 20);
+  ctx.restore();
+}
+
+function shake(t) {
+  const u = seg(t, T.shake[0], T.shake[1]);
+  if (u <= 0 || u >= 1) return { dx: 0, dy: 0, dr: 0 };
+  const env = Math.sin(Math.PI * u) * (1 - .4 * u);
+  return { dx: 22 * env * Math.sin(u * 42), dy: 9 * env * Math.sin(u * 35 + 1), dr: 3.6 * env * Math.sin(u * 39) };
+}
+
+const STATE = {};
+function drawPrint(k, t) {
+  const p = PR[k], s = pscale(k);
+  const outs = Object.keys(MAN.els).filter(n => MAN.els[n].print === k && STATE[n].out);
+  const c = printCanvas(k, outs);
+  const sk = k === 'globe' ? shake(t) : { dx: 0, dy: 0, dr: 0 };
+  let dr = sk.dr;
+  const jolt = { bike: B.wLeap, boatp: B.bLeap, flower: B.gLeap, blue: B.dLeap, woman: B.small[0].leap }[k];
+  if (jolt) dr += 1.4 * spring(t - jolt, 3, 6);
+  toScreen(); ctx.save();
+  ctx.translate(p.x + sk.dx, p.y + sk.dy); ctx.rotate((p.r + dr) * D2R); ctx.scale(s, s);
+  ctx.shadowColor = 'rgba(60,45,30,.28)'; ctx.shadowBlur = 22 * cam.z; ctx.shadowOffsetX = 6 * cam.z; ctx.shadowOffsetY = 10 * cam.z;
+  ctx.drawImage(c, -c.width / 2, -c.height / 2);
+  ctx.restore();
+  return sk;
+}
+
+function globeSnow(t, sk) {
+  if (t < T.shake[0] || t > 7) return;
+  const m = MAN.prints.globe, s = pscale('globe'), p = PR.globe;
+  toScreen(); ctx.save();
+  ctx.translate(p.x + sk.dx, p.y + sk.dy); ctx.rotate((p.r + sk.dr) * D2R); ctx.scale(s, s); ctx.translate(-m.w / 2, -m.h / 2);
+  const cx = .483 * m.w, cy = .41 * m.h, rx = .372 * m.w, ry = .285 * m.h, floor = .655 * m.h;
+  ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); ctx.clip();
+  const R = rng(7), dt = t - T.shake[0];
+  for (let i = 0; i < 190; i++) {
+    const a0 = R() * Math.PI * 2, rr = Math.sqrt(R()), sz = 3 + R() * 8, w = (R() < .5 ? -1 : 1) * (2.5 + R() * 3.5), fall = .5 + R();
+    const sw = w * (1 - Math.exp(-dt * 1.3)) / 1.3;
+    const x = cx + Math.cos(a0 + sw) * rx * rr * .95;
+    const y = Math.min(cy + Math.sin(a0 + sw) * ry * rr * .95 - 140 * Math.exp(-dt * 2) + 55 * dt * fall, floor - sz);
+    ctx.globalAlpha = clamp(dt * 4) * (1 - seg(t, 5, 7)) * (.6 + .4 * R());
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore(); ctx.globalAlpha = 1;
+}
+
+function ripples(t) {
+  if (t < B.wDive || t > B.wDive + 1.8) return;
+  const p = PR.sea, m = MAN.prints.sea, hh = p.w * m.h / m.w, [x, y] = B.dive;
+  toScreen(); ctx.save();
+  ctx.translate(p.x, p.y); ctx.rotate(p.r * D2R); ctx.beginPath(); ctx.rect(-p.w / 2, -hh / 2, p.w, hh); ctx.clip();
+  ctx.rotate(-p.r * D2R); ctx.translate(x - p.x, y - p.y);
+  for (let i = 0; i < 4; i++) {
+    const u = seg(t, B.wDive + i * .15, B.wDive + 1.3 + i * .15); if (u <= 0 || u >= 1) continue;
+    const r = 25 + 240 * easeOut(u);
+    ctx.globalAlpha = (1 - u) * .95; ctx.strokeStyle = '#f6fcfc'; ctx.lineWidth = 7 * (1 - u) + 2;
+    ctx.beginPath(); ctx.ellipse(0, 0, r, r * .28, 0, 0, Math.PI * 2); ctx.stroke();
+  }
+  // crown of the splash
+  const u = seg(t, B.wDive, B.wDive + .6);
+  if (u > 0 && u < 1) {
+    ctx.globalAlpha = 1 - u; ctx.fillStyle = '#e9f6f7';
+    for (let i = 0; i < 9; i++) { const a = Math.PI + (i / 8) * Math.PI, h = 90 * Math.sin(Math.PI * u) * (.6 + .4 * Math.sin(i * 2.1));
+      ctx.beginPath(); ctx.ellipse(Math.cos(a) * 60 * (.5 + u), -h * .9 + Math.sin(a) * 6, 7, 18, Math.cos(a) * .5, 0, Math.PI * 2); ctx.fill(); }
+  }
+  ctx.restore(); ctx.globalAlpha = 1;
+}
+
+function droplets(t) {
+  if (t < B.wDive || t > B.dropLand + .3) return;
+  const [sx, sy] = B.dive, R = rng(3); toScreen();
+  for (let i = 0; i < 20; i++) {
+    const far = i < 6, t0 = B.wDive + .02 + R() * .08, t1 = far ? B.dropLand - .12 + R() * .12 : t0 + .55 + R() * .35;
+    const tx = pf('boatp', .18 + R() * .3, .35 + R() * .4), ang = Math.PI + (R() - .5) * 1.8, sp = 110 + R() * 150;
+    const u = seg(t, t0, t1); if (u <= 0 || u >= 1) continue;
+    const p = far ? arc([sx, sy], tx, 420 + 120 * R(), u) : [sx + Math.cos(ang) * sp * u * .6 - 40 * u, sy - Math.abs(Math.sin(ang)) * sp * u * 1.6 + 300 * u * u];
+    const r = (far ? 13 : 6 + R() * 6);
+    ctx.globalAlpha = far ? 1 : 1 - u;
+    ctx.fillStyle = '#3d8792'; ctx.beginPath(); ctx.ellipse(p[0], p[1], r, r * 1.15, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(p[0] - r * .3, p[1] - r * .35, r * .3, 0, Math.PI * 2); ctx.fill();
+  }
+  // the drops land as small wet stains on the boat painting
+  const w = seg(t, B.dropLand - .05, B.dropLand + .3);
+  if (w > 0 && w < 1) { const c = pf('boatp', .3, .55); ctx.globalAlpha = .5 * (1 - w); ctx.strokeStyle = '#2f6f7a'; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.arc(c[0], c[1], 30 + 120 * w, 0, Math.PI * 2); ctx.stroke(); }
+  ctx.globalAlpha = 1;
+}
+
+function grow(n, t) {
+  const w = { bus: [T.hop, T.land], whale: [B.wLeap, B.wLeap + .8], boat: [B.bLeap, B.bLand], girl: [B.gLeap, B.gLand], dove: [B.dLeap, B.pick] }[n]
+    || (s => [s.leap, s.join])(B.small[+n.slice(-1) - 1]);
+  return easeOut(seg(t, w[0], w[1]));
+}
+function drawEl(n, t) {
+  const S = STATE[n]; if (!S.out || S.a <= .01) return;
+  const e = MAN.els[n], s = pscale(e.print);
+  toScreen(); ctx.save(); ctx.globalAlpha = S.a;
+  ctx.translate(S.x, S.y); ctx.rotate((PR[e.print].r * (S.sx < 0 ? -1 : 1) + S.r) * D2R);
+  const L = S.lift, lsc = (1 + .05 * clamp(L, 0, 1.5)) * lerp(1, ELS[n], grow(n, t));
+  ctx.scale(s * S.sx * lsc, s * S.sy * lsc);
+  // shadow falls down-right in screen space whatever the figure's flip
+  ctx.shadowColor = `rgba(45,32,20,${.16 + .14 * clamp(L, 0, 1.5)})`; ctx.shadowBlur = (6 + 30 * L) * cam.z;
+  ctx.shadowOffsetX = (4 + 22 * L) * cam.z; ctx.shadowOffsetY = (6 + 34 * L) * cam.z;
+  ctx.drawImage(IMG['e_' + n], -e.w / 2, -e.h / 2);
+  ctx.restore(); ctx.globalAlpha = 1;
+}
+
+// ---------- night and the moon ----------
+function moonA(t) {
+  const m = B.moon;
+  if (t < m - .5) return 0;
+  if (t < m - .42) return .55;
+  if (t < m - .3) return .05;
+  if (t < m - .2) return .75;
+  if (t < m - .12) return .2;
+  const on = easeOut(seg(t, m - .12, m + .35));
+  return on * (1 - .55 * easeIO(seg(t, B.fin + .4, B.fin + 1.8)));
+}
+const darkA = t => .76 * easeIO(seg(t, B.moon - 1.6, B.moon - .6)) * (1 - easeIO(seg(t, B.fin - .4, B.fin + 1.2)));
+function night(t) {
+  const a = darkA(t); if (a <= 0) return;
+  const ma = moonA(t), [mx, my] = scr(...pf('moon', .5, .3));
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'multiply';
+  const dark = `rgb(${Math.round(lerp(255, 34, a))},${Math.round(lerp(255, 44, a))},${Math.round(lerp(255, 92, a))})`;
+  const r0 = 140 * cam.z, r1 = (240 + 950 * ma) * cam.z;
+  const g = ctx.createRadialGradient(mx, my, r0, mx, my, r1);
+  g.addColorStop(0, ma > 0 ? '#fff' : dark); g.addColorStop(.45, ma > 0 ? `rgb(${Math.round(lerp(255, 120, a))},${Math.round(lerp(255, 128, a))},${Math.round(lerp(255, 160, a))})` : dark); g.addColorStop(1, dark);
+  ctx.fillStyle = ma > .01 ? g : dark; ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = 'source-over';
+}
+function moonGlow(t) {
+  const a = moonA(t); if (a <= 0) return;
+  const [mx, my] = scr(...pf('moon', .5, .25)), z = cam.z;
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalCompositeOperation = 'lighter';
+  let g = ctx.createRadialGradient(mx, my, 40 * z, mx, my, 700 * z);
+  g.addColorStop(0, `rgba(255,248,222,${.95 * a})`); g.addColorStop(.14, `rgba(255,238,190,${.62 * a})`);
+  g.addColorStop(.38, `rgba(230,200,150,${.16 * a})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // slow rays
+  ctx.save(); ctx.translate(mx, my); ctx.rotate(t * .08);
+  for (let i = 0; i < 14; i++) {
+    ctx.rotate(Math.PI * 2 / 14);
+    const L = (650 + 220 * Math.sin(i * 1.7 + t)) * z;
+    const rg = ctx.createLinearGradient(0, 0, L, 0); rg.addColorStop(0, `rgba(255,240,200,${.11 * a})`); rg.addColorStop(1, 'rgba(255,240,200,0)');
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(L, -38 * z); ctx.lineTo(L, 38 * z); ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+  // twinkles
+  const R = rng(11);
+  for (let i = 0; i < 46; i++) {
+    const ang = R() * Math.PI * 2, d = (220 + R() * 900) * z, ph = R() * 6, sz = (2 + R() * 4) * z;
+    const tw = Math.max(0, Math.sin(t * (3 + R() * 3) + ph)); const x = mx + Math.cos(ang) * d, y = my + Math.sin(ang) * d;
+    ctx.fillStyle = `rgba(255,248,225,${.85 * a * tw})`;
+    ctx.beginPath(); ctx.moveTo(x, y - sz * 3); ctx.lineTo(x + sz * .6, y); ctx.lineTo(x, y + sz * 3); ctx.lineTo(x - sz * .6, y); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x - sz * 3, y); ctx.lineTo(x, y + sz * .6); ctx.lineTo(x + sz * 3, y); ctx.lineTo(x, y - sz * .6); ctx.closePath(); ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+function logo(t) {
+  const u = seg(t, B.logo, B.logo + 1.0); if (u <= 0) return;
+  const w = LOGO.w, h = w * 19.75 / 25.16, wipe = easeOutExpo(u);
+  toScreen(); ctx.save();
+  // ink wipe right-to-left, the same way everything travelled
+  ctx.beginPath(); ctx.rect(LOGO.x + w / 2 + 30 - (w + 60) * wipe, LOGO.y - h / 2 - 30, (w + 60) * wipe, h + 60); ctx.clip();
+  const s = .97 + .03 * easeOut(u);
+  ctx.globalAlpha = clamp(u * 3);
+  ctx.drawImage(IMG.logo, LOGO.x - w / 2 * s, LOGO.y - h / 2 * s, w * s, h * s);
+  ctx.restore(); ctx.globalAlpha = 1;
+}
+
+function endSnow(t) {
+  if (t < B.snow) return;
+  const R = rng(21), dt = t - B.snow;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  for (let i = 0; i < 130; i++) {
+    const x0 = R() * W, y0 = -60 - R() * H * 1.2, sp = 80 + R() * 110, sz = 3 + R() * 7, ph = R() * 6;
+    const y = y0 + sp * dt, x = x0 + 30 * Math.sin(dt * .9 + ph);
+    if (y < -20 || y > H + 20) continue;
+    ctx.globalAlpha = clamp(dt * 1.5) * (.55 + .4 * R()); ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function vignette() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const g = ctx.createRadialGradient(W / 2, H / 2, H * .35, W / 2, H / 2, H * .78);
+  g.addColorStop(0, 'rgba(60,40,20,0)'); g.addColorStop(1, 'rgba(60,40,20,.22)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+
+const ORDER = ['boat', 'bus', 'whale', 'dove', 'dove1', 'dove2', 'dove3', 'girl'];
+window.render = function (t) {
+  t = clamp(t, 0, DUR - 1e-3);
+  cam = camAt(t);
+  for (const n of Object.keys(MAN.els)) STATE[n] = st(n, t);
+  drawTable();
+  let sk;
+  for (const k of Object.keys(PR)) { const r = drawPrint(k, t); if (k === 'globe') sk = r; }
+  globeSnow(t, sk); ripples(t); logo(t);
+  for (const n of ORDER) drawEl(n, t);
+  droplets(t);
+  night(t); moonGlow(t);
+  endSnow(t);
+  vignette();
+};
+// motion blur: average a few sub-frames across a 180-degree shutter
+const acc = document.createElement('canvas'); acc.width = W; acc.height = H;
+window.frame = function (t, fps = 30, n = 5) {
+  const g = acc.getContext('2d');
+  for (let i = 0; i < n; i++) {
+    render(t + (i / n - .5) * .5 / fps);
+    g.globalAlpha = 1 / (i + 1); g.drawImage(cv, 0, 0);
+  }
+  g.globalAlpha = 1;
+  return acc.toDataURL('image/jpeg', .95);
+};
+
+window.ready = (async () => {
+  MAN = await (await fetch(A + '/manifest.json')).json();
+  const jobs = [load(A + '/paper.webp').then(i => IMG.paper = i), load(A + '/logo.svg').then(i => IMG.logo = i)];
+  for (const k of Object.keys(PR)) jobs.push(load(`${A}/${k}.jpg`).then(i => IMG['p_' + k] = i));
+  for (const n of Object.keys(MAN.els)) {
+    jobs.push(load(`${A}/el_${n}.png`).then(i => IMG['e_' + n] = i));
+    jobs.push(load(`${A}/hole_${n}.png`).then(i => IMG['h_' + n] = maskFrom(i)));
+  }
+  await Promise.all(jobs);
+  for (const n of Object.keys(MAN.els)) HOME[n] = home(n);
+  plan();
+  render(0);
+  return true;
+})();
+
+function maskFrom(img) {
+  const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+  const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+  const d = g.getImageData(0, 0, c.width, c.height), p = d.data;
+  for (let i = 0; i < p.length; i += 4) { const v = p[i]; p[i] = p[i + 1] = p[i + 2] = 0; p[i + 3] = v; }
+  g.putImageData(d, 0, 0); return c;
+}
+
+if (!/capture/.test(location.search)) {
+  window.ready.then(() => { const t0 = performance.now(); (function loop() { render(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); })(); });
+}
+</script></body></html>

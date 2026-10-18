@@ -187,3 +187,13 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - Coming-soon gate: `SOON = "1"` in `worker/wrangler.toml` serves `prototype/soon.html` (assets in `prototype/soon-assets/`)
   for every page; the signed-in admin still sees the whole site (sign in at `/account.html`). The soon page's e-mail form
   posts to `/api/subscribe` (source `soon`). To launch: set `SOON = "0"` (or remove it) and deploy.
+
+## Launch reel (Oct 2026)
+
+- "The snow globe" teaser: figures leave Farah's paintings (prints on the paper table), join a
+  procession that only moves right-to-left, and gather at the real logo; music and an effect per
+  action. Code: `tools/reel/` (cut → refine → prep → `reel.html` → `capture.py` → `sound.py`).
+  How-to: `.claude/skills/painting-reel/` and `.claude/skills/reel-sound/`.
+- Source scans are in the owner's Google Drive (`Work/Art/ART`); keep them out of the repo.
+- Owner's notes on v1: motion must all go one way, cuts must be clean, the moon must glow hard,
+  and every action needs a sound.
