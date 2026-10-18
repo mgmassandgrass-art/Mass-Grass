@@ -130,12 +130,12 @@ label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-tran
 <footer>
   <div class="fgrid">
     <div>
-      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
-      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <h2 class="d" data-ar="بطاقة بريدية في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month, and nothing else.</p>
       <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
     </div>
     <div><h4 data-ar="المتجر">Shop</h4><ul>
-      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+      <li><a href="paintings.html" data-ar="اللوحات">Paintings</a></li><li><a href="postcards.html" data-ar="البطاقات البريدية">Postcards</a></li><li><a href="stickers.html" data-ar="الملصقات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم السنوي">Calendar</a></li></ul></div>
     <div><h4 data-ar="عنّا">About</h4><ul>
       <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
   </div>
@@ -148,7 +148,7 @@ label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-tran
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 let AR=false;const t=(en,ar)=>AR?ar:en;
-const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const ard=n=>String(n);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 $$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
 function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);

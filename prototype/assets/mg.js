@@ -207,7 +207,7 @@ const css=`
 const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 
 /* ---------- 1. the Shop menu ---------- */
-const MENU=[['shop.html','All products','كل المنتجات','hero','all'],['paintings.html','Paintings','لوحات','guitar'],['postcards.html','Postcards','بوست كارد','boattop'],['calendar.html','Calendar 2027','تقويم ٢٠٢٧','psea'],['stickers.html','Stickers','ستكرات','s-lemons'],['shop.html#apparel','Apparel · soon','ملابس · قريبًا','pelephant','soon']];
+const MENU=[['shop.html','All products','كل المنتجات','hero','all'],['paintings.html','Paintings','اللوحات','guitar'],['postcards.html','Postcards','البطاقات البريدية','boattop'],['calendar.html','Calendar 2027','تقويم 2027','psea'],['stickers.html','Stickers','الملصقات','s-lemons'],['shop.html#apparel','Apparel · soon','ملابس · قريبًا','pelephant','soon']];
 function buildMenu(){document.querySelectorAll('header nav a').forEach(a=>{if(!/shop\.html$/.test(a.getAttribute('href')||'')||a.closest('.mgdd'))return;
   const w=document.createElement('span');w.className='mgdd';a.parentNode.insertBefore(w,a);w.appendChild(a);
   const m=document.createElement('div');m.className='mgmenu';m.setAttribute('role','menu');w.appendChild(m);fillMenu(m);
@@ -228,7 +228,7 @@ function toast(msg){let el=document.querySelector('.mgtoast');if(!el){el=documen
 /* ---------- 3. the product window ---------- */
 const FORMS={painting:[['file','High-res file · PDF + PNG','ملف عالي الدقة · PDF + PNG',12]],
   postcard:[['file','High-res file · PDF + PNG','ملف عالي الدقة · PDF + PNG',2]],
-  sticker:[['one','Just this sticker','هالستكر لحاله',1],['pack','Add it to a pack of 6','ضيفه لباكيت ٦',3]],
+  sticker:[['one','Just this sticker','هالملصق لحاله',1],['pack','Add it to a pack of 6','ضيفه لباكيت 6',3]],
   calendar:[['cal','Calendar PDF · A3 + A4','تقويم PDF · A3 + A4',8]],
   archive:[['arc','Past edition · archive','نسخة سابقة · أرشيف',0]],
   apparel:[['tee','Tee','بلوزة',0],['tote','Tote bag','شنطة',0],['mug','Mug','مج',0]]};
@@ -243,13 +243,13 @@ function applyPrices(P){const c=window.MGCAT||{},pr=c.prices||{};
 applyPrices();
 const VIEWSK={painting:[['art','The painting','اللوحة'],['frame','Framed','بإطار']],
   postcard:[['art','The card','البطاقة'],['pc','Front & back','وجه وظهر']],
-  sticker:[['stk','The sticker','الستكر'],['lap','On a laptop','عاللابتوب']],
-  calendar:[['cover','The cover','الغلاف'],['cwall','On the wall','عالحيط'],['months','12 months','١٢ شهر']],
+  sticker:[['stk','The sticker','الملصق'],['lap','On a laptop','عاللابتوب']],
+  calendar:[['cover','The cover','الغلاف'],['cwall','On the wall','عالحيط'],['months','12 months','12 شهر']],
   apparel:[['art','The painting','اللوحة']]};
 /* a sticker pack you fill one sticker at a time, kept across pages */
 const PACK={get(){try{return JSON.parse(localStorage.mgPack||'[]')}catch(e){return []}},set(a){try{localStorage.mgPack=JSON.stringify(a)}catch(e){}document.dispatchEvent(new CustomEvent('mgpack'))},
   add(k){const a=this.get();if(a.length>=6)return a;a.push(k);this.set(a);return a},remove(i){const a=this.get();a.splice(i,1);this.set(a)},clear(){this.set([])},
-  toBag(){const a=this.get();if(a.length<6)return;BAG.add({k:'pack-'+Date.now(),kind:'sticker',t:'Your pack of 6',ta:'باكيتك · ٦ ستكرات',p:3,img:img(a[0]),pack:a});this.clear();toast(t('Your pack of 6 is in the bag ✶','باكيتك صار بالسلة ✶'))}};
+  toBag(){const a=this.get();if(a.length<6)return;BAG.add({k:'pack-'+Date.now(),kind:'sticker',t:'Your pack of 6',ta:'باكيتك · 6 ملصقات',p:3,img:img(a[0]),pack:a});this.clear();toast(t('Your pack of 6 is in the bag ✶','باكيتك صار بالسلة ✶'))}};
 window.MGPack=PACK;
 let D=null,P={},view=0,form=0;
 function ensureDlg(){if(D)return D;D=document.createElement('dialog');D.className='mgdlg';D.setAttribute('aria-label','Product');document.body.appendChild(D);
@@ -270,16 +270,16 @@ function mock(id){const s=img(P.key),wb=`--wb:${WB[P.key]||'#ECE8E2'}`,sh=P.shap
   if(id==='pc')return `<div class="mk mk-pc" style="${wb}"><div class="pcb"><span class="st" style="background-image:url(${img(STAMPK[(P.no||0)%6])})"></span><span class="pm">GAZA<br>✶</span><em>${t('Dear Lina,<br>a little piece of Gaza for you…','عزيزتي لينا،<br>قطعة صغيرة من غزة إلك…')}</em><i></i><i></i><i></i></div><div class="pcf"><img src="${s}" alt=""></div></div>`;
   if(id==='stk')return `<div class="mk mk-stk" style="${wb}"><div class="sk ${sh}"><img src="${s}" alt=""></div></div>`;
   if(id==='lap')return `<div class="mk mk-lap" style="${wb}"><div class="lid"><span class="cam"></span><div class="sk ${sh}"><img src="${s}" alt=""></div><span class="s2"></span></div></div>`;
-  if(id==='cover')return `<div class="mk mk-cal" style="${wb}"><div class="cal"><span class="sp"></span><img src="${P.coverSrc||s}" alt=""><b>${ard(P.year||2027)}</b><small>${t('Twelve months painted in Gaza','١٢ شهر مرسومين في غزة')}</small></div></div>`;
+  if(id==='cover')return `<div class="mk mk-cal" style="${wb}"><div class="cal"><span class="sp"></span><img src="${P.coverSrc||s}" alt=""><b>${ard(P.year||2027)}</b><small>${t('Twelve months painted in Gaza','12 شهر مرسومين في غزة')}</small></div></div>`;
   if(id==='cwall'){const m0=(P.months||[])[0]||P.key;return `<div class="mk mk-cal wall" style="${wb}"><span class="nail"></span><div class="cal"><span class="sp"></span><img src="${img(m0)}" alt=""><div class="mo"><b>${t('January','كانون الثاني')} ${ard(P.year||2027)}</b><div class="gr">${Array.from({length:35},(_,i)=>`<span class="${i%7===6||i%7===5?'we':''}">${i>2&&i<34?ard(i-2):''}</span>`).join('')}</div></div></div></div>`}
-  if(id==='months'){const MN=AR()?['كانون٢','شباط','آذار','نيسان','أيار','حزيران','تموز','آب','أيلول','تشرين١','تشرين٢','كانون١']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if(id==='months'){const MN=AR()?['كانون2','شباط','آذار','نيسان','أيار','حزيران','تموز','آب','أيلول','تشرين1','تشرين2','كانون1']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return `<div class="mk mk-months" style="${wb}"><div class="mg12">${(P.months||[]).map((k,i)=>`<figure><img src="${img(k)}" alt="" loading="lazy"><figcaption>${MN[i]}</figcaption></figure>`).join('')}</div></div>`}
   return ''}
 function specs(f){const row=(a,b)=>`<dt>${a}</dt><dd>${b}</dd>`,dl=row(t('Delivery','التوصيل'),t('Instant download','تحميل فوري'));
-  if(P.kind==='calendar')return row(t('Pages','الصفحات'),t('13 · a cover and 12 months','١٣ · غلاف و١٢ شهر'))+row(t('You get','بتاخذ'),t('PDF in A3 and A4','PDF بمقاسين A3 وA4'))+row(t('Months','الأشهر'),t('English and Levantine Arabic','إنجليزي وعربي شامي'))+row(t('Weekend','العطلة'),t('Fridays & Saturdays marked','الجمعة والسبت معلّمين'))+(P.archive?row(t('Edition','النسخة'),t('Sold out · shown as an archive','خلصت · معروضة كأرشيف')):dl);
-  if(P.kind==='sticker')return row(t('You get','بتاخذ'),t('Transparent PNG + WhatsApp & Telegram','PNG شفاف + واتساب وتيليغرام'))+row(t('Size','المقاس'),'1000 × 1000 px')+row(t('A pack of 6','باكيت ٦'),t('Mix any six for €3','اختار أي ٦ بـ€٣'))+dl;
-  return row(t('Original','الأصل'),t('Watercolour on cotton paper','ألوان مائية على ورق قطني'))+row(t('Original size','مقاس الأصل'),esc(P.size||'21 × 29.7 cm'))+row(t('You get','بتاخذ'),t('PDF + PNG · full resolution, 300 dpi','PDF + PNG · بأعلى دقة، ٣٠٠ dpi'))+row(t('Painted in','مكانها'),esc(t(P.place,P.placeAr)))+dl}
-function packBox(){const a=PACK.get();return `<div class="mgpack"><div class="ph"><b>${t('Your pack','باكيتك')}</b><span>${ard(a.length)} / ${ard(6)}</span></div><div class="sl">${Array.from({length:6},(_,i)=>a[i]?`<button data-prm="${i}" aria-label="${t('Remove','شيل')}"><img src="${img(a[i])}" alt=""></button>`:'<span></span>').join('')}</div>${a.length>=6?`<button class="mgbtn terra" id="mgpackbag">${t('Put the pack in the bag · €3','حط الباكيت بالسلة · €٣')}</button>`:`<span class="mgnote">${t('Pick “Add it to a pack of 6”, then keep adding stickers.','اختار «ضيفه لباكيت ٦» وكمّل ضيف ستكرات.')}</span>`}</div>`}
+  if(P.kind==='calendar')return row(t('Pages','الصفحات'),t('13 · a cover and 12 months','13 · غلاف و12 شهر'))+row(t('You get','بتاخذ'),t('PDF in A3 and A4','PDF بمقاسين A3 وA4'))+row(t('Months','الأشهر'),t('English and Levantine Arabic','إنجليزي وعربي شامي'))+row(t('Weekend','العطلة'),t('Fridays & Saturdays marked','الجمعة والسبت معلّمين'))+(P.archive?row(t('Edition','النسخة'),t('Sold out · shown as an archive','خلصت · معروضة كأرشيف')):dl);
+  if(P.kind==='sticker')return row(t('You get','بتاخذ'),t('Transparent PNG + WhatsApp & Telegram','PNG شفاف + واتساب وتيليغرام'))+row(t('Size','المقاس'),'1000 × 1000 px')+row(t('A pack of 6','باكيت 6'),t('Mix any six for €3','اختار أي 6 بـ€3'))+dl;
+  return row(t('Original','الأصل'),t('Watercolour on cotton paper','ألوان مائية على ورق قطني'))+row(t('Original size','مقاس الأصل'),esc(P.size||'21 × 29.7 cm'))+row(t('You get','بتاخذ'),t('PDF + PNG · full resolution, 300 dpi','PDF + PNG · بأعلى دقة، 300 dpi'))+row(t('Painted in','مكانها'),esc(t(P.place,P.placeAr)))+dl}
+function packBox(){const a=PACK.get();return `<div class="mgpack"><div class="ph"><b>${t('Your pack','باكيتك')}</b><span>${ard(a.length)} / ${ard(6)}</span></div><div class="sl">${Array.from({length:6},(_,i)=>a[i]?`<button data-prm="${i}" aria-label="${t('Remove','شيل')}"><img src="${img(a[i])}" alt=""></button>`:'<span></span>').join('')}</div>${a.length>=6?`<button class="mgbtn terra" id="mgpackbag">${t('Put the pack in the bag · €3','حط الباكيت بالسلة · €3')}</button>`:`<span class="mgnote">${t('Pick “Add it to a pack of 6”, then keep adding stickers.','اختار «ضيفه لباكيت 6» وكمّل ضيف ملصقات.')}</span>`}</div>`}
 function render(){const d=ensureDlg(),V=views(),F=P.archive?FORMS.archive:(FORMS[P.kind]||FORMS.painting),f=F[form]||F[0],soon=!f[3];d.dir=AR()?'rtl':'ltr';
   d.innerHTML=`<div class="mgw"><button class="mgx" aria-label="Close">✕</button>
    <div class="mgv"><div class="mgstage" id="mgstage">${mock((V[view]||V[0])[0])}</div>
@@ -310,7 +310,7 @@ function render(){const d=ensureDlg(),V=views(),F=P.archive?FORMS.archive:(FORMS
   const wr=d.querySelector('#mgwrite');if(wr)wr.onclick=()=>compose(P.key,P.title,P.titleAr);
   d.querySelectorAll('[data-prm]').forEach(b=>b.onclick=()=>{PACK.remove(+b.dataset.prm);render()});
   const pb=d.querySelector('#mgpackbag');if(pb)pb.onclick=()=>{PACK.toBag();render()};
-  const addb=d.querySelector('#mgadd');if(addb&&f[0]==='pack')addb.onclick=()=>{const a=PACK.get();if(a.length>=6){toast(t('Your pack is full, put it in the bag','الباكيت مليان، حطّه بالسلة'));return}PACK.add(P.key);render();toast(t(`${P.title} is in your pack · ${PACK.get().length}/6`,`${P.titleAr} صار بباكيتك · ${ard(PACK.get().length)}/٦`))};
+  const addb=d.querySelector('#mgadd');if(addb&&f[0]==='pack')addb.onclick=()=>{const a=PACK.get();if(a.length>=6){toast(t('Your pack is full, put it in the bag','الباكيت مليان، حطّه بالسلة'));return}PACK.add(P.key);render();toast(t(`${P.title} is in your pack · ${PACK.get().length}/6`,`${P.titleAr} صار بباكيتك · ${ard(PACK.get().length)}/6`))};
   else if(addb)addb.onclick=()=>{BAG.add({k:P.key,kind:P.kind,t:P.kind==='calendar'?`Calendar ${P.year}`:P.title,ta:P.kind==='calendar'?`تقويم ${ard(P.year)}`:P.titleAr,f:f[0],p:f[3],img:P.kind==='calendar'?(P.coverSrc||img(P.key)):undefined});addb.textContent=t('Added ✓','انضافت ✓');toast(t(`${P.title} · ${f[1]} is in your bag`,`${P.titleAr} · ${f[2]} صارت بالسلة`))};
   const gb=d.querySelector('#mggiftb');if(gb)gb.onclick=()=>{d.querySelector('#mggift').classList.toggle('on');setTimeout(()=>d.querySelector('#mgto')?.focus(),50)};
   const ga=d.querySelector('#mggiftadd');if(ga)ga.onclick=()=>{const to=d.querySelector('#mgto').value.trim(),em=d.querySelector('#mgem').value.trim();
@@ -328,7 +328,7 @@ function compose(k,ti,ta){if(typeof k==='string'){let i=PCS.findIndex(p=>p[0]===
   d.innerHTML=`<div class="mgw" style="grid-template-columns:1fr"><button class="mgx" aria-label="Close">✕</button><div class="mgc">
    <div class="cl"><div class="pcw" id="mgpcw"><div class="pc" id="mgpc"><div class="m" id="mgm"></div><div class="r"><span class="st" style="background-image:url(${img(STAMPK[cs.c%6])})"></span><span class="pm">GAZA<br>${dd}<br>✶</span><div class="ad"><span id="mgadto"></span><span></span><span></span></div></div></div></div>
      <div class="env" id="mgenv"><span class="ei"></span><span class="ep"></span><span class="fl"></span><span class="sw"></span></div></div>
-   <div class="cr"><span class="kk" style="align-self:start;font:12px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#C4593F;background:#FAF5E9;border:1.5px solid #2E241B;padding:6px 9px 5px;rotate:-2deg;justify-self:start">${t('A postcard from Gaza','بوست كارد من غزة')}</span>
+   <div class="cr"><span class="kk" style="align-self:start;font:12px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#C4593F;background:#FAF5E9;border:1.5px solid #2E241B;padding:6px 9px 5px;rotate:-2deg;justify-self:start">${t('A postcard from Gaza','بطاقة بريدية من غزة')}</span>
      <h3>${t('Send it to someone you love','ابعتها لحد بتحبه')}</h3>
      <div class="thumbs" id="mgth">${PCS.map((p,i)=>`<button data-i="${i}" aria-pressed="${i===cs.c}" aria-label="${esc(t(p[1],p[2]))}"><img src="${img(p[0])}" alt="" loading="lazy"></button>`).join('')}</div>
      <label>${t('Your message','رسالتك')}<textarea id="mgcm" maxlength="220" placeholder="${t('Dear Lina, a little piece of Gaza for you…','عزيزتي لينا، قطعة صغيرة من غزة إلك…')}">${esc(cs.m)}</textarea></label>
@@ -346,7 +346,7 @@ function compose(k,ti,ta){if(typeof k==='string'){let i=PCS.findIndex(p=>p[0]===
   [['#mgcm','m'],['#mgct','to'],['#mgcf','f']].forEach(([s,k])=>d.querySelector(s).oninput=e=>{cs[k]=e.target.value;upd()});
   d.querySelector('#mgseal').onclick=async()=>{const w=ms=>new Promise(r=>setTimeout(r,ms));pc.classList.add('pmon');await w(700);const env=d.querySelector('#mgenv');env.classList.add('on');await w(300);
     d.querySelector('#mgpcw').classList.add('go');await w(800);env.classList.add('shut');await w(1100);
-    const base=location.href.replace(/[^/]*([?#].*)?$/,''),L=base+'postcards.html?pc='+enc({c:cs.c,s:cs.c%6,m:cs.m,t:cs.to,f:cs.f}),txt=t('A postcard from Gaza for you ✶','بوست كارد من غزة إلك ✶');
+    const base=location.href.replace(/[^/]*([?#].*)?$/,''),L=base+'postcards.html?pc='+enc({c:cs.c,s:cs.c%6,m:cs.m,t:cs.to,f:cs.f}),txt=t('A postcard from Gaza for you ✶','بطاقة بريدية من غزة إلك ✶');
     d.querySelector('#mgwa').href='https://wa.me/?text='+encodeURIComponent(txt+'\n'+L);d.querySelector('#mgmail').href='mailto:?subject='+encodeURIComponent(txt)+'&body='+encodeURIComponent(txt+'\n\n'+L);
     d.querySelector('#mgcopy').onclick=async()=>{try{await navigator.clipboard.writeText(L);toast(t('Link copied','انتسخ الرابط'))}catch(e){prompt('Link',L)}};
     d.querySelector('#mgshare').classList.add('on')};
@@ -393,9 +393,9 @@ function curSelect(){const L=document.querySelector('footer .legal');if(!L||L.qu
 if(cur!=='EUR')new MutationObserver(ms=>ms.forEach(m=>{if(m.type==='characterData')convText(m.target);else m.addedNodes.forEach(x=>x.nodeType===3?convText(x):x.nodeType===1&&convAll(x))})).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
 
 /* ---------- 5. the bag drawer ---------- */
-const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بوست كارد · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ستكرات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
+const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بطاقة بريدية · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ملصقات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
 const itemSrc=x=>x.img||(x.k?img(x.k):'assets/hero.webp');
-const itemName=x=>t(x.t||'Mass & Grass piece',x.ta||x.t||'قطعة من ماس اند جراس');
+const itemName=x=>t(x.t||'Mass & Grass piece',x.ta||x.t||'قطعة من ماس آند غراس');
 const itemKind=x=>t(...(KIND[x.kind]||['Digital file','ملف رقمي']));
 let BD=null;
 function bagDrawer(){if(!BD){BD=document.createElement('div');BD.className='mgbagd';BD.setAttribute('role','dialog');BD.setAttribute('aria-modal','true');document.body.appendChild(BD);
@@ -429,7 +429,7 @@ function hit(){if(!matchMedia('(pointer:coarse)').matches)return;document.queryS
 addEventListener('load',()=>setTimeout(hit,600));})();
 
 /* page title follows the language */
-(function(){const AR={shop:'المتجر',paintings:'اللوحات',postcards:'البوست كارد',stickers:'الستكرات',calendar:'التقويم',story:'حكاية فرح',help:'المساعدة والتواصل',terms:'الشروط والخصوصية',account:'حسابك',profile:'بروفايلك',checkout:'الدفع','404':'رسالة ضايعة'};
+(function(){const AR={shop:'المتجر',paintings:'اللوحات',postcards:'البطاقات البريدية',stickers:'الملصقات',calendar:'التقويم',story:'حكاية فرح',help:'المساعدة والتواصل',terms:'الشروط والخصوصية',account:'حسابك',profile:'بروفايلك',checkout:'الدفع','404':'رسالة ضايعة'};
   const go=()=>{const k=(location.pathname.split('/').pop()||'index').replace(/\.html$/,'')||'index',en=document.title;
     const set=()=>{document.title=document.documentElement.lang==='ar'&&AR[k]?AR[k]+' · Mass & Grass':en};set();
     new MutationObserver(set).observe(document.documentElement,{attributes:true,attributeFilter:['lang']})};

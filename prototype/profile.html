@@ -183,12 +183,12 @@ label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-tran
 <footer>
   <div class="fgrid">
     <div>
-      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
-      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <h2 class="d" data-ar="بطاقة بريدية في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month, and nothing else.</p>
       <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
     </div>
     <div><h4 data-ar="المتجر">Shop</h4><ul>
-      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+      <li><a href="paintings.html" data-ar="اللوحات">Paintings</a></li><li><a href="postcards.html" data-ar="البطاقات البريدية">Postcards</a></li><li><a href="stickers.html" data-ar="الملصقات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم السنوي">Calendar</a></li></ul></div>
     <div><h4 data-ar="عنّا">About</h4><ul>
       <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
   </div>
@@ -201,7 +201,7 @@ label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-tran
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 let AR=false;const t=(en,ar)=>AR?ar:en;
-const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const ard=n=>String(n);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 $$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
 function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
@@ -213,7 +213,7 @@ $('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}cat
 let U=MGUser.get();if(!U){location.replace('account.html?next=profile.html')}
 MGUser.ready.then(()=>{if(!MGUser.get())return location.replace('account.html?next=profile.html');U=Object.assign(U||{},MGUser.get());render()});
 let tab=location.hash.slice(1)||'files';
-const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بوست كارد · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ستكرات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
+const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بطاقة بريدية · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ملصقات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
 const src=x=>x.img||(x.k?`assets/${x.k}.webp`:'assets/hero.webp');
 const nm=x=>t(x.t||'Mass & Grass piece',x.ta||x.t||'قطعة');
 const MONTHLY=['ppoppies','pflower','hero','boattop','seafish','dovegirl','deirbalah','alley','sparklers','waves','psea','blueflowers'];
@@ -224,7 +224,7 @@ window.render=()=>{if(!U)return;
   const orders=MGUser.orders(),files=orders.flatMap(o=>o.items.filter(x=>!x.gift).map(x=>Object.assign({},x,{no:o.no}))),sub=U.sub&&U.sub.on;
   $('#me').innerHTML=`<button class="av" id="av" aria-label="${t('Change your photo','غيّر صورتك')}">${U.photo?`<img src="${U.photo}" alt="">`:`<b>${esc((U.name||U.email)[0].toUpperCase())}</b>`}<span>${t('Change photo','غيّر الصورة')}</span></button>
    <div><span class="kick">${t('Your profile','بروفايلك')}</span><h1 class="d">${esc(U.name||U.email)}</h1><div class="meta"><span class="tag">${esc(U.email)}</span><span class="tag">${t('Member since','عضو من')} ${fmt(U.joined||Date.now())}</span>${U.via==='google'?`<span class="tag g">Google</span>`:''}${sub?`<span class="tag g">${t('Monthly painting ✶','لوحة كل شهر ✶')}</span>`:''}</div></div>
-   <button class="btn alt out" id="out">${t('Sign out','اطلع')}</button>`;
+   <button class="btn alt out" id="out">${t('Sign out','سجّل خروج')}</button>`;
   const T=[['files',t('Your files','ملفاتك'),files.length],['orders',t('Orders','الطلبات'),orders.length],['monthly',t('A painting a month','لوحة كل شهر'),sub?'✶':''],['settings',t('Settings','الإعدادات'),'']];
   $('#ptabs').innerHTML=T.map(([k,l,n])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${l}${n!==''?`<small>${typeof n==='number'?ard(n):n}</small>`:''}</button>`).join('');
   let h='';
@@ -239,12 +239,12 @@ window.render=()=>{if(!U)return;
       <div class="price">€${ard(5)}<small>${t('/ month','/ بالشهر')}</small></div>
       <ul><li>${t('A new painting by Farah on the 1st of every month, as a high-res PDF + PNG','لوحة جديدة من فرح أول كل شهر، ملف PDF + PNG بدقة عالية')}</li><li>${t('You get it before it reaches the shop','بتوصلك قبل ما تنزل عالمتجر')}</li><li>${t('A short note from Farah about the day she painted it','كلمة قصيرة من فرح عن اليوم اللي رسمتها فيه')}</li><li>${t('Cancel any time, keep everything you received','ألغِ وقت ما بدك، وكل اللي وصلك بيضل إلك')}</li></ul>
       ${sub?`<div class="active"><span class="dot"></span><b>${t('Active since','شغّال من')} ${fmt(s.since)}</b></div><p class="note">${t('Next painting','اللوحة الجاية')}: ${fmt(nx)} · ${t('paid with PayPal','الدفع بباي بال')}</p><p style="margin-top:12px"><button class="link" id="cancel">${t('Cancel the subscription','إلغاء الاشتراك')}</button></p>`
-      :`<button class="btn terra" id="subb">${t('Subscribe · €5 a month','اشترك · €٥ بالشهر')}</button><p class="note" style="margin-top:10px">${t('Paid monthly with PayPal or card. Prototype: nothing is charged.','بتدفع كل شهر بباي بال أو بطاقة. نموذج: ما في دفع حقيقي.')}</p>`}
+      :`<button class="btn terra" id="subb">${t('Subscribe · €5 a month','اشترك · €5 بالشهر')}</button><p class="note" style="margin-top:10px">${t('Paid monthly with PayPal or card. Prototype: nothing is charged.','بتدفع كل شهر بباي بال أو بطاقة. نموذج: ما في دفع حقيقي.')}</p>`}
       </div><div class="env"><span class="st" style="background-image:url(assets/${MONTHLY[nx.getMonth()]}.webp)"></span><span class="pm">GAZA<br>01·${String(nx.getMonth()+1).padStart(2,'0')}<br>✶</span><p>${t('For ','إلى ')}${esc(U.name||'')}<br>${t('a painting, every month','لوحة، كل شهر')}</p></div></div>
       ${sub?`<p class="note" style="margin-top:26px">${t('Your monthly paintings','لوحاتك الشهرية')}</p><div class="months">${got.map(([k,d])=>`<figure><img src="assets/${k}.webp" alt=""><figcaption>${MN()[d.getMonth()]} ${ard(d.getFullYear())}</figcaption></figure>`).join('')}<figure><div class="lock">${MN()[nx.getMonth()]}</div><figcaption>${t('coming','قريبًا')}</figcaption></figure></div>`:''}</div>`}
   if(tab==='settings')h=`<form class="box set" id="setf" novalidate><div class="two"><label class="f">${t('Name','الاسم')}<input id="snm" value="${esc(U.name||'')}" maxlength="60"></label><label class="f">${t('Email','الإيميل')}<input value="${esc(U.email)}" disabled dir="ltr"></label></div>
      <label class="f">${t('Country','البلد')}<input id="sct" value="${esc(U.country||'')}" maxlength="60" placeholder="${t('Palestine','فلسطين')}"></label>
-     <label class="chk"><input type="checkbox" id="snews" ${U.news!==false?'checked':''}>${t('Send me the free monthly postcard email','ابعتولي إيميل البوست كارد الشهري المجاني')}</label>
+     <label class="chk"><input type="checkbox" id="snews" ${U.news!==false?'checked':''}>${t('Send me the free monthly postcard email','ابعتولي إيميل البطاقة البريدية الشهري المجاني')}</label>
      <div><button class="btn terra" type="submit">${t('Save','احفظ')}</button> <span class="ok" id="saved"></span></div>
      <div class="danger"><button class="link" type="button" id="del">${t('Delete my account','احذف حسابي')}</button><p class="note">${t('Removes your profile and order history from this browser.','بيمسح بروفايلك وطلباتك من هالمتصفح.')}</p></div></form>`;
   $('#panel').innerHTML=h;
@@ -260,7 +260,7 @@ window.render=()=>{if(!U)return;
 function sheet(html,bind){$('#shb').innerHTML=html;$('#sh').classList.add('on');bind&&bind()}
 function closeSheet(){$('#sh').classList.remove('on')}
 $('#sh').onclick=e=>{if(e.target.id==='sh')closeSheet()};addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
-function subscribe(){sheet(`<h3>${t('A painting a month','لوحة كل شهر')}</h3><p class="lead">${t('€5 every month, starting today. The first painting arrives right away.','€٥ كل شهر من اليوم. أول لوحة بتوصلك فورًا.')}</p><button class="btn ochre" id="pay">${t('Subscribe with PayPal or card','اشترك بباي بال أو بطاقة')}</button><button class="btn alt" id="no">${t('Not now','مش هلأ')}</button><p class="note">${t('Prototype: nothing is charged.','نموذج: ما في دفع حقيقي.')}</p>`,()=>{
+function subscribe(){sheet(`<h3>${t('A painting a month','لوحة كل شهر')}</h3><p class="lead">${t('€5 every month, starting today. The first painting arrives right away.','€5 كل شهر من اليوم. أول لوحة بتوصلك فورًا.')}</p><button class="btn ochre" id="pay">${t('Subscribe with PayPal or card','اشترك بباي بال أو بطاقة')}</button><button class="btn alt" id="no">${t('Not now','مش هلأ')}</button><p class="note">${t('Prototype: nothing is charged.','نموذج: ما في دفع حقيقي.')}</p>`,()=>{
   $('#no').onclick=closeSheet;$('#pay').onclick=()=>{$('#pay').disabled=true;$('#pay').textContent=t('Sealing…','عم نختمها…');setTimeout(()=>{U.sub={on:true,since:new Date().toISOString()};save();closeSheet();tab='monthly';render()},800)}})}
 $('#ph').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),S=200,s=Math.min(im.width,im.height);c.width=c.height=S;c.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,S,S);U.photo=c.toDataURL('image/jpeg',.82);save();render()};im.src=r.result};r.readAsDataURL(f)};
 

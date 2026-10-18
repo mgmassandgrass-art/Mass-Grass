@@ -151,12 +151,12 @@ input.bad{border-color:var(--terra);background:#fff3ef}
 <footer>
   <div class="fgrid">
     <div>
-      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
-      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <h2 class="d" data-ar="بطاقة بريدية في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month, and nothing else.</p>
       <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
     </div>
     <div><h4 data-ar="المتجر">Shop</h4><ul>
-      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+      <li><a href="paintings.html" data-ar="اللوحات">Paintings</a></li><li><a href="postcards.html" data-ar="البطاقات البريدية">Postcards</a></li><li><a href="stickers.html" data-ar="الملصقات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم السنوي">Calendar</a></li></ul></div>
     <div><h4 data-ar="عنّا">About</h4><ul>
       <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
   </div>
@@ -169,12 +169,12 @@ input.bad{border-color:var(--terra);background:#fff3ef}
 const $=s=>document.querySelector(s);
 let AR=false;try{AR=localStorage.mgLang==='ar'}catch(e){}
 const t=(en,ar)=>AR?ar:en;
-const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const ard=n=>String(n);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const B=window.MGBag;
-const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بوست كارد · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ستكرات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
+const KIND={painting:['Painting · PDF + PNG','لوحة · PDF + PNG'],postcard:['Postcard · PDF + PNG','بطاقة بريدية · PDF + PNG'],sticker:['Stickers · PNG + WhatsApp','ملصقات · PNG + واتساب'],calendar:['PDF · A3 + A4','PDF · A3 + A4']};
 const src=x=>x.img||(x.k?`assets/${x.k}.webp`:'assets/hero.webp');
-const nm=x=>t(x.t||'Mass & Grass piece',x.ta||x.t||'قطعة من ماس اند جراس');
+const nm=x=>t(x.t||'Mass & Grass piece',x.ta||x.t||'قطعة من ماس آند غراس');
 const kd=x=>t(...(KIND[x.kind]||['Digital file','ملف رقمي']));
 const U=window.MGUser&&MGUser.get();const form={name:U?U.name||'':'',em:U?U.email:'',news:true};
 
@@ -191,7 +191,7 @@ function render(){
       <div class="two"><label>${t('Your name','اسمك')}<input type="text" id="nm" autocomplete="name" maxlength="60" value="${esc(form.name)}" placeholder="${t('Lina','لينا')}"></label>
       <label>${t('Your email','إيميلك')}<input type="email" id="em" autocomplete="email" maxlength="100" value="${esc(form.em)}" placeholder="lina@email.com" dir="ltr"></label></div>
       <p class="note">${U?t('Signed in as ','داخل باسم ')+esc(U.email)+' · <a href="profile.html">'+t('your profile','بروفايلك')+'</a>':`<a href="account.html?next=checkout.html">${t('Sign in','سجّل دخول')}</a> ${t('to keep your files in your profile, or just carry on.','عشان تنحفظ ملفاتك ببروفايلك، أو كمّل عادي.')}`}</p>
-      <label class="chk"><input type="checkbox" id="news" ${form.news?'checked':''}>${t('Send me one new painting a month. Nothing else.','ابعتولي لوحة جديدة كل شهر. ولا شي غيرها.')}</label>
+      <label class="chk"><input type="checkbox" id="news" ${form.news?'checked':''}>${t('Send me one new painting a month, and nothing else.','ابعتولي لوحة جديدة كل شهر، ولا شي غيرها.')}</label>
     </div>
     ${gifts.length?`<div class="step"><h2><i>02</i>${t('Gifts','الهدايا')}</h2><p class="note">${t('These go to the people you named, with your note, once you pay:','هدول بيروحوا للي اخترتهم مع كلمتك بعد الدفع:')}</p>${gifts.map(x=>`<p class="note">✉ ${esc(nm(x))} → <b>${esc(x.gift.to)}</b> · ${esc(x.gift.em)}</p>`).join('')}</div>`:''}
     <div class="step"><h2><i>${ard(gifts.length?'03':'02')}</i>${t('Pay','ادفع')}</h2>
@@ -217,7 +217,7 @@ function render(){
     const r=await MGUser.api('POST','/api/orders',{email:em,name:$('#nm').value.trim(),news:form.news,items:B.get()});
     const fail=m=>{go.disabled=false;go.innerHTML=t('Pay','ادفع');$('#err').textContent=m};
     if(r.ok&&r.data.approve){try{sessionStorage.mgPending=JSON.stringify({id:r.data.id,access:r.data.access,em})}catch(e){}location.href=r.data.approve;return}
-    if(r.ok&&r.data.payments==='off')return fail(t('Card and PayPal payments open very soon. Nothing was charged.','الدفع بالبطاقة وباي بال بيفتح قريبًا جدًا. ما انخصم اشي.'));
+    if(r.ok&&r.data.payments==='off')return fail(t('Card and PayPal payments open soon. Nothing was charged.','الدفع بالبطاقة وباي بال بيفتح قريبًا. ما انخصم اشي.'));
     if(r.data&&r.data.error==='item_unavailable')return fail(t('One of the pieces in your bag is no longer for sale. Remove it and try again.','في قطعة بالسلة ما عادت للبيع. شيلها وجرّب مرة ثانية.'));
     fail(t('Something went wrong. Please try again.','صار خطأ. جرّب مرة ثانية.'))};
 }
@@ -242,7 +242,7 @@ function showDone(o){
     <div class="dl">${o.a.map(x=>`<div class="row"><span class="th"><img src="${esc(src(x))}" alt=""></span><div><h3 style="font:18px/1.05 var(--en);text-transform:uppercase">${esc(nm(x))}</h3><small class="note">${esc(kd(x))}${x.gift?' · '+t('sent to ','انبعتت لـ')+esc(x.gift.to):''}</small></div>
       <div class="b">${x.gift?`<span class="note">✉ ${t('On its way','في الطريق')}</span>`:filesFor(x,o.files).map(f=>`<a class="btn alt" href="${esc(f.url)}" download>${esc(f.name.split('.').pop().toUpperCase())} ↓</a>`).join('')||`<span class="note">${t('Your files are being prepared; they will appear in your profile.','ملفاتك عم تتجهّز، وبتظهر ببروفايلك.')}</span>`}</div></div>`).join('')}</div>
     <p class="note" style="margin-top:12px">${t('Your files will reach your email and your profile shortly.','ملفاتك رح توصل على إيميلك وبروفايلك قريبًا.')}</p>
-    <div class="next"><a class="btn terra" href="postcards.html#write">${t('Send a free postcard','ابعت بوست كارد ببلاش')} ✉</a><a class="btn alt" href="shop.html">${t('Back to the shop','رجوع للمتجر')}</a></div>`;
+    <div class="next"><a class="btn terra" href="postcards.html#write">${t('Send a free postcard','ابعت بطاقة بريدية ببلاش')} ✉</a><a class="btn alt" href="shop.html">${t('Back to the shop','رجوع للمتجر')}</a></div>`;
   scrollTo(0,0)}
 
 $('#bag').onclick=e=>{e.preventDefault();(document.querySelector('.sum')||document.body).scrollIntoView({behavior:'smooth'})};

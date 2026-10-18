@@ -141,12 +141,12 @@ label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-tran
 <footer>
   <div class="fgrid">
     <div>
-      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
-      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <h2 class="d" data-ar="بطاقة بريدية في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month, and nothing else.</p>
       <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
     </div>
     <div><h4 data-ar="المتجر">Shop</h4><ul>
-      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+      <li><a href="paintings.html" data-ar="اللوحات">Paintings</a></li><li><a href="postcards.html" data-ar="البطاقات البريدية">Postcards</a></li><li><a href="stickers.html" data-ar="الملصقات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم السنوي">Calendar</a></li></ul></div>
     <div><h4 data-ar="عنّا">About</h4><ul>
       <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
   </div>
@@ -159,7 +159,7 @@ label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-tran
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 let AR=false;const t=(en,ar)=>AR?ar:en;
-const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const ard=n=>String(n);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 $$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
 function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
@@ -171,16 +171,16 @@ $('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}cat
 const D=[
  ['licence','Licence','الرخصة',[
   ['What you get','شو بتاخذ','When you buy a file you get a personal licence to use it. The painting and its copyright stay with Farah Al-Helou.','لما تشتري ملف بتاخذ رخصة استخدام شخصي. اللوحة وحقوقها بتضل لفرح الحلو.'],
-  ['You may','مسموح','Print it for your home or office · use it as a wallpaper · send a postcard file to friends · give a print as a gift.','تطبعه لبيتك أو مكتبك · تستخدمه خلفية · تبعت ملف البوست كارد لأصحابك · تهدي طبعة.'],
+  ['You may','مسموح','Print it for your home or office · use it as a wallpaper · send a postcard file to friends · give a print as a gift.','تطبعه لبيتك أو مكتبك · تستخدمه خلفية · تبعت ملف البطاقة البريدية لأصحابك · تهدي طبعة.'],
   ['You may not','ممنوع','Sell the file or prints of it · put it on products for sale · share it publicly for download · use it to train AI · remove the signature.','تبيع الملف أو طبعاته · تحطه على منتجات للبيع · تنشره للتحميل العام · تستخدمه لتدريب ذكاء اصطناعي · تشيل التوقيع.']]],
  ['terms','Terms of sale','شروط البيع',[
   ['Prices and payment','الأسعار والدفع','Prices show in your local currency (euro, dollar, pound or shekel), picked from where you open the site, and include all fees. You pay in that currency through PayPal; we never see your card.','الأسعار بتطلع بعملة بلدك (يورو، دولار، جنيه أو شيكل) حسب المكان اللي فاتح منه الموقع، وشاملة كل شي. بتدفع بنفس العملة عن طريق باي بال، وإحنا ما بنشوف بطاقتك.'],
   ['Delivery','التوصيل','Files are delivered instantly as downloads and by email. Nothing physical is shipped yet.','الملفات بتوصل فورًا للتحميل وعلى الإيميل. ما في شحن لأشياء مطبوعة لهلأ.'],
-  ['Refunds','الاسترجاع','Because files are delivered instantly, sales are final. If a file is broken or not what you ordered, write within 14 days and we fix it or refund you.','لأن الملفات بتوصل فورًا، البيع نهائي. إذا الملف خربان أو مش اللي طلبته، ابعتلنا خلال ١٤ يوم وبنصلحه أو بنرجعلك.'],
-  ['A painting a month','لوحة كل شهر','€5 billed monthly from the day you subscribe. Cancel any time from your profile; you keep every painting you received.','€٥ كل شهر من يوم الاشتراك. بتلغيه وقت ما بدك من بروفايلك، وكل لوحة وصلتك بتضل إلك.']]],
+  ['Refunds','الاسترجاع','Because files are delivered instantly, sales are final. If a file is broken or not what you ordered, write within 14 days and we fix it or refund you.','لأن الملفات بتوصل فورًا، البيع نهائي. إذا الملف خربان أو مش اللي طلبته، ابعتلنا خلال 14 يوم وبنصلحه أو بنرجعلك.'],
+  ['A painting a month','لوحة كل شهر','€5 billed monthly from the day you subscribe. Cancel any time from your profile; you keep every painting you received.','€5 كل شهر من يوم الاشتراك. بتلغيه وقت ما بدك من بروفايلك، وكل لوحة وصلتك بتضل إلك.']]],
  ['privacy','Privacy','الخصوصية',[
   ['What we keep','شو بنحفظ','Your name, email, photo if you add one, your orders and your subscription. If you sign in with Google we receive your name, email and photo from Google.','اسمك، إيميلك، صورتك إذا ضفتها، طلباتك واشتراكك. إذا دخلت بجوجل بيوصلنا منه اسمك وإيميلك وصورتك.'],
-  ['What we do with it','شو بنعمل فيها','Deliver your files, run your account, and, if you agree, send the monthly postcard email. We never sell your data.','بنوصلك ملفاتك، بنشغّل حسابك، وإذا وافقت بنبعتلك إيميل البوست كارد الشهري. وما بنبيع بياناتك أبدًا.'],
+  ['What we do with it','شو بنعمل فيها','Deliver your files, run your account, and, if you agree, send the monthly postcard email. We never sell your data.','بنوصلك ملفاتك، بنشغّل حسابك، وإذا وافقت بنبعتلك إيميل البطاقة البريدية الشهري. وما بنبيع بياناتك أبدًا.'],
   ['Your rights','حقوقك','Ask for a copy of your data or delete your account at any time from Settings, or by writing to info@massandgrass.com.','بتقدر تطلب نسخة من بياناتك أو تحذف حسابك وقت ما بدك من الإعدادات، أو تبعتلنا على info@massandgrass.com.']]]];
 window.render=()=>{
   $('#toc').innerHTML=D.map(d=>`<a href="#${d[0]}">${t(d[1],d[2])}</a>`).join('');

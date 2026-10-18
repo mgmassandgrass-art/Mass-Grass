@@ -142,12 +142,12 @@ label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-tran
 <footer>
   <div class="fgrid">
     <div>
-      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
-      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <h2 class="d" data-ar="بطاقة بريدية في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month, and nothing else.</p>
       <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
     </div>
     <div><h4 data-ar="المتجر">Shop</h4><ul>
-      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+      <li><a href="paintings.html" data-ar="اللوحات">Paintings</a></li><li><a href="postcards.html" data-ar="البطاقات البريدية">Postcards</a></li><li><a href="stickers.html" data-ar="الملصقات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم السنوي">Calendar</a></li></ul></div>
     <div><h4 data-ar="عنّا">About</h4><ul>
       <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
   </div>
@@ -160,7 +160,7 @@ label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-tran
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 let AR=false;const t=(en,ar)=>AR?ar:en;
-const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const ard=n=>String(n);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 $$('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
 function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.body.classList.toggle('ar-on',a);
@@ -171,14 +171,14 @@ $('#langBtn').onclick=()=>{setLang(!AR);try{localStorage.mgLang=AR?'ar':'en'}cat
 
 const QA=[
  ['How do I get my files?','كيف بتوصلني الملفات؟','Right after you pay you get a download page, and a copy goes to your email. If you have an account, every file also stays in your profile.','بعد الدفع مباشرة بتطلعلك صفحة تحميل، ونسخة بتوصل إيميلك. وإذا عندك حساب، كل ملف بيضل محفوظ ببروفايلك.'],
- ['What formats do I get?','شو صيغة الملفات؟','Paintings and postcards come as a high-res PDF and PNG (300 dpi). Stickers come as transparent PNGs plus WhatsApp and Telegram packs. The calendar is a PDF in A3 and A4.','اللوحات والبوست كارد PDF وPNG بدقة عالية (٣٠٠ dpi). الستكرات PNG شفاف مع باكيت واتساب وتيليغرام. التقويم PDF بمقاسين A3 وA4.'],
- ['How big can I print?','لأي حجم بقدر أطبع؟','Up to A3 looks sharp. For bigger, write to us and we send a larger file.','لحد A3 بتطلع حادة. إذا بدك أكبر، ابعتلنا وبنبعتلك ملف أكبر.'],
+ ['What formats do I get?','شو صيغة الملفات؟','Paintings and postcards come as a high-res PDF and PNG (300 dpi). Stickers come as transparent PNGs plus WhatsApp and Telegram packs. The calendar is a PDF in A3 and A4.','اللوحات والبطاقات البريدية PDF وPNG بدقة عالية (300 dpi). الملصقات PNG شفاف مع باكيت واتساب وتيليغرام. التقويم PDF بمقاسين A3 وA4.'],
+ ['How big can I print?','لأي حجم بقدر أطبع؟','Up to A3 looks sharp. For anything bigger, write to us and we’ll send a larger file.','لحد A3 بتطلع حادة. إذا بدك أكبر، ابعتلنا وبنبعتلك ملف أكبر.'],
  ['Can I sell prints or use them commercially?','بقدر أبيع الطبعات أو أستخدمها تجاريًا؟','No. Files are for you: print them, hang them, give them as gifts. Selling, reprinting for sale or using them in products needs Farah’s written permission. See the licence in the terms.','لا. الملفات إلك: اطبعها، علّقها، أهديها. البيع أو إعادة الطباعة للبيع أو استخدامها بمنتجات بدها إذن مكتوب من فرح. شوف الرخصة بالشروط.'],
  ['How do gifts work?','كيف بتشتغل الهدايا؟','Choose “Send it to someone”, write their name, email and a note. Once you pay, we email them the file with your words.','اختار «ابعثها لحد»، اكتب اسمه وإيميله وكلمة إله. بعد الدفع بنبعتله الملف مع كلمتك.'],
- ['What is “A painting a month”?','شو هو «لوحة كل شهر»؟','A €5 monthly subscription: a new painting by Farah on the 1st of each month, before it reaches the shop. Cancel any time from your profile.','اشتراك بـ€٥ بالشهر: لوحة جديدة من فرح أول كل شهر، قبل ما تنزل عالمتجر. بتلغيه وقت ما بدك من بروفايلك.'],
- ['Something is wrong with my file. Can I get a refund?','في مشكلة بالملف، بقدر أسترجع؟','If a file is broken or not what you ordered, write to us within 14 days and we fix it or refund you.','إذا الملف خربان أو مش اللي طلبته، ابعتلنا خلال ١٤ يوم وبنصلحه أو بنرجعلك المبلغ.'],
+ ['What is “A painting a month”?','شو هو «لوحة كل شهر»؟','A €5 monthly subscription: a new painting by Farah on the 1st of each month, before it reaches the shop. Cancel any time from your profile.','اشتراك بـ€5 بالشهر: لوحة جديدة من فرح أول كل شهر، قبل ما تنزل عالمتجر. بتلغيه وقت ما بدك من بروفايلك.'],
+ ['Something is wrong with my file. Can I get a refund?','في مشكلة بالملف، بقدر أسترجع؟','If a file is broken or not what you ordered, write to us within 14 days and we fix it or refund you.','إذا الملف خربان أو مش اللي طلبته، ابعتلنا خلال 14 يوم وبنصلحه أو بنرجعلك المبلغ.'],
  ['Do you ship printed things?','بتشحنوا أشياء مطبوعة؟','Not yet. Tees, totes and mugs printed on demand are coming soon.','لسا لا. البلايز والشنط والمجات المطبوعة حسب الطلب قريبًا.'],
- ['Where does the money go?','لوين بتروح المصاري؟','Straight to the studio in Gaza: paint, paper, and keeping Farah painting and telling the story.','مباشرة للاستوديو في غزة: ألوان وورق، وعشان تضل فرح ترسم وتحكي الحكاية.']];
+ ['Where does the money go?','لوين بتروح المصاري؟','Straight to the studio in Gaza, for paint and paper, and so Farah can keep painting and telling the story.','مباشرة للاستوديو في غزة: ألوان وورق، وعشان تضل فرح ترسم وتحكي الحكاية.']];
 window.render=()=>{
   $('#faq').innerHTML=QA.map((q,i)=>`<details${i===0?' open':''}><summary>${t(q[0],q[1])}</summary><p>${t(q[2],q[3])}</p></details>`).join('');
   const U=window.MGUser&&MGUser.get();

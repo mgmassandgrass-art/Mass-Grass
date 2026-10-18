@@ -207,7 +207,7 @@ section.cat:nth-of-type(even){background:var(--paper) url(assets/paper.jpg);back
     <h1 class="d" data-ar="كل شي رسمته <em>فرح</em>">Everything <em>Farah</em> painted</h1>
   </div>
   <div>
-    <p data-ar="كل قطعة هون بلشت لوحة مائية رسمتها فرح الحلو بغزة. بتاخذها ملف رقمي بدقة عالية وبتحمّلها فورًا. الملابس والشنط قريبًا.">Every piece here started as a watercolour Farah Al-Helou painted in Gaza. You take it home as a high-res digital file and download it straight away. Tees and totes are coming soon.</p>
+    <p data-ar="كل قطعة هون بلشت لوحة مائية رسمتها فرح الحلو بغزة. بتاخذها ملف رقمي بدقة عالية وبتحمّلها فورًا. الملابس والشنط قريبًا.">Every piece here started as a watercolour Farah Al-Helou painted in Gaza. It comes as a high-res digital file you can download straight away. Tees and totes are coming soon.</p>
   </div>
 </div>
 <nav class="tabs" id="tabs" aria-label="Shop sections"></nav>
@@ -216,12 +216,12 @@ section.cat:nth-of-type(even){background:var(--paper) url(assets/paper.jpg);back
 <footer>
   <div class="fgrid">
     <div>
-      <h2 class="d" data-ar="بوست كارد في بريدك">A postcard in your inbox</h2>
-      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month. Nothing else.</p>
+      <h2 class="d" data-ar="بطاقة بريدية في بريدك">A postcard in your inbox</h2>
+      <p style="opacity:.75" data-ar="لوحة جديدة كل شهر، ولا شيء غيرها.">One new painting a month, and nothing else.</p>
       <form class="news" onsubmit="event.preventDefault();this.querySelector('button').textContent='✓'"><input type="email" placeholder="you@email.com" aria-label="Email"><button data-ar="اشترك">Join</button></form>
     </div>
     <div><h4 data-ar="المتجر">Shop</h4><ul>
-      <li><a href="paintings.html" data-ar="لوحات">Paintings</a></li><li><a href="postcards.html" data-ar="بوست كارد">Postcards</a></li><li><a href="stickers.html" data-ar="ستكرات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم">Calendar</a></li></ul></div>
+      <li><a href="paintings.html" data-ar="اللوحات">Paintings</a></li><li><a href="postcards.html" data-ar="البطاقات البريدية">Postcards</a></li><li><a href="stickers.html" data-ar="الملصقات">Stickers</a></li><li><a href="shop.html#apparel" data-ar="ملابس وشنط · قريبًا">Apparel &amp; totes · soon</a></li><li><a href="calendar.html" data-ar="التقويم السنوي">Calendar</a></li></ul></div>
     <div><h4 data-ar="عنّا">About</h4><ul>
       <li><a href="story.html" data-ar="الحكاية">Story</a></li><li><a href="https://instagram.com/farahh.gaza" target="_blank" rel="noopener" data-ar="انستغرام">Instagram</a></li></ul></div>
   </div>
@@ -233,7 +233,7 @@ section.cat:nth-of-type(even){background:var(--paper) url(assets/paper.jpg);back
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 let AR=false;
 const t=(en,ar)=>AR?ar:en;
-const ard=n=>AR?String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]):String(n);
+const ard=n=>String(n);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const src=k=>`assets/${k}.webp`;
 const rot=i=>((i*37)%5-2)*.8+'deg';
@@ -262,34 +262,34 @@ const PACKS=[['sea','Gaza Sea','بحر غزة','The coast, the boats and the fis
  ['home','Home','البيت','Gaza, home and the streets around it.','غزة والبيت والشوارع حوله.','#C4593F',['s-gaza','s-heart','house','alley','pcartgirl','s-whale']],
  ['night','Gaza Nights','ليالي غزة','Moons, sparklers and night songs.','أقمار وشماريخ وأغاني الليل.','#2E241B',['sparklers','pmoon','pmoonsleep','guitar','pelephant','ptree']]];
 const CALS=[
- {y:2027,cover:'house',acc:'#C4593F',sub:['Twelve months painted in Gaza','١٢ شهر مرسومين في غزة'],months:['waves','psea','ppoppies','blueflowers','pflower','hero','boattop','seafish','dovegirl','deirbalah','alley','sparklers'],
+ {y:2027,cover:'house',acc:'#C4593F',sub:['Twelve months painted in Gaza','12 شهر مرسومين في غزة'],months:['waves','psea','ppoppies','blueflowers','pflower','hero','boattop','seafish','dovegirl','deirbalah','alley','sparklers'],
   note:['The new calendar: a painting for every month, the days laid out, the months in English and in Levantine Arabic.','التقويم الجديد: لوحة لكل شهر، والأيام مرتبة، والأشهر بالإنجليزي وبالعربي الشامي.']},
  {y:2026,cover:'pmoon',acc:'#66805A',sub:['Back home, al-Jalaa','رجعة للبيت، الجلاء'],months:['pmoon','pelephant','ptree','pcartgirl','pflower','ppoppies','blueflowers','pwaves','pboat','pcart','pmoonsleep','sparklers'],note:['Painted after going back home, in the small office by al-Saraya.','انرسم بعد الرجعة للبيت، بالمكتب الصغير عند السرايا.']},
  {y:2025,coverSrc:'assets/cal2025.jpg',cover:'house',acc:'#C4593F',sub:['Painted in displacement, az-Zawayda','انرسم بالنزوح، الزوايدة'],months:['house','dovegirl','deirbalah','hill','hero','waves','seafish','boattop','psea','pwhale','plemons','sparklers'],note:['A record of every place Farah was displaced to. It reached people in many countries and was shown in several exhibitions.','توثيق لكل مكان نزحت إله فرح. وصل لناس بدول كثيرة وانعرض بعدة معارض.']},
  {y:2024,cover:'guitar',acc:'#3f6b8a',sub:['Painted at home, al-Jalaa','انرسم بالبيت، الجلاء'],months:['guitar','pmoon','hill','house','alley','boatman','waves','pflower','ppoppies','pcartgirl','pmoonsleep','ptree'],note:['The last calendar Farah painted at home before the war.','آخر تقويم رسمته فرح بالبيت قبل الحرب.']}];
 const TEES=[['boattop','#66805A','Tee','بلوزة'],['pelephant','#E9E2D2','Tee','بلوزة'],['hero','#3f6b8a','Tote bag','شنطة'],['sparklers','#2E241B','Hoodie','هودي']];
 
-const SECS=[['paintings','Paintings','لوحات',PT.length],['postcards','Postcards','بوست كارد',PCK.length],['stickers','Stickers','ستكرات',S.length],['calendar','Calendars','تقاويم',CALS.length],['apparel','Tees & totes','ملابس وشنط',0]];
+const SECS=[['paintings','Paintings','اللوحات',PT.length],['postcards','Postcards','البطاقات البريدية',PCK.length],['stickers','Stickers','الملصقات',S.length],['calendar','Calendars','تقاويم',CALS.length],['apparel','Tees & totes','ملابس وشنط',0]];
 
 function head(id,kick,h,p,link){return `<div class="shead"><div><span class="kick">${kick}</span><h2 class="d">${h}</h2><p>${p}</p></div>${link||''}</div>`}
 function build(){
   $('#tabs').innerHTML=SECS.map(([id,en,ar,n])=>`<a href="#${id}" data-s="${id}">${t(en,ar)}${n?`<small>${ard(n)}</small>`:`<small>${t('soon','قريبًا')}</small>`}</a>`).join('');
   $('#main').innerHTML=`
-  <section class="cat" id="paintings">${head('paintings',t('Paintings · €12','لوحات · €١٢'),t('Paintings','اللوحات'),t('Tap a painting to see it whole, framed on a wall, and in detail. Each one is a high-res PDF + PNG to print at any size.','اضغط على أي لوحة لتشوفها كاملة، وبإطار عالحيط، وبالتفاصيل. كل وحدة ملف PDF + PNG بدقة عالية تطبعه بأي حجم.'),`<a class="go" href="paintings.html">${t('Walk Farah’s line →','امشِ على حبل فرح ←')}</a>`)}
+  <section class="cat" id="paintings">${head('paintings',t('Paintings · €12','لوحات · €12'),t('Paintings','اللوحات'),t('Tap a painting to see it whole, framed on a wall, and in detail. Each one is a high-res PDF + PNG to print at any size.','اضغط على أي لوحة لتشوفها كاملة، وبإطار عالحيط، وبالتفاصيل. كل وحدة ملف PDF + PNG بدقة عالية تطبعه بأي حجم.'),`<a class="go" href="paintings.html">${t('Walk Farah’s line →','امشِ على حبل فرح ←')}</a>`)}
     <div class="pgrid">${PT.map((p,i)=>`<button class="tile" data-kind="painting" data-k="${p[0]}">${p[6]?`<span class="new">${t('NEW','جديد')}</span>`:''}<div class="sheet" style="--r:${rot(i)}"><img src="${src(p[0])}" alt="" loading="lazy"></div><div class="cap"><div><h3>${esc(t(p[1],p[2]))}</h3><span class="pl">${esc(t(p[3],p[4]))}</span></div><span class="price">€${ard(12)}</span></div></button>`).join('')}</div>
   </section>
-  <section class="cat" id="postcards">${head('postcards',t('Postcards · €2','بوست كارد · €٢'),t('Postcards','البوست كارد'),t('Pick a card, write on it and send it to someone you love for free, or buy the printable file.','اختار بطاقة، اكتب عليها وابعتها لحد بتحبه ببلاش، أو اشتري ملفها للطباعة.'),`<a class="go" href="postcards.html">${t('Spin the postcard rack →','لفّ ستاند البوست كارد ←')}</a>`)}
+  <section class="cat" id="postcards">${head('postcards',t('Postcards · €2','بطاقات بريدية · €2'),t('Postcards','البطاقات البريدية'),t('Pick a card, write on it and send it to someone you love for free, or buy the printable file.','اختار بطاقة، اكتب عليها وابعتها لحد بتحبه ببلاش، أو اشتري ملفها للطباعة.'),`<a class="go" href="postcards.html">${t('Spin the postcard rack →','لفّ ستاند البطاقات البريدية ←')}</a>`)}
     <div class="cgrid">${PCK.map((k,i)=>{const p=pc(k);return `<div><button class="tile" data-kind="postcard" data-k="${k}" data-i="${i}"><div class="pcd"><div class="in" style="--r:${rot(i+1)}"><div class="fr"><img src="${src(k)}" alt="" loading="lazy"></div><div class="bk"><em>${t('Dear…','عزيزي…')}</em><i style="background-image:url(${src(STAMPS[i%6])})"></i><b></b><b></b><b></b></div></div></div></button>
       <div class="cap"><div><h3>${esc(t(p[1],p[2]))}</h3><span class="pl">${esc(t(p[3],p[4]))}</span></div><span class="price">€${ard(2)}</span></div>
       <div class="row2"><button class="mini t" data-write="${k}">✎ ${t('Write & send','اكتبها وابعتها')}</button><button class="mini" data-buy="${k}">${t('Add to bag','أضف للسلة')}</button></div></div>`}).join('')}</div>
   </section>
-  <section class="cat" id="stickers">${head('stickers',t('Stickers · €1 each · 6 for €3','ستكرات · €١ للوحدة · ٦ بـ€٣'),t('Stickers','الستكرات'),t('Tap a sticker to take it on its own, or add it to a pack of six you fill yourself.','اضغط على ستكر لتاخذه لحاله، أو ضيفه لباكيت من ٦ بتعبّيه بنفسك.'),`<a class="go" href="stickers.html">${t('Open the sticker sheet →','افتح ورقة الستكرات ←')}</a>`)}
+  <section class="cat" id="stickers">${head('stickers',t('Stickers · €1 each · 6 for €3','ملصقات · €1 للوحدة · 6 بـ€3'),t('Stickers','الملصقات'),t('Tap a sticker to take it on its own, or add it to a pack of six you fill yourself.','اضغط على ملصق لتاخذه لحاله، أو ضيفه لباكيت من 6 بتعبّيه بنفسك.'),`<a class="go" href="stickers.html">${t('Open the sticker sheet →','افتح ورقة الملصقات ←')}</a>`)}
     <div class="sgrid">${S.map((s,i)=>`<button class="tile sk" data-kind="sticker" data-k="${s[0]}"><span class="art ${s[1]}" style="--r:${rot(i+2)}"><img src="${src(s[0])}" alt="" loading="lazy"></span><h3>${esc(t(s[2],s[3]))}</h3><span class="ps">€${ard(1)}</span></button>`).join('')}</div>
-    <p class="sub">${t('Or a ready pack of six · €3','أو باكيت جاهز من ٦ · €٣')}</p>
+    <p class="sub">${t('Or a ready pack of six · €3','أو باكيت جاهز من 6 · €3')}</p>
     <div class="packs">${PACKS.map(([id,en,ar,le,la,c,ks])=>`<div class="pk" style="--c:${c}"><div class="m">${ks.map(k=>`<img src="${src(k)}" alt="" loading="lazy">`).join('')}</div><h3>${t(en,ar)}</h3><p>${t(le,la)}</p><div class="b"><span class="price">€${ard(3)}</span><button class="mini t" data-pack="${id}">${t('Add to bag','أضف للسلة')}</button></div></div>`).join('')}</div>
   </section>
-  <section class="cat" id="calendar">${head('calendar',t('Calendars · one a year','تقاويم · واحد كل سنة'),t('Calendars','التقاويم'),t('Every year Farah paints twelve months. Tap a year to see its paintings and its design. 2027 is out now; the years before it are kept here as an archive.','كل سنة فرح بترسم ١٢ شهر. اضغط على سنة لتشوف لوحاتها وتصميمها. تقويم ٢٠٢٧ نازل هلأ، والسنين اللي قبله محفوظة هون كأرشيف.'),`<a class="go" href="calendar.html">${t('Tear through 2027 →','قلّب تقويم ٢٠٢٧ ←')}</a>`)}
-    <div class="ygrid">${CALS.map((c,i)=>`<button class="tile" data-kind="calendar" data-y="${c.y}" data-k="${c.cover}"><div class="yc" style="--r:${rot(i+3)};--acc:${c.acc}"><span class="tag${i?' arc':''}">${i?t('Archive','أرشيف'):t('New · €8','جديد · €٨')}</span><img src="${c.coverSrc||src(c.cover)}" alt="" loading="lazy"><b>${ard(c.y)}</b><small>${t('Twelve months painted in Gaza','١٢ شهر مرسومين في غزة')}</small></div><div class="ycap"><h3>${t('Calendar','تقويم')} ${ard(c.y)}</h3><span>${esc(t(...c.sub))}</span></div></button>`).join('')}</div>
+  <section class="cat" id="calendar">${head('calendar',t('Calendars · one a year','تقاويم · واحد كل سنة'),t('Calendars','التقاويم'),t('Every year Farah paints twelve months. Tap a year to see its paintings and its design. 2027 is out now; the years before it are kept here as an archive.','كل سنة فرح بترسم 12 شهر. اضغط على سنة لتشوف لوحاتها وتصميمها. تقويم 2027 نازل هلأ، والسنين اللي قبله محفوظة هون كأرشيف.'),`<a class="go" href="calendar.html">${t('Tear through 2027 →','قلّب تقويم 2027 ←')}</a>`)}
+    <div class="ygrid">${CALS.map((c,i)=>`<button class="tile" data-kind="calendar" data-y="${c.y}" data-k="${c.cover}"><div class="yc" style="--r:${rot(i+3)};--acc:${c.acc}"><span class="tag${i?' arc':''}">${i?t('Archive','أرشيف'):t('New · €8','جديد · €8')}</span><img src="${c.coverSrc||src(c.cover)}" alt="" loading="lazy"><b>${ard(c.y)}</b><small>${t('Twelve months painted in Gaza','12 شهر مرسومين في غزة')}</small></div><div class="ycap"><h3>${t('Calendar','تقويم')} ${ard(c.y)}</h3><span>${esc(t(...c.sub))}</span></div></button>`).join('')}</div>
   </section>
   <section class="cat" id="apparel">${head('apparel',t('Coming soon','قريبًا'),t('Tees & totes','ملابس وشنط'),t('Farah’s paintings on tees, hoodies, totes and mugs, printed on demand. Join the list below and we’ll tell you the day they open.','لوحات فرح على بلايز وهوديز وشنط ومجات، بتنطبع حسب الطلب. اشترك تحت وبنخبرك يوم ما تفتح.'))}
     <div class="agrid">${TEES.map(([k,c,en,ar])=>`<div><div class="tee" style="--c:${c}"><img src="${src(k)}" alt="" loading="lazy"></div><div class="cap"><h3>${t(en,ar)}</h3><span class="soonb">${t('Soon','قريبًا')}</span></div></div>`).join('')}</div>
@@ -301,17 +301,17 @@ $('#main').addEventListener('click',e=>{
   const w=e.target.closest('[data-write]'),b=e.target.closest('[data-buy]'),pk=e.target.closest('[data-pack]'),tl=e.target.closest('.tile');
   if(w){const p=pc(w.dataset.write);MGCompose(p[0],p[1],p[2]);return}
   if(b){const p=pc(b.dataset.buy);MGBag.add({k:p[0],kind:'postcard',t:p[1],ta:p[2],p:2});b.textContent=t('Added ✓','انضافت ✓');return}
-  if(pk){const P=PACKS.find(x=>x[0]===pk.dataset.pack);MGBag.add({k:'pack-'+P[0],kind:'sticker',t:P[1]+' · sticker pack',ta:'باكيت ستكرات · '+P[2],p:3,img:src(P[6][0])});pk.textContent=t('Added ✓','انضاف ✓');return}
+  if(pk){const P=PACKS.find(x=>x[0]===pk.dataset.pack);MGBag.add({k:'pack-'+P[0],kind:'sticker',t:P[1]+' · sticker pack',ta:'باكيت ملصقات · '+P[2],p:3,img:src(P[6][0])});pk.textContent=t('Added ✓','انضاف ✓');return}
   if(!tl)return;const k=tl.dataset.k,kind=tl.dataset.kind;
   if(kind==='painting'){const p=BYP[k];MGProduct.open({key:k,title:p[1],titleAr:p[2],place:p[3],placeAr:p[4],kind,kindLabel:'Painting',kindLabelAr:'لوحة',no:PT.indexOf(p)+1,big:p[5]?`assets/${k}.jpg`:null})}
-  else if(kind==='postcard'){const p=pc(k);MGProduct.open({key:k,title:p[1],titleAr:p[2],place:p[3],placeAr:p[4],kind,kindLabel:'Postcard',kindLabelAr:'بوست كارد',no:+tl.dataset.i+1})}
-  else if(kind==='sticker'){const s=BYS[k];MGProduct.open({key:k,title:s[2],titleAr:s[3],place:s[4],placeAr:s[5],kind,shape:s[1],kindLabel:'Sticker',kindLabelAr:'ستكر',no:S.indexOf(s)+1,form:'one'})}
+  else if(kind==='postcard'){const p=pc(k);MGProduct.open({key:k,title:p[1],titleAr:p[2],place:p[3],placeAr:p[4],kind,kindLabel:'Postcard',kindLabelAr:'بطاقة بريدية',no:+tl.dataset.i+1})}
+  else if(kind==='sticker'){const s=BYS[k];MGProduct.open({key:k,title:s[2],titleAr:s[3],place:s[4],placeAr:s[5],kind,shape:s[1],kindLabel:'Sticker',kindLabelAr:'ملصق',no:S.indexOf(s)+1,form:'one'})}
   else if(kind==='calendar'){const c=CALS.find(x=>x.y===+tl.dataset.y);MGProduct.open({key:c.cover,coverSrc:c.coverSrc,kind,year:c.y,months:c.months,archive:c.y<2027,title:t(`Calendar ${c.y}`,`تقويم ${ard(c.y)}`),titleAr:`تقويم ${ard(c.y)}`,sub:c.sub,story:c.note[0],storyAr:c.note[1],kindLabel:c.y<2027?'Calendar · archive':'Calendar · new',kindLabelAr:c.y<2027?'تقويم · أرشيف':'تقويم · جديد'})}
 });
 
 /* ---- the pack you fill yourself ---- */
 function tray(){const a=MGPack.get(),el=$('#tray');el.classList.toggle('on',a.length>0);
-  el.innerHTML=`<b>${t('Your pack','باكيتك')} ${ard(a.length)}/${ard(6)}</b><div class="sl">${Array.from({length:6},(_,i)=>`<span>${a[i]?`<img src="${src(a[i])}" alt="">`:''}</span>`).join('')}</div>${a.length>=6?`<button class="mini t" id="trayb">${t('Put it in the bag · €3','حطّه بالسلة · €٣')}</button>`:`<span class="mini" style="cursor:default">${t(`${6-a.length} more`,`باقي ${ard(6-a.length)}`)}</span>`}<button class="x" id="trayx" aria-label="${t('Empty the pack','فضّي الباكيت')}">✕</button>`;
+  el.innerHTML=`<b>${t('Your pack','باكيتك')} ${ard(a.length)}/${ard(6)}</b><div class="sl">${Array.from({length:6},(_,i)=>`<span>${a[i]?`<img src="${src(a[i])}" alt="">`:''}</span>`).join('')}</div>${a.length>=6?`<button class="mini t" id="trayb">${t('Put it in the bag · €3','حطّه بالسلة · €3')}</button>`:`<span class="mini" style="cursor:default">${t(`${6-a.length} more`,`باقي ${ard(6-a.length)}`)}</span>`}<button class="x" id="trayx" aria-label="${t('Empty the pack','فضّي الباكيت')}">✕</button>`;
   const b=$('#trayb');if(b)b.onclick=()=>MGPack.toBag();$('#trayx').onclick=()=>MGPack.clear()}
 document.addEventListener('mgpack',tray);
 
