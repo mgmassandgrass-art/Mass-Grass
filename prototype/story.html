@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="stylesheet" href="fonts/fonts.css">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/anton-latin-400-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/lalezar-arabic-400-normal.woff2">
 <script src="assets/mg.js"></script>
 <meta name="description" content="The story of Mass & Grass and Farah Al-Helou, the painter behind it, told on a map of displacement.">
 <link rel="canonical" href="https://www.massandgrass.com/story.html">
@@ -51,12 +53,12 @@ header>*{pointer-events:auto}
 .logo img{width:100%;height:100%}
 nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
 nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
-nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+nav a.on{background:var(--ink);color:var(--paper)}@media(hover:hover){nav a:hover{background:var(--ink);color:var(--paper)}}
 .ar-on nav a{font-family:var(--ar);font-size:16px}
 .tools{display:flex;gap:8px;justify-self:end}
 .chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
-.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
-.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+@media(hover:hover){.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}}
+.chip:active{transform:translate(1px,1px);box-shadow:0 0 0 transparent;transition-duration:.08s}
 .bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
 .bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
 /* header scales with the screen instead of jumping at a breakpoint */
@@ -80,7 +82,7 @@ footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
 .ar-on .news button{font-family:var(--ar)}
 footer ul{list-style:none;padding:0;display:grid;gap:8px}
 footer ul a{text-decoration:none;opacity:.85}
-footer ul a:hover{opacity:1;text-decoration:underline}
+@media(hover:hover){footer ul a:hover{opacity:1;text-decoration:underline}}
 footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
 .legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
 @media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
@@ -138,6 +140,7 @@ body[data-lang=en] .letter p{font-size:3.25cqw;line-height:1.75}
 .letter .sig{display:inline-block;vertical-align:middle;margin-inline-end:5cqw;margin-top:1.6cqw;width:26cqw;aspect-ratio:var(--sar,2.56);background:var(--img-signature) center/contain no-repeat}
 .letter .go{display:inline-flex;align-items:center;gap:2cqw;margin-top:1.5cqw;font:400 3.4cqw/1 var(--f-ar-disp);color:#C4593F;border-bottom:.5cqw solid}
 body[data-lang=en] .letter .go{font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.03em}
+@media(pointer:coarse){.letter .go{position:relative}.letter .go::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}}
 .letter .go svg{width:4cqw;height:4cqw;animation:bob2 1.4s ease-in-out infinite}
 @keyframes bob2{50%{translate:0 .8cqw}}
 .scrollhint{position:absolute;bottom:2.5vh;left:50%;translate:-50% 0;z-index:10;font:600 12px/1 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;opacity:calc(1 - var(--p,0)*6);display:flex;align-items:center;gap:10px;color:var(--paper);background:var(--ink);border:0;padding:9px 16px 9px 14px;box-shadow:1px 1px 0 rgba(196,89,63,0.28);white-space:nowrap}
@@ -310,7 +313,7 @@ body[data-lang=en] .painter .role{font:600 30px/1 var(--f-script)}
 .receipt .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
 .receipt .btns a{flex:1 1 100%;display:flex;align-items:center;justify-content:center;gap:10px;border:2px solid #2E241B;padding:13px 14px;font:400 21px/1 var(--f-ar-disp);box-shadow:2px 3px 0 rgba(46,36,27,0.25);transition:.15s}
 body[data-lang=en] .receipt .btns a{font-family:var(--f-disp);text-transform:uppercase;font-size:19px}
-.receipt .btns a:hover{transform:translate(-2px,-2px);box-shadow:3px 4px 0 rgba(46,36,27,0.25)}
+@media(hover:hover){.receipt .btns a:hover{transform:translate(-2px,-2px);box-shadow:3px 4px 0 rgba(46,36,27,0.25)}}
 .receipt .btns .d{background:#C4593F;color:#FBF6EA}.receipt .btns .k{background:#FBF6EA;color:#2E241B}
 .receipt small{display:block;margin-top:18px;text-align:center;font:500 13px/1.6 var(--f-ar);color:#6f6150}
 .fly{position:fixed;z-index:4000;width:90px;aspect-ratio:515/520;pointer-events:none;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(1px 2px 0 rgba(46,36,27,0.28))}

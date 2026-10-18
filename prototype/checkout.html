@@ -7,6 +7,8 @@
 <meta name="robots" content="noindex">
 <title>Checkout · Mass &amp; Grass</title>
 <link rel="stylesheet" href="fonts/fonts.css">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/anton-latin-400-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/lalezar-arabic-400-normal.woff2">
 <style>
 :root{--gut:clamp(16px,4vw,56px);--field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--env:#FBF7EE;--soft:#6f604d;--en:'Anton',Impact,sans-serif;--ar:'Lalezar',sans-serif;--body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;--hand:'Caveat','Aref Ruqaa',cursive}
 *{box-sizing:border-box;margin:0}
@@ -26,12 +28,12 @@ header>*{pointer-events:auto}
 .logo img{width:100%;height:100%}
 nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
 nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
-nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+nav a.on{background:var(--ink);color:var(--paper)}@media(hover:hover){nav a:hover{background:var(--ink);color:var(--paper)}}
 .ar-on nav a{font-family:var(--ar);font-size:16px}
 .tools{display:flex;gap:8px;justify-self:end}
 .chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
-.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
-.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+@media(hover:hover){.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}}
+.chip:active{transform:translate(1px,1px);box-shadow:0 0 0 transparent;transition-duration:.08s}
 .bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
 .bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
 /* header scales with the screen instead of jumping at a breakpoint */
@@ -55,12 +57,13 @@ footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
 .ar-on .news button{font-family:var(--ar)}
 footer ul{list-style:none;padding:0;display:grid;gap:8px}
 footer ul a{text-decoration:none;opacity:.85}
-footer ul a:hover{opacity:1;text-decoration:underline}
+@media(hover:hover){footer ul a:hover{opacity:1;text-decoration:underline}}
 footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
 .legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
 @media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
 
 .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:start;margin-top:clamp(20px,3vw,40px)}
+#wrap{min-height:420px}
 .box{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);padding:clamp(18px,2.4vw,30px)}
 .step{display:grid;gap:12px;padding-bottom:22px;margin-bottom:22px;border-bottom:1.5px dashed rgba(46,36,27,.3)}
 .step:last-child{border:0;margin:0;padding:0}
@@ -75,7 +78,8 @@ input.bad{border-color:var(--terra);background:#fff3ef}
 .chk input{width:20px;height:20px;accent-color:var(--terra);margin-top:1px;flex:none}
 .err{font:600 18px/1.1 var(--hand);color:var(--terra);min-height:1em}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:14px 18px 12px;font:18px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;box-shadow:3px 3px 0 rgba(196,89,63,.45);text-decoration:none;transition:transform .15s}
-.btn:hover{transform:translate(-1px,-1px)}
+@media(hover:hover){.btn:hover{transform:translate(-1px,-1px)}}
+.btn:active{transform:translate(2px,2px);box-shadow:0 0 0 transparent;transition-duration:.08s}
 .btn.terra{background:var(--terra)}
 .btn.alt{background:var(--paper);color:var(--ink)}
 .btn.pay{width:100%;background:var(--ochre);color:var(--ink);font-size:20px;padding:16px 18px 14px}
@@ -95,6 +99,7 @@ input.bad{border-color:var(--terra);background:#fff3ef}
 .it .gf{display:block;font:600 17px/1.1 var(--hand);color:var(--terra)}
 .it .pr{font:20px/1 var(--en)}
 .it .rm{display:block;margin-top:6px;border:0;background:none;font:11px var(--mono);text-decoration:underline;color:var(--soft);cursor:pointer;padding:0}
+@media(pointer:coarse){.it .rm{position:relative}.it .rm::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}}
 .tot{display:grid;gap:6px;margin-top:14px}
 .tot div{display:flex;justify-content:space-between;font:12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
 .tot .g{border-top:2px solid var(--ink);padding-top:10px;margin-top:4px;color:var(--ink);align-items:baseline}

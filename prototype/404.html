@@ -7,6 +7,8 @@
 <meta name="robots" content="noindex">
 <title>Lost letter · Mass &amp; Grass</title>
 <link rel="stylesheet" href="fonts/fonts.css">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/anton-latin-400-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/lalezar-arabic-400-normal.woff2">
 <script src="assets/mg.js"></script>
 <style>
 :root{--gut:clamp(20px,5vw,80px);
@@ -34,12 +36,12 @@ header>*{pointer-events:auto}
 .logo img{width:100%;height:100%}
 nav{display:flex;gap:4px;background:var(--paper);padding:5px;box-shadow:2px 2px 0 rgba(46,36,27,0.25);border:1.5px solid var(--ink)}
 nav a{font:15px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;text-decoration:none;padding:8px 12px 7px}
-nav a:hover,nav a.on{background:var(--ink);color:var(--paper)}
+nav a.on{background:var(--ink);color:var(--paper)}@media(hover:hover){nav a:hover{background:var(--ink);color:var(--paper)}}
 .ar-on nav a{font-family:var(--ar);font-size:16px}
 .tools{display:flex;gap:8px;justify-self:end}
 .chip{border:1.5px solid var(--ink);background:var(--paper);box-shadow:1px 1px 0 rgba(46,36,27,0.25);height:38px;min-width:38px;padding:0 10px;display:grid;place-items:center;font:13px/1 var(--mono);font-weight:600;transition:transform .15s,box-shadow .15s}
-.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}
-.chip:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+@media(hover:hover){.chip:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(46,36,27,0.25)}}
+.chip:active{transform:translate(1px,1px);box-shadow:0 0 0 transparent;transition-duration:.08s}
 .bag{gap:6px;display:flex;align-items:center;background:var(--terra);color:#fff;border-color:var(--ink)}
 .bag b{background:#fff;color:var(--terra);border-radius:20px;padding:1px 6px;font-size:11px}
 /* header scales with the screen instead of jumping at a breakpoint */
@@ -63,7 +65,7 @@ footer h2{font-size:clamp(28px,3vw + 16px,60px);margin-bottom:16px}
 .ar-on .news button{font-family:var(--ar)}
 footer ul{list-style:none;padding:0;display:grid;gap:8px}
 footer ul a{text-decoration:none;opacity:.85}
-footer ul a:hover{opacity:1;text-decoration:underline}
+@media(hover:hover){footer ul a:hover{opacity:1;text-decoration:underline}}
 footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-bottom:14px;font-weight:400}
 .legal{margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:11px var(--mono);letter-spacing:.1em;opacity:.55;text-transform:uppercase}
 @media (max-width:760px){.fgrid{grid-template-columns:1fr 1fr}.fgrid>div:first-child{grid-column:1/-1}}
@@ -77,7 +79,7 @@ footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;op
 .lead{color:var(--soft);max-width:50ch;font-size:clamp(15px,.3vw + 14px,18px)}
 .box{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);padding:clamp(18px,2.6vw,32px)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);padding:13px 18px 11px;font:17px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;box-shadow:3px 3px 0 rgba(196,89,63,.45);text-decoration:none;transition:transform .15s}
-.btn:hover{transform:translate(-1px,-1px)}.btn.terra{background:var(--terra)}.btn.alt{background:var(--paper);color:var(--ink)}.btn.ochre{background:var(--ochre);color:var(--ink)}
+@media(hover:hover){.btn:hover{transform:translate(-1px,-1px)}}.btn.terra{background:var(--terra)}.btn.alt{background:var(--paper);color:var(--ink)}.btn.ochre{background:var(--ochre);color:var(--ink)}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .ar-on .btn{font-family:var(--ar)}
 label.f{display:grid;gap:6px;font:12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
