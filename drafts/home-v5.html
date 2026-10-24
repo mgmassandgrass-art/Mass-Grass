@@ -473,6 +473,32 @@ header nav a.on::after{transform:scaleX(1)}@media(hover:hover){header nav a:hove
 footer::before{display:none}
 #hint,#hsw{display:none!important}
 .cur:not(.on){opacity:0!important}@media(hover:none){.cur{display:none!important}}
+
+/* first screen: a bigger painting, its name underneath */
+#wall{--ps2:min(44vw,54svh,560px)}.wp{--ps:var(--ps2)}
+#bigTop{display:none}
+.bign.bot{top:calc(44% + var(--ps2)*.42 + 16px);font:italic 500 clamp(34px,3.6vw,58px)/1.15 var(--en)!important;text-transform:none;letter-spacing:0}
+.ar-on .bign.bot{font:700 clamp(30px,3vw,50px)/1.35 var(--ar)!important}
+.wmeta{top:calc(44% + var(--ps2)*.42 + clamp(76px,7vw,104px));bottom:auto;font:500 14px/1.4 var(--body);letter-spacing:0;text-transform:none}
+@media (max-width:700px){#wall{--ps2:min(80vw,44svh)}.bign.bot{--bh:auto;font-size:32px!important}.ar-on .bign.bot{font-size:28px!important}.wmeta{top:calc(44% + var(--ps2)*.42 + 66px);font-size:12px}}
+/* 2027 calendar section */
+#cal27{padding:clamp(70px,10vw,130px) var(--gut);background:#EFE3CE}
+.c27{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(30px,5vw,80px);align-items:center;max-width:1240px;margin:auto}
+.c27-big{position:relative;border-radius:10px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(43,34,25,.55);aspect-ratio:4/3;background:#ddd}
+.c27-big img{width:100%;height:100%;object-fit:cover;transition:opacity .45s}
+.c27-mo{position:absolute;inset:auto 0 0;padding:40px 22px 18px;background:linear-gradient(transparent,rgba(30,22,15,.6));color:#fff;display:flex;justify-content:space-between;align-items:end;gap:12px}
+.c27-mo b{font:italic 500 clamp(28px,3vw,44px)/1 var(--en)}.ar-on .c27-mo b{font:700 clamp(26px,2.6vw,38px)/1.2 var(--ar)}
+.c27-mo span{font-size:14px;opacity:.9}
+.c27-eye{display:block;color:var(--terra);font:italic 500 20px/1.2 var(--en);margin-bottom:8px}.ar-on .c27-eye{font:700 18px/1.4 var(--ar)}
+.c27-txt h2{font-size:clamp(40px,4.6vw,76px);margin-bottom:16px}
+.c27-txt p{color:var(--soft);max-width:44ch;margin-bottom:24px}
+.c27-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:28px}
+.c27-grid button{border:0;padding:0;background:none;display:flex;flex-direction:column;gap:5px;align-items:stretch;font:500 12px/1.2 var(--body);color:var(--soft);white-space:nowrap}.ar-on .c27-grid button{font-size:11px}
+.c27-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;outline:2px solid transparent;outline-offset:2px;transition:outline-color .25s,transform .3s}
+.c27-grid button.on{color:var(--ink)}.c27-grid button.on img{outline-color:var(--terra)}
+@media(hover:hover){.c27-grid button:hover img{transform:translateY(-3px)}}
+.c27-acts{display:flex;flex-wrap:wrap;gap:12px}
+@media(max-width:820px){.c27{grid-template-columns:1fr}.c27-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
@@ -557,6 +583,22 @@ footer::before{display:none}
 </div></dialog>
 
 <!-- 3 · SHEETS: shop by category -->
+<!-- 2027 CALENDAR: the launch piece -->
+<section id="cal27">
+  <div class="c27">
+    <div class="c27-art">
+      <div class="c27-big"><img id="c27img" src="assets/waves.webp" alt=""><div class="c27-mo"><b id="c27m"></b><span id="c27p"></span></div></div>
+    </div>
+    <div class="c27-txt">
+      <span class="c27-eye" data-ar="جديد · للإطلاق">New · for the launch</span>
+      <h2 class="d" data-ar="تقويم 2027">The 2027 Calendar</h2>
+      <p data-ar="اثنا عشر شهرًا، واثنتا عشرة لوحة مائية رسمتها فرح في غزة. اطبعوه في البيت وعلّقوه، ودَعوا كل شهر يحمل لكم مكانًا من غزة.">Twelve months, twelve watercolours Farah painted in Gaza. Print it at home, hang it up, and let every month bring you a place in Gaza.</p>
+      <div class="c27-grid" id="c27grid"></div>
+      <div class="c27-acts"><a class="btn" href="calendar.html" data-ar="اطلبوا التقويم">Get the calendar</a><a class="btn alt" href="calendar.html" data-ar="تصفحوا الأشهر">Flip through the months</a></div>
+    </div>
+  </div>
+</section>
+
 <section class="pad" id="sheets">
   <div class="shead">
     <h2 class="d" data-ar="كل لوحة، بكل أشكالها">The paintings, in every form</h2>
@@ -712,7 +754,7 @@ const COLS=4;let items=[],CW=0,CH=0,TW=0,TH=0,ox=0,oy=0,tx=null,ty=null,drag=nul
 const srcOf=k=>k==='hero'?'assets/hero.webp':`assets/${k}.webp`;
 function prod(k,i){return `<div class="onpaper" style="rotate:${(i%3-1)*2.5}deg"><span class="bg"></span><img src="${srcOf(k)}" alt="" draggable="false">${W8[i][7]?`<span class="new">${AR?'جديد':'New'}</span>`:''}</div>`}
 function buildWall(){wall.querySelectorAll('.wp').forEach(n=>n.remove());items=[];
-  const vw=innerWidth,vh=wall.clientHeight;CW=Math.max(vw*.46,360);CH=Math.max(vh*.6,380);TW=CW*COLS;TH=CH*Math.ceil(W8.length/COLS);
+  const vw=innerWidth,vh=wall.clientHeight;CW=Math.max(vw*.6,420);CH=Math.max(vh*.6,380);TW=CW*COLS;TH=CH*Math.ceil(W8.length/COLS);
   W8.forEach((w,i)=>{const el=document.createElement('div');el.className='wp';el.dataset.i=i;
     el.innerHTML=`<div class="pv">${prod(w[0],i)}</div>`;wall.appendChild(el);
     const c=i%COLS,r=Math.floor(i/COLS);items.push({el,x:c*CW+(r%2?CW*.5:0),y:r*CH})});
@@ -722,12 +764,12 @@ function pos(it){const ps=it.el.offsetWidth;let x=((it.x+ox)%TW+TW)%TW,y=((it.y+
   const cx=innerWidth/2,cy=wall.clientHeight/2;if(x-cx>TW/2)x-=TW;if(cx-x>TW/2)x+=TW;if(y-cy>TH/2)y-=TH;if(cy-y>TH/2)y+=TH;return{x,y,ps}}
 function nearest(){const cx=innerWidth/2,cy=wall.clientHeight/2;let best=0,bd=1e9;items.forEach((it,i)=>{const p=pos(it),d=Math.hypot(p.x-cx,p.y-cy);if(d<bd){bd=d;best=i}});return best}
 function focusOn(i,instant){const it=items[i];if(!it)return;const p=pos(it);
-  const dx=innerWidth/2-p.x,dy=wall.clientHeight/2-p.y;if(instant){ox+=dx;oy+=dy;tx=ty=null}else{tx=ox+dx;ty=oy+dy}
+  const dx=innerWidth/2-p.x,dy=wall.clientHeight*.44-p.y;if(instant){ox+=dx;oy+=dy;tx=ty=null}else{tx=ox+dx;ty=oy+dy}
   if(i===curI&&!instant)return;curI=i;const w=W8[i];
   const words=(AR?w[2]:w[1]).split(' '),half=Math.ceil(words.length/2);
   // Arabic letters must stay joined: animate whole words there, single letters in English
   const sp=t=>(AR?t.split(' '):[...t]).map((c,k)=>`<span style="animation-delay:${k*(AR?.08:.035)}s">${c===' '?'&nbsp;':c}</span>`).join(AR?' ':'');
-  $('#bigTop').innerHTML=sp(words.slice(0,half).join(' '));$('#bigBot').innerHTML=sp(words.slice(half).join(' ')||'');
+  $('#bigTop').innerHTML='';$('#bigBot').innerHTML=sp(words.join(' ')); // the name sits under the painting
   $('#bigTop').style.color=$('#bigBot').style.color=w[5];
   const fg='#6f604d';
   $('#wmeta').style.color=fg;wall.querySelectorAll('.wcorner').forEach(e=>e.style.color=fg);
@@ -879,6 +921,22 @@ addEventListener('resize',buildWall);
 buildWall();buildSheets();buildBest();popAll();
 try{if(localStorage.mgLang==='ar')setLang(true)}catch(e){}
 requestAnimationFrame(loop);
+
+/* ---- 2027 calendar: the months play by themselves; pick one to stop on it ---- */
+const M27=[['January','كانون الثاني','waves','Gaza beach','بحر غزة'],['February','شباط','psea','Gaza','غزة'],['March','آذار','ppoppies','Gaza','غزة'],['April','نيسان','blueflowers','Beit Lahia','بيت لاهيا'],
+ ['May','أيار','pflower','Gaza','غزة'],['June','حزيران','hero','Al-Mawasi','المواصي'],['July','تموز','boattop','Gaza port','ميناء غزة'],['August','آب','seafish','Al-Shati','الشاطئ'],
+ ['September','أيلول','dovegirl','Deir al-Balah','دير البلح'],['October','تشرين الأول','deirbalah','Deir al-Balah','دير البلح'],['November','تشرين الثاني','alley','Old City','البلدة القديمة'],['December','كانون الأول','sparklers','Gaza City','مدينة غزة']];
+let c27i=0,c27t=null;
+function c27show(i){c27i=(i+12)%12;const m=M27[c27i],im=document.getElementById('c27img');if(!im)return;im.style.opacity=0;
+  setTimeout(()=>{im.src='assets/'+m[2]+'.webp';im.onload=()=>im.style.opacity=1},200);
+  document.getElementById('c27m').textContent=AR?m[1]:m[0];document.getElementById('c27p').textContent=AR?m[4]:m[3];
+  document.querySelectorAll('#c27grid button').forEach((b,k)=>b.classList.toggle('on',k===c27i))}
+function c27build(){const g=document.getElementById('c27grid');if(!g)return;
+  g.innerHTML=M27.map((m,k)=>`<button type="button"><img src="assets/${m[2]}.webp" alt="" loading="lazy"><span>${AR?m[1]:m[0].slice(0,3)}</span></button>`).join('');
+  g.querySelectorAll('button').forEach((b,k)=>{b.onclick=()=>{clearInterval(c27t);c27t=null;c27show(k)};b.onmouseenter=()=>{if(matchMedia('(hover:hover)').matches){clearInterval(c27t);c27t=null;c27show(k)}}});
+  c27show(c27i);if(!c27t&&!matchMedia('(prefers-reduced-motion: reduce)').matches)c27t=setInterval(()=>c27show(c27i+1),3200)}
+c27build();
+new MutationObserver(()=>{clearInterval(c27t);c27t=null;c27build()}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
 </script>
 </body>
 </html>
