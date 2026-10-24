@@ -481,24 +481,30 @@ footer::before{display:none}
 .ar-on .bign.bot{font:700 clamp(30px,3vw,50px)/1.35 var(--ar)!important}
 .wmeta{top:calc(44% + var(--ps2)*.42 + clamp(76px,7vw,104px));bottom:auto;font:500 14px/1.4 var(--body);letter-spacing:0;text-transform:none}
 @media (max-width:700px){#wall{--ps2:min(80vw,44svh)}.bign.bot{--bh:auto;font-size:32px!important}.ar-on .bign.bot{font-size:28px!important}.wmeta{top:calc(44% + var(--ps2)*.42 + 66px);font-size:12px}}
-/* 2027 calendar section */
+/* 2027 calendar section: twelve slices of the year, the active month opens */
 #cal27{padding:clamp(70px,10vw,130px) var(--gut);background:#EFE3CE}
-.c27{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(30px,5vw,80px);align-items:center;max-width:1240px;margin:auto}
-.c27-big{position:relative;border-radius:10px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(43,34,25,.55);aspect-ratio:4/3;background:#ddd}
-.c27-big img{width:100%;height:100%;object-fit:cover;transition:opacity .45s}
-.c27-mo{position:absolute;inset:auto 0 0;padding:40px 22px 18px;background:linear-gradient(transparent,rgba(30,22,15,.6));color:#fff;display:flex;justify-content:space-between;align-items:end;gap:12px}
-.c27-mo b{font:italic 500 clamp(28px,3vw,44px)/1 var(--en)}.ar-on .c27-mo b{font:700 clamp(26px,2.6vw,38px)/1.2 var(--ar)}
-.c27-mo span{font-size:14px;opacity:.9}
-.c27-eye{display:block;color:var(--terra);font:italic 500 20px/1.2 var(--en);margin-bottom:8px}.ar-on .c27-eye{font:700 18px/1.4 var(--ar)}
-.c27-txt h2{font-size:clamp(40px,4.6vw,76px);margin-bottom:16px}
-.c27-txt p{color:var(--soft);max-width:44ch;margin-bottom:24px}
-.c27-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:28px}
-.c27-grid button{border:0;padding:0;background:none;display:flex;flex-direction:column;gap:5px;align-items:stretch;font:500 12px/1.2 var(--body);color:var(--soft);white-space:nowrap}.ar-on .c27-grid button{font-size:11px}
-.c27-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;outline:2px solid transparent;outline-offset:2px;transition:outline-color .25s,transform .3s}
-.c27-grid button.on{color:var(--ink)}.c27-grid button.on img{outline-color:var(--terra)}
-@media(hover:hover){.c27-grid button:hover img{transform:translateY(-3px)}}
+.c27h{text-align:center;max-width:620px;margin:0 auto clamp(30px,4vw,50px)}
+.c27-eye{display:block;color:var(--terra);margin-bottom:10px}
+.c27h h2{font-size:clamp(42px,5vw,84px);margin-bottom:12px}
+.c27h p{color:var(--soft)}
+.year{display:flex;gap:6px;height:clamp(320px,58vh,560px);max-width:1400px;margin:auto}
+.mo{position:relative;flex:1;min-width:0;border:0;padding:0;border-radius:10px;overflow:hidden;cursor:pointer;background:#ddd;transition:flex .7s cubic-bezier(.2,.8,.2,1)}
+.mo.on{flex:7}
+.mo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.8,.2,1),filter .5s}
+.mo:not(.on) img{filter:saturate(.75) brightness(.92)}
+@media(hover:hover){.mo:not(.on):hover img{filter:none;transform:scale(1.05)}}
+.mo .n{position:absolute;left:50%;bottom:14px;translate:-50% 0;font:400 11px/1 var(--lab);letter-spacing:.2em;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5);writing-mode:vertical-rl;transform:rotate(180deg);transition:opacity .3s}
+.mo.on .n{opacity:0}
+.mo .big{position:absolute;inset:auto 0 0;padding:60px 22px 18px;display:flex;justify-content:space-between;align-items:end;gap:10px;background:linear-gradient(transparent,rgba(30,22,15,.55));color:#fff;opacity:0;transition:opacity .4s .25s}
+.mo.on .big{opacity:1}
+.mo .big b{font:300 clamp(30px,3.4vw,54px)/1 var(--en)}.ar-on .mo .big b{font:400 clamp(26px,2.8vw,42px)/1.2 var(--ar)}
+.mo .big i{font:400 12px/1 var(--lab);letter-spacing:.2em;font-style:normal;opacity:.9}
+.c27f{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;max-width:1400px;margin:22px auto 0}
+.c27-now{display:flex;align-items:baseline;gap:14px}
+.c27-now b{font:300 28px/1 var(--en)}.ar-on .c27-now b{font:400 24px/1.3 var(--ar)}
+.c27-now span{font:400 11px/1 var(--lab);letter-spacing:.2em;color:var(--soft);text-transform:uppercase}
 .c27-acts{display:flex;flex-wrap:wrap;gap:12px}
-@media(max-width:820px){.c27{grid-template-columns:1fr}.c27-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:700px){.year{gap:3px;height:420px}.mo{border-radius:6px}.mo.on{flex:9}.mo .n{font-size:9px;letter-spacing:.1em;bottom:8px}.mo .big i{display:none}.c27f{justify-content:center;text-align:center}}
 
 /* ===== brand type (from the Mass & Grass brand sheet): Cormorant Garamond Light + IBM Plex Mono, wide-spaced capitals ===== */
 :root{--ink:#4A3B2C;--en:'Cormorant Garamond',Georgia,serif;--lab:'IBM Plex Mono',ui-monospace,monospace}
@@ -529,7 +535,6 @@ header nav a,.ar-on header nav a{font:400 12px/1 var(--lab);letter-spacing:.24em
 #wall{--ps2:min(54vw,62svh,720px)}
 @media (max-width:700px){#wall{--ps2:min(90vw,50svh)}}
 .c27{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
-@media (min-width:641px){.sheets{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(24px,3vw,44px)!important}}
 .bgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))!important}
 .pcol{max-width:520px}
 </style>
@@ -616,19 +621,17 @@ header nav a,.ar-on header nav a{font:400 12px/1 var(--lab);letter-spacing:.24em
 </div></dialog>
 
 <!-- 3 · SHEETS: shop by category -->
-<!-- 2027 CALENDAR: the launch piece -->
+<!-- 2027 CALENDAR: the launch piece. The year is a row of twelve paintings; the month you touch opens up -->
 <section id="cal27">
-  <div class="c27">
-    <div class="c27-art">
-      <div class="c27-big"><img id="c27img" src="assets/waves.webp" alt=""><div class="c27-mo"><b id="c27m"></b><span id="c27p"></span></div></div>
-    </div>
-    <div class="c27-txt">
-      <span class="c27-eye" data-ar="جديد · للإطلاق">New · for the launch</span>
-      <h2 class="d" data-ar="تقويم 2027">The 2027 Calendar</h2>
-      <p data-ar="اثنا عشر شهرًا، واثنتا عشرة لوحة مائية رسمتها فرح في غزة. اطبعوه في البيت وعلّقوه، ودَعوا كل شهر يحمل لكم مكانًا من غزة.">Twelve months, twelve watercolours Farah painted in Gaza. Print it at home, hang it up, and let every month bring you a place in Gaza.</p>
-      <div class="c27-grid" id="c27grid"></div>
-      <div class="c27-acts"><a class="btn" href="calendar.html" data-ar="اطلبوا التقويم">Get the calendar</a><a class="btn alt" href="calendar.html" data-ar="تصفحوا الأشهر">Flip through the months</a></div>
-    </div>
+  <div class="c27h">
+    <span class="c27-eye" data-ar="جديد · للإطلاق">New · for the launch</span>
+    <h2 class="d" data-ar="تقويم 2027">The 2027 Calendar</h2>
+    <p data-ar="اثنا عشر شهرًا، واثنتا عشرة لوحة من غزة. مرّروا على الأشهر.">Twelve months, twelve paintings from Gaza. Run through the year.</p>
+  </div>
+  <div class="year" id="year"></div>
+  <div class="c27f">
+    <div class="c27-now"><b id="c27m"></b><span id="c27p"></span></div>
+    <div class="c27-acts"><a class="btn" href="calendar.html" data-ar="اطلبوا التقويم">Get the calendar</a><a class="btn alt" href="calendar.html" data-ar="تصفحوا الأشهر">Flip through the months</a></div>
   </div>
 </section>
 
@@ -955,21 +958,23 @@ buildWall();buildSheets();buildBest();popAll();
 try{if(localStorage.mgLang==='ar')setLang(true)}catch(e){}
 requestAnimationFrame(loop);
 
-/* ---- 2027 calendar: the months play by themselves; pick one to stop on it ---- */
+/* ---- 2027 calendar: the year as twelve slices; touch a month and it opens. It walks on by itself until you do ---- */
 const M27=[['January','كانون الثاني','waves','Gaza beach','بحر غزة'],['February','شباط','psea','Gaza','غزة'],['March','آذار','ppoppies','Gaza','غزة'],['April','نيسان','blueflowers','Beit Lahia','بيت لاهيا'],
  ['May','أيار','pflower','Gaza','غزة'],['June','حزيران','hero','Al-Mawasi','المواصي'],['July','تموز','boattop','Gaza port','ميناء غزة'],['August','آب','seafish','Al-Shati','الشاطئ'],
  ['September','أيلول','dovegirl','Deir al-Balah','دير البلح'],['October','تشرين الأول','deirbalah','Deir al-Balah','دير البلح'],['November','تشرين الثاني','alley','Old City','البلدة القديمة'],['December','كانون الأول','sparklers','Gaza City','مدينة غزة']];
 let c27i=0,c27t=null;
-function c27show(i){c27i=(i+12)%12;const m=M27[c27i],im=document.getElementById('c27img');if(!im)return;im.style.opacity=0;
-  setTimeout(()=>{im.src='assets/'+m[2]+'.webp';im.onload=()=>im.style.opacity=1},200);
-  document.getElementById('c27m').textContent=AR?m[1]:m[0];document.getElementById('c27p').textContent=AR?m[4]:m[3];
-  document.querySelectorAll('#c27grid button').forEach((b,k)=>b.classList.toggle('on',k===c27i))}
-function c27build(){const g=document.getElementById('c27grid');if(!g)return;
-  g.innerHTML=M27.map((m,k)=>`<button type="button"><img src="assets/${m[2]}.webp" alt="" loading="lazy"><span>${AR?m[1]:m[0].slice(0,3)}</span></button>`).join('');
-  g.querySelectorAll('button').forEach((b,k)=>{b.onclick=()=>{clearInterval(c27t);c27t=null;c27show(k)};b.onmouseenter=()=>{if(matchMedia('(hover:hover)').matches){clearInterval(c27t);c27t=null;c27show(k)}}});
-  c27show(c27i);if(!c27t&&!matchMedia('(prefers-reduced-motion: reduce)').matches)c27t=setInterval(()=>c27show(c27i+1),3200)}
+function c27show(i){c27i=(i+12)%12;const m=M27[c27i];
+  document.querySelectorAll('#year .mo').forEach((b,k)=>{b.classList.toggle('on',k===c27i);b.setAttribute('aria-pressed',k===c27i)});
+  document.getElementById('c27m').textContent=AR?m[1]:m[0];document.getElementById('c27p').textContent=(AR?m[4]:m[3])+' · 2027'}
+function c27stop(){clearInterval(c27t);c27t=null}
+function c27build(){const y=document.getElementById('year');if(!y)return;
+  y.innerHTML=M27.map((m,k)=>`<button class="mo" type="button" aria-label="${AR?m[1]:m[0]}"><img src="assets/${m[2]}.webp" alt="" loading="lazy"><span class="n">${(AR?m[1]:m[0]).slice(0,AR?12:3).toUpperCase()}</span><span class="big"><b>${AR?m[1]:m[0]}</b><i>${String(k+1).padStart(2,'0')} / 12</i></span></button>`).join('');
+  const fine=matchMedia('(hover:hover)').matches;
+  y.querySelectorAll('.mo').forEach((b,k)=>{b.onclick=()=>{c27stop();c27show(k)};if(fine)b.onmouseenter=()=>{c27stop();c27show(k)}});
+  c27show(c27i);
+  if(!c27t&&!matchMedia('(prefers-reduced-motion: reduce)').matches)c27t=setInterval(()=>c27show(c27i+1),2600)}
 c27build();
-new MutationObserver(()=>{clearInterval(c27t);c27t=null;c27build()}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+new MutationObserver(()=>{c27stop();c27build()}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
 </script>
 </body>
 </html>
