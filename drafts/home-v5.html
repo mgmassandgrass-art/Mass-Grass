@@ -642,8 +642,8 @@ header nav a,.ar-on header nav a{font:400 12px/1 var(--lab);letter-spacing:.24em
 <!-- 3b · BEST SELLERS (auto-sorted from sales data) -->
 <section class="pad" id="best">
   <div class="shead">
-    <h2 class="d" data-ar="الأكثر مبيعًا">Best sellers</h2>
-    <p data-ar="تتحدّث تلقائيًا حسب المبيعات. الخصومات والجديد موضّحة فوق كل لوحة.">Sorted by sales. Deals and new paintings are marked on each one.</p>
+    <h2 class="d" data-ar="وصل حديثًا">Just in</h2>
+    <p data-ar="آخر ما رسمته فرح على طاولتها.">The latest paintings from Farah's table.</p>
   </div>
   <div class="bgrid" id="bestGrid"></div>
 </section>
@@ -892,10 +892,10 @@ const FORMOF={};
 function openProduct(k,en,arT,kindKey,i){const pl=PLACE[k]||['Gaza','غزة'],kind=KIND[kindKey]||'painting';
   window.MGProduct&&MGProduct.open({key:k,title:en,titleAr:arT,place:pl[0],placeAr:pl[1],kind,form:FORMOF[kindKey],no:i!=null?i+1:null,big:BIG.includes(k)?`assets/${k}.jpg`:null,
     kindLabel:{painting:'Painting',postcard:'Postcard',sticker:'Sticker',calendar:'Calendar 2027'}[kind],kindLabelAr:{painting:'لوحة',postcard:'بطاقة بريدية',sticker:'ملصق',calendar:'تقويم 2027'}[kind]})}
-function buildBest(){$('#bestGrid').innerHTML=[...BS].sort((x,y)=>y[6]-x[6]).map((b,i)=>{
+function buildBest(){$('#bestGrid').innerHTML=[...BS].sort((x,y)=>(y[8]||0)-(x[8]||0)) /* newest first */.map((b,i)=>{
   const price=b[7]?`<s>€${b[5]}</s><b>€${(b[5]*(1-b[7]/100)).toFixed(2).replace(/\.00$/,'')}</b>`:`€${b[5]}`;
   const badges=(b[7]?`<span class="badge sale">-${b[7]}%</span>`:'')+(b[8]?`<span class="badge new">${AR?'جديد':'New'}</span>`:'');
-  return `<a class="bcard" href="shop.html?art=${b[0]}" data-k="${b[0]}" data-i="${BS.indexOf(b)}"><span class="rank">${i+1}</span><span class="badges">${badges}</span><div class="pp"><img src="${b[0]==='hero'?'assets/hero.webp':'assets/'+b[0]+'.webp'}" alt="" loading="lazy"></div><h3>${AR?b[2]:b[1]}</h3><div class="pr">${AR?b[4]:b[3]} · ${price}</div></a>`}).join('')}
+  return `<a class="bcard" href="shop.html?art=${b[0]}" data-k="${b[0]}" data-i="${BS.indexOf(b)}"><span class="badges">${badges}</span><div class="pp"><img src="${b[0]==='hero'?'assets/hero.webp':'assets/'+b[0]+'.webp'}" alt="" loading="lazy"></div><h3>${AR?b[2]:b[1]}</h3><div class="pr">${AR?b[4]:b[3]} · ${price}</div></a>`}).join('')}
 
 $('#bestGrid').addEventListener('click',e=>{const c=e.target.closest('.bcard');if(!c||!window.MGProduct)return;e.preventDefault();const b=BS[+c.dataset.i];openProduct(b[0],b[1],b[2],b[3])});
 /* ---- the table holds the page: one wheel step in, one step out ---- */
