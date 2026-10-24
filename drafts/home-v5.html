@@ -499,6 +499,39 @@ footer::before{display:none}
 @media(hover:hover){.c27-grid button:hover img{transform:translateY(-3px)}}
 .c27-acts{display:flex;flex-wrap:wrap;gap:12px}
 @media(max-width:820px){.c27{grid-template-columns:1fr}.c27-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* ===== brand type (from the Mass & Grass brand sheet): Cormorant Garamond Light + IBM Plex Mono, wide-spaced capitals ===== */
+:root{--ink:#4A3B2C;--en:'Cormorant Garamond',Georgia,serif;--lab:'IBM Plex Mono',ui-monospace,monospace}
+body{font:400 18px/1.6 var(--en)}
+.ar-on body,body.ar-on{font-family:var(--body);font-size:16px}
+.d{font-family:var(--en);font-weight:300!important;letter-spacing:.01em}
+.ar-on .d{font-family:var(--ar);font-weight:400!important}
+header nav a,.ar-on header nav a{font:400 12px/1 var(--lab);letter-spacing:.24em;text-transform:uppercase}
+.ar-on header nav a{font:500 15px/1 var(--body);letter-spacing:0}
+.chip{font:400 11px/1 var(--lab);letter-spacing:.14em}
+.mono,.wcorner,.count{font-family:var(--lab)!important;letter-spacing:.24em!important}
+.wmeta{font:400 11px/1.4 var(--lab)!important;letter-spacing:.24em!important;text-transform:uppercase}
+.ar-on .wmeta{font:500 13px/1.5 var(--body)!important;letter-spacing:0!important}
+.bign.bot{font:300 clamp(36px,3.8vw,60px)/1.1 var(--en)!important;letter-spacing:.01em}
+.ar-on .bign.bot{font:400 clamp(30px,3vw,50px)/1.35 var(--ar)!important}
+.c27-eye,.tag{font:400 11px/1.4 var(--lab)!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--soft)}
+.ar-on .c27-eye,.ar-on .tag{font:500 14px/1.5 var(--body)!important;letter-spacing:0!important}
+.c27-mo b{font:300 clamp(30px,3.2vw,48px)/1 var(--en)}
+.sheet .lab .tag{font:300 24px/1.2 var(--en)!important;letter-spacing:.01em!important;text-transform:none!important;color:var(--ink)!important}
+.ar-on .sheet .lab .tag{font:400 20px/1.4 var(--ar)!important}
+.bcard h3{font:300 24px/1.15 var(--en);text-transform:none;letter-spacing:0}
+.ar-on .bcard h3{font:400 19px/1.4 var(--ar)}
+.bcard .pr{font:400 12px var(--lab);letter-spacing:.1em}
+.btn{font:400 12px/1 var(--lab);letter-spacing:.2em;text-transform:uppercase;padding:16px 26px}
+.ar-on .btn{font:500 15px/1 var(--body);letter-spacing:0}
+.ptext blockquote{font:300 clamp(30px,3.4vw,48px)/1.2 var(--en)}
+/* bigger paintings */
+#wall{--ps2:min(54vw,62svh,720px)}
+@media (max-width:700px){#wall{--ps2:min(90vw,50svh)}}
+.c27{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+@media (min-width:641px){.sheets{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:clamp(24px,3vw,44px)!important}}
+.bgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))!important}
+.pcol{max-width:520px}
 </style>
 </head>
 <body>
