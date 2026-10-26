@@ -81,7 +81,7 @@ async function signup(env, req) {
   const email = clean(b.email, 120).toLowerCase(), name = clean(b.name, 60), pw = String(b.password ?? '');
   if (!EMAIL.test(email)) return fail('email_invalid');
   if (!name) return fail('name_required');
-  if (pw.length < 8 || pw.length > 200) return fail('password_short');
+  if (pw.length < 10 || pw.length > 200) return fail('password_short');
   if (email === (env.ADMIN_EMAIL || '').toLowerCase()) return fail('email_taken', 409);
   if (await env.DB.prepare('SELECT 1 FROM users WHERE email=?').bind(email).first()) return fail('email_taken', 409);
   const id = crypto.randomUUID(), salt = rand(16);
@@ -154,7 +154,7 @@ async function reset(env, req) {
   if (!(await limit(env, req, 'reset', 10, 3600))) return fail('rate_limited', 429);
   const b = await readJson(req);
   const pw = String(b?.password ?? ''), t = String(b?.token ?? '');
-  if (pw.length < 8 || pw.length > 200) return fail('password_short');
+  if (pw.length < 10 || pw.length > 200) return fail('password_short');
   const th = await sha256(t);
   const row = await env.DB.prepare('SELECT user_id FROM reset_tokens WHERE token_hash=? AND expires_at>?').bind(th, Date.now()).first();
   if (!row) return fail('token_invalid', 400);
@@ -333,6 +333,7 @@ async function handle(req, env0) {
     const env = { ...env0, SITE_ORIGIN: url.origin }; // same origin as the page: production host or the staging workers.dev host
     let path = url.pathname;
     try { path = decodeURIComponent(path); } catch {} // '/%61dmin/' must meet the same checks as '/admin/' (the asset server decodes it)
+    path = path.replace(/\/{2,}/g, '/'); // '//admin/' must not slip past the admin gate either
     const p = path.replace(/\/+$/, '') || '/';
     try {
       if (p.startsWith('/api/')) return await api(req, env, url, p);

@@ -100,9 +100,12 @@ const orderOut = (o) => ({ id: o.id, email: o.email, name: o.name, items: JSON.p
 
 const withFiles = async (env, o) => ({ ...orderOut(o), files: await orderFiles(env, o) });
 
+// constant-time compare for order secrets
+const sameStr = (a, b) => { a = String(a ?? ''); b = String(b ?? ''); if (a.length !== b.length) return false; let d = 0; for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; };
+
 export async function captureOrder(env, id, access) {
   const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first();
-  if (!o || !o.access || o.access !== access) return fail('not_found', 404);
+  if (!o || !o.access || !sameStr(o.access, access)) return fail('not_found', 404);
   if (o.status === 'paid') return json({ order: await withFiles(env, o) });
   if (o.status !== 'pending' || !o.paypal_id || !env.PAYPAL_CLIENT_ID) return fail('not_paid', 402); // cancelled/refunded stay so
   let r = await pp(env, `/v2/checkout/orders/${o.paypal_id}/capture`);
