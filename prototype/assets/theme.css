@@ -1,0 +1,214 @@
+/* Mass & Grass site theme (v5): plain beige, brand type, paintings as they are, full top menu,
+   motion tokens and interface polish. Loaded after each page's own styles. */
+/* ===== simple theme (v5): plain beige, no paper or grain, paintings as they are, a full menu ===== */
+:root{--field:#F6EEDF;--paper:#FFFBF4;--env:#FFFBF4;--ink:#2B2219;--soft:#7A6A57;--terra:#B4532F;--line:rgba(43,34,25,.12);
+  --en:'Cormorant Garamond',Georgia,serif;--ar:'Amiri','IBM Plex Sans Arabic',serif}
+body{background:var(--field)!important}
+.d{text-transform:none;font-weight:500;letter-spacing:-.01em;line-height:1.05}
+.ar-on .d{font-weight:700}
+#wall{background:var(--field)!important}#wall::before{display:none!important}
+#splash{background:var(--field)!important;color:var(--ink)}#splash .sp-logo{filter:none}
+#zoomBg{background:var(--field)!important}
+#intro{display:none!important}
+/* header: logo at the side, the whole menu in a line */
+header{grid-template-columns:auto 1fr auto;background:rgba(246,238,223,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 1px 0 var(--line);padding:10px clamp(16px,3vw,40px)}
+.logo{width:auto;height:44px;background:none;box-shadow:none;transform:none;padding:0}.logo img{width:auto;height:100%}
+header nav{justify-self:center;background:none;border:0;box-shadow:none;padding:0;gap:clamp(6px,1.6vw,26px)}
+header nav a{font:500 16px/1 var(--body);text-transform:none;letter-spacing:0;padding:10px 2px;position:relative;white-space:nowrap}
+.ar-on header nav a{font:500 15px/1 var(--body)}
+header nav a.on,header nav a:hover{background:none!important;color:var(--ink)!important}
+header nav a::after{content:"";position:absolute;inset:auto 0 2px;height:2px;border-radius:2px;background:var(--terra);transform:scaleX(0);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+header nav a.on::after{transform:scaleX(1)}@media(hover:hover){header nav a:hover::after{transform:scaleX(1)}}
+.chip{border:1px solid var(--line);background:var(--paper);box-shadow:none;border-radius:999px;font-weight:500}
+@media(hover:hover){.chip:hover{transform:none;box-shadow:none;border-color:var(--ink)}}
+@media(max-width:980px){header{grid-template-columns:auto auto;row-gap:6px}header nav{grid-column:1/-1;grid-row:2;justify-self:stretch;overflow-x:auto;scrollbar-width:none;gap:18px;padding-bottom:2px}header nav::-webkit-scrollbar{display:none}.tools{grid-row:1;grid-column:2}.logo{height:34px}}
+/* paintings as they are: no paper sheets, no stamps */
+.cell::before,.cell::after,.onpaper .bg,.bcard .pp::before{display:none!important}
+.cell{padding:0;filter:none}.cell>img:first-child{border-radius:6px;box-shadow:0 14px 30px -18px rgba(43,34,25,.45)}
+@media(hover:hover){.cell:hover{filter:none}}
+.onpaper{padding:0;filter:none}.onpaper img{box-shadow:0 18px 36px -20px rgba(43,34,25,.5);border-radius:6px}
+.wst .sw{filter:none}
+.perf{-webkit-mask:none!important;mask:none!important;padding:0!important;background:none!important}
+.face{background:none}.face img{box-shadow:none;border-radius:6px}
+.tg,.tag,.badge,.onpaper .new,.wp .lbl,.sheet .n,.sheet .gotl,.whead p,.hint>span{border:0!important;box-shadow:none!important;border-radius:999px;rotate:0deg!important;transform:none!important;font-family:var(--body)!important;text-transform:none!important;letter-spacing:0!important;font-weight:500}
+.tag{background:var(--paper);padding:8px 16px}
+.btn{border:0;border-radius:999px;background:var(--terra);color:#fff;font:500 16px/1 var(--body);text-transform:none;letter-spacing:0;padding:15px 26px;box-shadow:none}
+.btn.alt{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.wnav{border:1px solid var(--line);box-shadow:none;background:var(--paper)}
+#gtip{border:0;box-shadow:0 8px 20px -10px rgba(43,34,25,.4);border-radius:14px}
+#guide{filter:none}
+.count,.wcorner,.wmeta{color:var(--soft)!important}
+/* collections: the four paintings of each set, plain on a soft card */
+.sheet,.sheet:nth-child(odd),.sheet:nth-child(even){transform:none}
+@media(hover:hover){.sheet:hover{transform:translateY(-6px)}.sheet.soon:hover{transform:translateY(-6px)}}
+.sheet .sh{filter:none;background:var(--paper);border-radius:14px;padding:12px;box-shadow:0 16px 34px -24px rgba(43,34,25,.4)}
+.grid4{gap:8px}.grid4>div{border:0!important;padding:0;background:none;border-radius:6px;overflow:hidden}
+.grid4 img{object-fit:cover}.grid4.stk{background:none}.grid4.stk img{object-fit:contain;filter:none}
+.sheet .lab{position:static;margin-top:14px;text-align:center}
+.sheet .lab .tag{background:none;padding:0;font:500 22px/1.2 var(--en)!important}
+.ar-on .sheet .lab .tag{font:700 19px/1.4 var(--ar)!important}
+.sheet .n{background:var(--terra);font:500 12px/1 var(--body)!important;padding:6px 10px}
+.sheet .yr{text-shadow:0 2px 12px rgba(0,0,0,.35)}
+/* best sellers */
+.bcard .pp{padding:0;filter:none}.bcard .pp img{border-radius:8px;box-shadow:0 16px 32px -22px rgba(43,34,25,.5)}
+.bcard .rank{background:var(--paper);color:var(--ink);box-shadow:0 4px 12px -6px rgba(43,34,25,.4);font:600 18px/1 var(--en)}
+.badge.sale{background:var(--terra)}.badge.new{background:#5E7A52}
+.dl{background:var(--paper)!important;border:0!important;border-radius:16px;box-shadow:0 30px 70px -30px rgba(43,34,25,.5)!important}
+.opt{border:1px solid var(--line);box-shadow:none;border-radius:999px;font-family:var(--body);text-transform:none;letter-spacing:0}
+
+.chip.bag{background:var(--terra)!important;color:#fff!important;border-color:var(--terra)!important}
+.bubble{border:0!important;box-shadow:0 8px 20px -10px rgba(43,34,25,.4)!important;border-radius:14px;background:var(--paper)!important}.bubble::after{border:0!important;background:var(--paper)!important}
+.sheet .lab .tag,.sheet .lab .tag.terra{color:var(--ink)!important;background:none!important}
+.sheet.soon .lab .tag{color:var(--soft)!important}
+.sheet .yr{display:none}
+.polaroid{background:none;padding:0;box-shadow:none;rotate:0deg;aspect-ratio:1}
+.polaroid img{position:static;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.polaroid figcaption{height:auto;margin-top:16px;font:500 16px/1.4 var(--body)!important;color:var(--soft)}
+.pcol .jug{display:none}
+footer::before{display:none}
+#hint,#hsw{display:none!important}
+.cur:not(.on){opacity:0!important}@media(hover:none){.cur{display:none!important}}
+
+/* first screen: a bigger painting, its name underneath */
+#wall{--ps2:min(44vw,54svh,560px)}.wp{--ps:var(--ps2)}
+#bigTop{display:none}
+.bign.bot{top:calc(44% + var(--ps2)*.42 + 16px);font:italic 500 clamp(34px,3.6vw,58px)/1.15 var(--en)!important;text-transform:none;letter-spacing:0}
+.ar-on .bign.bot{font:700 clamp(30px,3vw,50px)/1.35 var(--ar)!important}
+.wmeta{top:calc(44% + var(--ps2)*.42 + clamp(76px,7vw,104px));bottom:auto;font:500 14px/1.4 var(--body);letter-spacing:0;text-transform:none}
+@media (max-width:700px){#wall{--ps2:min(80vw,44svh)}.bign.bot{--bh:auto;font-size:32px!important}.ar-on .bign.bot{font-size:28px!important}.wmeta{top:calc(44% + var(--ps2)*.42 + 66px);font-size:12px}}
+/* 2027 calendar section */
+#cal27{padding:clamp(70px,10vw,130px) var(--gut);background:#EFE3CE}
+.c27{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(30px,5vw,80px);align-items:center;max-width:1240px;margin:auto}
+.c27-big{position:relative;border-radius:10px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(43,34,25,.55);aspect-ratio:4/3;background:#ddd}
+.c27-big img{width:100%;height:100%;object-fit:cover;transition:opacity .45s}
+.c27-mo{position:absolute;inset:auto 0 0;padding:40px 22px 18px;background:linear-gradient(transparent,rgba(30,22,15,.6));color:#fff;display:flex;justify-content:space-between;align-items:end;gap:12px}
+.c27-mo b{font:italic 500 clamp(28px,3vw,44px)/1 var(--en)}.ar-on .c27-mo b{font:700 clamp(26px,2.6vw,38px)/1.2 var(--ar)}
+.c27-mo span{font-size:14px;opacity:.9}
+.c27-eye{display:block;color:var(--terra);font:italic 500 20px/1.2 var(--en);margin-bottom:8px}.ar-on .c27-eye{font:700 18px/1.4 var(--ar)}
+.c27-txt h2{font-size:clamp(40px,4.6vw,76px);margin-bottom:16px}
+.c27-txt p{color:var(--soft);max-width:44ch;margin-bottom:24px}
+.c27-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:28px}
+.c27-grid button{border:0;padding:0;background:none;display:flex;flex-direction:column;gap:5px;align-items:stretch;font:500 12px/1.2 var(--body);color:var(--soft);white-space:nowrap}.ar-on .c27-grid button{font-size:11px}
+.c27-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;outline:2px solid transparent;outline-offset:2px;transition:outline-color .25s,transform .3s}
+.c27-grid button.on{color:var(--ink)}.c27-grid button.on img{outline-color:var(--terra)}
+@media(hover:hover){.c27-grid button:hover img{transform:translateY(-3px)}}
+.c27-acts{display:flex;flex-wrap:wrap;gap:12px}
+@media(max-width:820px){.c27{grid-template-columns:1fr}.c27-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* ===== brand type (from the Mass & Grass brand sheet): Cormorant Garamond Light + IBM Plex Mono, wide-spaced capitals ===== */
+:root{--ink:#4A3B2C;--en:'Cormorant Garamond',Georgia,serif;--lab:'IBM Plex Mono',ui-monospace,monospace}
+body{font:400 18px/1.6 var(--en)}
+.ar-on body,body.ar-on{font-family:var(--body);font-size:16px}
+.d{font-family:var(--en);font-weight:300!important;letter-spacing:.01em}
+.ar-on .d{font-family:var(--ar);font-weight:400!important}
+header nav a,.ar-on header nav a{font:400 12px/1 var(--lab);letter-spacing:.24em;text-transform:uppercase}
+.ar-on header nav a{font:500 15px/1 var(--body);letter-spacing:0}
+.chip{font:400 11px/1 var(--lab);letter-spacing:.14em}
+.mono,.wcorner,.count{font-family:var(--lab)!important;letter-spacing:.24em!important}
+.wmeta{font:400 11px/1.4 var(--lab)!important;letter-spacing:.24em!important;text-transform:uppercase}
+.ar-on .wmeta{font:500 13px/1.5 var(--body)!important;letter-spacing:0!important}
+.bign.bot{font:300 clamp(36px,3.8vw,60px)/1.1 var(--en)!important;letter-spacing:.01em}
+.ar-on .bign.bot{font:400 clamp(30px,3vw,50px)/1.35 var(--ar)!important}
+.c27-eye,.tag{font:400 11px/1.4 var(--lab)!important;letter-spacing:.24em!important;text-transform:uppercase!important;color:var(--soft)}
+.ar-on .c27-eye,.ar-on .tag{font:500 14px/1.5 var(--body)!important;letter-spacing:0!important}
+.c27-mo b{font:300 clamp(30px,3.2vw,48px)/1 var(--en)}
+.sheet .lab .tag{font:300 24px/1.2 var(--en)!important;letter-spacing:.01em!important;text-transform:none!important;color:var(--ink)!important}
+.ar-on .sheet .lab .tag{font:400 20px/1.4 var(--ar)!important}
+.bcard h3{font:300 24px/1.15 var(--en);text-transform:none;letter-spacing:0}
+.ar-on .bcard h3{font:400 19px/1.4 var(--ar)}
+.bcard .pr{font:400 12px var(--lab);letter-spacing:.1em}
+.btn{font:400 12px/1 var(--lab);letter-spacing:.2em;text-transform:uppercase;padding:16px 26px}
+.ar-on .btn{font:500 15px/1 var(--body);letter-spacing:0}
+.ptext blockquote{font:300 clamp(30px,3.4vw,48px)/1.2 var(--en)}
+/* bigger paintings */
+#wall{--ps2:min(54vw,62svh,720px)}
+@media (max-width:700px){#wall{--ps2:min(90vw,50svh)}}
+.c27{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+.bgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))!important}
+.pcol{max-width:520px}
+
+/* ===== motion tokens (transitions.dev scale) + interface polish (make-interfaces-feel-better) ===== */
+:root{--duration-stagger:40ms;--duration-quick:150ms;--duration-fast:250ms;--duration-medium:350ms;--duration-slow:400ms;--duration-very-slow:500ms;
+  --ease-smooth-out:cubic-bezier(.22,1,.36,1);--ease-bounce:cubic-bezier(.34,1.36,.64,1);--distance-micro:4px;--distance-base:8px;--distance-medium:12px}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+h1,h2,h3,.d,blockquote{text-wrap:balance}p{text-wrap:pretty}
+.bcard .pr,.wcorner,.count,.c27-grid span,.sheet .n,#bagn{font-variant-numeric:tabular-nums}
+/* images get a hairline so light paintings keep their edge on beige */
+.cell>img:first-child,.onpaper img,.bcard .pp img,.grid4 img,.c27-big,.c27-grid img,.polaroid img{outline:1px solid rgba(43,34,25,.08);outline-offset:-1px}
+/* concentric corners: card 14px, padding 8px, so images inside are 6px */
+.sheet .sh{border-radius:14px;padding:8px}.grid4>div{border-radius:6px}
+/* press feedback and hit areas */
+.btn,.chip,.c27-grid button,.wnav,.sheet,.bcard{transition:transform var(--duration-quick) var(--ease-smooth-out),background-color var(--duration-fast),color var(--duration-fast),box-shadow var(--duration-fast)}
+.btn:active,.chip:active,.wnav:active{transform:scale(.96)}
+.c27-grid button:active img{transform:scale(.96)}
+header nav a{min-height:44px;display:inline-flex;align-items:center}
+/* hover lifts use one distance, hover-out a touch slower than hover-in */
+@media(hover:hover){.sheet:hover,.bcard:hover{transform:translateY(calc(var(--distance-base) * -1));transition-duration:var(--duration-fast)}}
+/* the reveal everything shares: 12px rise + fade, smooth-out, 40ms stagger */
+.pop{translate:0 var(--distance-medium)!important}
+.pop.on{translate:0 0!important;transition:opacity var(--duration-very-slow) var(--ease-smooth-out),translate var(--duration-very-slow) var(--ease-smooth-out)!important;transition-delay:calc(var(--d,0) * var(--duration-stagger))!important}
+/* the painting's name swaps like text, not like a bounce */
+@keyframes bigIn{from{opacity:0;transform:translateY(var(--distance-medium));filter:blur(4px)}}
+.bign span{animation:bigIn var(--duration-very-slow) var(--ease-smooth-out) both!important}
+.c27-big img{transition:opacity var(--duration-medium) ease-in-out}
+.c27-grid img{transition:outline-color var(--duration-fast),transform var(--duration-fast) var(--ease-smooth-out)}
+@media(max-width:820px){.c27{grid-template-columns:1fr!important}}
+/* split headings: lines rise out of a mask */
+.mgline{overflow:clip;padding-bottom:.08em;margin-bottom:-.08em}
+
+/* ===== type scale: calmer headings, the paintings lead ===== */
+body{font-size:17px}
+.shead h2{font-size:clamp(30px,2.4vw + 18px,52px)!important}
+.c27-txt h2{font-size:clamp(36px,3vw + 14px,56px)!important}
+footer h2{font-size:clamp(26px,1.6vw + 16px,40px)!important}
+.bign.bot{font-size:clamp(30px,2.6vw + 8px,44px)!important}
+.ar-on .bign.bot{font-size:clamp(28px,2.4vw + 6px,40px)!important}
+.ptext blockquote{font-size:clamp(24px,1.6vw + 14px,36px)!important}
+.ar-on .ptext blockquote{font-size:clamp(22px,1.4vw + 12px,32px)!important}
+.sheet .lab .tag{font-size:20px!important}.ar-on .sheet .lab .tag{font-size:18px!important}
+.bcard h3{font-size:20px}.ar-on .bcard h3{font-size:18px}
+.c27-mo b{font-size:clamp(26px,2.4vw,40px)}
+@media(max-width:700px){.sheet .lab .tag,.bcard h3{font-size:18px!important}.ar-on .sheet .lab .tag,.ar-on .bcard h3{font-size:17px!important}}
+
+/* ===== the rest of the site: soften every ink box into the same quiet language ===== */
+/* paintings as they are: no white print margins around them */
+.pt .pp,.card .ph .pp,.dl .big .pp,.dl .pvw{padding:0!important;background:none!important;border:0!important;box-shadow:none!important}
+.pt .pp img,.card .ph .pp img,.dl .big .pp img{border-radius:6px;box-shadow:0 14px 30px -18px rgba(43,34,25,.45)!important;outline:1px solid rgba(43,34,25,.08);outline-offset:-1px}
+/* fields */
+.f input,.f select,.f textarea,.field input,.field textarea,.mysheet input,.free input,input[type=email],input[type=text],input[type=password],select,textarea{
+  border:1px solid var(--line)!important;border-radius:10px!important;background:var(--paper)!important;box-shadow:none!important;font-family:var(--body)}
+.f input:focus,.f textarea:focus,.f select:focus,.field input:focus,.field textarea:focus,input:focus{border-color:var(--ink)!important;outline:none}
+/* cards and panels */
+.box,.dl,.tray,.mini,.buy,.mysheet,.tsheet,.free,.receipt,.letter,.vw,.vw .vp,.scene,.share,.blocks,.under,.ord .o,.fi,.months figure,.av,.dl .row{
+  border:0!important;border-radius:16px;box-shadow:0 18px 40px -28px rgba(43,34,25,.45)!important}
+.box,.dl,.tray,.buy,.mysheet,.tsheet,.free,.share{background:var(--paper)!important}
+/* small controls: one pill style */
+.arw,.chipf,.pchips button,.fchips button,.sizes button,.tabs a,.tabs2 button,.ptabs button,.toc a,.thumbs button,.wpc .chips button,.tknobs button,.off a,.pairs button,.ways a,.receipt .btns a,.harr,.x,.gbtn,.shead .go,.yc,.pk{
+  border:1px solid var(--line)!important;box-shadow:none!important;border-radius:999px!important;font-family:var(--lab)!important;letter-spacing:.14em;background:var(--paper)}
+.ar-on :is(.arw,.chipf,.pchips button,.fchips button,.sizes button,.tabs a,.tabs2 button,.ptabs button,.toc a,.thumbs button,.wpc .chips button,.tknobs button,.off a,.pairs button,.ways a,.receipt .btns a,.gbtn,.shead .go){font-family:var(--body)!important;letter-spacing:0}
+:is(.chipf,.pchips button,.fchips button,.sizes button,.tabs a,.tabs2 button,.ptabs button,.thumbs button,.wpc .chips button):is(.on,[aria-pressed=true],[aria-selected=true]){background:var(--ink)!important;color:var(--paper)!important;border-color:var(--ink)!important}
+/* labels */
+.kick,.pile .tag,.pt .new,.soonb,.tag{border:0!important;box-shadow:none!important;border-radius:999px!important;transform:none!important;rotate:0deg!important}
+.kick{background:none!important;padding:0!important;color:var(--soft)!important;font:400 11px/1.4 var(--lab)!important;letter-spacing:.24em!important;text-transform:uppercase}
+.ar-on .kick{font:500 14px/1.5 var(--body)!important;letter-spacing:0!important}
+/* page titles everywhere follow the home scale */
+main h1,section h1,.hero h1,h1.d{font-family:var(--en);font-weight:300!important;letter-spacing:.005em}
+.ar-on :is(main h1,section h1,.hero h1,h1.d){font-family:var(--ar);font-weight:400!important}
+.pt .pp{clip-path:none!important}
+.pcd .fr{padding:0!important}
+.pk{border:0!important;box-shadow:0 18px 40px -28px rgba(43,34,25,.45)!important;border-radius:16px;background:var(--paper)!important}
+/* coloured first screens turn beige; the painting carries the colour */
+.hold1{background:var(--field)!important;color:var(--ink)!important}
+/* footer stays dark: its currency picker keeps light text */
+footer select,footer .mgcur{background:transparent!important;color:var(--paper)!important;border:1px solid rgba(255,251,244,.4)!important}
+footer select option{color:#2B2219}
+/* shop grid: the painting itself, no print border, no tilt */
+.tile .sheet{background:none!important;padding:0!important;box-shadow:none!important;rotate:0deg!important}
+.tile .sheet img{border-radius:6px;box-shadow:0 14px 30px -18px rgba(43,34,25,.45)!important;outline:1px solid rgba(43,34,25,.08);outline-offset:-1px}
+.tile:hover .sheet{translate:0 -6px}
+/* reassurance strip above the footer */
+.mgtrust{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 40px;padding:26px var(--gut,20px);border-top:1px solid var(--line);background:var(--field)}
+.mgtrust span{display:inline-flex;align-items:center;gap:10px;font:400 11px/1.4 var(--lab);letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
+.ar-on .mgtrust span{font:500 14px/1.5 var(--body);letter-spacing:0;text-transform:none}
+.mgtrust svg{width:18px;height:18px;fill:none;stroke:var(--terra);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.mgtrust b{font-weight:400}

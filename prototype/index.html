@@ -13,9 +13,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <title>Mass &amp; Grass</title>
 <link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="fonts/lux.css">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/anton-latin-400-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/lalezar-arabic-400-normal.woff2">
 <script src="assets/mg.js"></script>
+<script src="assets/gsap.min.js"></script>
+<script src="assets/ScrollTrigger.min.js"></script>
+<script src="assets/SplitText.min.js"></script>
 <style>
 :root{--gut:clamp(20px,5vw,80px);
   --field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--wall:#66805A;--ochre:#D9A441;
@@ -25,7 +29,7 @@
 }
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
-body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
+body{background:var(--field) none;background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -114,7 +118,7 @@ nav a{font-size:clamp(12px,.3vw + 10.8px,15px);padding:clamp(6px,.6vw,8px) clamp
 
 
 /* opening splash */
-#splash{position:fixed;inset:0;z-index:90;background:var(--sage) url(assets/paper.jpg);background-blend-mode:multiply;display:grid;place-items:center;color:#F6EEDC;cursor:pointer;
+#splash{position:fixed;inset:0;z-index:90;background:var(--sage) none;background-blend-mode:multiply;display:grid;place-items:center;color:#F6EEDC;cursor:pointer;
  clip-path:inset(0 0 0 0);transition:clip-path 1s cubic-bezier(.77,0,.18,1)}
 #splash.out{clip-path:inset(0 0 100% 0)}
 .sp-in{width:min(760px,88vw)}
@@ -130,11 +134,11 @@ body.intro-wait .cell{animation-play-state:paused}
 .col{--cw:min(15.5vw,calc((100svh - 300px)/2.5));position:absolute;inset:78px 0 150px;display:grid;grid-template-columns:repeat(5,var(--cw));gap:clamp(14px,2vw,30px);justify-content:center;align-content:center}
 .cell{position:relative;aspect-ratio:4/5;background:none;padding:9% 9% 14%;filter:drop-shadow(3px 3px 0 rgba(46,36,27,0.25));opacity:0;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;
  animation:in .8s cubic-bezier(.2,.8,.2,1) forwards,float 5.5s ease-in-out infinite alternate}
-.cell::before{content:"";position:absolute;inset:0;z-index:0;background:#F7F5EF url(assets/paper.jpg);background-blend-mode:soft-light;clip-path:polygon(1.5% 1%,30% 0,62% 1.2%,98.5% 0,100% 30%,99% 63%,100% 98%,68% 100%,35% 98.8%,0 100%,1% 66%,0 33%)}
+.cell::before{content:"";position:absolute;inset:0;z-index:0;background:#F7F5EF none;background-blend-mode:soft-light;clip-path:polygon(1.5% 1%,30% 0,62% 1.2%,98.5% 0,100% 30%,99% 63%,100% 98%,68% 100%,35% 98.8%,0 100%,1% 66%,0 33%)}
 .cell>img:first-child{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .cell{overflow:visible;cursor:zoom-in}
 #zoomer{position:fixed;z-index:95;object-fit:cover;box-shadow:4px 4px 0 rgba(46,36,27,0.25);transition:transform .55s cubic-bezier(.16,1,.3,1),box-shadow .55s cubic-bezier(.16,1,.3,1)}
-#zoomBg{position:fixed;inset:0;z-index:94;background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;opacity:0;transition:opacity .5s .15s}
+#zoomBg{position:fixed;inset:0;z-index:94;background:var(--field) none;background-blend-mode:multiply;opacity:0;transition:opacity .5s .15s}
 .cell.hero{filter:drop-shadow(3px 3px 0 rgba(196,89,63,0.4))}
 .tg{position:absolute;left:8px;bottom:8px;z-index:3;background:var(--paper);color:var(--ink);border:2px solid var(--ink);padding:5px 9px 3px;font:clamp(12px,1vw,15px)/1 var(--en);text-transform:uppercase;letter-spacing:.04em;box-shadow:1px 1px 0 rgba(46,36,27,0.25);rotate:-3deg;text-decoration:none}
 .tg.big{background:var(--terra);color:#fff}.tg.terra{background:var(--sage);color:#fff}.tg.ink{background:var(--ink);color:var(--paper)}
@@ -170,7 +174,7 @@ body.intro-wait .cell{animation-play-state:paused}
 .envw{position:relative;justify-self:center;width:min(640px,100%);will-change:transform}
 .env{position:relative;aspect-ratio:1.58;background:var(--env);padding:16px;box-shadow:4px 4px 0 rgba(46,36,27,0.25);color:#2E241B;
   background-image:repeating-linear-gradient(135deg,var(--terra) 0 18px,var(--env) 18px 30px,#3f6b8a 30px 48px,var(--env) 48px 60px)}
-.env .in{position:absolute;inset:14px;background:var(--env) url(assets/paper.jpg);background-blend-mode:multiply}
+.env .in{position:absolute;inset:14px;background:var(--env) none;background-blend-mode:multiply}
 .env .slot{position:absolute;right:5%;top:8%;width:23%;aspect-ratio:.84}
 .env .avion{position:absolute;left:6%;top:9%;border:2px solid #3f6b8a;color:#3f6b8a;padding:6px 10px 4px;font:15px/1.1 var(--en);letter-spacing:.06em;transform:rotate(-4deg)}
 .env .avion small{display:none;font:13px/1.2 var(--ar)}.ar-on .env .avion small{display:block}
@@ -186,7 +190,7 @@ body.intro-wait .cell{animation-play-state:paused}
 
 /* ---------- 2. the stamp wall (infinite drag) ---------- */
 #wall{position:relative;height:100svh;min-height:560px;background:var(--wall);overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none}
-#wall::before{content:"";position:absolute;inset:0;background:url(assets/grain.png);opacity:.35;mix-blend-mode:multiply;pointer-events:none;z-index:1}
+#wall::before{content:"";position:absolute;inset:0;background:none;opacity:.35;mix-blend-mode:multiply;pointer-events:none;z-index:1}
 .wst{position:absolute;left:0;top:0;cursor:inherit;transition:opacity .35s,filter .35s}
 .wst .sw{filter:drop-shadow(1px 1px 0 rgba(30,24,17,0.28));transition:transform .3s cubic-bezier(.2,.8,.2,1.3)}
 .wst .perf{width:100%;height:100%}
@@ -254,7 +258,7 @@ body.intro-wait .cell{animation-play-state:paused}
 @media (max-width:700px){#gtip{font-size:15px;white-space:normal;width:132px}#guide{width:50px}}
 .onpaper{position:relative;padding:8% 8% 12%;filter:drop-shadow(3px 3px 0 rgba(46,36,27,0.25));max-width:96%;max-height:96%}
 .onpaper::marker{content:none}
-.onpaper .bg{position:absolute;inset:0;background:#F7F5EF url(assets/paper.jpg);background-blend-mode:soft-light;clip-path:polygon(1.5% 1%,30% 0,62% 1.2%,98.5% 0,100% 30%,99% 63%,100% 98%,68% 100%,35% 98.8%,0 100%,1% 66%,0 33%)}
+.onpaper .bg{position:absolute;inset:0;background:#F7F5EF none;background-blend-mode:soft-light;clip-path:polygon(1.5% 1%,30% 0,62% 1.2%,98.5% 0,100% 30%,99% 63%,100% 98%,68% 100%,35% 98.8%,0 100%,1% 66%,0 33%)}
 .onpaper img{position:relative}
 .onpaper img{display:block;max-width:100%;max-height:calc(var(--ps)*.8);width:auto;height:auto;box-shadow:0 0 0 1px rgba(46,36,27,.22)}
 .onpaper .new{position:absolute;z-index:2;top:-12px;right:-10px;background:var(--terra);color:#fff;font:14px/1 var(--en);letter-spacing:.06em;padding:6px 9px 4px;rotate:8deg;box-shadow:1px 1px 0 rgba(46,36,27,0.25)}
@@ -262,7 +266,7 @@ body.intro-wait .cell{animation-play-state:paused}
 /* product sheet dialog */
 dialog{border:0;padding:0;background:transparent;max-width:min(980px,94vw);width:100%;color:var(--ink)}
 dialog::backdrop{background:#1e1811cc;backdrop-filter:blur(3px)}
-.dl{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,0.4);display:grid;grid-template-columns:1fr 1fr;max-height:90svh;overflow:auto}
+.dl{background:var(--paper) none;background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,0.4);display:grid;grid-template-columns:1fr 1fr;max-height:90svh;overflow:auto}
 .dl .pvw{background:var(--field);display:grid;place-items:center;padding:30px;min-height:380px;position:relative;border-inline-end:2px solid var(--ink)}
 .dl .info{padding:28px clamp(18px,3vw,34px)}
 .dl h3{font-size:clamp(32px,4vw,52px);margin:10px 0 6px}
@@ -336,7 +340,7 @@ section.pad{padding:clamp(70px,10vw,130px) var(--gut)}
 .bcard{position:relative;text-decoration:none;display:block;transition:transform .3s cubic-bezier(.2,.8,.2,1.3)}
 @media(hover:hover){.bcard:hover{transform:translateY(-6px) rotate(-.8deg)}}
 .bcard .pp{position:relative;padding:9% 9% 14%;filter:drop-shadow(3px 3px 0 rgba(46,36,27,0.25))}
-.bcard .pp::before{content:"";position:absolute;inset:0;background:#F7F5EF url(assets/paper.jpg);background-blend-mode:soft-light;clip-path:polygon(1.5% 1%,30% 0,62% 1.2%,98.5% 0,100% 30%,99% 63%,100% 98%,68% 100%,35% 98.8%,0 100%,1% 66%,0 33%)}
+.bcard .pp::before{content:"";position:absolute;inset:0;background:#F7F5EF none;background-blend-mode:soft-light;clip-path:polygon(1.5% 1%,30% 0,62% 1.2%,98.5% 0,100% 30%,99% 63%,100% 98%,68% 100%,35% 98.8%,0 100%,1% 66%,0 33%)}
 .bcard .pp img{position:relative;display:block;width:100%;height:auto;box-shadow:0 0 0 1px rgba(46,36,27,.22)}
 .bgrid{align-items:start}
 .bcard .rank{position:absolute;z-index:3;left:-10px;top:-14px;width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font:20px/1 var(--en)}
@@ -403,7 +407,10 @@ footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;op
   .wnav{bottom:150px}
   #gtip{width:120px}
 }
+
 </style>
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/theme.js" defer></script>
 </head>
 <body>
 <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap" data-ar="ماس آند غراس: ألوان مائية من غزة">Mass &amp; Grass: watercolours from Gaza</h1>
@@ -416,8 +423,12 @@ footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;op
 <header>
   <a class="logo" href="#" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
   <nav>
-    <a href="#" class="on" data-ar="الرئيسية">Index</a>
-    <a href="shop.html" data-ar="المتجر">Shop</a>
+    <a href="#" class="on" data-ar="الرئيسية">Home</a>
+    <a href="paintings.html" data-ar="اللوحات">Paintings</a>
+    <a href="postcards.html" data-ar="البطاقات البريدية">Postcards</a>
+    <a href="stickers.html" data-ar="الملصقات">Stickers</a>
+    <a href="calendar.html" data-ar="التقويم">Calendar</a>
+    <a href="shop.html#apparel" data-ar="الملابس والحقائب">Apparel</a>
     <a href="story.html" data-ar="الحكاية">Story</a>
   </nav>
   <div class="tools">
@@ -483,6 +494,22 @@ footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;op
 </div></dialog>
 
 <!-- 3 · SHEETS: shop by category -->
+<!-- 2027 CALENDAR: the launch piece -->
+<section id="cal27">
+  <div class="c27">
+    <div class="c27-art">
+      <div class="c27-big"><img id="c27img" src="assets/waves.webp" alt=""><div class="c27-mo"><b id="c27m"></b><span id="c27p"></span></div></div>
+    </div>
+    <div class="c27-txt">
+      <span class="c27-eye" data-ar="جديد · للإطلاق">New · for the launch</span>
+      <h2 class="d" data-ar="تقويم 2027">The 2027 Calendar</h2>
+      <p data-ar="اثنا عشر شهرًا، واثنتا عشرة لوحة مائية رسمتها فرح في غزة. اطبعوه في البيت وعلّقوه، ودَعوا كل شهر يحمل لكم مكانًا من غزة.">Twelve months, twelve watercolours Farah painted in Gaza. Print it at home, hang it up, and let every month bring you a place in Gaza.</p>
+      <div class="c27-grid" id="c27grid"></div>
+      <div class="c27-acts"><a class="btn" href="calendar.html" data-ar="اطلبوا التقويم">Get the calendar</a><a class="btn alt" href="calendar.html" data-ar="تصفحوا الأشهر">Flip through the months</a></div>
+    </div>
+  </div>
+</section>
+
 <section class="pad" id="sheets">
   <div class="shead">
     <h2 class="d" data-ar="كل لوحة، بكل أشكالها">The paintings, in every form</h2>
@@ -494,8 +521,8 @@ footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;op
 <!-- 3b · BEST SELLERS (auto-sorted from sales data) -->
 <section class="pad" id="best">
   <div class="shead">
-    <h2 class="d" data-ar="الأكثر مبيعًا">Best sellers</h2>
-    <p data-ar="تتحدّث تلقائيًا حسب المبيعات. الخصومات والجديد موضّحة فوق كل لوحة.">Sorted by sales. Deals and new paintings are marked on each one.</p>
+    <h2 class="d" data-ar="وصل حديثًا">Just in</h2>
+    <p data-ar="آخر ما رسمته فرح على طاولتها.">The latest paintings from Farah's table.</p>
   </div>
   <div class="bgrid" id="bestGrid"></div>
 </section>
@@ -594,7 +621,7 @@ function placeHS(R,pad){Object.assign(hs.style,{left:R.l+'px',top:R.t+'px',width
 function targetCell(){const card=document.querySelector(`#sheetGrid .sheet[data-cat="${W8[curI][8]}"]`);return card&&{card,img:card.querySelector('.grid4>div:first-child img')}}
 function unland(){if(!landedOn)return;landedOn.img.src=landedOn.img.dataset.orig;landedOn.card.classList.remove('got');landedOn.card.querySelector('.gotl')?.remove();landedOn=null}
 // table -> envelope stamp -> its corner of the shop
-function introFrame(){
+function introFrame(){return; // the postcard section is gone in this version
   const r=intro.getBoundingClientRect(),vh=innerHeight,q=clamp((vh-r.top)/r.height);
   const e=ease(clamp((q-.04)/.36)),ty=(1-e)*vh*.9;envw.style.transform=`translateY(${ty}px) rotate(${(1-e)*-6}deg)`;
   const so=slot.getBoundingClientRect(),T={left:so.left,top:so.top,width:so.width,height:so.height};
@@ -638,7 +665,7 @@ const COLS=4;let items=[],CW=0,CH=0,TW=0,TH=0,ox=0,oy=0,tx=null,ty=null,drag=nul
 const srcOf=k=>k==='hero'?'assets/hero.webp':`assets/${k}.webp`;
 function prod(k,i){return `<div class="onpaper" style="rotate:${(i%3-1)*2.5}deg"><span class="bg"></span><img src="${srcOf(k)}" alt="" draggable="false">${W8[i][7]?`<span class="new">${AR?'جديد':'New'}</span>`:''}</div>`}
 function buildWall(){wall.querySelectorAll('.wp').forEach(n=>n.remove());items=[];
-  const vw=innerWidth,vh=wall.clientHeight;CW=Math.max(vw*.46,360);CH=Math.max(vh*.6,380);TW=CW*COLS;TH=CH*Math.ceil(W8.length/COLS);
+  const vw=innerWidth,vh=wall.clientHeight;CW=Math.max(vw*.6,420);CH=Math.max(vh*.6,380);TW=CW*COLS;TH=CH*Math.ceil(W8.length/COLS);
   W8.forEach((w,i)=>{const el=document.createElement('div');el.className='wp';el.dataset.i=i;
     el.innerHTML=`<div class="pv">${prod(w[0],i)}</div>`;wall.appendChild(el);
     const c=i%COLS,r=Math.floor(i/COLS);items.push({el,x:c*CW+(r%2?CW*.5:0),y:r*CH})});
@@ -648,15 +675,14 @@ function pos(it){const ps=it.el.offsetWidth;let x=((it.x+ox)%TW+TW)%TW,y=((it.y+
   const cx=innerWidth/2,cy=wall.clientHeight/2;if(x-cx>TW/2)x-=TW;if(cx-x>TW/2)x+=TW;if(y-cy>TH/2)y-=TH;if(cy-y>TH/2)y+=TH;return{x,y,ps}}
 function nearest(){const cx=innerWidth/2,cy=wall.clientHeight/2;let best=0,bd=1e9;items.forEach((it,i)=>{const p=pos(it),d=Math.hypot(p.x-cx,p.y-cy);if(d<bd){bd=d;best=i}});return best}
 function focusOn(i,instant){const it=items[i];if(!it)return;const p=pos(it);
-  const dx=innerWidth/2-p.x,dy=wall.clientHeight/2-p.y;if(instant){ox+=dx;oy+=dy;tx=ty=null}else{tx=ox+dx;ty=oy+dy}
+  const dx=innerWidth/2-p.x,dy=wall.clientHeight*.44-p.y;if(instant){ox+=dx;oy+=dy;tx=ty=null}else{tx=ox+dx;ty=oy+dy}
   if(i===curI&&!instant)return;curI=i;const w=W8[i];
-  wall.style.backgroundColor=w[5];
   const words=(AR?w[2]:w[1]).split(' '),half=Math.ceil(words.length/2);
   // Arabic letters must stay joined: animate whole words there, single letters in English
   const sp=t=>(AR?t.split(' '):[...t]).map((c,k)=>`<span style="animation-delay:${k*(AR?.08:.035)}s">${c===' '?'&nbsp;':c}</span>`).join(AR?' ':'');
-  $('#bigTop').innerHTML=sp(words.slice(0,half).join(' '));$('#bigBot').innerHTML=sp(words.slice(half).join(' ')||'');
-  $('#bigTop').style.color=$('#bigBot').style.color=w[6];
-  const light=['#D9A441'].includes(w[5]);const fg=light?'#2E241B':'#FAF5E9';
+  $('#bigTop').innerHTML='';$('#bigBot').innerHTML=sp(words.join(' ')); // the name sits under the painting
+  $('#bigTop').style.color=$('#bigBot').style.color=w[5];
+  const fg='#6f604d';
   $('#wmeta').style.color=fg;wall.querySelectorAll('.wcorner').forEach(e=>e.style.color=fg);
   $('#wmeta').textContent=(AR?w[4]+' · ألوان مائية على ورق':w[3]+' · watercolour on paper')+'  ·  '+(AR?'اضغط لتفتحها':'tap to open');
   $('#wnum').textContent=pad(i+1)+' / '+pad(W8.length);
@@ -745,10 +771,10 @@ const FORMOF={};
 function openProduct(k,en,arT,kindKey,i){const pl=PLACE[k]||['Gaza','غزة'],kind=KIND[kindKey]||'painting';
   window.MGProduct&&MGProduct.open({key:k,title:en,titleAr:arT,place:pl[0],placeAr:pl[1],kind,form:FORMOF[kindKey],no:i!=null?i+1:null,big:BIG.includes(k)?`assets/${k}.jpg`:null,
     kindLabel:{painting:'Painting',postcard:'Postcard',sticker:'Sticker',calendar:'Calendar 2027'}[kind],kindLabelAr:{painting:'لوحة',postcard:'بطاقة بريدية',sticker:'ملصق',calendar:'تقويم 2027'}[kind]})}
-function buildBest(){$('#bestGrid').innerHTML=[...BS].sort((x,y)=>y[6]-x[6]).map((b,i)=>{
+function buildBest(){$('#bestGrid').innerHTML=[...BS].sort((x,y)=>(y[8]||0)-(x[8]||0)) /* newest first */.map((b,i)=>{
   const price=b[7]?`<s>€${b[5]}</s><b>€${(b[5]*(1-b[7]/100)).toFixed(2).replace(/\.00$/,'')}</b>`:`€${b[5]}`;
   const badges=(b[7]?`<span class="badge sale">-${b[7]}%</span>`:'')+(b[8]?`<span class="badge new">${AR?'جديد':'New'}</span>`:'');
-  return `<a class="bcard" href="shop.html?art=${b[0]}" data-k="${b[0]}" data-i="${BS.indexOf(b)}"><span class="rank">${i+1}</span><span class="badges">${badges}</span><div class="pp"><img src="${b[0]==='hero'?'assets/hero.webp':'assets/'+b[0]+'.webp'}" alt="" loading="lazy"></div><h3>${AR?b[2]:b[1]}</h3><div class="pr">${AR?b[4]:b[3]} · ${price}</div></a>`}).join('')}
+  return `<a class="bcard" href="shop.html?art=${b[0]}" data-k="${b[0]}" data-i="${BS.indexOf(b)}"><span class="badges">${badges}</span><div class="pp"><img src="${b[0]==='hero'?'assets/hero.webp':'assets/'+b[0]+'.webp'}" alt="" loading="lazy"></div><h3>${AR?b[2]:b[1]}</h3><div class="pr">${AR?b[4]:b[3]} · ${price}</div></a>`}).join('')}
 
 $('#bestGrid').addEventListener('click',e=>{const c=e.target.closest('.bcard');if(!c||!window.MGProduct)return;e.preventDefault();const b=BS[+c.dataset.i];openProduct(b[0],b[1],b[2],b[3])});
 /* ---- the table holds the page: one wheel step in, one step out ---- */
@@ -806,6 +832,37 @@ addEventListener('resize',buildWall);
 buildWall();buildSheets();buildBest();popAll();
 try{if(localStorage.mgLang==='ar')setLang(true)}catch(e){}
 requestAnimationFrame(loop);
+
+/* ---- 2027 calendar: the months play by themselves; pick one to stop on it ---- */
+const M27=[['January','كانون الثاني','waves','Gaza beach','بحر غزة'],['February','شباط','psea','Gaza','غزة'],['March','آذار','ppoppies','Gaza','غزة'],['April','نيسان','blueflowers','Beit Lahia','بيت لاهيا'],
+ ['May','أيار','pflower','Gaza','غزة'],['June','حزيران','hero','Al-Mawasi','المواصي'],['July','تموز','boattop','Gaza port','ميناء غزة'],['August','آب','seafish','Al-Shati','الشاطئ'],
+ ['September','أيلول','dovegirl','Deir al-Balah','دير البلح'],['October','تشرين الأول','deirbalah','Deir al-Balah','دير البلح'],['November','تشرين الثاني','alley','Old City','البلدة القديمة'],['December','كانون الأول','sparklers','Gaza City','مدينة غزة']];
+let c27i=0,c27t=null;
+function c27show(i){c27i=(i+12)%12;const m=M27[c27i],im=document.getElementById('c27img');if(!im)return;im.style.opacity=0;
+  setTimeout(()=>{im.src='assets/'+m[2]+'.webp';im.onload=()=>im.style.opacity=1},200);
+  document.getElementById('c27m').textContent=AR?m[1]:m[0];document.getElementById('c27p').textContent=AR?m[4]:m[3];
+  document.querySelectorAll('#c27grid button').forEach((b,k)=>b.classList.toggle('on',k===c27i))}
+function c27build(){const g=document.getElementById('c27grid');if(!g)return;
+  g.innerHTML=M27.map((m,k)=>`<button type="button"><img src="assets/${m[2]}.webp" alt="" loading="lazy"><span>${AR?m[1]:m[0].slice(0,3)}</span></button>`).join('');
+  g.querySelectorAll('button').forEach((b,k)=>{b.onclick=()=>{clearInterval(c27t);c27t=null;c27show(k)};b.onmouseenter=()=>{if(matchMedia('(hover:hover)').matches){clearInterval(c27t);c27t=null;c27show(k)}}});
+  c27show(c27i);if(!c27t&&!matchMedia('(prefers-reduced-motion: reduce)').matches)c27t=setInterval(()=>c27show(c27i+1),3200)}
+c27build();
+new MutationObserver(()=>{clearInterval(c27t);c27t=null;c27build()}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+
+/* ---- GSAP: headings rise line by line, the calendar painting drifts with the scroll ---- */
+if(window.gsap&&window.ScrollTrigger){gsap.registerPlugin(ScrollTrigger,...(window.SplitText?[SplitText]:[]));
+  const mm=gsap.matchMedia();
+  mm.add('(prefers-reduced-motion: no-preference)',()=>{
+    const heads=gsap.utils.toArray('.shead h2,.c27-txt h2,.ptext blockquote');
+    const splits=[];
+    const runSplit=()=>{splits.forEach(s=>s.revert());splits.length=0;
+      heads.forEach(h=>{if(!window.SplitText)return;const sp=new SplitText(h,{type:'lines',linesClass:'mgline',mask:'lines'});splits.push(sp);
+        gsap.from(sp.lines,{yPercent:100,opacity:0,duration:.7,ease:'expo.out',stagger:.08,scrollTrigger:{trigger:h,start:'top 85%',once:true}})})};
+    document.fonts&&document.fonts.ready?document.fonts.ready.then(runSplit):runSplit();
+    gsap.fromTo('.c27-big img',{yPercent:-4,scale:1.08},{yPercent:4,scale:1.08,ease:'none',scrollTrigger:{trigger:'#cal27',start:'top bottom',end:'bottom top',scrub:true}});
+    gsap.from('.c27-grid button',{opacity:0,y:8,duration:.5,ease:'power3.out',stagger:.04,scrollTrigger:{trigger:'.c27-grid',start:'top 88%',once:true}});
+    return()=>splits.forEach(s=>s.revert())});
+  new MutationObserver(()=>ScrollTrigger.refresh()).observe(document.documentElement,{attributes:true,attributeFilter:['lang']})}
 </script>
 </body>
 </html>
