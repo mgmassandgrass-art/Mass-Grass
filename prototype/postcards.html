@@ -13,7 +13,6 @@
 <meta name="twitter:card" content="summary_large_image">
 <title>Postcards · Mass &amp; Grass</title>
 <link rel="stylesheet" href="fonts/fonts.css">
-<link rel="stylesheet" href="fonts/lux.css">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/anton-latin-400-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/lalezar-arabic-400-normal.woff2">
 <script src="assets/mg.js"></script>
@@ -26,7 +25,7 @@
 }
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
-body{background:var(--field) none;background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -106,7 +105,7 @@ section.pad{padding:clamp(70px,9vw,130px) var(--gut)}
 .pcard>.f,.pcard>.b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;container-type:inline-size;box-shadow:0 1px 0 rgba(46,36,27,.15),0 0 0 1px rgba(46,36,27,.06)}
 .pcard>.f{background:#fff;padding:3.2%}
 .pcard>.f img{width:100%;height:100%;object-fit:cover;display:block}
-.pcard>.b{transform:rotateY(180deg);background:#FBF8F1 none;background-blend-mode:multiply;color:var(--ink);display:grid;grid-template-columns:1.15fr 1fr;padding:5% 5% 4%;gap:0 4%}
+.pcard>.b{transform:rotateY(180deg);background:#FBF8F1 url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);display:grid;grid-template-columns:1.15fr 1fr;padding:5% 5% 4%;gap:0 4%}
 .pcard>.b::before{content:"";position:absolute;left:53.5%;top:9%;bottom:9%;width:.25cqw;background:rgba(46,36,27,.35)}
 .pcard .msg{position:relative;font:600 4.3cqw/1.32 var(--hand);color:#2b3a55;white-space:pre-wrap;overflow:hidden;word-break:break-word;padding-top:9cqw}
 .pcard .msg.ar{font-family:'Aref Ruqaa',serif;font-weight:400;direction:rtl;text-align:right;font-size:3.9cqw;line-height:1.6}
@@ -135,8 +134,8 @@ section.pad{padding:clamp(70px,9vw,130px) var(--gut)}
 
 /* ---------- 1. one big postcard in your hands (full screen) ---------- */
 .hold1{--cw:min(56vw,calc((100svh - 280px)*1.5),980px);--bg:#5c6f80;--fg:#FAF5E9;position:relative;height:max(100svh,700px);overflow:hidden;background:var(--bg);color:var(--fg);transition:background-color .9s ease,color .6s;user-select:none;-webkit-user-select:none}
-.hold1::before{content:"";position:absolute;inset:0;background:none;mix-blend-mode:multiply;opacity:.38;pointer-events:none}
-.hold1::after{content:"";position:absolute;inset:0;background:none,radial-gradient(70% 60% at 50% 45%,rgba(255,255,255,.12),transparent 70%);background-blend-mode:multiply,normal;opacity:.55;pointer-events:none}
+.hold1::before{content:"";position:absolute;inset:0;background:url(assets/paper.jpg);mix-blend-mode:multiply;opacity:.38;pointer-events:none}
+.hold1::after{content:"";position:absolute;inset:0;background:url(assets/grain.png),radial-gradient(70% 60% at 50% 45%,rgba(255,255,255,.12),transparent 70%);background-blend-mode:multiply,normal;opacity:.55;pointer-events:none}
 .hstage{position:absolute;left:50%;top:calc(50% + 4px);translate:-50% -50%;width:var(--cw);aspect-ratio:3/2;perspective:calc(var(--cw)*2.2);z-index:2;touch-action:pan-y}
 .under{position:absolute;inset:0;background:#fff;padding:2.2%;box-shadow:0 18px 30px rgba(0,0,0,.25);transition:transform .5s cubic-bezier(.2,1.2,.4,1)}
 .under img{width:100%;height:100%;object-fit:cover}
@@ -199,7 +198,7 @@ section.pad{padding:clamp(70px,9vw,130px) var(--gut)}
 .menv.sealed .sealW{opacity:1;scale:1}
 
 /* ---------- 2. write & send ---------- */
-#write{background:var(--paper) none;background-blend-mode:multiply}
+#write{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply}
 .studio{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:start}
 .steps{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;min-width:0}
 .step{min-width:0}
@@ -256,7 +255,7 @@ section.pad{padding:clamp(70px,9vw,130px) var(--gut)}
 .desk.done .flipb{opacity:0;pointer-events:none}
 
 /* ---------- 3. all the postcards ---------- */
-#all{background:var(--field) none;background-blend-mode:multiply}
+#all{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply}
 .fchips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:clamp(26px,3vw,40px)}
 .fchips button{border:1.5px solid var(--ink);background:var(--paper);padding:9px 13px 8px;font:14px/1 var(--en);text-transform:uppercase;letter-spacing:.04em;box-shadow:1px 1px 0 var(--sh)}
 .ar-on .fchips button{font-family:var(--ar)}
@@ -605,9 +604,5 @@ buildAll();observe();
 try{if(localStorage.mgLang==='ar')setLang(true)}catch(e){}
 })();
 </script>
-<link rel="stylesheet" href="assets/theme.css">
-<script src="assets/gsap.min.js"></script>
-<script src="assets/ScrollTrigger.min.js"></script>
-<script src="assets/theme.js"></script>
 </body>
 </html>

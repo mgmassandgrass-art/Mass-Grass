@@ -7,14 +7,13 @@
 <meta name="robots" content="noindex">
 <title>Checkout · Mass &amp; Grass</title>
 <link rel="stylesheet" href="fonts/fonts.css">
-<link rel="stylesheet" href="fonts/lux.css">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/anton-latin-400-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/lalezar-arabic-400-normal.woff2">
 <style>
 :root{--gut:clamp(16px,4vw,56px);--field:#E9DCC2;--ink:#2E241B;--paper:#FAF5E9;--terra:#C4593F;--sage:#66805A;--ochre:#D9A441;--env:#FBF7EE;--soft:#6f604d;--en:'Anton',Impact,sans-serif;--ar:'Lalezar',sans-serif;--body:'IBM Plex Sans Arabic',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;--hand:'Caveat','Aref Ruqaa',cursive}
 *{box-sizing:border-box;margin:0}
 html{background:var(--field)}
-body{background:var(--field) none;background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);min-height:100svh;overflow-x:hidden}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);min-height:100svh;overflow-x:hidden}
 a{color:inherit}
 button{font:inherit;color:inherit}
 .kick{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--terra);background:var(--paper);border:1.5px solid var(--ink);padding:6px 9px 5px;rotate:-2deg}
@@ -65,7 +64,7 @@ footer h4{font:12px var(--mono);letter-spacing:.14em;text-transform:uppercase;op
 
 .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:start;margin-top:clamp(20px,3vw,40px)}
 #wrap{min-height:420px}
-.box{background:var(--paper) none;background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);padding:clamp(18px,2.4vw,30px)}
+.box{background:var(--paper) url(assets/paper.jpg);background-blend-mode:multiply;border:2px solid var(--ink);box-shadow:4px 4px 0 rgba(196,89,63,.4);padding:clamp(18px,2.4vw,30px)}
 .step{display:grid;gap:12px;padding-bottom:22px;margin-bottom:22px;border-bottom:1.5px dashed rgba(46,36,27,.3)}
 .step:last-child{border:0;margin:0;padding:0}
 .step h2{display:flex;align-items:baseline;gap:10px;font:clamp(22px,1vw + 16px,30px)/1 var(--en);text-transform:uppercase}
@@ -257,9 +256,5 @@ $('#langBtn').onclick=()=>{AR=!AR;try{localStorage.mgLang=AR?'ar':'en'}catch(e){
 render();
 })();
 </script>
-<link rel="stylesheet" href="assets/theme.css">
-<script src="assets/gsap.min.js"></script>
-<script src="assets/ScrollTrigger.min.js"></script>
-<script src="assets/theme.js"></script>
 </body>
 </html>

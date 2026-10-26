@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="stylesheet" href="fonts/fonts.css">
-<link rel="stylesheet" href="fonts/lux.css">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/anton-latin-400-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/lalezar-arabic-400-normal.woff2">
 <script src="assets/mg.js"></script>
@@ -28,13 +27,13 @@
   --tatreez:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2726%27%20height%3D%2726%27%3E%3Crect%20width%3D%2726%27%20height%3D%2726%27%20fill%3D%27%23ECE0C9%27/%3E%3Cg%20fill%3D%27%23B5452F%27%20opacity%3D%27.85%27%3E%3Crect%20x%3D%2711%27%20y%3D%273%27%20width%3D%274%27%20height%3D%274%27/%3E%3Crect%20x%3D%277%27%20y%3D%277%27%20width%3D%274%27%20height%3D%274%27/%3E%3Crect%20x%3D%2715%27%20y%3D%277%27%20width%3D%274%27%20height%3D%274%27/%3E%3Crect%20x%3D%2711%27%20y%3D%2711%27%20width%3D%274%27%20height%3D%274%27/%3E%3Crect%20x%3D%273%27%20y%3D%2711%27%20width%3D%272%27%20height%3D%272%27/%3E%3Crect%20x%3D%2721%27%20y%3D%2711%27%20width%3D%272%27%20height%3D%272%27/%3E%3C/g%3E%3Cg%20fill%3D%27%235F7752%27%20opacity%3D%27.7%27%3E%3Crect%20x%3D%2712%27%20y%3D%2719%27%20width%3D%272%27%20height%3D%275%27/%3E%3Crect%20x%3D%2710%27%20y%3D%2721%27%20width%3D%276%27%20height%3D%271.6%27/%3E%3C/g%3E%3C/svg%3E");
   color-scheme:light;
 }
-:root{--img-bird0:url(assets/bird0.webp);--img-bird1:url(assets/bird1.webp);--img-bird2:url(assets/bird2.webp);--img-cal2025:url(assets/cal2025.jpg);--img-coast:url(assets/coast.jpg);--img-deirbalah:url(assets/deirbalah.jpg);--img-dovegirl:url(assets/dovegirl.jpg);--img-env_inside:url(assets/env_inside.webp);--img-env_pocket:url(assets/env_pocket.webp);--img-flap_in:url(assets/flap_in.webp);--img-flap_out:url(assets/flap_out.webp);--img-guitar:url(assets/guitar.jpg);--img-hill:url(assets/hill.jpg);--img-house:url(assets/house.jpg);--img-jug:url(assets/jug.webp);--img-leaf:url(assets/leaf.webp);--img-paper:none;--img-photo_coast:url(assets/photo_coast.jpg);--img-photo_hill:url(assets/photo_hill.jpg);--img-photo_sea:url(assets/photo_sea.jpg);--img-seafish:url(assets/seafish.jpg);--img-sealA:url(assets/sealA.webp);--img-sealB:url(assets/sealB.webp);--img-sealW:url(assets/sealW.webp);--img-signature:url(assets/signature.png);--img-sparklers:url(assets/sparklers.jpg);--img-truckfull:url(assets/truckfull.webp);--img-portrait:url(assets/farah.jpg);}
+:root{--img-bird0:url(assets/bird0.webp);--img-bird1:url(assets/bird1.webp);--img-bird2:url(assets/bird2.webp);--img-cal2025:url(assets/cal2025.jpg);--img-coast:url(assets/coast.jpg);--img-deirbalah:url(assets/deirbalah.jpg);--img-dovegirl:url(assets/dovegirl.jpg);--img-env_inside:url(assets/env_inside.webp);--img-env_pocket:url(assets/env_pocket.webp);--img-flap_in:url(assets/flap_in.webp);--img-flap_out:url(assets/flap_out.webp);--img-guitar:url(assets/guitar.jpg);--img-hill:url(assets/hill.jpg);--img-house:url(assets/house.jpg);--img-jug:url(assets/jug.webp);--img-leaf:url(assets/leaf.webp);--img-paper:url(assets/paper.jpg);--img-photo_coast:url(assets/photo_coast.jpg);--img-photo_hill:url(assets/photo_hill.jpg);--img-photo_sea:url(assets/photo_sea.jpg);--img-seafish:url(assets/seafish.jpg);--img-sealA:url(assets/sealA.webp);--img-sealB:url(assets/sealB.webp);--img-sealW:url(assets/sealW.webp);--img-signature:url(assets/signature.png);--img-sparklers:url(assets/sparklers.jpg);--img-truckfull:url(assets/truckfull.webp);--img-portrait:url(assets/farah.jpg);}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0}
 html{overflow-x:clip}
 html{scroll-behavior:smooth}
-body{background:var(--field) none;background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:clip;-webkit-tap-highlight-color:transparent}
+body{background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;color:var(--ink);font:16px/1.55 var(--body);overflow-x:clip;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit;cursor:pointer}
 a{color:inherit;text-decoration:none}
 :focus-visible{outline:3px solid var(--ink);outline-offset:3px}
@@ -338,7 +337,7 @@ body[data-lang=en] .receipt .btns a{font-family:var(--f-disp);text-transform:upp
   .envbig{--W:min(74vw,42vh,440px)}
   #journey{display:block;padding:0 var(--gut) 70px}
   .mapcol{position:sticky;top:0;z-index:20;height:auto;display:flex;justify-content:center;margin:0 calc(var(--gut)*-1);padding:calc(clamp(10px,1.4vw,14px)*2 + 40px) 0 12px;
-    background:var(--field) none;background-blend-mode:multiply;box-shadow:0 10px 12px -10px rgba(46,36,27,.35)}
+    background:var(--field) url(assets/paper.jpg);background-blend-mode:multiply;box-shadow:0 10px 12px -10px rgba(46,36,27,.35)}
   .map{width:auto;height:min(32vh,280px);aspect-ratio:600/707;rotate:0deg}
   .map .pl text,.map .city,.map .ttl{display:none}
   .map .pl.on text{display:block;font-size:40px!important}
@@ -677,7 +676,3 @@ const qIO='IntersectionObserver' in window?new IntersectionObserver(es=>{if(es[0
 </script>
 
 </html>
-<link rel="stylesheet" href="assets/theme.css">
-<script src="assets/gsap.min.js"></script>
-<script src="assets/ScrollTrigger.min.js"></script>
-<script src="assets/theme.js"></script>
