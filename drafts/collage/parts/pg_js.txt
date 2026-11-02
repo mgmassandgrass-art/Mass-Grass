@@ -1,0 +1,42 @@
+let AR=false;
+/* the twenty paintings (titles and places from the shop); Farah's clean scans are used where she sent them */
+const P=[['hero','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي',1],['sparklers','Sparkler Night','ليلة الشماريخ','Gaza City','مدينة غزة',1],['cal-06','Dove Girl','فتاة الحمام','Deir al-Balah','دير البلح',0],
+ ['cal-07','The Boat','القارب','Gaza port','ميناء غزة',0],['guitar','Guitar Girl','فتاة الجيتار','Tel al-Hawa','تل الهوا',0],['cal-05','Moon Swing','أرجوحة القمر','Gaza','غزة',0],
+ ['house','Home','البيت','Az-Zawayda','الزوايدة',0],['alley','The Alley','الزقاق','Old City','البلدة القديمة',0],['cal-03','White Dove','الحمامة البيضاء','Beit Lahia','بيت لاهيا',0],
+ ['seafish','Sea Fish','سمك البحر','Al-Shati','الشاطئ',0],['cal-08','Girl with Cart','فتاة والعربة','Gaza','غزة',0],['hill','Hill & Boat','التلة والقارب','Khan Younis','خان يونس',0],
+ ['cal-10','Elephant on a Bike','فيل على دراجة','Gaza','غزة',1],['cal-01','The Waves','الموج','Gaza beach','بحر غزة',0],['deirbalah','Deir al-Balah','دير البلح','Deir al-Balah','دير البلح',0],
+ ['ppoppies','Blue Poppies','شقائق زرقاء','Gaza','غزة',0],['ptree','Little Tree','شجرة صغيرة','Gaza','غزة',0],['cal-04','Big Flower','الزهرة الكبيرة','Gaza','غزة',0],
+ ['cal-11','Moon Sleeper','نائمة على القمر','Gaza','غزة',0],['cal-02','Sea & Clouds','بحر وغيوم','Gaza','غزة',0]];
+const ASP={"hero": 1.454, "sparklers": 0.723, "cal-06": 1.328, "cal-07": 1.294, "guitar": 0.781, "cal-05": 0.836, "house": 1.342, "alley": 0.84, "cal-03": 1.396, "seafish": 0.674, "cal-08": 1.296, "hill": 1.011, "cal-10": 0.719, "cal-01": 1.46, "deirbalah": 0.815, "ppoppies": 1.396, "ptree": 0.66, "cal-04": 1.32, "cal-11": 0.812, "cal-02": 0.923};
+const MK={"mk-bench": {"w": 1024, "h": 768, "x": 0.251, "y": 0.263, "ww": 0.3633, "wh": 0.3268, "o": "l"}, "mk-bed": {"w": 1024, "h": 768, "x": 0.3389, "y": 0.1667, "ww": 0.3193, "wh": 0.2487, "o": "l"}, "mk-desk": {"w": 1024, "h": 1280, "x": 0.3486, "y": 0.2531, "ww": 0.3027, "wh": 0.3688, "o": "p"}, "mk-girl": {"w": 1024, "h": 1280, "x": 0.3574, "y": 0.3633, "ww": 0.2979, "wh": 0.3281, "o": "p"}, "wall-l": {"w": 1600, "h": 1200, "x": 0.2925, "y": 0.2292, "ww": 0.4231, "wh": 0.3567, "o": "l"}, "wall-p": {"w": 680, "h": 848, "x": 0.3456, "y": 0.1887, "ww": 0.3132, "wh": 0.3597, "o": "p"}, "held-4x5": {"w": 1080, "h": 1350, "x": 0.3528, "y": 0.123, "ww": 0.3009, "wh": 0.3126, "o": "p"}, "held-3x4": {"w": 1080, "h": 1350, "x": 0.3722, "y": 0.1674, "ww": 0.2546, "wh": 0.283, "o": "p"}, "held-5x4": {"w": 1080, "h": 1350, "x": 0.2509, "y": 0.2719, "ww": 0.5028, "wh": 0.3141, "o": "l"}, "held-1x1": {"w": 1080, "h": 1350, "x": 0.3296, "y": 0.1837, "ww": 0.3167, "wh": 0.2474, "o": "s"}};
+/* every painting gets its own scene: hung on a wall, leaning on a bench or a desk, above a bed, or held up by someone */
+const SC={l:[],p:[],s:[]};Object.entries(MK).forEach(([k,m])=>SC[m.o].push(k));
+function sceneFor(key,i){const a=ASP[key]||1.3,o=a>1.12?'l':a<.9?'p':'s',list=SC[o].length?SC[o]:SC.p;return list[i%list.length]}
+function mockHTML(key,i){const k=sceneFor(key,i),m=MK[k];
+  return `<div class="scene" style="--ar:${m.w/m.h}"><img class="room" src="assets/${k}.webp" alt=""><img class="art" src="assets/${key}.webp" alt="" style="left:${m.x*100}%;top:${m.y*100}%;width:${m.ww*100}%;height:${m.wh*100}%"></div>`}
+const wall=document.getElementById('wall'),filt=document.getElementById('filt'),view=document.getElementById('view');let mode='all',shown=[],vi=0,bag=new Set();
+const FL=[['all','All','الكل',()=>true],['new','New','الجديدة',p=>p[5]===1]];
+function render(){buildLine();filt.innerHTML=FL.map(f=>`<li><button type="button" data-f="${f[0]}" aria-pressed="${mode===f[0]}">${AR?f[2]:f[1]}<sup>${P.filter(f[3]).length}</sup></button></li>`).join('');
+  shown=P.filter(FL.find(f=>f[0]===mode)[3]);
+  wall.innerHTML=shown.map((p,i)=>`<a class="pp" href="#${p[0]}" data-i="${i}" aria-label="${AR?p[2]:p[1]}">${p[5]?`<span class="new paper" data-tear="2"><span class="fill"></span>${AR?'جديدة':'New'}</span>`:''}<div class="bed paper" data-tear="6"><span class="fill"></span><div class="pc" data-tear="4"><img src="assets/${p[0]}.webp" alt="${p[1]}, watercolour by Farah Al-Helou" loading="lazy"></div><div class="mk" aria-hidden="true">${mockHTML(p[0],P.indexOf(p))}</div></div>
+   <div class="cap"><div><h2>${AR?p[2]:p[1]}</h2><span class="where">${AR?p[4]:p[3]}</span></div><span class="pr">€12</span></div></a>`).join('');
+  if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}
+  if(window.gsap&&!matchMedia('(prefers-reduced-motion: reduce)').matches)gsap.from(wall.querySelectorAll('.pp'),{y:24,opacity:0,duration:.6,ease:'power2.out',stagger:.05})}
+function buildLine(){}
+filt.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.f;render()});
+wall.addEventListener('click',e=>{const a=e.target.closest('.pp');if(!a)return;e.preventDefault();open_(+a.dataset.i)});
+let vmode='art';
+document.getElementById('vtabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;vmode=b.dataset.v;open_(vi)});
+function open_(i){vi=(i+shown.length)%shown.length;const p=shown[vi];const im=document.getElementById('vimg');im.src=`assets/${p[0]}.webp`;im.alt=`${p[1]}, watercolour by Farah Al-Helou`;
+  document.getElementById('v-h').textContent=AR?p[2]:p[1];document.getElementById('vwhere').textContent=(AR?p[4]:p[3])+(AR?'، ':', ')+(AR?'ألوان مائية على ورق':'watercolour on paper');
+  const b=document.getElementById('vadd'),inb=bag.has(p[0]);b.textContent=inb?(AR?'في السلة':'In your bag'):(AR?'أضيفوها إلى السلة (12€)':'Add to bag (€12)');b.setAttribute('aria-pressed',inb);
+  document.querySelectorAll('#vtabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===vmode));
+  const big=document.querySelector('.view .big');let vm=big.querySelector('.mk');if(!vm){vm=document.createElement('div');vm.className='mk';big.append(vm)}
+  vm.innerHTML=mockHTML(p[0],P.indexOf(p));vm.style.opacity=vmode==='wall'?1:0;
+  if(!view.open){view.showModal();requestAnimationFrame(()=>typeof draw==='function'&&draw())}history.replaceState(null,'','#'+p[0])}
+document.getElementById('vadd').onclick=()=>{const k=shown[vi][0];bag.has(k)?bag.delete(k):bag.add(k);document.getElementById('bagn').textContent=bag.size;open_(vi)};
+document.getElementById('vnext').onclick=()=>open_(vi+1);document.getElementById('vprev').onclick=()=>open_(vi-1);
+document.getElementById('vx').onclick=()=>view.close();view.addEventListener('close',()=>history.replaceState(null,'',location.pathname));
+view.addEventListener('click',e=>{if(e.target===view)view.close()});
+addEventListener('keydown',e=>{if(!view.open)return;if(e.key==='ArrowRight')open_(vi+(AR?-1:1));if(e.key==='ArrowLeft')open_(vi-(AR?-1:1))});
+

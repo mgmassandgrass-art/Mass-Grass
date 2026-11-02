@@ -197,3 +197,18 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - Source scans are in the owner's Google Drive (`Work/Art/ART`); keep them out of the repo.
 - Owner's notes on v1: motion must all go one way, cuts must be clean, the moon must glow hard,
   and every action needs a sound.
+
+## Design skills and the collage direction (Nov 2026)
+
+- The owner asked for these skills to be used in every design conversation from now on:
+  `hallmark`, `impeccable`, `design-taste-frontend` (taste-skill), `frontend-design`, `ui-ux-pro-max`,
+  `typography-scale-builder`, `extract-design-md`, `interface-design` (app screens only), `hue` (new design
+  languages), `shadcn` (only if a React/shadcn project appears). They live in `.claude/skills/`.
+- `DESIGN.md` at the root is the locked system for the collage direction (tokens, type roles, spacing,
+  components, mockup method). Read it first; new pages follow it.
+- The collage pages are in `drafts/collage/` (see its README). Before showing a page, run
+  `node .claude/skills/hallmark/scripts/sloplint.mjs drafts/collage/site/<page>.html` and fix every FAIL.
+- Hallmark floor rules the site now follows: colours and fonts only through `:root` tokens, type through the
+  role tokens (`--fs-*`), spacing on a 4px scale, `minmax(0,1fr)` image tracks, no tracked-caps labels or
+  eyebrows, no middle-dot meta strings or arrows glued to links, focus-visible everywhere, content visible
+  without scripts (`.js` gates hidden states), no fake success messages.
