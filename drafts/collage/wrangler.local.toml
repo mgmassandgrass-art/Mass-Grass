@@ -1,0 +1,19 @@
+# Run the collage site against the real Worker API on this machine (never deploy this file):
+#   cd drafts/collage && npx --prefix ../../worker wrangler d1 migrations apply mass-grass --local --persist-to .wstate -c wrangler.local.toml
+#   npx --prefix ../../worker wrangler dev --local --persist-to .wstate -c wrangler.local.toml --port 8787
+name = "mass-grass-collage-local"
+main = "../../worker/src/index.js"
+compatibility_date = "2025-09-01"
+[assets]
+directory = "site"
+binding = "ASSETS"
+run_worker_first = ["/*", "!/fonts/*"]
+[vars]
+ADMIN_EMAIL = "info@massandgrass.com"
+SITE_ORIGIN = "http://localhost:8787"
+SOON = "0"
+[[d1_databases]]
+binding = "DB"
+database_name = "mass-grass"
+database_id = "local"
+migrations_dir = "../../worker/migrations"

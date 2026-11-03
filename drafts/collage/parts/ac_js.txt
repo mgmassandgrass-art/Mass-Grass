@@ -1,0 +1,43 @@
+let AR=false;const P=[],view={open:false};let vi=0;function open_(){}
+/* sign in, create an account, forgotten password and a new password from the e-mailed link; all through the shop's /api */
+const S=window.MGShop,U=S.USER,T=(en,ar)=>AR?ar:en,esc=S.esc,$=id=>document.getElementById(id);
+const Q=new URLSearchParams(location.search),resetTok=Q.get('reset');
+const safeNext=n=>/^[a-z0-9\-/]*(\.html)?(#[\w-]*)?$/i.test(n||'')&&!/^\/\//.test(n)?n:'profile.html';
+const next=safeNext(Q.get('next')||'profile.html');
+let mode=resetTok?'reset':Q.get('mode')==='up'?'up':'in',msg=Q.get('error')?{google_not_configured:['Google sign-in is not ready yet. Please use your email.','الدخول عبر Google غير متاح بعد. استخدموا البريد الإلكتروني.']}[Q.get('error')]||['Google sign-in did not work. Please try again.','لم ينجح الدخول عبر Google. حاولوا مرة أخرى.']:null,ok=false;
+const ERR={bad_credentials:['That email and password do not match.','البريد الإلكتروني وكلمة المرور غير متطابقين.'],email_taken:['There is already an account with this email. Sign in instead.','يوجد حساب بهذا البريد. سجّلوا الدخول بدلًا من ذلك.'],
+  email_invalid:['Please enter a valid email, like name@mail.com.','اكتبوا بريدًا إلكترونيًا صحيحًا، مثل name@mail.com.'],name_required:['Please write your name.','اكتبوا اسمكم.'],password_short:['The password needs at least 10 characters.','تحتاج كلمة المرور إلى 10 أحرف على الأقل.'],
+  rate_limited:['Too many tries. Please wait a little and try again.','محاولات كثيرة. انتظروا قليلًا ثم حاولوا مرة أخرى.'],token_invalid:['This link has expired. Ask for a new one.','انتهت صلاحية هذا الرابط. اطلبوا رابطًا جديدًا.'],
+  offline:['Accounts open with the shop. This preview cannot reach the server.','تُفتح الحسابات مع افتتاح المتجر. هذه المعاينة لا تصل إلى الخادم.']};
+const err=r=>T(...(ERR[r.offline?'offline':r.data&&r.data.error]||['Something went wrong. Please try again.','حدث خطأ. حاولوا مرة أخرى.']));
+const G=`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.2-2.1 3.5-5.1 3.5-8.7z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.3 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.3a12 12 0 0 0 0 10.8z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z"/></svg>`;
+function render(){const box=$('acc'),m=msg?`<p class="fmsg${ok?' ok':''}" role="status">${esc(Array.isArray(msg)?T(...msg):msg)}</p>`:'<p class="fmsg" role="status"></p>';
+  if(mode==='reset'){box.innerHTML=`<p class="lead">${T('Choose a new password for your account.','اختاروا كلمة مرور جديدة لحسابكم.')}</p><form id="f" novalidate>
+    <label class="fld">${T('New password','كلمة المرور الجديدة')}<input id="pw" type="password" autocomplete="new-password" minlength="10" required><small>${T('At least 10 characters.','10 أحرف على الأقل.')}</small></label>${m}
+    <button class="ink full" type="submit">${T('Save the password','احفظوا كلمة المرور')}</button></form>`}
+  else if(mode==='forgot'){box.innerHTML=`<p class="lead">${T('Write your email and we will send you a link to choose a new password.','اكتبوا بريدكم الإلكتروني وسنرسل لكم رابطًا لاختيار كلمة مرور جديدة.')}</p><form id="f" novalidate>
+    <label class="fld">${T('Email','البريد الإلكتروني')}<input id="em" type="email" autocomplete="email" required></label>${m}
+    <button class="ink full" type="submit">${T('Send the link','أرسلوا الرابط')}</button></form><div class="row"><button class="linkb" type="button" data-mode="in">${T('Back to sign in','العودة إلى الدخول')}</button></div>`}
+  else{const up=mode==='up';box.innerHTML=`<div class="tabs" role="tablist"><button type="button" role="tab" data-mode="in" aria-selected="${!up}">${T('Sign in','الدخول')}</button><button type="button" role="tab" data-mode="up" aria-selected="${up}">${T('Create an account','حساب جديد')}</button></div>
+    <form id="f" novalidate>${up?`<label class="fld">${T('Your name','الاسم')}<input id="nm" autocomplete="name" maxlength="60" required></label>`:''}
+    <label class="fld">${T('Email','البريد الإلكتروني')}<input id="em" type="email" autocomplete="email" required></label>
+    <label class="fld">${T('Password','كلمة المرور')}<input id="pw" type="password" autocomplete="${up?'new-password':'current-password'}" minlength="${up?10:1}" required>${up?`<small>${T('At least 10 characters.','10 أحرف على الأقل.')}</small>`:''}</label>${m}
+    <button class="ink full" type="submit">${up?T('Create the account','أنشئوا الحساب'):T('Sign in','الدخول')}</button></form>
+    ${up?'':`<div class="row"><button class="linkb" type="button" data-mode="forgot">${T('Forgot your password?','نسيتم كلمة المرور؟')}</button></div>`}
+    <p class="or">${T('or','أو')}</p><a class="ghost" href="/api/auth/google?next=${encodeURIComponent(next)}">${G}<span>${T('Continue with Google','المتابعة عبر Google')}</span></a>`}
+  $('f').onsubmit=submit;box.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;msg=null;ok=false;render();const i=box.querySelector('input');i&&i.focus()})}
+async function submit(e){e.preventDefault();const f=e.target,btn=f.querySelector('[type=submit]'),v=id=>($(id)||{}).value||'',say=(t,good)=>{msg=t;ok=!!good;const el=f.querySelector('.fmsg');el.textContent=Array.isArray(t)?T(...t):t;el.classList.toggle('ok',!!good)};
+  const em=v('em').trim();
+  if(mode!=='reset'&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){say(ERR.email_invalid);$('em').focus();return}
+  if(mode==='up'&&!v('nm').trim()){say(ERR.name_required);$('nm').focus();return}
+  if((mode==='up'||mode==='reset')&&v('pw').length<10){say(ERR.password_short);$('pw').focus();return}
+  btn.disabled=true;let r;
+  if(mode==='forgot'){r=await U.api('POST','/api/forgot',{email:em});btn.disabled=false;
+    if(r.ok)say([`If there is an account for ${em}, a link is on its way.`,`إذا كان هناك حساب بالبريد ${em}، فالرابط في طريقه إليكم.`],true);else say(err(r));return}
+  if(mode==='reset'){r=await U.api('POST','/api/reset',{token:resetTok,password:v('pw')});btn.disabled=false;
+    if(r.ok){history.replaceState(null,'','account.html');mode='in';msg=['Your password is saved. Sign in with it now.','حُفظت كلمة المرور. سجّلوا الدخول بها الآن.'];ok=true;render()}else say(err(r));return}
+  r=mode==='up'?await U.api('POST','/api/signup',{name:v('nm').trim(),email:em,password:v('pw')}):await U.api('POST','/api/login',{email:em,password:v('pw')});
+  btn.disabled=false;if(!r.ok){say(err(r));return}
+  U.set(r.data.user);location.href=next}
+/* already signed in: straight to the profile */
+U.sync().then(u=>{if(u&&!resetTok)location.replace(next)});

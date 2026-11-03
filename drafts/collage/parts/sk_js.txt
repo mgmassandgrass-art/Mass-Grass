@@ -7,8 +7,8 @@ const P=[['s-lemons','die','Lemons','ليمون'],['s-dove','die','Blue Dove','�
  ['cal-04','round','Big Flower','الزهرة الكبيرة'],['ppoppies','rect','Blue Poppies','شقائق زرقاء'],['alley','rect','The Alley','الزقاق'],['cal-08','round','Girl with Cart','فتاة والعربة'],['cal-11','round','Moon Sleeper','نائمة على القمر'],
  ['cal-10','rect','Elephant on a Bike','فيل على دراجة'],['ptree','round','Little Tree','شجرة صغيرة']];
 const stk=k=>{const s=P.find(p=>p[0]===k);return s[1]==='die'?`<span class="stk die"><img src="assets/${k}.webp" alt="" draggable="false" loading="lazy"></span>`:`<span class="stk ${s[1]}"><i><img src="assets/${k}.webp" alt="" draggable="false" loading="lazy"></i></span>`};
-const price=n=>Math.floor(n/6)*3+Math.min(n%6,3);
-const pack=new Set();let bagN=0;
+const price=n=>{const pk=S.price('pack'),one=S.price('sticker');return Math.floor(n/6)*pk+(n%6>3?pk:(n%6)*one)};
+const pack=new Set();const S=window.MGShop;
 /* the sheet in the intro */
 const SH=[['s-lemons',16,4,6,-6],['hero',24,26,8,4],['s-dove',27,56,5,-3],['sparklers',20,6,52,5],['s-gaza',21,32,56,-4],['s-heart',18,58,48,6],['cal-05',19,78,10,-5],['s-whale',26,72,60,3]];
 function sheet(){$('sheet').innerHTML=SH.map(([k,w,x,y,r])=>`<button type="button" class="s" style="--w:${w}%;--x:${x}%;--y:${y}%;--r:${r}deg" data-k="${k}" aria-label="${name(k)}">${stk(k)}</button>`).join('')}
@@ -17,7 +17,7 @@ $('sheet').addEventListener('click',e=>{const b=e.target.closest('.s');if(!b)ret
 /* try them on things: real photos; stickers are drawn on a canvas, flat on the laptop, notebook and phone,
    and wrapped around the bottle (each column of the sticker follows the curve, with the bottle's light on it) */
 const OBJ=[{k:'laptop',n:['Laptop','حاسوب محمول'],r:[.13,.15,.75,.70],s:.2},{k:'notebook',n:['Notebook','دفتر'],r:[.275,.05,.395,.905],s:.24},
-  {k:'bottle',n:['Water bottle','قارورة ماء'],r:[.41,.27,.182,.62],s:.5,cyl:true},{k:'phone',n:['Phone','هاتف'],r:[.35,.25,.31,.665],s:.3}];
+  {k:'bottle',n:['Water bottle','قارورة ماء'],r:[.41,.27,.182,.62],s:.46,cyl:true},{k:'phone',n:['Phone','هاتف'],r:[.35,.25,.31,.665],s:.3}];
 let oi=0,placed=[],sel=-1;const cv=$('skc'),cx=cv.getContext('2d'),sprites={};
 function sprite(k,cb){if(sprites[k])return cb(sprites[k]);const s=P.find(p=>p[0]===k),im=new Image();im.onload=()=>{const S=420,c=document.createElement('canvas'),x=c.getContext('2d');
   if(s[1]==='die'){const r=im.width/im.height;c.width=r>=1?S:Math.round(S*r);c.height=r>=1?Math.round(S/r):S;x.drawImage(im,0,0,c.width,c.height)}
@@ -28,7 +28,7 @@ function sprite(k,cb){if(sprites[k])return cb(sprites[k]);const s=P.find(p=>p[0]
   sprites[k]=c;cb(c)};im.src=`assets/${k}.webp`}
 function size(){const r=cv.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);paintAll()}
 new ResizeObserver(size).observe($('stage'));
-function geom(p){const o=OBJ[oi],W=cv.width,H=cv.height,[rx,ry,rw,rh]=o.r,sp=sprites[p.k];const tw=o.s*p.z*rw*W,th=tw*sp.height/sp.width;return{W,H,rx:rx*W,ry:ry*H,rw:rw*W,rh:rh*H,tw,th,x:p.u*W,y:p.v*H}}
+function geom(p){const o=OBJ[oi],W=cv.width,H=cv.height,[rx,ry,rw,rh]=o.r,sp=sprites[p.k];const base=o.s*p.z*rw*W,tw=base*Math.min(1,sp.width/sp.height*1.15),th=tw*sp.height/sp.width;return{W,H,rx:rx*W,ry:ry*H,rw:rw*W,rh:rh*H,tw,th,x:p.u*W,y:p.v*H}}
 function paintAll(){const W=cv.width,H=cv.height;cx.clearRect(0,0,W,H);const o=OBJ[oi];
   placed.forEach(p=>{const sp=sprites[p.k];if(!sp)return;const g=geom(p);
     const L=document.createElement('canvas');L.width=W;L.height=H;const l=L.getContext('2d');
@@ -54,7 +54,11 @@ function objs(){$('objs').innerHTML=OBJ.map((o,i)=>`<button type="button" role="
 $('objs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;oi=+b.dataset.i;$('obj').src=`assets/sk-${OBJ[oi].k}.webp`;placed=[];sel=-1;objs();paintAll()});
 function place(k,at){const o=OBJ[oi],[rx,ry,rw,rh]=o.r;sprite(k,()=>{const n=placed.length;let u,v;
     if(at){u=Math.min(rx+rw,Math.max(rx,at[0]));v=Math.min(ry+rh,Math.max(ry,at[1]))}else{const SL=[[.3,.28],[.72,.3],[.5,.55],[.26,.74],[.74,.74],[.52,.2],[.3,.52],[.7,.52],[.5,.84]],sl=SL[n%SL.length];u=rx+rw*(o.cyl?.5+(sl[0]-.5)*.5:sl[0]);v=ry+rh*sl[1]}
-    placed.push({k,u,v,z:P.find(p=>p[0]===k)[1]==='die'?1.1:1,r:o.cyl?0:((n%5)-2)*.07});sel=placed.length-1;paintAll()})}
+    if(o.cyl&&!at){const CV=[.16,.4,.64,.86,.28,.52,.76];v=ry+rh*CV[n%CV.length];u=rx+rw*.5}
+    const q={k,u,v,z:P.find(p=>p[0]===k)[1]==='die'?1.1:1,r:o.cyl?0:((n%5)-2)*.07};placed.push(q);
+    /* keep the whole sticker on the object */
+    const g=geom(q),hw=g.tw/2/g.W*1.04,hh=g.th/2/g.H*1.04;q.u=Math.min(rx+rw-hw,Math.max(rx+hw,q.u));q.v=Math.min(ry+rh-hh,Math.max(ry+hh,q.v));
+    sel=placed.length-1;paintAll()})}
 let td=null,ghost=null,dragged=false;
 $('tray').addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;td={k:b.dataset.k,x:e.clientX,y:e.clientY,b};dragged=false;b.setPointerCapture(e.pointerId)});
 $('tray').addEventListener('pointermove',e=>{if(!td)return;if(!dragged&&Math.hypot(e.clientX-td.x,e.clientY-td.y)>6){dragged=true;ghost=document.createElement('div');ghost.className='ghost';ghost.innerHTML=stk(td.k);ghost.style.width=td.b.offsetWidth*1.5+'px';document.body.append(ghost)}
@@ -86,11 +90,11 @@ $('usePack').onclick=()=>{placed.forEach(p=>pack.add(p.k));sync();$('grid').scro
 function toggle(k){pack.has(k)?pack.delete(k):pack.add(k);sync()}
 function sync(){$('grid').querySelectorAll('.sc').forEach(b=>{const on=pack.has(b.dataset.k);b.setAttribute('aria-pressed',on);b.querySelector('.chk').textContent=on?'✓':'+'});
   const n=pack.size;$('packbar').hidden=!n;$('pbS').innerHTML=[...pack].map(stk).join('');$('pbN').textContent=n+' '+T(n===1?'sticker':'stickers',n===1?'ملصق':'ملصقات');
-  $('pbP').textContent=', €'+price(n)+(n%6&&n>0?(AR?'، ':', ')+T(`${6-n%6} more for the next pack`,`أضيفوا ${6-n%6} لتكتمل المجموعة`):'');
-  $('pbAdd').textContent=T('Add to bag (€'+price(n)+')','أضيفوها إلى السلة ('+price(n)+'€)');
+  $('pbP').textContent=', '+S.fmt(price(n))+(n%6&&n>0?(AR?'، ':', ')+T(`${6-n%6} more for the next pack`,`أضيفوا ${6-n%6} لتكتمل المجموعة`):'');
+  $('pbAdd').textContent=T('Add to bag ('+S.fmt(price(n))+')','أضيفوها إلى السلة ('+S.fmt(price(n))+')');
   if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}}
 $('grid').addEventListener('click',e=>{const b=e.target.closest('.sc');if(b)toggle(b.dataset.k)});
 $('pbClear').onclick=()=>{pack.clear();sync()};
-$('pbAdd').onclick=()=>{bagN+=pack.size;$('bagn').textContent=bagN;$('pbAdd').textContent=T('Added to your bag','أُضيفت إلى السلة');pack.clear();setTimeout(sync,1100)};
-function render(){sheet();objs();$('grid').innerHTML=P.map(p=>`<button type="button" class="sc" data-k="${p[0]}" aria-pressed="false" aria-label="${AR?p[3]:p[2]}"><span class="pad">${stk(p[0])}</span><span class="chk" aria-hidden="true">+</span><span class="cap"><b class="nm">${AR?p[3]:p[2]}</b><span class="pr">€1</span></span></button>`).join('');sync();
+$('pbAdd').onclick=()=>{S.BAG.stickers([...pack]);S.toast(T('Your stickers are in the bag.','أُضيفت الملصقات إلى السلة.'));$('pbAdd').textContent=T('Added to your bag','أُضيفت إلى السلة');pack.clear();setTimeout(sync,1100)};
+function render(){sheet();objs();$('grid').innerHTML=P.map(p=>`<button type="button" class="sc" data-k="${p[0]}" aria-pressed="false" aria-label="${AR?p[3]:p[2]}"><span class="pad">${stk(p[0])}</span><span class="chk" aria-hidden="true">+</span><span class="cap"><b class="nm">${AR?p[3]:p[2]}</b><span class="pr">${S.fmt(S.price('sticker',p[0]))}</span></span></button>`).join('');sync();
   if(window.gsap&&!matchMedia('(prefers-reduced-motion: reduce)').matches)gsap.from('#sheet .s',{y:-30,opacity:0,rotate:'+=20',duration:.6,ease:'back.out(1.6)',stagger:.06})}

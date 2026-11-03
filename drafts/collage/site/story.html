@@ -62,14 +62,82 @@ header{position:relative}
 header .mmenu a{text-transform:none;font:800 var(--fs-h2)/1.25 var(--f);letter-spacing:-.02em;padding:4px 0}
 .ar-on header .mmenu a{font:700 var(--fs-title)/1.5 var(--fa);letter-spacing:0}
 header .mmenu a[aria-current=page]{text-decoration:underline;text-underline-offset:8px;text-decoration-thickness:2px}
-header .menub,header .pill,header .lang,header .logo{position:relative;z-index:61}
-.bagpop{position:absolute;top:calc(100% - 6px);inset-inline-end:clamp(18px,6vw,72px);z-index:62;width:300px;max-width:calc(100% - 32px);padding:20px 24px;--c:var(--paper);filter:drop-shadow(0 10px 18px rgba(var(--ink-rgb),.22))}
-.bagpop[hidden]{display:none}
-.bp-t{margin:0 0 8px;font:600 var(--fs-body)/1.3 var(--f)}.bp-t b{font:800 var(--fs-h4)/1 var(--f)}.ar-on .bp-t{font-family:var(--fa)}
-.bp-s{margin:0 0 16px;font-size:var(--fs-sm);line-height:1.5;color:var(--soft)}
-.bagpop .go{background:none;border:0;border-bottom:1.5px solid currentColor;padding:0 0 4px;cursor:pointer;color:var(--ink)}
+header .menub,header .pill,header .lang,header .logo,header>.acct{position:relative;z-index:61}
+/* the bag sheet, the account link and the small note (shop.js) */
+.acct{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:0 4px;font:500 var(--fs-sm)/1 var(--f);color:var(--ink)}
+.ar-on .acct{font-family:var(--fa)}
+@media(hover:hover){header .acct:hover span{text-decoration:underline;text-underline-offset:6px}}
+.acct b{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--mustard);color:var(--ink);font:800 var(--fs-sm)/1 var(--f)}
+header .mmenu .acct{justify-content:flex-start;min-height:0;padding:16px 0 0;font:500 var(--fs-lead)/1.3 var(--f);text-decoration:underline;text-underline-offset:6px}
+.ar-on header .mmenu .acct{font-family:var(--fa)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.bagd{margin:0;margin-inline-start:auto;inset-block:0;height:100dvh;max-height:none;width:100%;max-width:440px;padding:0;border:0;background:none;color:var(--ink);overflow:visible}
+.bagd::backdrop{background:rgba(var(--ink-rgb),.45)}
+.bagd[open]{animation:bagIn .35s cubic-bezier(.2,.9,.3,1)}
+@keyframes bagIn{from{transform:translateX(40px);opacity:0}}
+[dir=rtl].bagd[open]{animation-name:bagInR}@keyframes bagInR{from{transform:translateX(-40px);opacity:0}}
+.bagd-in{--c:var(--paper);height:100%;display:flex;flex-direction:column;padding:24px;overflow:auto;box-shadow:0 0 40px rgba(var(--ink-rgb),.25)}
+.bagd-hd{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:1.5px solid var(--ink)}
+.bagd h2{margin:0;font:800 var(--fs-h3)/1.1 var(--f);letter-spacing:-.02em}
+.ar-on .bagd h2,[dir=rtl] .bagd h2{font-family:var(--fa);font-weight:700;letter-spacing:0}
+.bagd .x,.sheetx{width:44px;height:44px;border-radius:50%;border:0;background:var(--ink);color:var(--cream);font:600 var(--fs-sm)/1 var(--f);cursor:pointer;flex:none}
+.bagd-ls{list-style:none;margin:0;padding:0;flex:1}
+.bagd-ls li{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px dashed rgba(var(--ink-rgb),.25)}
+.bagd-ls .th{width:64px;height:64px;display:grid;place-items:center;background:var(--paper-white);box-shadow:0 2px 6px rgba(var(--ink-rgb),.15)}
+.bagd-ls .th img{max-width:56px;max-height:56px;object-fit:contain}
+.bagd-ls b{display:block;font:700 var(--fs-body)/1.3 var(--f)}
+[dir=rtl] .bagd-ls b{font-family:var(--fa)}
+.bagd-ls small{display:block;font-size:var(--fs-caption);color:var(--soft);margin-top:4px}
+.bagd-ls .pr{text-align:end;font:700 var(--fs-body)/1 var(--f)}
+.bagd-ls .rm{display:block;margin-top:8px;margin-inline-start:auto;background:none;border:0;padding:4px 0;font:500 var(--fs-caption)/1 var(--f);color:var(--soft);text-decoration:underline;cursor:pointer;min-height:24px}
+[dir=rtl] .bagd-ls .rm{font-family:var(--fa)}
+.bagd-ft{display:grid;gap:16px;padding-top:24px}
+.bagd-ft .tt{display:flex;justify-content:space-between;align-items:baseline;margin:0;font:600 var(--fs-body)/1 var(--f)}
+.bagd-ft .tt b{font:800 var(--fs-figure)/1 var(--f)}
+.bagd-ft .ink{justify-content:center}
+.bagd-ft .note{margin:0;font-size:var(--fs-caption);color:var(--soft);text-align:center}
+.bagd-em{flex:1;display:grid;place-content:center;justify-items:center;gap:16px;text-align:center}
+.bagd-em p{margin:0;font:600 var(--fs-lead)/1.4 var(--f)}
+.mgtoast{position:fixed;left:50%;bottom:24px;z-index:90;translate:-50% 16px;margin:0;padding:12px 24px;border-radius:999px;background:var(--ink);color:var(--cream);font:500 var(--fs-sm)/1.3 var(--f);opacity:0;pointer-events:none;transition:opacity .25s,translate .25s;max-width:calc(100vw - 32px);text-align:center}
+.ar-on .mgtoast{font-family:var(--fa)}
+.mgtoast.on{opacity:1;translate:-50% 0}
 footer nav a{display:inline-block;padding:8px 2px}
-@media(max-width:900px){header nav:not(.mmenu){display:none}header .pill{margin-inline-start:auto}.menub{display:flex}}
+@media(max-width:900px){header nav:not(.mmenu){display:none}header .lang{margin-inline-start:auto}.menub{display:flex}header{gap:8px}header>.acct span{font-size:var(--fs-caption)}}
+@media(max-width:420px){header .pill{padding:0 16px}header .logo img{height:34px}}
+
+/* forms and sheets shared by the account, checkout, profile and help pages */
+.pghd{padding-block:clamp(40px,6vw,80px) var(--gh)}
+.pghd h1{margin:0;font:800 var(--fs-h1)/1 var(--f);letter-spacing:-.03em;text-wrap:balance}
+.ar-on .pghd h1{font:700 var(--fs-h2)/1.3 var(--fa);letter-spacing:0}
+.pghd p{margin:16px 0 0;max-width:46ch;font-size:var(--fs-lead);line-height:1.5;color:var(--soft)}
+.sheet{--c:var(--paper);padding:clamp(24px,4vw,48px);filter:drop-shadow(0 10px 22px rgba(var(--ink-rgb),.16))}
+.sheet h2{margin:0 0 24px;font:800 var(--fs-h3)/1.1 var(--f);letter-spacing:-.02em}
+.ar-on .sheet h2{font:700 var(--fs-h3)/1.35 var(--fa);letter-spacing:0}
+.fld{display:grid;gap:8px;margin-bottom:16px;font:600 var(--fs-sm)/1.3 var(--f)}
+.ar-on .fld{font-family:var(--fa)}
+.fld input,.fld textarea,.fld select{width:100%;min-height:48px;padding:12px 16px;border:1.5px solid var(--ink);border-radius:3px;background:var(--paper-white);color:var(--ink);font:500 var(--fs-body)/1.4 var(--f)}
+.ar-on .fld input,.ar-on .fld textarea,.ar-on .fld select{font-family:var(--fa)}
+.fld textarea{min-height:140px;resize:vertical}
+.fld input[type=email],.fld input[type=password]{direction:ltr;text-align:start}
+.ar-on .fld input[type=email],.ar-on .fld input[type=password]{text-align:right}
+.fld small{font-weight:500;color:var(--soft);font-size:var(--fs-caption)}
+.chk{display:flex;gap:12px;align-items:flex-start;margin:8px 0 24px;font-size:var(--fs-sm);line-height:1.45;cursor:pointer}
+.chk input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ink);flex:none}
+.fmsg{min-height:1.5em;margin:0 0 16px;font:500 var(--fs-sm)/1.5 var(--f);color:var(--terra)}
+.ar-on .fmsg{font-family:var(--fa)}
+.fmsg.ok{color:var(--olive)}
+.tabs{display:flex;gap:24px;margin-bottom:24px;border-bottom:1.5px solid rgba(var(--ink-rgb),.2)}
+.tabs button{background:none;border:0;padding:8px 0 12px;margin-bottom:-1.5px;border-bottom:2.5px solid transparent;font:600 var(--fs-body)/1 var(--f);color:var(--soft);cursor:pointer;min-height:44px}
+.ar-on .tabs button{font-family:var(--fa)}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--ink)}
+.ink[disabled],.ink[aria-disabled=true]{background:var(--c-e9e0ce);color:var(--soft);cursor:not-allowed}
+.ink.full{width:100%;justify-content:center}
+.or{display:flex;align-items:center;gap:16px;margin:24px 0;color:var(--soft);font-size:var(--fs-caption)}
+.or::before,.or::after{content:"";flex:1;height:1px;background:rgba(var(--ink-rgb),.2)}
+.ghost{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:48px;padding:0 24px;border:1.5px solid var(--ink);border-radius:999px;background:var(--paper-white);color:var(--ink);font:600 var(--fs-sm)/1 var(--f);cursor:pointer;width:100%}
+.ar-on .ghost{font-family:var(--fa)}
+.linkb{background:none;border:0;padding:8px 0;font:500 var(--fs-sm)/1.3 var(--f);color:var(--ink);text-decoration:underline;text-underline-offset:4px;cursor:pointer;min-height:44px}
+.ar-on .linkb{font-family:var(--fa)}
 
 :root{--mood-happy:#F6E7BE;--mood-joy:#F2D9A6;--mood-worried:#D9E2E9;--mood-sad:#CBD3D9;--mood-calm:#EFE6D6;}
 /* story page: Farah's journey on torn paper, with her face walking a dashed route as you scroll */
@@ -200,6 +268,7 @@ footer{position:relative;margin-top:-8px;padding:clamp(80px,8vw,104px) 16px 56px
 footer nav{display:flex;justify-content:center;flex-wrap:wrap;align-items:center;gap:8px 24px;font:500 var(--fs-sm)/1 var(--f);letter-spacing:0}
 .ar-on footer nav{font:500 var(--fs-sm)/1 var(--fa);letter-spacing:0;text-transform:none}
 footer nav i{width:4px;height:4px;border-radius:50%;background:var(--c-2b2119);color:var(--paper);display:inline-block}
+@media(max-width:700px){footer nav i{display:none}footer nav{gap:4px 24px;max-width:340px;margin-inline:auto}}
 footer .seal{display:inline-flex;align-items:center;gap:16px;margin-top:28px}
 footer .seal::before,footer .seal::after{content:"";width:22px;height:2px;background:var(--c-2b2119)}
 footer .seal span{display:inline-grid;place-items:center;padding:8px 20px;border:2px solid var(--c-2b2119);border-radius:50%}
@@ -222,9 +291,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" aria-current="page" data-ar="الحكاية">Story</a>
   </nav>
   <button class="lang" id="lang" type="button" aria-label="Arabic / English">ع</button>
-  <button class="pill" type="button" id="bagb" aria-expanded="false" aria-controls="bagpop"><span data-ar="السلة">Bag</span>&nbsp;(<span id="bagn">0</span>)</button>
+  <button class="pill" type="button" id="bagb" aria-haspopup="dialog"><span data-ar="السلة">Bag</span>&nbsp;(<span id="bagn">0</span>)</button>
   <button class="menub" type="button" id="menub" aria-expanded="false" aria-controls="mmenu" aria-label="Menu"><i></i><i></i><i></i></button>
-  <div class="bagpop paper" data-tear="4" id="bagpop" hidden><span class="fill"></span><p class="bp-t"><b id="bagn2">0</b> <span data-ar="قطع في السلة">pieces in your bag</span></p><p class="bp-s" data-ar="الدفع يفتح قريبًا. سنحفظ سلتكم إلى ذلك الحين.">Checkout opens soon. We will keep your bag until then.</p><button class="go" type="button" id="bagclear" data-ar="إفراغ السلة">Empty the bag</button></div>
   <nav class="mmenu" id="mmenu" hidden aria-label="Menu"><a href="index.html" data-ar="الرئيسية">Home</a><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a></nav>
 </header>
 
@@ -323,10 +391,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   </div>
   <nav><a href="paintings.html" data-ar="اللوحات">Paintings</a><i></i><a href="postcards.html" data-ar="البطاقات">Postcards</a><i></i><a href="stickers.html" data-ar="الملصقات">Stickers</a><i></i><a href="story.html" data-ar="الحكاية">Story</a></nav>
   <div class="seal"><span><img src="assets/logo.svg" alt="Mass & Grass"></span></div>
-  <small data-ar="تحميل فوري · دفع آمن · كل قطعة تدعم فرح في غزة<br>© 2026 ماس آند غراس<br>غزة، فلسطين">Instant download<br>Secure checkout<br>Every piece supports Farah in Gaza<br>© 2026 Mass &amp; Grass<br>Gaza, Palestine</small>
+  <small data-ar="تحميل فوري<br>دفع آمن<br>كل قطعة تدعم فرح في غزة<br>© 2026 ماس آند غراس<br>غزة، فلسطين">Instant download<br>Secure checkout<br>Every piece supports Farah in Gaza<br>© 2026 Mass &amp; Grass<br>Gaza, Palestine</small>
 </footer>
 
 <script src="assets/gsap.min.js"></script>
+<script src="assets/shop.js"></script>
 <script>
 let AR=false;const P=[],view={open:false};let vi=0;function open_(){}
 const SD={"strip":[[34.49104,31.59513],[34.50207,31.58744],[34.51057,31.58178],[34.51849,31.57598],[34.52175,31.57403],[34.52415,31.57218],[34.52972,31.56833],[34.53778,31.56222],[34.54044,31.56041],[34.54331,31.55827],[34.54405,31.55745],[34.54818,31.55447],[34.55116,31.55275],[34.55591,31.54865],[34.56504,31.54269],[34.56668,31.54146],[34.56732,31.54012],[34.56543,31.53324],[34.56455,31.53191],[34.55905,31.52841],[34.55843,31.52761],[34.55819,31.52512],[34.55481,31.5228],[34.55378,31.52125],[34.55391,31.51992],[34.55422,31.51874],[34.55009,31.51672],[34.54675,31.51304],[34.54225,31.51128],[34.53852,31.51012],[34.53137,31.50708],[34.52959,31.50622],[34.52818,31.50505],[34.52473,31.50295],[34.51671,31.50156],[34.51271,31.5007],[34.50852,31.49833],[34.50457,31.49518],[34.49639,31.48917],[34.49242,31.48609],[34.48904,31.48272],[34.48654,31.48088],[34.48518,31.48005],[34.48037,31.47784],[34.47791,31.47621],[34.47443,31.47184],[34.46727,31.46471],[34.46473,31.46114],[34.45703,31.45484],[34.45318,31.45205],[34.45129,31.44948],[34.4493,31.44725],[34.44702,31.44507],[34.44555,31.44379],[34.4419,31.44299],[34.43706,31.44027],[34.43355,31.43612],[34.43051,31.43119],[34.42809,31.42888],[34.4236,31.42337],[34.42067,31.42178],[34.4183,31.421],[34.4164,31.41973],[34.41486,31.41765],[34.41235,31.41564],[34.41027,31.4143],[34.40752,31.41158],[34.40483,31.41208],[34.4042,31.41164],[34.40276,31.41047],[34.39997,31.40712],[34.39746,31.40464],[34.39584,31.40328],[34.39502,31.40185],[34.38929,31.39741],[34.38846,31.39612],[34.38668,31.39512],[34.38463,31.39317],[34.3823,31.39142],[34.38027,31.38957],[34.38029,31.38763],[34.37905,31.38581],[34.37484,31.3804],[34.37402,31.3788],[34.37316,31.37597],[34.37307,31.37387],[34.37154,31.37227],[34.37145,31.37198],[34.37186,31.37095],[34.37183,31.37022],[34.37135,31.36965],[34.37045,31.36932],[34.37006,31.36932],[34.36889,31.36986],[34.36807,31.36993],[34.36717,31.36958],[34.36592,31.36728],[34.36557,31.36573],[34.36506,31.36441],[34.3651,31.36334],[34.36472,31.36167],[34.3683,31.33649],[34.37329,31.30617],[34.36927,31.29554],[34.36655,31.29053],[34.34521,31.27999],[34.3422,31.27825],[34.34032,31.27461],[34.33636,31.2684],[34.33162,31.26285],[34.32872,31.26029],[34.32581,31.25797],[34.31943,31.25361],[34.31619,31.2517],[34.30863,31.24899],[34.3067,31.24816],[34.29891,31.24442],[34.29347,31.24213],[34.29191,31.2412],[34.29063,31.24009],[34.28517,31.23442],[34.28091,31.23057],[34.27848,31.22851],[34.27437,31.22546],[34.26849,31.22066],[34.2675,31.22013],[34.2571,31.24925],[34.2555,31.25309],[34.25259,31.26094],[34.24858,31.27209],[34.24734,31.27599],[34.2457,31.28021],[34.24469,31.28338],[34.24354,31.28619],[34.24007,31.29578],[34.23923,31.29617],[34.23584,31.2964],[34.23552,31.29662],[34.2188,31.32358],[34.21841,31.32398],[34.26438,31.36128],[34.30427,31.39803],[34.30209,31.40037],[34.3065,31.39868],[34.33587,31.42366],[34.41365,31.50321],[34.42933,31.52218],[34.4274,31.52594],[34.42869,31.52776],[34.4309,31.52919],[34.42781,31.52565],[34.43158,31.52356],[34.43184,31.52795],[34.43931,31.5309],[34.49104,31.59513]],"places":{"jalaa":{"lat":31.524,"lon":34.4555,"name":{"ar":"الجلاء","en":"al-Jalaa"}},"office":{"lat":31.5148,"lon":34.4478,"name":{"ar":"المكتب، السرايا","en":"The office, al-Saraya"}},"mina":{"lat":31.5236,"lon":34.434,"name":{"ar":"الميناء","en":"al-Mina"},"labelWest":true},"telhawa":{"lat":31.503,"lon":34.4333,"name":{"ar":"تل الهوا","en":"Tel al-Hawa"},"labelWest":true},"zawaida":{"lat":31.4333,"lon":34.3667,"name":{"ar":"الزوايدة","en":"az-Zawayda"}},"deir":{"lat":31.418,"lon":34.3503,"name":{"ar":"دير البلح","en":"Deir al-Balah"},"labelWest":true}},"towns":[{"lat":31.55,"lon":34.495,"name":{"ar":"بيت لاهيا","en":"Beit Lahia"}},{"lat":31.515,"lon":34.47,"name":{"ar":"غزة","en":"Gaza"},"city":true},{"lat":31.448,"lon":34.3925,"name":{"ar":"النصيرات","en":"Nuseirat"}},{"lat":31.345,"lon":34.303,"name":{"ar":"خانيونس","en":"Khan Younis"}},{"lat":31.288,"lon":34.25,"name":{"ar":"رفح","en":"Rafah"}}],"steps":[{"f":["jalaa"],"mood":"happy","dark":0,"bombed":null},{"f":["jalaa"],"mood":"happy","dark":0,"bombed":null},{"f":["jalaa"],"mood":"happy","dark":0,"bombed":null},{"f":["zawaida"],"mood":"sad","dark":1,"bombed":null},{"f":["zawaida"],"mood":"worried","dark":0.6,"bombed":null},{"f":["zawaida"],"mood":"worried","dark":0.5,"bombed":null},{"f":["zawaida"],"mood":"happy","dark":0.3,"bombed":null},{"f":["jalaa"],"mood":"joy","dark":0,"bombed":null},{"f":["office"],"mood":"happy","dark":0,"bombed":null},{"f":["deir"],"mood":"sad","dark":1,"bombed":null},{"f":["jalaa"],"mood":"sad","dark":1,"bombed":"jalaa"},{"f":["telhawa"],"mood":"worried","dark":0.5,"bombed":null},{"f":["telhawa"],"mood":"happy","dark":0,"bombed":null},{"f":["office"],"mood":"joy","dark":0,"bombed":null}],"map":{"sea":{"ar":"البحر المتوسط","en":"Mediterranean Sea"},"strip":{"ar":"قطاع غزة","en":"Gaza Strip"},"farah":{"ar":"فرح","en":"Farah"}}};
@@ -420,19 +489,11 @@ document.getElementById('nl').onsubmit=async e=>{e.preventDefault();const v=docu
    ok.textContent=r.ok?(AR?'شكرًا لكم. أول بطاقة في الطريق.':'Thank you. Your first postcard is on its way.'):(AR?'لم يصل الطلب. حاولوا مرة أخرى لاحقًا.':'That did not go through. Please try again later.')}
  catch(err){ok.textContent=AR?'لم يصل الطلب. حاولوا مرة أخرى لاحقًا.':'That did not go through. Please try again later.'}};
 
-/* the bag: its count lives in this browser, so it follows you from page to page */
-{const bn=document.getElementById('bagn'),bn2=document.getElementById('bagn2'),pop=document.getElementById('bagpop'),bb=document.getElementById('bagb');
-  let n=0;try{n=+localStorage.mgBag||0}catch(e){}const set=v=>{n=v;bn.textContent=n;bn2.textContent=n;try{localStorage.mgBag=n}catch(e){}};
-  new MutationObserver(()=>{const v=+bn.textContent;if(v!==n){const add=v>=0?v:0;set(window.__bagBase!==undefined?window.__bagBase+add:add)}}).observe(bn,{childList:true,characterData:true,subtree:true});
-  window.__bagBase=n;bn.textContent=0;window.__bagBase=n;set(n);
-  bb.onclick=()=>{pop.hidden=!pop.hidden;bb.setAttribute('aria-expanded',!pop.hidden);if(!pop.hidden&&typeof draw==='function')requestAnimationFrame(draw)};
-  document.getElementById('bagclear').onclick=()=>{window.__bagBase=0;set(0);pop.hidden=true;bb.setAttribute('aria-expanded',false)};
-  addEventListener('click',e=>{if(!pop.hidden&&!e.target.closest('#bagpop,#bagb')){pop.hidden=true;bb.setAttribute('aria-expanded',false)}});
-  document.querySelectorAll('[data-add]').forEach(a=>a.addEventListener('click',()=>{window.__bagBase=n;set(n+1);window.__bagBase=n}));
-  const mb=document.getElementById('menub'),mm=document.getElementById('mmenu');
+/* the phone menu */
+{const mb=document.getElementById('menub'),mm=document.getElementById('mmenu');
   mb.onclick=()=>{mm.hidden=!mm.hidden;mb.setAttribute('aria-expanded',!mm.hidden);document.body.style.overflow=mm.hidden?'':'hidden'};
   mm.addEventListener('click',e=>{if(e.target.closest('a')){mm.hidden=true;mb.setAttribute('aria-expanded',false);document.body.style.overflow=''}});
-  addEventListener('keydown',e=>{if(e.key==='Escape'){if(!mm.hidden)mb.click();pop.hidden=true}})}
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&!mm.hidden)mb.click()})}
 /* torn edges: a ragged polygon per element, redrawn when its size changes */
 function rnd(seed){return()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646}}
 function tear(el,amp,seed,topOnly){const w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;const r=rnd(seed),pts=[],step=Math.max(5,amp*.9);

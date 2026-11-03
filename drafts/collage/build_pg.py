@@ -21,5 +21,5 @@ header nav a[aria-current=page]{text-decoration:underline;text-underline-offset:
 '''
 end='''render();{const k=location.hash.slice(1),L=typeof shown!=='undefined'?shown:P,i=L.findIndex(p=>p[0]===k);if(i>=0)open_(i)}
 </script>'''
-page=head+css+footcss+'</style>\n<script>document.documentElement.classList.add(\'js\')</script>\n</head>\n<body>\n\n'+header+'\n'+main+'\n'+footer+'\n\n<script src="assets/gsap.min.js"></script>\n<script>\n'+js+nl+tail+end+'\n</body>\n</html>\n'
+page=head+css+footcss+'</style>\n<script>document.documentElement.classList.add(\'js\')</script>\n</head>\n<body>\n\n'+header+'\n'+main+'\n'+footer+'\n\n<script src="assets/gsap.min.js"></script>\n<script src="assets/shop.js"></script>\n<script>\n'+js+nl+tail+end+'\n</body>\n</html>\n'
 open('site/'+out,'w').write(page);print(len(page))

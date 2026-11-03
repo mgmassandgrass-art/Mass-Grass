@@ -59,7 +59,7 @@ dialog.view::backdrop{background:rgba(var(--ink-rgb),.55)}
 .mk .scene{position:absolute;left:50%;top:50%;translate:-50% -50%;width:max(100cqw,calc(100cqh * var(--ar)));aspect-ratio:var(--ar)}
 .mk .scene img{position:absolute;max-width:none;max-height:none;filter:none;box-shadow:none;padding:0}
 .mk .room{inset:0;width:100%;height:100%}
-.mk .art{object-fit:cover;mix-blend-mode:multiply}
+.mk .scene .art{object-fit:fill;mix-blend-mode:multiply;box-shadow:inset 0 0 0 1px rgba(var(--ink-rgb),.12),0 0 0 .6px rgba(var(--ink-rgb),.22)}
 @media(hover:hover){.pp:hover .mk{opacity:1}}
 .view .vtabs{display:flex;gap:16px;margin:0 0 16px}
 .view .vtabs button{border:0;background:none;padding:8px 0;font:700 var(--fs-sm)/1 var(--f);color:var(--soft);cursor:pointer;border-bottom:2px solid transparent}

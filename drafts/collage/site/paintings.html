@@ -62,14 +62,82 @@ header{position:relative}
 header .mmenu a{text-transform:none;font:800 var(--fs-h2)/1.25 var(--f);letter-spacing:-.02em;padding:4px 0}
 .ar-on header .mmenu a{font:700 var(--fs-title)/1.5 var(--fa);letter-spacing:0}
 header .mmenu a[aria-current=page]{text-decoration:underline;text-underline-offset:8px;text-decoration-thickness:2px}
-header .menub,header .pill,header .lang,header .logo{position:relative;z-index:61}
-.bagpop{position:absolute;top:calc(100% - 6px);inset-inline-end:clamp(18px,6vw,72px);z-index:62;width:300px;max-width:calc(100% - 32px);padding:20px 24px;--c:var(--paper);filter:drop-shadow(0 10px 18px rgba(var(--ink-rgb),.22))}
-.bagpop[hidden]{display:none}
-.bp-t{margin:0 0 8px;font:600 var(--fs-body)/1.3 var(--f)}.bp-t b{font:800 var(--fs-h4)/1 var(--f)}.ar-on .bp-t{font-family:var(--fa)}
-.bp-s{margin:0 0 16px;font-size:var(--fs-sm);line-height:1.5;color:var(--soft)}
-.bagpop .go{background:none;border:0;border-bottom:1.5px solid currentColor;padding:0 0 4px;cursor:pointer;color:var(--ink)}
+header .menub,header .pill,header .lang,header .logo,header>.acct{position:relative;z-index:61}
+/* the bag sheet, the account link and the small note (shop.js) */
+.acct{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:0 4px;font:500 var(--fs-sm)/1 var(--f);color:var(--ink)}
+.ar-on .acct{font-family:var(--fa)}
+@media(hover:hover){header .acct:hover span{text-decoration:underline;text-underline-offset:6px}}
+.acct b{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--mustard);color:var(--ink);font:800 var(--fs-sm)/1 var(--f)}
+header .mmenu .acct{justify-content:flex-start;min-height:0;padding:16px 0 0;font:500 var(--fs-lead)/1.3 var(--f);text-decoration:underline;text-underline-offset:6px}
+.ar-on header .mmenu .acct{font-family:var(--fa)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.bagd{margin:0;margin-inline-start:auto;inset-block:0;height:100dvh;max-height:none;width:100%;max-width:440px;padding:0;border:0;background:none;color:var(--ink);overflow:visible}
+.bagd::backdrop{background:rgba(var(--ink-rgb),.45)}
+.bagd[open]{animation:bagIn .35s cubic-bezier(.2,.9,.3,1)}
+@keyframes bagIn{from{transform:translateX(40px);opacity:0}}
+[dir=rtl].bagd[open]{animation-name:bagInR}@keyframes bagInR{from{transform:translateX(-40px);opacity:0}}
+.bagd-in{--c:var(--paper);height:100%;display:flex;flex-direction:column;padding:24px;overflow:auto;box-shadow:0 0 40px rgba(var(--ink-rgb),.25)}
+.bagd-hd{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:1.5px solid var(--ink)}
+.bagd h2{margin:0;font:800 var(--fs-h3)/1.1 var(--f);letter-spacing:-.02em}
+.ar-on .bagd h2,[dir=rtl] .bagd h2{font-family:var(--fa);font-weight:700;letter-spacing:0}
+.bagd .x,.sheetx{width:44px;height:44px;border-radius:50%;border:0;background:var(--ink);color:var(--cream);font:600 var(--fs-sm)/1 var(--f);cursor:pointer;flex:none}
+.bagd-ls{list-style:none;margin:0;padding:0;flex:1}
+.bagd-ls li{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px dashed rgba(var(--ink-rgb),.25)}
+.bagd-ls .th{width:64px;height:64px;display:grid;place-items:center;background:var(--paper-white);box-shadow:0 2px 6px rgba(var(--ink-rgb),.15)}
+.bagd-ls .th img{max-width:56px;max-height:56px;object-fit:contain}
+.bagd-ls b{display:block;font:700 var(--fs-body)/1.3 var(--f)}
+[dir=rtl] .bagd-ls b{font-family:var(--fa)}
+.bagd-ls small{display:block;font-size:var(--fs-caption);color:var(--soft);margin-top:4px}
+.bagd-ls .pr{text-align:end;font:700 var(--fs-body)/1 var(--f)}
+.bagd-ls .rm{display:block;margin-top:8px;margin-inline-start:auto;background:none;border:0;padding:4px 0;font:500 var(--fs-caption)/1 var(--f);color:var(--soft);text-decoration:underline;cursor:pointer;min-height:24px}
+[dir=rtl] .bagd-ls .rm{font-family:var(--fa)}
+.bagd-ft{display:grid;gap:16px;padding-top:24px}
+.bagd-ft .tt{display:flex;justify-content:space-between;align-items:baseline;margin:0;font:600 var(--fs-body)/1 var(--f)}
+.bagd-ft .tt b{font:800 var(--fs-figure)/1 var(--f)}
+.bagd-ft .ink{justify-content:center}
+.bagd-ft .note{margin:0;font-size:var(--fs-caption);color:var(--soft);text-align:center}
+.bagd-em{flex:1;display:grid;place-content:center;justify-items:center;gap:16px;text-align:center}
+.bagd-em p{margin:0;font:600 var(--fs-lead)/1.4 var(--f)}
+.mgtoast{position:fixed;left:50%;bottom:24px;z-index:90;translate:-50% 16px;margin:0;padding:12px 24px;border-radius:999px;background:var(--ink);color:var(--cream);font:500 var(--fs-sm)/1.3 var(--f);opacity:0;pointer-events:none;transition:opacity .25s,translate .25s;max-width:calc(100vw - 32px);text-align:center}
+.ar-on .mgtoast{font-family:var(--fa)}
+.mgtoast.on{opacity:1;translate:-50% 0}
 footer nav a{display:inline-block;padding:8px 2px}
-@media(max-width:900px){header nav:not(.mmenu){display:none}header .pill{margin-inline-start:auto}.menub{display:flex}}
+@media(max-width:900px){header nav:not(.mmenu){display:none}header .lang{margin-inline-start:auto}.menub{display:flex}header{gap:8px}header>.acct span{font-size:var(--fs-caption)}}
+@media(max-width:420px){header .pill{padding:0 16px}header .logo img{height:34px}}
+
+/* forms and sheets shared by the account, checkout, profile and help pages */
+.pghd{padding-block:clamp(40px,6vw,80px) var(--gh)}
+.pghd h1{margin:0;font:800 var(--fs-h1)/1 var(--f);letter-spacing:-.03em;text-wrap:balance}
+.ar-on .pghd h1{font:700 var(--fs-h2)/1.3 var(--fa);letter-spacing:0}
+.pghd p{margin:16px 0 0;max-width:46ch;font-size:var(--fs-lead);line-height:1.5;color:var(--soft)}
+.sheet{--c:var(--paper);padding:clamp(24px,4vw,48px);filter:drop-shadow(0 10px 22px rgba(var(--ink-rgb),.16))}
+.sheet h2{margin:0 0 24px;font:800 var(--fs-h3)/1.1 var(--f);letter-spacing:-.02em}
+.ar-on .sheet h2{font:700 var(--fs-h3)/1.35 var(--fa);letter-spacing:0}
+.fld{display:grid;gap:8px;margin-bottom:16px;font:600 var(--fs-sm)/1.3 var(--f)}
+.ar-on .fld{font-family:var(--fa)}
+.fld input,.fld textarea,.fld select{width:100%;min-height:48px;padding:12px 16px;border:1.5px solid var(--ink);border-radius:3px;background:var(--paper-white);color:var(--ink);font:500 var(--fs-body)/1.4 var(--f)}
+.ar-on .fld input,.ar-on .fld textarea,.ar-on .fld select{font-family:var(--fa)}
+.fld textarea{min-height:140px;resize:vertical}
+.fld input[type=email],.fld input[type=password]{direction:ltr;text-align:start}
+.ar-on .fld input[type=email],.ar-on .fld input[type=password]{text-align:right}
+.fld small{font-weight:500;color:var(--soft);font-size:var(--fs-caption)}
+.chk{display:flex;gap:12px;align-items:flex-start;margin:8px 0 24px;font-size:var(--fs-sm);line-height:1.45;cursor:pointer}
+.chk input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ink);flex:none}
+.fmsg{min-height:1.5em;margin:0 0 16px;font:500 var(--fs-sm)/1.5 var(--f);color:var(--terra)}
+.ar-on .fmsg{font-family:var(--fa)}
+.fmsg.ok{color:var(--olive)}
+.tabs{display:flex;gap:24px;margin-bottom:24px;border-bottom:1.5px solid rgba(var(--ink-rgb),.2)}
+.tabs button{background:none;border:0;padding:8px 0 12px;margin-bottom:-1.5px;border-bottom:2.5px solid transparent;font:600 var(--fs-body)/1 var(--f);color:var(--soft);cursor:pointer;min-height:44px}
+.ar-on .tabs button{font-family:var(--fa)}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--ink)}
+.ink[disabled],.ink[aria-disabled=true]{background:var(--c-e9e0ce);color:var(--soft);cursor:not-allowed}
+.ink.full{width:100%;justify-content:center}
+.or{display:flex;align-items:center;gap:16px;margin:24px 0;color:var(--soft);font-size:var(--fs-caption)}
+.or::before,.or::after{content:"";flex:1;height:1px;background:rgba(var(--ink-rgb),.2)}
+.ghost{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:48px;padding:0 24px;border:1.5px solid var(--ink);border-radius:999px;background:var(--paper-white);color:var(--ink);font:600 var(--fs-sm)/1 var(--f);cursor:pointer;width:100%}
+.ar-on .ghost{font-family:var(--fa)}
+.linkb{background:none;border:0;padding:8px 0;font:500 var(--fs-sm)/1.3 var(--f);color:var(--ink);text-decoration:underline;text-underline-offset:4px;cursor:pointer;min-height:44px}
+.ar-on .linkb{font-family:var(--fa)}
 
 /* paintings page: a quiet wall of Farah's paintings, each torn out and laid on a pale sheet of coloured paper */
 .ph{padding:clamp(40px,6vw,88px) 0 clamp(36px,4vw,56px)}
@@ -132,7 +200,7 @@ dialog.view::backdrop{background:rgba(var(--ink-rgb),.55)}
 .mk .scene{position:absolute;left:50%;top:50%;translate:-50% -50%;width:max(100cqw,calc(100cqh * var(--ar)));aspect-ratio:var(--ar)}
 .mk .scene img{position:absolute;max-width:none;max-height:none;filter:none;box-shadow:none;padding:0}
 .mk .room{inset:0;width:100%;height:100%}
-.mk .art{object-fit:cover;mix-blend-mode:multiply}
+.mk .scene .art{object-fit:fill;mix-blend-mode:multiply;box-shadow:inset 0 0 0 1px rgba(var(--ink-rgb),.12),0 0 0 .6px rgba(var(--ink-rgb),.22)}
 @media(hover:hover){.pp:hover .mk{opacity:1}}
 .view .vtabs{display:flex;gap:16px;margin:0 0 16px}
 .view .vtabs button{border:0;background:none;padding:8px 0;font:700 var(--fs-sm)/1 var(--f);color:var(--soft);cursor:pointer;border-bottom:2px solid transparent}
@@ -158,6 +226,7 @@ footer{position:relative;margin-top:-8px;padding:clamp(80px,8vw,104px) 16px 56px
 footer nav{display:flex;justify-content:center;flex-wrap:wrap;align-items:center;gap:8px 24px;font:500 var(--fs-sm)/1 var(--f);letter-spacing:0}
 .ar-on footer nav{font:500 var(--fs-sm)/1 var(--fa);letter-spacing:0;text-transform:none}
 footer nav i{width:4px;height:4px;border-radius:50%;background:var(--c-2b2119);color:var(--paper);display:inline-block}
+@media(max-width:700px){footer nav i{display:none}footer nav{gap:4px 24px;max-width:340px;margin-inline:auto}}
 footer .seal{display:inline-flex;align-items:center;gap:16px;margin-top:28px}
 footer .seal::before,footer .seal::after{content:"";width:22px;height:2px;background:var(--c-2b2119)}
 footer .seal span{display:inline-grid;place-items:center;padding:8px 20px;border:2px solid var(--c-2b2119);border-radius:50%}
@@ -180,9 +249,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <a href="paintings.html" aria-current="page" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a>
   </nav>
   <button class="lang" id="lang" type="button" aria-label="Arabic / English">ع</button>
-  <button class="pill" type="button" id="bagb" aria-expanded="false" aria-controls="bagpop"><span data-ar="السلة">Bag</span>&nbsp;(<span id="bagn">0</span>)</button>
+  <button class="pill" type="button" id="bagb" aria-haspopup="dialog"><span data-ar="السلة">Bag</span>&nbsp;(<span id="bagn">0</span>)</button>
   <button class="menub" type="button" id="menub" aria-expanded="false" aria-controls="mmenu" aria-label="Menu"><i></i><i></i><i></i></button>
-  <div class="bagpop paper" data-tear="4" id="bagpop" hidden><span class="fill"></span><p class="bp-t"><b id="bagn2">0</b> <span data-ar="قطع في السلة">pieces in your bag</span></p><p class="bp-s" data-ar="الدفع يفتح قريبًا. سنحفظ سلتكم إلى ذلك الحين.">Checkout opens soon. We will keep your bag until then.</p><button class="go" type="button" id="bagclear" data-ar="إفراغ السلة">Empty the bag</button></div>
   <nav class="mmenu" id="mmenu" hidden aria-label="Menu"><a href="index.html" data-ar="الرئيسية">Home</a><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a></nav>
 </header>
 
@@ -193,7 +261,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
       <h1 id="ph-h" data-ar="اللوحات">The paintings</h1>
       <p class="lead" data-ar="عشرون لوحة مائية رسمتها فرح الحلو في غزة.">Twenty watercolours Farah Al-Helou painted in Gaza.</p>
     </div>
-    <p class="note paper" data-tear="4"><span class="fill"></span><b>€12</b><span data-ar="لكل لوحة. ملف عالي الدقة بصيغتي PDF وPNG، تحمّلونه فورًا وتطبعونه بأي حجم.">for each painting. A high-res PDF and PNG you download at once and print at any size.</span></p>
+    <p class="note paper" data-tear="4"><span class="fill"></span><b data-price="painting">€12</b><span data-ar="لكل لوحة. ملف عالي الدقة بصيغتي PDF وPNG، تحمّلونه فورًا وتطبعونه بأي حجم.">for each painting. A high-res PDF and PNG you download at once and print at any size.</span></p>
   </div>
 </section>
 <section class="wrap" aria-label="Filter"><ul class="filt" id="filt"></ul></section>
@@ -206,7 +274,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <div>
       <h2 id="v-h"></h2><p class="where" id="vwhere"></p>
       <div class="vtabs" id="vtabs"><button type="button" data-v="art" aria-pressed="true" data-ar="اللوحة">The painting</button><button type="button" data-v="wall" aria-pressed="false" data-ar="في مكانها">In a room</button></div>
-      <p class="price">€12</p>
+      <p class="price" data-price="painting">€12</p>
       <p class="fmt" data-ar="ملف عالي الدقة بصيغتي PDF وPNG. تحمّلونه فور الدفع، وتطبعونه بأي حجم.">A high-res PDF and PNG. Download it straight after paying and print it at any size.</p>
       <div class="acts"><button class="ink" type="button" id="vadd"></button></div>
       <div class="nav"><button class="tbtn paper" data-tear="3" type="button" id="vprev"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="السابقة">Previous</span></button>
@@ -227,10 +295,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   </div>
   <nav><a href="paintings.html" data-ar="اللوحات">Paintings</a><i></i><a href="postcards.html" data-ar="البطاقات">Postcards</a><i></i><a href="stickers.html" data-ar="الملصقات">Stickers</a><i></i><a href="story.html" data-ar="الحكاية">Story</a></nav>
   <div class="seal"><span><img src="assets/logo.svg" alt="Mass & Grass"></span></div>
-  <small data-ar="تحميل فوري · دفع آمن · كل قطعة تدعم فرح في غزة<br>© 2026 ماس آند غراس<br>غزة، فلسطين">Instant download<br>Secure checkout<br>Every piece supports Farah in Gaza<br>© 2026 Mass &amp; Grass<br>Gaza, Palestine</small>
+  <small data-ar="تحميل فوري<br>دفع آمن<br>كل قطعة تدعم فرح في غزة<br>© 2026 ماس آند غراس<br>غزة، فلسطين">Instant download<br>Secure checkout<br>Every piece supports Farah in Gaza<br>© 2026 Mass &amp; Grass<br>Gaza, Palestine</small>
 </footer>
 
 <script src="assets/gsap.min.js"></script>
+<script src="assets/shop.js"></script>
 <script>
 let AR=false;
 /* the twenty paintings (titles and places from the shop); Farah's clean scans are used where she sent them */
@@ -243,17 +312,20 @@ const P=[['hero','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي',1],
  ['cal-11','Moon Sleeper','نائمة على القمر','Gaza','غزة',0],['cal-02','Sea & Clouds','بحر وغيوم','Gaza','غزة',0]];
 const ASP={"hero": 1.454, "sparklers": 0.723, "cal-06": 1.328, "cal-07": 1.294, "guitar": 0.781, "cal-05": 0.836, "house": 1.342, "alley": 0.84, "cal-03": 1.396, "seafish": 0.674, "cal-08": 1.296, "hill": 1.011, "cal-10": 0.719, "cal-01": 1.46, "deirbalah": 0.815, "ppoppies": 1.396, "ptree": 0.66, "cal-04": 1.32, "cal-11": 0.812, "cal-02": 0.923};
 const MK={"mk-bench": {"w": 1024, "h": 768, "x": 0.251, "y": 0.263, "ww": 0.3633, "wh": 0.3268, "o": "l"}, "mk-bed": {"w": 1024, "h": 768, "x": 0.3389, "y": 0.1667, "ww": 0.3193, "wh": 0.2487, "o": "l"}, "mk-desk": {"w": 1024, "h": 1280, "x": 0.3486, "y": 0.2531, "ww": 0.3027, "wh": 0.3688, "o": "p"}, "mk-girl": {"w": 1024, "h": 1280, "x": 0.3574, "y": 0.3633, "ww": 0.2979, "wh": 0.3281, "o": "p"}, "wall-l": {"w": 1600, "h": 1200, "x": 0.2925, "y": 0.2292, "ww": 0.4231, "wh": 0.3567, "o": "l"}, "wall-p": {"w": 680, "h": 848, "x": 0.3456, "y": 0.1887, "ww": 0.3132, "wh": 0.3597, "o": "p"}, "held-4x5": {"w": 1080, "h": 1350, "x": 0.3528, "y": 0.123, "ww": 0.3009, "wh": 0.3126, "o": "p"}, "held-3x4": {"w": 1080, "h": 1350, "x": 0.3722, "y": 0.1674, "ww": 0.2546, "wh": 0.283, "o": "p"}, "held-5x4": {"w": 1080, "h": 1350, "x": 0.2509, "y": 0.2719, "ww": 0.5028, "wh": 0.3141, "o": "l"}, "held-1x1": {"w": 1080, "h": 1350, "x": 0.3296, "y": 0.1837, "ww": 0.3167, "wh": 0.2474, "o": "s"}};
-/* every painting gets its own scene: hung on a wall, leaning on a bench or a desk, above a bed, or held up by someone */
-const SC={l:[],p:[],s:[]};Object.entries(MK).forEach(([k,m])=>SC[m.o].push(k));
-function sceneFor(key,i){const a=ASP[key]||1.3,o=a>1.12?'l':a<.9?'p':'s',list=SC[o].length?SC[o]:SC.p;return list[i%list.length]}
-function mockHTML(key,i){const k=sceneFor(key,i),m=MK[k];
-  return `<div class="scene" style="--ar:${m.w/m.h}"><img class="room" src="assets/${k}.webp" alt=""><img class="art" src="assets/${key}.webp" alt="" style="left:${m.x*100}%;top:${m.y*100}%;width:${m.ww*100}%;height:${m.wh*100}%"></div>`}
-const wall=document.getElementById('wall'),filt=document.getElementById('filt'),view=document.getElementById('view');let mode='all',shown=[],vi=0,bag=new Set();
+/* every painting gets its own scene: hung on a wall, leaning on a bench or a desk, above a bed, or held up by someone.
+   The scene is picked by the frame's shape, and the painting is laid whole inside the frame's white mat (never stretched or cropped). */
+const FR=Object.entries(MK).map(([k,m])=>[k,m.ww*m.w/(m.wh*m.h)]);
+function sceneFor(key,i){const a=ASP[key]||1.3,d=FR.map(([k,r])=>[k,Math.abs(Math.log(r/a))]).sort((x,y)=>x[1]-y[1]),best=d[0][1],ok=d.filter(x=>x[1]<=best+.12);return ok[i%ok.length][0]}
+function artBox(key,m){const a=ASP[key]||1.3,rw=m.ww*m.w,rh=m.wh*m.h,s=.9;let w,h;if(a>rw/rh){w=rw*s;h=w/a}else{h=rh*s;w=h*a}
+  return {l:(m.x+(m.ww-w/m.w)/2)*100,t:(m.y+(m.wh-h/m.h)/2)*100,w:w/m.w*100,h:h/m.h*100}}
+function mockHTML(key,i){const k=sceneFor(key,i),m=MK[k],b=artBox(key,m);
+  return `<div class="scene" style="--ar:${m.w/m.h}"><img class="room" src="assets/${k}.webp" alt=""><img class="art" src="assets/${key}.webp" alt="" style="left:${b.l}%;top:${b.t}%;width:${b.w}%;height:${b.h}%"></div>`}
+const wall=document.getElementById('wall'),filt=document.getElementById('filt'),view=document.getElementById('view');let mode='all',shown=[],vi=0;const S=window.MGShop;
 const FL=[['all','All','الكل',()=>true],['new','New','الجديدة',p=>p[5]===1]];
 function render(){buildLine();filt.innerHTML=FL.map(f=>`<li><button type="button" data-f="${f[0]}" aria-pressed="${mode===f[0]}">${AR?f[2]:f[1]}<sup>${P.filter(f[3]).length}</sup></button></li>`).join('');
   shown=P.filter(FL.find(f=>f[0]===mode)[3]);
   wall.innerHTML=shown.map((p,i)=>`<a class="pp" href="#${p[0]}" data-i="${i}" aria-label="${AR?p[2]:p[1]}">${p[5]?`<span class="new paper" data-tear="2"><span class="fill"></span>${AR?'جديدة':'New'}</span>`:''}<div class="bed paper" data-tear="6"><span class="fill"></span><div class="pc" data-tear="4"><img src="assets/${p[0]}.webp" alt="${p[1]}, watercolour by Farah Al-Helou" loading="lazy"></div><div class="mk" aria-hidden="true">${mockHTML(p[0],P.indexOf(p))}</div></div>
-   <div class="cap"><div><h2>${AR?p[2]:p[1]}</h2><span class="where">${AR?p[4]:p[3]}</span></div><span class="pr">€12</span></div></a>`).join('');
+   <div class="cap"><div><h2>${AR?p[2]:p[1]}</h2><span class="where">${AR?p[4]:p[3]}</span></div><span class="pr">${S.fmt(S.price('painting',p[0]))}</span></div></a>`).join('');
   if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}
   if(window.gsap&&!matchMedia('(prefers-reduced-motion: reduce)').matches)gsap.from(wall.querySelectorAll('.pp'),{y:24,opacity:0,duration:.6,ease:'power2.out',stagger:.05})}
 function buildLine(){}
@@ -263,12 +335,12 @@ let vmode='art';
 document.getElementById('vtabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;vmode=b.dataset.v;open_(vi)});
 function open_(i){vi=(i+shown.length)%shown.length;const p=shown[vi];const im=document.getElementById('vimg');im.src=`assets/${p[0]}.webp`;im.alt=`${p[1]}, watercolour by Farah Al-Helou`;
   document.getElementById('v-h').textContent=AR?p[2]:p[1];document.getElementById('vwhere').textContent=(AR?p[4]:p[3])+(AR?'، ':', ')+(AR?'ألوان مائية على ورق':'watercolour on paper');
-  const b=document.getElementById('vadd'),inb=bag.has(p[0]);b.textContent=inb?(AR?'في السلة':'In your bag'):(AR?'أضيفوها إلى السلة (12€)':'Add to bag (€12)');b.setAttribute('aria-pressed',inb);
+  const b=document.getElementById('vadd'),inb=S.BAG.has('painting',p[0]),pr=S.fmt(S.price('painting',p[0]));b.textContent=inb?(AR?'في السلة':'In your bag'):(AR?`أضيفوها إلى السلة (${pr})`:`Add to bag (${pr})`);b.setAttribute('aria-pressed',inb);
   document.querySelectorAll('#vtabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===vmode));
   const big=document.querySelector('.view .big');let vm=big.querySelector('.mk');if(!vm){vm=document.createElement('div');vm.className='mk';big.append(vm)}
   vm.innerHTML=mockHTML(p[0],P.indexOf(p));vm.style.opacity=vmode==='wall'?1:0;
   if(!view.open){view.showModal();requestAnimationFrame(()=>typeof draw==='function'&&draw())}history.replaceState(null,'','#'+p[0])}
-document.getElementById('vadd').onclick=()=>{const k=shown[vi][0];bag.has(k)?bag.delete(k):bag.add(k);document.getElementById('bagn').textContent=bag.size;open_(vi)};
+document.getElementById('vadd').onclick=()=>{const p=shown[vi];if(S.BAG.toggle('painting',p[0],p[1],p[2]))S.toast(AR?'أُضيفت اللوحة إلى السلة.':'The painting is in your bag.');open_(vi)};
 document.getElementById('vnext').onclick=()=>open_(vi+1);document.getElementById('vprev').onclick=()=>open_(vi-1);
 document.getElementById('vx').onclick=()=>view.close();view.addEventListener('close',()=>history.replaceState(null,'',location.pathname));
 view.addEventListener('click',e=>{if(e.target===view)view.close()});
@@ -282,19 +354,11 @@ document.getElementById('nl').onsubmit=async e=>{e.preventDefault();const v=docu
    ok.textContent=r.ok?(AR?'شكرًا لكم. أول بطاقة في الطريق.':'Thank you. Your first postcard is on its way.'):(AR?'لم يصل الطلب. حاولوا مرة أخرى لاحقًا.':'That did not go through. Please try again later.')}
  catch(err){ok.textContent=AR?'لم يصل الطلب. حاولوا مرة أخرى لاحقًا.':'That did not go through. Please try again later.'}};
 
-/* the bag: its count lives in this browser, so it follows you from page to page */
-{const bn=document.getElementById('bagn'),bn2=document.getElementById('bagn2'),pop=document.getElementById('bagpop'),bb=document.getElementById('bagb');
-  let n=0;try{n=+localStorage.mgBag||0}catch(e){}const set=v=>{n=v;bn.textContent=n;bn2.textContent=n;try{localStorage.mgBag=n}catch(e){}};
-  new MutationObserver(()=>{const v=+bn.textContent;if(v!==n){const add=v>=0?v:0;set(window.__bagBase!==undefined?window.__bagBase+add:add)}}).observe(bn,{childList:true,characterData:true,subtree:true});
-  window.__bagBase=n;bn.textContent=0;window.__bagBase=n;set(n);
-  bb.onclick=()=>{pop.hidden=!pop.hidden;bb.setAttribute('aria-expanded',!pop.hidden);if(!pop.hidden&&typeof draw==='function')requestAnimationFrame(draw)};
-  document.getElementById('bagclear').onclick=()=>{window.__bagBase=0;set(0);pop.hidden=true;bb.setAttribute('aria-expanded',false)};
-  addEventListener('click',e=>{if(!pop.hidden&&!e.target.closest('#bagpop,#bagb')){pop.hidden=true;bb.setAttribute('aria-expanded',false)}});
-  document.querySelectorAll('[data-add]').forEach(a=>a.addEventListener('click',()=>{window.__bagBase=n;set(n+1);window.__bagBase=n}));
-  const mb=document.getElementById('menub'),mm=document.getElementById('mmenu');
+/* the phone menu */
+{const mb=document.getElementById('menub'),mm=document.getElementById('mmenu');
   mb.onclick=()=>{mm.hidden=!mm.hidden;mb.setAttribute('aria-expanded',!mm.hidden);document.body.style.overflow=mm.hidden?'':'hidden'};
   mm.addEventListener('click',e=>{if(e.target.closest('a')){mm.hidden=true;mb.setAttribute('aria-expanded',false);document.body.style.overflow=''}});
-  addEventListener('keydown',e=>{if(e.key==='Escape'){if(!mm.hidden)mb.click();pop.hidden=true}})}
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&!mm.hidden)mb.click()})}
 /* torn edges: a ragged polygon per element, redrawn when its size changes */
 function rnd(seed){return()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646}}
 function tear(el,amp,seed,topOnly){const w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;const r=rnd(seed),pts=[],step=Math.max(5,amp*.9);

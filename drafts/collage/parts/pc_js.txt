@@ -1,5 +1,5 @@
 let AR=false;
-{const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Aref+Ruqaa&display=swap';document.head.append(l)}
+
 /* the fifteen postcards */
 const P=[['hero','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي'],['cal-03','White Dove','الحمامة البيضاء','Beit Lahia','بيت لاهيا'],['cal-01','The Waves','الموج','Gaza beach','بحر غزة'],
  ['boatman','The Boatman','الصياد','Gaza port','ميناء غزة'],['house','Home','البيت','Az-Zawayda','الزوايدة'],['ppoppies','Blue Poppies','شقائق زرقاء','Gaza','غزة'],
@@ -10,13 +10,13 @@ const P=[['hero','Gaza Coast','ساحل غزة','Al-Mawasi','المواصي'],['
 const STAMPS=[{real:'stamp-gaza'},{img:'cal-05'},{img:'seafish'},{img:'ptree'},{img:'cal-04'},{img:'sparklers'},{img:'cal-10'}];
 const stampHTML=i=>{const s=STAMPS[i]||STAMPS[0];return s.real?`<span class="stamp real"><img src="assets/${s.real}.webp" alt=""></span>`:`<span class="stamp" style="--img:url(assets/${s.img}.webp)"><i></i><b><span>GAZA</span><em>M&amp;G</em></b></span>`};
 /* the places a card can be shown: on a table, pinned to a board, on a shelf, in a hand */
-const MK={"pc-hands":{"w":1536,"h":1152,"x":0.1725,"y":0.1641,"ww":0.6628,"wh":0.5842,"occ":true,"side":"front"},"pc-read":{"w":1536,"h":1152,"x":0.3991,"y":0.2891,"ww":0.3587,"wh":0.2925,"occ":true,"side":"back"},"pc-sea":{"w":1536,"h":1152,"x":0.2279,"y":0.2708,"ww":0.543,"wh":0.4384,"occ":true,"side":"front"},"pc-desk":{"w":1536,"h":1152,"x":0.3112,"y":0.3247,"ww":0.3978,"wh":0.3472,"occ":true,"side":"back"}};const MKK=Object.keys(MK);
+const MK={"pc-hands":{"w":1536,"h":1152,"x":0.1725,"y":0.1641,"ww":0.6628,"wh":0.5842,"occ":true,"side":"front"},"pc-read":{"w":1536,"h":1152,"x":0.4128,"y":0.2891,"ww":0.345,"wh":0.2925,"occ":true,"side":"back"},"pc-sea":{"w":1536,"h":1152,"x":0.2279,"y":0.2708,"ww":0.543,"wh":0.4384,"occ":true,"side":"front"},"pc-desk":{"w":1536,"h":1152,"x":0.3112,"y":0.3247,"ww":0.3978,"wh":0.3472,"occ":true,"side":"back"}};const MKK=Object.keys(MK);
 const MKN={'pc-hands':['In hand','في اليد'],'pc-read':['Being read','وهي تُقرأ'],'pc-sea':['By the sea','أمام البحر'],'pc-desk':['On the table','على الطاولة']};
 /* the back of a card as it arrives: Farah's note, a stamp and the Gaza postmark */
 function backHTML(i){const p=P[i];return `<div class="fc back still"><div class="msg${AR?' ar':''}">${T('From Gaza, with love.\nThinking of you.','من غزة، مع المحبة.\nأفكر فيكم.')}<span class="from">— ${T('Farah','فرح')}</span></div><div class="addr"><span class="stampbox">${stampHTML(i%STAMPS.length)}</span><span class="pm on">GAZA<br>${today()}<br>✶</span><span class="to${AR?' ar':''}">${T('To you, wherever you are','إليكم، أينما كنتم')}</span><i></i><i></i><i></i></div><span class="cap2">${AR?p[2]:p[1]}, ${T('Farah Al-Helou, Gaza','فرح الحلو، غزة')}</span></div>`}
 function sceneHTML(key,k){const m=MK[k],i=Math.max(0,P.findIndex(p=>p[0]===key)),pos=`left:${m.x*100}%;top:${m.y*100}%;width:${m.ww*100}%;height:${m.wh*100}%`;const ins=.032,ipos=`left:${(m.x+m.ww*ins*.667)*100}%;top:${(m.y+m.wh*ins)*100}%;width:${m.ww*(1-ins*1.333)*100}%;height:${m.wh*(1-ins*2)*100}%`;
   return `<div class="scene" style="--ar:${m.w/m.h}"><img class="room" src="assets/${k}.webp" alt="">${m.side==='back'?`<div class="bk" style="${pos}">${backHTML(i)}</div>`:`<img class="art" src="assets/${key}.webp" alt="" style="${ipos}">`}${m.occ?`<img class="top" src="assets/${k}-top.webp" alt="">`:''}</div>`}
-const $=id=>document.getElementById(id),T=(en,ar)=>AR?ar:en;let bag=new Set();
+const $=id=>document.getElementById(id),T=(en,ar)=>AR?ar:en;const SH=window.MGShop;
 
 /* 1 · the envelope in the intro hands out one card after another */
 const ienv=$('ienv');let ii=0,itimer=0;
@@ -60,16 +60,16 @@ $('again').onclick=()=>{msgIn.value='';toIn.value='';reset();flip(false);paint()
 const grid=$('cards2'),view=$('view');let vi=0,vmode='card';
 function render(){pickers();paint();flip(S.back);
   grid.innerHTML=P.map((p,i)=>`<a class="pk" href="#${p[0]}" data-i="${i}" aria-label="${AR?p[2]:p[1]}"><div class="face"><img src="assets/${p[0]}.webp" alt="${p[1]}, postcard of a watercolour by Farah Al-Helou" loading="lazy"><div class="mk" aria-hidden="true">${sceneHTML(p[0],MKK[i%MKK.length])}</div></div>
-  <div class="cap"><div><h3>${AR?p[2]:p[1]}</h3><span class="where">${AR?p[4]:p[3]}</span></div><span class="pr">€2</span></div></a>`).join('')}
+  <div class="cap"><div><h3>${AR?p[2]:p[1]}</h3><span class="where">${AR?p[4]:p[3]}</span></div><span class="pr">${SH.fmt(SH.price('postcard',p[0]))}</span></div></a>`).join('')}
 grid.addEventListener('click',e=>{const a=e.target.closest('.pk');if(!a)return;e.preventDefault();vmode='card';open_(+a.dataset.i)});
 $('vtabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;vmode=b.dataset.v;open_(vi)});
 function open_(i){vi=(i+P.length)%P.length;const p=P[vi];
   $('vtabs').innerHTML=[['card',T('The card','البطاقة')],...MKK.map(k=>[k,AR?MKN[k][1]:MKN[k][0]])].map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v===vmode}">${l}</button>`).join('');
   $('vbig').innerHTML=vmode==='card'?`<div class="pk" style="rotate:0deg;translate:none;pointer-events:none"><div class="face"><img src="assets/${p[0]}.webp" alt="${p[1]}"></div></div>`:`<div class="mkv">${sceneHTML(p[0],vmode)}</div>`;
   $('v-h').textContent=AR?p[2]:p[1];$('vwhere').textContent=(AR?p[4]:p[3])+(AR?'، ':', ')+T('postcard','بطاقة بريدية');
-  const b=$('vadd'),inb=bag.has(p[0]);b.textContent=inb?T('In your bag','في السلة'):T('Add to bag (€2)','أضيفوها إلى السلة (2€)');
+  const b=$('vadd'),inb=SH.BAG.has('postcard',p[0]),pr=SH.fmt(SH.price('postcard',p[0]));b.textContent=inb?T('In your bag','في السلة'):T(`Add to bag (${pr})`,`أضيفوها إلى السلة (${pr})`);
   if(!view.open){view.showModal();requestAnimationFrame(()=>typeof draw==='function'&&draw())}}
-$('vadd').onclick=()=>{const k=P[vi][0];bag.has(k)?bag.delete(k):bag.add(k);$('bagn').textContent=bag.size;open_(vi)};
+$('vadd').onclick=()=>{const p=P[vi];if(SH.BAG.toggle('postcard',p[0],p[1],p[2]))SH.toast(T('The postcard is in your bag.','أُضيفت البطاقة إلى السلة.'));open_(vi)};
 $('vwrite').onclick=()=>{S.c=vi;view.close();reset();pickers();flip(false);paint();$('write').scrollIntoView({behavior:'smooth'})};
 $('vnext').onclick=()=>open_(vi+1);$('vprev').onclick=()=>open_(vi-1);$('vx').onclick=()=>view.close();
 view.addEventListener('click',e=>{if(e.target===view)view.close()});

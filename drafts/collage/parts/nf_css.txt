@@ -1,0 +1,9 @@
+.nf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--col-gap);align-items:center;padding-block:var(--sec)}
+.nf-env{position:relative;max-width:420px;justify-self:center;rotate:-4deg}
+.nf-env img{width:100%;height:auto;filter:drop-shadow(0 12px 22px rgba(var(--ink-rgb),.2))}
+.nf-card{position:absolute;left:12%;top:-18%;width:76%!important;rotate:8deg;background:var(--paper-white);padding:3%;z-index:-1}
+.nf h1{margin:0 0 16px;font:800 var(--fs-h1)/1 var(--f);letter-spacing:-.03em;text-wrap:balance}
+.ar-on .nf h1{font:700 var(--fs-h2)/1.3 var(--fa);letter-spacing:0}
+.nf p{margin:0 0 24px;max-width:40ch;color:var(--soft);font-size:var(--fs-lead)}
+.nf-go{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+@media(max-width:760px){.nf{grid-template-columns:minmax(0,1fr)}.nf-env{width:70%}}

@@ -62,14 +62,82 @@ header{position:relative}
 header .mmenu a{text-transform:none;font:800 var(--fs-h2)/1.25 var(--f);letter-spacing:-.02em;padding:4px 0}
 .ar-on header .mmenu a{font:700 var(--fs-title)/1.5 var(--fa);letter-spacing:0}
 header .mmenu a[aria-current=page]{text-decoration:underline;text-underline-offset:8px;text-decoration-thickness:2px}
-header .menub,header .pill,header .lang,header .logo{position:relative;z-index:61}
-.bagpop{position:absolute;top:calc(100% - 6px);inset-inline-end:clamp(18px,6vw,72px);z-index:62;width:300px;max-width:calc(100% - 32px);padding:20px 24px;--c:var(--paper);filter:drop-shadow(0 10px 18px rgba(var(--ink-rgb),.22))}
-.bagpop[hidden]{display:none}
-.bp-t{margin:0 0 8px;font:600 var(--fs-body)/1.3 var(--f)}.bp-t b{font:800 var(--fs-h4)/1 var(--f)}.ar-on .bp-t{font-family:var(--fa)}
-.bp-s{margin:0 0 16px;font-size:var(--fs-sm);line-height:1.5;color:var(--soft)}
-.bagpop .go{background:none;border:0;border-bottom:1.5px solid currentColor;padding:0 0 4px;cursor:pointer;color:var(--ink)}
+header .menub,header .pill,header .lang,header .logo,header>.acct{position:relative;z-index:61}
+/* the bag sheet, the account link and the small note (shop.js) */
+.acct{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:0 4px;font:500 var(--fs-sm)/1 var(--f);color:var(--ink)}
+.ar-on .acct{font-family:var(--fa)}
+@media(hover:hover){header .acct:hover span{text-decoration:underline;text-underline-offset:6px}}
+.acct b{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--mustard);color:var(--ink);font:800 var(--fs-sm)/1 var(--f)}
+header .mmenu .acct{justify-content:flex-start;min-height:0;padding:16px 0 0;font:500 var(--fs-lead)/1.3 var(--f);text-decoration:underline;text-underline-offset:6px}
+.ar-on header .mmenu .acct{font-family:var(--fa)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.bagd{margin:0;margin-inline-start:auto;inset-block:0;height:100dvh;max-height:none;width:100%;max-width:440px;padding:0;border:0;background:none;color:var(--ink);overflow:visible}
+.bagd::backdrop{background:rgba(var(--ink-rgb),.45)}
+.bagd[open]{animation:bagIn .35s cubic-bezier(.2,.9,.3,1)}
+@keyframes bagIn{from{transform:translateX(40px);opacity:0}}
+[dir=rtl].bagd[open]{animation-name:bagInR}@keyframes bagInR{from{transform:translateX(-40px);opacity:0}}
+.bagd-in{--c:var(--paper);height:100%;display:flex;flex-direction:column;padding:24px;overflow:auto;box-shadow:0 0 40px rgba(var(--ink-rgb),.25)}
+.bagd-hd{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:1.5px solid var(--ink)}
+.bagd h2{margin:0;font:800 var(--fs-h3)/1.1 var(--f);letter-spacing:-.02em}
+.ar-on .bagd h2,[dir=rtl] .bagd h2{font-family:var(--fa);font-weight:700;letter-spacing:0}
+.bagd .x,.sheetx{width:44px;height:44px;border-radius:50%;border:0;background:var(--ink);color:var(--cream);font:600 var(--fs-sm)/1 var(--f);cursor:pointer;flex:none}
+.bagd-ls{list-style:none;margin:0;padding:0;flex:1}
+.bagd-ls li{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px dashed rgba(var(--ink-rgb),.25)}
+.bagd-ls .th{width:64px;height:64px;display:grid;place-items:center;background:var(--paper-white);box-shadow:0 2px 6px rgba(var(--ink-rgb),.15)}
+.bagd-ls .th img{max-width:56px;max-height:56px;object-fit:contain}
+.bagd-ls b{display:block;font:700 var(--fs-body)/1.3 var(--f)}
+[dir=rtl] .bagd-ls b{font-family:var(--fa)}
+.bagd-ls small{display:block;font-size:var(--fs-caption);color:var(--soft);margin-top:4px}
+.bagd-ls .pr{text-align:end;font:700 var(--fs-body)/1 var(--f)}
+.bagd-ls .rm{display:block;margin-top:8px;margin-inline-start:auto;background:none;border:0;padding:4px 0;font:500 var(--fs-caption)/1 var(--f);color:var(--soft);text-decoration:underline;cursor:pointer;min-height:24px}
+[dir=rtl] .bagd-ls .rm{font-family:var(--fa)}
+.bagd-ft{display:grid;gap:16px;padding-top:24px}
+.bagd-ft .tt{display:flex;justify-content:space-between;align-items:baseline;margin:0;font:600 var(--fs-body)/1 var(--f)}
+.bagd-ft .tt b{font:800 var(--fs-figure)/1 var(--f)}
+.bagd-ft .ink{justify-content:center}
+.bagd-ft .note{margin:0;font-size:var(--fs-caption);color:var(--soft);text-align:center}
+.bagd-em{flex:1;display:grid;place-content:center;justify-items:center;gap:16px;text-align:center}
+.bagd-em p{margin:0;font:600 var(--fs-lead)/1.4 var(--f)}
+.mgtoast{position:fixed;left:50%;bottom:24px;z-index:90;translate:-50% 16px;margin:0;padding:12px 24px;border-radius:999px;background:var(--ink);color:var(--cream);font:500 var(--fs-sm)/1.3 var(--f);opacity:0;pointer-events:none;transition:opacity .25s,translate .25s;max-width:calc(100vw - 32px);text-align:center}
+.ar-on .mgtoast{font-family:var(--fa)}
+.mgtoast.on{opacity:1;translate:-50% 0}
 footer nav a{display:inline-block;padding:8px 2px}
-@media(max-width:900px){header nav:not(.mmenu){display:none}header .pill{margin-inline-start:auto}.menub{display:flex}}
+@media(max-width:900px){header nav:not(.mmenu){display:none}header .lang{margin-inline-start:auto}.menub{display:flex}header{gap:8px}header>.acct span{font-size:var(--fs-caption)}}
+@media(max-width:420px){header .pill{padding:0 16px}header .logo img{height:34px}}
+
+/* forms and sheets shared by the account, checkout, profile and help pages */
+.pghd{padding-block:clamp(40px,6vw,80px) var(--gh)}
+.pghd h1{margin:0;font:800 var(--fs-h1)/1 var(--f);letter-spacing:-.03em;text-wrap:balance}
+.ar-on .pghd h1{font:700 var(--fs-h2)/1.3 var(--fa);letter-spacing:0}
+.pghd p{margin:16px 0 0;max-width:46ch;font-size:var(--fs-lead);line-height:1.5;color:var(--soft)}
+.sheet{--c:var(--paper);padding:clamp(24px,4vw,48px);filter:drop-shadow(0 10px 22px rgba(var(--ink-rgb),.16))}
+.sheet h2{margin:0 0 24px;font:800 var(--fs-h3)/1.1 var(--f);letter-spacing:-.02em}
+.ar-on .sheet h2{font:700 var(--fs-h3)/1.35 var(--fa);letter-spacing:0}
+.fld{display:grid;gap:8px;margin-bottom:16px;font:600 var(--fs-sm)/1.3 var(--f)}
+.ar-on .fld{font-family:var(--fa)}
+.fld input,.fld textarea,.fld select{width:100%;min-height:48px;padding:12px 16px;border:1.5px solid var(--ink);border-radius:3px;background:var(--paper-white);color:var(--ink);font:500 var(--fs-body)/1.4 var(--f)}
+.ar-on .fld input,.ar-on .fld textarea,.ar-on .fld select{font-family:var(--fa)}
+.fld textarea{min-height:140px;resize:vertical}
+.fld input[type=email],.fld input[type=password]{direction:ltr;text-align:start}
+.ar-on .fld input[type=email],.ar-on .fld input[type=password]{text-align:right}
+.fld small{font-weight:500;color:var(--soft);font-size:var(--fs-caption)}
+.chk{display:flex;gap:12px;align-items:flex-start;margin:8px 0 24px;font-size:var(--fs-sm);line-height:1.45;cursor:pointer}
+.chk input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ink);flex:none}
+.fmsg{min-height:1.5em;margin:0 0 16px;font:500 var(--fs-sm)/1.5 var(--f);color:var(--terra)}
+.ar-on .fmsg{font-family:var(--fa)}
+.fmsg.ok{color:var(--olive)}
+.tabs{display:flex;gap:24px;margin-bottom:24px;border-bottom:1.5px solid rgba(var(--ink-rgb),.2)}
+.tabs button{background:none;border:0;padding:8px 0 12px;margin-bottom:-1.5px;border-bottom:2.5px solid transparent;font:600 var(--fs-body)/1 var(--f);color:var(--soft);cursor:pointer;min-height:44px}
+.ar-on .tabs button{font-family:var(--fa)}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--ink)}
+.ink[disabled],.ink[aria-disabled=true]{background:var(--c-e9e0ce);color:var(--soft);cursor:not-allowed}
+.ink.full{width:100%;justify-content:center}
+.or{display:flex;align-items:center;gap:16px;margin:24px 0;color:var(--soft);font-size:var(--fs-caption)}
+.or::before,.or::after{content:"";flex:1;height:1px;background:rgba(var(--ink-rgb),.2)}
+.ghost{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:48px;padding:0 24px;border:1.5px solid var(--ink);border-radius:999px;background:var(--paper-white);color:var(--ink);font:600 var(--fs-sm)/1 var(--f);cursor:pointer;width:100%}
+.ar-on .ghost{font-family:var(--fa)}
+.linkb{background:none;border:0;padding:8px 0;font:500 var(--fs-sm)/1.3 var(--f);color:var(--ink);text-decoration:underline;text-underline-offset:4px;cursor:pointer;min-height:44px}
+.ar-on .linkb{font-family:var(--fa)}
 
 /* 1 · hero: Farah's paintings, one at a time, edge to edge; captions on torn paper */
 .show{position:relative;height:calc(100svh - 72px);min-height:560px;max-height:1000px;overflow:hidden;margin-top:-16px;background:var(--c-2e3b33)}
@@ -187,6 +255,7 @@ button:disabled{cursor:not-allowed}
 .it .kind{display:block;color:var(--soft);font-size:var(--fs-sm);margin-bottom:12px}
 .add{min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:600 var(--fs-sm)/1 var(--f);cursor:pointer;transition:background .2s,color .2s}
 .ar-on .add{font-family:var(--fa)}
+.add{white-space:nowrap}@media(max-width:480px){.add{padding:0 12px;font-size:var(--fs-caption)}}
 @media(hover:hover){.add:hover{background:var(--ink);color:var(--cream)}}
 .add[aria-pressed=true]{background:var(--ink);color:var(--cream)}
 @media(max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -217,6 +286,7 @@ footer{position:relative;margin-top:-8px;padding:clamp(80px,8vw,104px) 16px 56px
 footer nav{display:flex;justify-content:center;flex-wrap:wrap;align-items:center;gap:8px 24px;font:500 var(--fs-sm)/1 var(--f);letter-spacing:0}
 .ar-on footer nav{font:500 var(--fs-sm)/1 var(--fa);letter-spacing:0;text-transform:none}
 footer nav i{width:4px;height:4px;border-radius:50%;background:var(--c-2b2119);color:var(--paper);display:inline-block}
+@media(max-width:700px){footer nav i{display:none}footer nav{gap:4px 24px;max-width:340px;margin-inline:auto}}
 footer .seal{display:inline-flex;align-items:center;gap:16px;margin-top:28px}
 footer .seal::before,footer .seal::after{content:"";width:22px;height:2px;background:var(--c-2b2119)}
 footer .seal span{display:inline-grid;place-items:center;padding:8px 20px;border:2px solid var(--c-2b2119);border-radius:50%}
@@ -239,9 +309,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
     <a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a>
   </nav>
   <button class="lang" id="lang" type="button" aria-label="Arabic / English">ع</button>
-  <button class="pill" type="button" id="bagb" aria-expanded="false" aria-controls="bagpop"><span data-ar="السلة">Bag</span>&nbsp;(<span id="bagn">0</span>)</button>
+  <button class="pill" type="button" id="bagb" aria-haspopup="dialog"><span data-ar="السلة">Bag</span>&nbsp;(<span id="bagn">0</span>)</button>
   <button class="menub" type="button" id="menub" aria-expanded="false" aria-controls="mmenu" aria-label="Menu"><i></i><i></i><i></i></button>
-  <div class="bagpop paper" data-tear="4" id="bagpop" hidden><span class="fill"></span><p class="bp-t"><b id="bagn2">0</b> <span data-ar="قطع في السلة">pieces in your bag</span></p><p class="bp-s" data-ar="الدفع يفتح قريبًا. سنحفظ سلتكم إلى ذلك الحين.">Checkout opens soon. We will keep your bag until then.</p><button class="go" type="button" id="bagclear" data-ar="إفراغ السلة">Empty the bag</button></div>
   <nav class="mmenu" id="mmenu" hidden aria-label="Menu"><a href="index.html" data-ar="الرئيسية">Home</a><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a></nav>
 </header>
 
@@ -271,7 +340,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
       <h2 class="big" id="cal-h" data-ar="تقويم 2027">The 2027 Calendar</h2>
       <p class="lead" data-ar="اثنا عشر شهرًا، ولكل شهر لوحة من غزة.">Twelve months, and every month a painting from Gaza.</p>
       <p class="season paper" data-tear="3"><span class="fill"></span><span id="seasonT"></span></p>
-      <div class="buy"><b>€8</b><a class="ink" href="#cal" data-add="calendar" data-ar="اطلبوا التقويم">Get the calendar</a></div>
+      <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوا التقويم إلى السلة">Add the calendar to bag</button></div>
       <ul class="mlist" id="mlist" aria-label="Months"></ul>
     </div>
     <div>
@@ -339,10 +408,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   </div>
   <nav><a href="paintings.html" data-ar="اللوحات">Paintings</a><i></i><a href="postcards.html" data-ar="البطاقات">Postcards</a><i></i><a href="stickers.html" data-ar="الملصقات">Stickers</a><i></i><a href="story.html" data-ar="الحكاية">Story</a></nav>
   <div class="seal"><span><img src="assets/logo.svg" alt="Mass & Grass"></span></div>
-  <small data-ar="تحميل فوري · دفع آمن · كل قطعة تدعم فرح في غزة<br>© 2026 ماس آند غراس<br>غزة، فلسطين">Instant download<br>Secure checkout<br>Every piece supports Farah in Gaza<br>© 2026 Mass &amp; Grass<br>Gaza, Palestine</small>
+  <small data-ar="تحميل فوري<br>دفع آمن<br>كل قطعة تدعم فرح في غزة<br>© 2026 ماس آند غراس<br>غزة، فلسطين">Instant download<br>Secure checkout<br>Every piece supports Farah in Gaza<br>© 2026 Mass &amp; Grass<br>Gaza, Palestine</small>
 </footer>
 
 <script src="assets/gsap.min.js"></script>
+<script src="assets/shop.js"></script>
 <script>
 let AR=false;
 const still=matchMedia('(prefers-reduced-motion: reduce)').matches,G=window.gsap;
@@ -416,16 +486,18 @@ const sky=(()=>{const cv=document.getElementById('sky'),cx=cv.getContext('2d');l
  return{set(m){if(m===mode&&P.length)return;mode=m;size();P=Array.from({length:count()},()=>make(false))}}})();
 buildPages();
 
-/* just in */
-const J=[['cal-02','The Sea','البحر','Postcard','بطاقة بريدية',2],['cal-06','Dove Girl','فتاة الحمام','Painting','لوحة',12],['cal-09','Whale Ride','رحلة الحوت','Painting','لوحة',12],
- ['cal-12','Snow Globe','كرة الثلج','Sticker','ملصق',1],['cal-08','The Cart','العربة','Painting','لوحة',12],['cal-11','Moon Sleep','نوم على الهلال','Postcard','بطاقة بريدية',2],
- ['cal-10','Elephant Ride','رحلة الفيل','Sticker','ملصق',1],['cal-04','Grey Bloom','الزهرة الرمادية','Painting','لوحة',12]];
-const gr=document.getElementById('grid');let bag=0;
-J.forEach((j,i)=>{const li=document.createElement('li');li.className='it';
- li.innerHTML=`<span class="tag paper" data-tear="3"><span class="fill"></span>€${j[5]}</span><div class="bed paper" data-tear="6"><span class="fill"></span><div class="pc" data-tear="4"><img src="assets/${j[0]}.webp" alt="${j[1]}, watercolour by Farah Al-Helou"></div></div>
- <h3 data-ar="${j[2]}">${j[1]}</h3><span class="kind" data-ar="${j[4]}">${j[3]}</span><button class="add" type="button" aria-pressed="false" data-ar="أضيفوها إلى السلة">Add to bag</button>`;gr.append(li)});
-gr.addEventListener('click',e=>{const b=e.target.closest('.add');if(!b)return;const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);
- b.dataset.en=on?'In your bag':'Add to bag';b.dataset.ar=on?'في السلة':'أضيفوها إلى السلة';b.textContent=AR?b.dataset.ar:b.dataset.en;bag+=on?1:-1;document.getElementById('bagn').textContent=bag});
+/* just in: a few pieces, each one straight into the bag */
+const J=[['cal-02','postcard','Sea & Clouds','بحر وغيوم','Postcard','بطاقة بريدية'],['cal-06','painting','Dove Girl','فتاة الحمام','Painting','لوحة'],['sparklers','painting','Sparkler Night','ليلة الشماريخ','Painting','لوحة'],
+ ['s-lemons','sticker','Lemons','ليمون','Sticker','ملصق'],['cal-08','painting','Girl with Cart','فتاة والعربة','Painting','لوحة'],['cal-11','postcard','Moon Sleeper','نائمة على القمر','Postcard','بطاقة بريدية'],
+ ['cal-10','sticker','Elephant on a Bike','فيل على دراجة','Sticker','ملصق'],['cal-04','painting','Big Flower','الزهرة الكبيرة','Painting','لوحة']];
+const gr=document.getElementById('grid'),SH=window.MGShop;
+const addTxt=on=>on?['In your bag','في السلة']:['Add to bag','أضيفوها إلى السلة'];
+J.forEach(j=>{const li=document.createElement('li');li.className='it';const on=SH.BAG.has(j[1],j[0]),tx=addTxt(on);
+ li.innerHTML=`<span class="tag paper" data-tear="3"><span class="fill"></span>${SH.fmt(SH.price(j[1],j[0]))}</span><div class="bed paper" data-tear="6"><span class="fill"></span><div class="pc" data-tear="4"><img src="assets/${j[0]}.webp" alt="${j[2]}, watercolour by Farah Al-Helou"></div></div>
+ <h3 data-ar="${j[3]}">${j[2]}</h3><span class="kind" data-ar="${j[5]}">${j[4]}</span><button class="add" type="button" aria-pressed="${on}" data-k="${j[0]}" data-kind="${j[1]}" data-ar="${tx[1]}">${tx[0]}</button>`;gr.append(li)});
+function syncAdds(){gr.querySelectorAll('.add').forEach(b=>{const on=SH.BAG.has(b.dataset.kind,b.dataset.k),tx=addTxt(on);b.setAttribute('aria-pressed',on);b.dataset.en=tx[0];b.dataset.ar=tx[1];b.textContent=AR?tx[1]:tx[0]})}
+gr.addEventListener('click',e=>{const b=e.target.closest('.add');if(!b)return;const j=J.find(x=>x[0]===b.dataset.k&&x[1]===b.dataset.kind);SH.BAG.toggle(j[1],j[0],j[2],j[3]);syncAdds()});
+document.addEventListener('mgbag',syncAdds);
 
 /* newsletter: posts to the shop's /api/subscribe; it only says thank you once the server has the address */
 document.getElementById('nl').onsubmit=async e=>{e.preventDefault();const v=document.getElementById('nl-mail'),ok=document.getElementById('nl-ok');
@@ -435,19 +507,11 @@ document.getElementById('nl').onsubmit=async e=>{e.preventDefault();const v=docu
    ok.textContent=r.ok?(AR?'شكرًا لكم. أول بطاقة في الطريق.':'Thank you. Your first postcard is on its way.'):(AR?'لم يصل الطلب. حاولوا مرة أخرى لاحقًا.':'That did not go through. Please try again later.')}
  catch(err){ok.textContent=AR?'لم يصل الطلب. حاولوا مرة أخرى لاحقًا.':'That did not go through. Please try again later.'}};
 
-/* the bag: its count lives in this browser, so it follows you from page to page */
-{const bn=document.getElementById('bagn'),bn2=document.getElementById('bagn2'),pop=document.getElementById('bagpop'),bb=document.getElementById('bagb');
-  let n=0;try{n=+localStorage.mgBag||0}catch(e){}const set=v=>{n=v;bn.textContent=n;bn2.textContent=n;try{localStorage.mgBag=n}catch(e){}};
-  new MutationObserver(()=>{const v=+bn.textContent;if(v!==n){const add=v>=0?v:0;set(window.__bagBase!==undefined?window.__bagBase+add:add)}}).observe(bn,{childList:true,characterData:true,subtree:true});
-  window.__bagBase=n;bn.textContent=0;window.__bagBase=n;set(n);
-  bb.onclick=()=>{pop.hidden=!pop.hidden;bb.setAttribute('aria-expanded',!pop.hidden);if(!pop.hidden&&typeof draw==='function')requestAnimationFrame(draw)};
-  document.getElementById('bagclear').onclick=()=>{window.__bagBase=0;set(0);pop.hidden=true;bb.setAttribute('aria-expanded',false)};
-  addEventListener('click',e=>{if(!pop.hidden&&!e.target.closest('#bagpop,#bagb')){pop.hidden=true;bb.setAttribute('aria-expanded',false)}});
-  document.querySelectorAll('[data-add]').forEach(a=>a.addEventListener('click',()=>{window.__bagBase=n;set(n+1);window.__bagBase=n}));
-  const mb=document.getElementById('menub'),mm=document.getElementById('mmenu');
+/* the phone menu */
+{const mb=document.getElementById('menub'),mm=document.getElementById('mmenu');
   mb.onclick=()=>{mm.hidden=!mm.hidden;mb.setAttribute('aria-expanded',!mm.hidden);document.body.style.overflow=mm.hidden?'':'hidden'};
   mm.addEventListener('click',e=>{if(e.target.closest('a')){mm.hidden=true;mb.setAttribute('aria-expanded',false);document.body.style.overflow=''}});
-  addEventListener('keydown',e=>{if(e.key==='Escape'){if(!mm.hidden)mb.click();pop.hidden=true}})}
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&!mm.hidden)mb.click()})}
 /* torn edges: a ragged polygon per element, redrawn when its size changes */
 function rnd(seed){return()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646}}
 function tear(el,amp,seed,topOnly){const w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;const r=rnd(seed),pts=[],step=Math.max(5,amp*.9);
