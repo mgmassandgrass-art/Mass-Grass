@@ -16,6 +16,32 @@ function sceneFor(key,i){const a=ASP[key]||1.3,d=FR.map(([k,r])=>[k,Math.abs(Mat
 /* the painting in the middle of the mat, with the same margin all round (a little more at the bottom, as framers cut it) */
 function artBox(key,m){const a=ASP[key]||1.3,mw=m.ww*m.w,mh=m.wh*m.h,g=.13*Math.min(mw,mh),bw=mw-2*g,bh=mh-2*g;let w,h;if(a>bw/bh){w=bw;h=w/a}else{h=bh;w=h*a}
   const top=(mh-h)/2-.012*mh;return {l:(m.x+(mw-w)/2/m.w)*100,t:(m.y+top/m.h)*100,w:w/m.w*100,h:h/m.h*100}}
+
+/* each painting's details, worked out from its file: the shape, the file, the papers it prints sharp on, the frames it fits.
+   px is the size of the file the buyer gets (update it when a bigger scan arrives); cm is the original sheet, when known. */
+const DET={"hero":{px:[1300,894]},"sparklers":{px:[651,900]},"cal-06":{px:[1800,1355]},"cal-07":{px:[1800,1391]},"guitar":{px:[703,900]},"cal-05":{px:[1505,1800]},
+ "house":{px:[820,611]},"alley":{px:[521,620]},"cal-03":{px:[1800,1289]},"seafish":{px:[607,900]},"cal-08":{px:[1800,1389]},"hill":{px:[820,811]},"cal-10":{px:[1295,1800]},
+ "cal-01":{px:[1800,1233]},"deirbalah":{px:[668,820]},"cal-04":{px:[1800,1364]},"cal-11":{px:[1461,1800]},"cal-02":{px:[1661,1800]}};
+const PAPER=[['A6',10.5,14.8],['A5',14.8,21],['A4',21,29.7],['A3',29.7,42],['A2',42,59.4]];
+const FRAMES=[[13,18,'cm'],[20,25,'cm'],[21,29.7,'cm'],[30,40,'cm'],[40,50,'cm'],[50,70,'cm'],[20,20,'cm'],[30,30,'cm'],[20,30,'cm'],[8,10,'in'],[11,14,'in'],[12,16,'in']];
+/* the biggest paper the painting fills at a given sharpness (dots per inch) */
+function maxPaper(px,dpi){let best=null;const L=Math.max(...px),S=Math.min(...px),a=L/S;
+  for(const [n,ps,pl] of PAPER){const s=Math.min(pl/a,ps),l=s*a;if(L/(l/2.54)>=dpi&&S/(s/2.54)>=dpi)best=[n,ps,pl]}return best}
+function shapeOf(a){const r=a>=1?a:1/a;const R=[[1,'1:1'],[1.25,'5:4'],[1.333,'4:3'],[1.414,'√2:1'],[1.5,'3:2']];const n=R.reduce((x,y)=>Math.abs(y[0]-r)<Math.abs(x[0]-r)?y:x);
+  const ratio=n[1]==='1:1'?'1:1':a>=1?n[1]:n[1].split(':').reverse().join(':');
+  if(a>.94&&a<1.06)return [['Square','مربّعة'],'1:1'];
+  if(n[1]==='1:1')return [a>1?['Landscape, almost square','عرضية، شبه مربّعة']:['Portrait, almost square','طولية، شبه مربّعة'],''];
+  return [a>1?['Landscape','عرضية']:['Portrait','طولية'],ratio]}
+function framesFor(a){const r=a>=1?a:1/a;return FRAMES.filter(f=>Math.abs(Math.max(f[0],f[1])/Math.min(f[0],f[1])-r)/r<.04).map(f=>a>=1?`${f[1]} × ${f[0]} ${f[2]}`:`${f[0]} × ${f[1]} ${f[2]}`)}
+function specHTML(k){const d=DET[k];if(!d)return '';const a=d.px[0]/d.px[1],sh=shapeOf(a),sharp=maxPaper(d.px,300),good=maxPaper(d.px,150),fr=framesFor(a),T=(e,ar)=>AR?ar:e;
+  const paper=p=>p?`${T('up to','حتى')} ${p[0]} (<span dir="ltr">${a>=1?p[2]+' × '+p[1]:p[1]+' × '+p[2]} cm</span>)`:T('below A6','أصغر من A6');
+  const rows=[[T('Original','الأصل'),T('Watercolour on paper','ألوان مائية على ورق')+(d.cm?`, ${d.cm[0]} × ${d.cm[1]} cm`:'')],
+   [T('Shape','الشكل'),T(...sh[0])+(sh[1]?T(', ','، ')+sh[1]:'')],
+   [T('File','الملف'),`PNG + PDF${T(', ','، ')}<span dir="ltr">${d.px[0]} × ${d.px[1]} px</span>`],
+   [T('Sharp print','طباعة حادة'),`${paper(sharp)}${T(', ','، ')}<span class="nw">300 dpi</span>`],
+   [T('Good print','طباعة جيدة'),`${paper(good)}${T(', ','، ')}<span class="nw">150 dpi</span>`]];
+  if(fr.length)rows.push([T('Fits frames','تناسب إطارات'),fr.slice(0,3).map(f=>`<span dir="ltr">${f}</span>`).join(T(', ','، '))+T(', no cropping','، دون قص')]);
+  return rows.map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('')}
 /* three sizes of every painting: a small one for the wall, a medium one for the viewer and the rooms, the scan itself for zoom */
 const SM=k=>`assets/p/${k}-s.webp`,MD=k=>`assets/p/${k}.webp`,LG=k=>`assets/${k}.webp`;
 /* the three rooms whose frame suits a painting best */
@@ -38,7 +64,7 @@ wall.addEventListener('click',e=>{const a=e.target.closest('.pp');if(!a)return;e
 let vmode='art';
 document.getElementById('vthumbs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;vmode=b.dataset.v;open_(vi)});
 function open_(i){vi=(i+shown.length)%shown.length;const p=shown[vi];unzoom();const im=document.getElementById('vimg');im.src=MD(p[0]);im.dataset.k=p[0];im.alt=`${p[1]}, watercolour by Farah Al-Helou`;
-  document.getElementById('v-h').textContent=AR?p[2]:p[1];document.getElementById('vwhere').textContent=(AR?p[4]:p[3])+(AR?'، ':', ')+(AR?'ألوان مائية على ورق':'watercolour on paper');
+  document.getElementById('v-h').textContent=AR?p[2]:p[1];document.getElementById('vspec').innerHTML=specHTML(p[0]);document.getElementById('vwhere').textContent=(AR?p[4]:p[3])+(AR?'، ':', ')+(AR?'ألوان مائية على ورق':'watercolour on paper');
   const b=document.getElementById('vadd'),inb=S.BAG.has('painting',p[0]),pr=S.fmt(S.price('painting',p[0]));b.textContent=inb?(AR?'في السلة':'In your bag'):(AR?`أضيفوها إلى السلة (${pr})`:`Add to bag (${pr})`);b.setAttribute('aria-pressed',inb);
   const sc=scenesOf(p[0]);if(vmode!=='art'&&!sc.includes(vmode))vmode=sc[0];
   document.getElementById('vthumbs').innerHTML=`<button type="button" data-v="art" aria-pressed="${vmode==='art'}" aria-label="${AR?'اللوحة':'The painting'}"><span class="th art"><img src="${SM(p[0])}" alt=""></span></button>`+sc.map((k,j)=>`<button type="button" data-v="${k}" aria-pressed="${vmode===k}" aria-label="${(AR?'في غرفة ':'In a room ')+(j+1)}"><span class="th mk">${mockHTML(p[0],0,'thumb',k)}</span></button>`).join('');
