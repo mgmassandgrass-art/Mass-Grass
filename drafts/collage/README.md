@@ -6,13 +6,15 @@ Its design system is `DESIGN.md` at the repo root.
 - `site/index.html` is the home page and holds the shared head (tokens, header, footer, shared JS).
 - `parts/<p>_main.html`, `<p>_css.txt`, `<p>_js.txt` are the other pages: `pg` paintings, `pc` postcards,
   `sk` stickers, `st` story (map), `ca` calendar, `ac` account (sign in / sign up / Google / reset), `co` checkout,
-  `pf` profile (files, name, password, data), `hp` help, `tm` terms, `nf` 404.
+  `pf` profile (files, name, password, data), `hp` help, `tm` terms, `nf` 404, `sh` the shop (every product, by category).
+- Rebuild every page at once: `./build_all.sh`.
+- Header: sticky; logo, sections in the middle, language, account and a bag icon at the side. Buttons (`.ink`) are olive.
 - `site/assets/shop.js` is the shop layer on every page: the bag (`localStorage.mgBag`, the same lines the Worker's
   `/api/orders` prices), the bag sheet, the account link (`/api/me`), prices from `window.MGCAT` (defaults offline),
   and `data-add` / `data-price`. Product ids: Farah's `cal-XX` scans map to catalog ids in `IDS`.
 - Test against the real API: `wrangler.local.toml` (commands inside) runs the Worker with this site on :8787.
 - Mockups: paintings sit whole inside the frame's mat (`artBox`, scene picked by frame shape); postcards and calendar
-  pages use `object-fit: contain` on white card stock; stickers are kept fully on the object when placed.
+  pages are cut to the painting's shape and printed edge to edge (photo scenes with a landscape card only carry landscape paintings; an upright card turns a quarter to show its back); calendar pages use `object-fit: contain`; stickers are kept fully on the object when placed.
 - Build a page: `python3 build_pg.py <p> <out.html> <Title> <out.html>` (run from this folder), e.g.
   `python3 build_pg.py ca calendar.html Calendar calendar.html`.
 - Check it: `node ../../.claude/skills/hallmark/scripts/sloplint.mjs site/<page>.html` (0 FAIL), then

@@ -43,7 +43,7 @@ const BAG={
     this.set(a);bump()}
 };
 function bump(){const b=$('#bagb');if(b&&b.animate&&!matchMedia('(prefers-reduced-motion: reduce)').matches)b.animate([{transform:'scale(1.12) rotate(-4deg)'},{transform:'none'}],{duration:320,easing:'ease-out'})}
-function paint(){const n=BAG.count();document.querySelectorAll('#bagn,[data-bagn]').forEach(e=>e.textContent=n)}
+function paint(){const n=BAG.count();document.querySelectorAll('#bagn,[data-bagn]').forEach(e=>e.textContent=n);document.querySelectorAll('.bagb').forEach(b=>{b.classList.toggle('has',n>0);b.setAttribute('aria-label',T('Bag','السلة')+(n?` (${n})`:''))})}
 
 /* ---------- the bag sheet ---------- */
 let D=null;
@@ -74,8 +74,6 @@ function acct(){const u=USER.get();document.querySelectorAll('.acct').forEach(a=
 function header(){const bb=$('#bagb');if(bb&&!$('header .acct')){const a=document.createElement('a');a.className='acct';a.href='account.html';bb.before(a)}
   const mm=$('#mmenu');if(mm&&!mm.querySelector('.acct')){const a=document.createElement('a');a.className='acct';a.href='account.html';mm.append(a)}
   if(bb){bb.removeAttribute('aria-controls');bb.removeAttribute('aria-expanded');bb.setAttribute('aria-haspopup','dialog');bb.onclick=e=>{e.preventDefault();sheet()}}
-  const fn=$('footer nav');if(fn&&!fn.querySelector('[href="help.html"]'))fn.insertAdjacentHTML('beforeend',`<i></i><a href="help.html" data-ar="المساعدة">Help</a><i></i><a href="terms.html" data-ar="الشروط والخصوصية">Terms and privacy</a>`);
-  fn&&fn.querySelectorAll('[data-ar]').forEach(e=>{if(!e.dataset.en)e.dataset.en=e.innerHTML;e.innerHTML=AR()?e.dataset.ar:e.dataset.en});
   document.querySelectorAll('[data-price]').forEach(e=>e.textContent=fmt(price(e.dataset.price)));
   acct();paint()}
 
@@ -87,7 +85,10 @@ function toast(msg){let el=$('.mgtoast');if(!el){el=document.createElement('p');
 document.addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(!b)return;e.preventDefault();const kind=b.dataset.add;
   if(kind==='calendar'){const added=BAG.add('calendar','calendar-2027','Calendar 2027','تقويم 2027',{img:'assets/calmock.webp'});toast(added?T('The calendar is in your bag.','أُضيف التقويم إلى السلة.'):T('The calendar is already in your bag.','التقويم في السلة.'))}});
 window.MGShop={BAG,USER,price,fmt,id,img,product,toast,open:sheet,esc};
-const boot=()=>{header();USER.sync();new MutationObserver(()=>{acct();if(D&&D.open)fill()}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']})};
+/* the header stays on top: its height is shared as --head for anything sticky under it */
+function stick(){const h=$('header');if(!h)return;const set=()=>document.documentElement.style.setProperty('--head',h.offsetHeight+'px');set();new ResizeObserver(set).observe(h);
+  const on=()=>h.classList.toggle('stuck',scrollY>4);on();addEventListener('scroll',on,{passive:true})}
+const boot=()=>{header();stick();USER.sync();new MutationObserver(()=>{acct();if(D&&D.open)fill()}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']})};
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
 addEventListener('storage',e=>{if(e.key==='mgBag')paint();if(e.key==='mgUser')acct()});
 })();

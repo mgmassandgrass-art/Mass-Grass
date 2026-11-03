@@ -1,6 +1,6 @@
 .tm{padding-bottom:var(--sec)}
 .tm-grid{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--col-gap);align-items:start}
-.toc{position:sticky;top:24px;display:grid;gap:8px}
+.toc{position:sticky;top:calc(var(--head,72px) + 24px);display:grid;gap:8px}
 .toc a{padding:8px 0;font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(var(--ink-rgb),.3)}
 .doc{max-width:68ch}
 .doc section{padding-bottom:var(--gh);margin-bottom:var(--gh);border-bottom:1.5px solid var(--ink)}

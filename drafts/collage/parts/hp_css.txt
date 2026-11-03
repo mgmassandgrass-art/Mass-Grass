@@ -10,6 +10,6 @@
 .hp details p{margin:0 0 24px;max-width:60ch;color:var(--soft)}
 .hp .ways{display:flex;gap:24px;flex-wrap:wrap;margin-top:24px;font-size:var(--fs-sm)}
 .hp .ways a{text-decoration:underline;text-underline-offset:4px}
-.hp .sheet{position:sticky;top:24px}
+.hp .sheet{position:sticky;top:calc(var(--head,72px) + 24px)}
 .hp .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 @media(max-width:860px){.hp-grid{grid-template-columns:minmax(0,1fr)}.hp .sheet{position:static}.hp .two{grid-template-columns:minmax(0,1fr)}}

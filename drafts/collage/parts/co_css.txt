@@ -14,7 +14,7 @@
 .ar-on .co-ls .rm{margin:8px auto 0 0;font-family:var(--fa)}
 .co-tt{display:flex;justify-content:space-between;align-items:baseline;padding-top:24px;font:600 var(--fs-body)/1 var(--f)}
 .co-tt b{font:800 var(--fs-figure)/1 var(--f)}
-.co .sheet{position:sticky;top:24px}
+.co .sheet{position:sticky;top:calc(var(--head,72px) + 24px)}
 .co .fine{margin:16px 0 0;font-size:var(--fs-caption);line-height:1.5;color:var(--soft)}
 .co .fine a{text-decoration:underline}
 .co-empty{display:grid;justify-items:start;gap:24px;max-width:520px}

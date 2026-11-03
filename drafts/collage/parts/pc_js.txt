@@ -14,22 +14,30 @@ const MK={"pc-hands":{"w":1536,"h":1152,"x":0.1725,"y":0.1641,"ww":0.6628,"wh":0
 const MKN={'pc-hands':['In hand','في اليد'],'pc-read':['Being read','وهي تُقرأ'],'pc-sea':['By the sea','أمام البحر'],'pc-desk':['On the table','على الطاولة']};
 /* the back of a card as it arrives: Farah's note, a stamp and the Gaza postmark */
 function backHTML(i){const p=P[i];return `<div class="fc back still"><div class="msg${AR?' ar':''}">${T('From Gaza, with love.\nThinking of you.','من غزة، مع المحبة.\nأفكر فيكم.')}<span class="from">— ${T('Farah','فرح')}</span></div><div class="addr"><span class="stampbox">${stampHTML(i%STAMPS.length)}</span><span class="pm on">GAZA<br>${today()}<br>✶</span><span class="to${AR?' ar':''}">${T('To you, wherever you are','إليكم، أينما كنتم')}</span><i></i><i></i><i></i></div><span class="cap2">${AR?p[2]:p[1]}, ${T('Farah Al-Helou, Gaza','فرح الحلو، غزة')}</span></div>`}
-function sceneHTML(key,k){const m=MK[k],i=Math.max(0,P.findIndex(p=>p[0]===key)),pos=`left:${m.x*100}%;top:${m.y*100}%;width:${m.ww*100}%;height:${m.wh*100}%`;const ins=.032,ipos=`left:${(m.x+m.ww*ins*.667)*100}%;top:${(m.y+m.wh*ins)*100}%;width:${m.ww*(1-ins*1.333)*100}%;height:${m.wh*(1-ins*2)*100}%`;
+/* every card is cut to its painting's shape, and the painting is printed edge to edge (nothing cropped, no white border) */
+const PA={"hero": 1.454, "cal-03": 1.396, "cal-01": 1.46, "boatman": 1.297, "house": 1.342, "ppoppies": 1.396, "cal-06": 1.328, "cal-08": 1.296, "cal-04": 1.32, "hill": 1.011, "cal-07": 1.294, "cal-02": 0.923, "alley": 0.84, "sparklers": 0.723, "guitar": 0.795},pa=k=>PA[k]||1.4;
+/* a card in a 3:2 slot: as wide as the slot when landscape, as tall as it when upright */
+function cardBox(el,k){const a=pa(k);el.style.setProperty('--a',a);el.classList.toggle('pt',a<1);el.style.aspectRatio=a;el.style.width=a>=1.5?'100%':(100*a/1.5)+'%';el.style.marginInline='auto'}
+function envCard(el,k){const a=pa(k),w=Math.min(88,58.7*a);el.style.left=el.style.right=((100-w)/2)+'%';el.style.aspectRatio=a}
+/* photographed scenes: the card in the photo is landscape, so its front only carries landscape paintings */
+const faceW=k=>pa(k)<1.5?`width:${100*pa(k)/1.5}%;margin-inline:auto`:'';
+const scenesFor=k=>MKK.filter(m=>MK[m].side==='back'||pa(k)>=1.15);
+function sceneHTML(key,k){const m=MK[k],i=Math.max(0,P.findIndex(p=>p[0]===key)),pos=`left:${m.x*100}%;top:${m.y*100}%;width:${m.ww*100}%;height:${m.wh*100}%`;const ins=.004,ipos=`left:${(m.x+m.ww*ins)*100}%;top:${(m.y+m.wh*ins)*100}%;width:${m.ww*(1-ins*2)*100}%;height:${m.wh*(1-ins*2)*100}%`;
   return `<div class="scene" style="--ar:${m.w/m.h}"><img class="room" src="assets/${k}.webp" alt="">${m.side==='back'?`<div class="bk" style="${pos}">${backHTML(i)}</div>`:`<img class="art" src="assets/${key}.webp" alt="" style="${ipos}">`}${m.occ?`<img class="top" src="assets/${k}-top.webp" alt="">`:''}</div>`}
 const $=id=>document.getElementById(id),T=(en,ar)=>AR?ar:en;const SH=window.MGShop;
 
 /* 1 · the envelope in the intro hands out one card after another */
 const ienv=$('ienv');let ii=0,itimer=0;
-function nextCard(){ienv.classList.remove('up');setTimeout(()=>{ii=(ii+1)%P.length;$('iimg').src=`assets/${P[ii][0]}.webp`;$('iimg').alt=P[ii][1];requestAnimationFrame(()=>ienv.classList.add('up'))},700)}
+function nextCard(){ienv.classList.remove('up');setTimeout(()=>{ii=(ii+1)%P.length;$('iimg').src=`assets/${P[ii][0]}.webp`;$('iimg').alt=P[ii][1];envCard($('icard'),P[ii][0]);requestAnimationFrame(()=>ienv.classList.add('up'))},700)}
 function loopIntro(){clearInterval(itimer);if(!matchMedia('(prefers-reduced-motion: reduce)').matches)itimer=setInterval(nextCard,4200)}
-setTimeout(()=>ienv.classList.add('up'),500);loopIntro();ienv.onclick=()=>{nextCard();loopIntro()};
+envCard($('icard'),P[0][0]);setTimeout(()=>ienv.classList.add('up'),500);loopIntro();ienv.onclick=()=>{nextCard();loopIntro()};
 
 /* 2 · the desk */
 const S={c:0,s:0,back:false,sent:false};const card=$('card3'),dst=$('dst'),toIn=$('toIn'),msgIn=$('msgIn'),fromIn=$('fromIn');
 const isAr=s=>/[؀-ۿ]/.test(s);
 const today=()=>{const d=new Date();return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()};
 function flip(b){S.back=b;card.classList.toggle('back-on',b);$('flipT').textContent=b?T('Show the front','اعرضوا الوجه'):T('Show the back','اعرضوا الظهر')}
-function paint(){const p=P[S.c];$('dimg').src=`assets/${p[0]}.webp`;$('dimg').alt=p[1];
+function paint(){const p=P[S.c];$('dimg').src=`assets/${p[0]}.webp`;$('dimg').alt=p[1];cardBox(card,p[0]);
   const m=msgIn.value,f=fromIn.value,mo=$('msgOut');mo.className='msg'+(isAr(m+f)?' ar':'');mo.innerHTML='';
   if(m||f){mo.textContent=m;if(f){const s=document.createElement('span');s.className='from';s.textContent='— '+f;mo.append(s)}}
   mo.dataset.empty=T('Dear…\nyour message appears here, in handwriting.','عزيزي…\nتظهر رسالتكم هنا بخط اليد.');
@@ -59,13 +67,14 @@ $('again').onclick=()=>{msgIn.value='';toIn.value='';reset();flip(false);paint()
 /* 3 · all the cards */
 const grid=$('cards2'),view=$('view');let vi=0,vmode='card';
 function render(){pickers();paint();flip(S.back);
-  grid.innerHTML=P.map((p,i)=>`<a class="pk" href="#${p[0]}" data-i="${i}" aria-label="${AR?p[2]:p[1]}"><div class="face"><img src="assets/${p[0]}.webp" alt="${p[1]}, postcard of a watercolour by Farah Al-Helou" loading="lazy"><div class="mk" aria-hidden="true">${sceneHTML(p[0],MKK[i%MKK.length])}</div></div>
+  grid.innerHTML=P.map((p,i)=>`<a class="pk" href="#${p[0]}" data-i="${i}" aria-label="${AR?p[2]:p[1]}"><div class="face" style="${faceW(p[0])}"><img src="assets/${p[0]}.webp" alt="${p[1]}, postcard of a watercolour by Farah Al-Helou" loading="lazy" style="aspect-ratio:${pa(p[0])}"><div class="mk" aria-hidden="true">${sceneHTML(p[0],scenesFor(p[0])[i%scenesFor(p[0]).length])}</div></div>
   <div class="cap"><div><h3>${AR?p[2]:p[1]}</h3><span class="where">${AR?p[4]:p[3]}</span></div><span class="pr">${SH.fmt(SH.price('postcard',p[0]))}</span></div></a>`).join('')}
 grid.addEventListener('click',e=>{const a=e.target.closest('.pk');if(!a)return;e.preventDefault();vmode='card';open_(+a.dataset.i)});
 $('vtabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;vmode=b.dataset.v;open_(vi)});
 function open_(i){vi=(i+P.length)%P.length;const p=P[vi];
-  $('vtabs').innerHTML=[['card',T('The card','البطاقة')],...MKK.map(k=>[k,AR?MKN[k][1]:MKN[k][0]])].map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v===vmode}">${l}</button>`).join('');
-  $('vbig').innerHTML=vmode==='card'?`<div class="pk" style="rotate:0deg;translate:none;pointer-events:none"><div class="face"><img src="assets/${p[0]}.webp" alt="${p[1]}"></div></div>`:`<div class="mkv">${sceneHTML(p[0],vmode)}</div>`;
+  if(vmode!=='card'&&!scenesFor(p[0]).includes(vmode))vmode='card';
+  $('vtabs').innerHTML=[['card',T('The card','البطاقة')],...scenesFor(p[0]).map(k=>[k,AR?MKN[k][1]:MKN[k][0]])].map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v===vmode}">${l}</button>`).join('');
+  $('vbig').innerHTML=vmode==='card'?`<div class="pk" style="rotate:0deg;translate:none;pointer-events:none"><div class="face" style="${faceW(p[0])}"><img src="assets/${p[0]}.webp" alt="${p[1]}" style="aspect-ratio:${pa(p[0])}"></div></div>`:`<div class="mkv">${sceneHTML(p[0],vmode)}</div>`;
   $('v-h').textContent=AR?p[2]:p[1];$('vwhere').textContent=(AR?p[4]:p[3])+(AR?'، ':', ')+T('postcard','بطاقة بريدية');
   const b=$('vadd'),inb=SH.BAG.has('postcard',p[0]),pr=SH.fmt(SH.price('postcard',p[0]));b.textContent=inb?T('In your bag','في السلة'):T(`Add to bag (${pr})`,`أضيفوها إلى السلة (${pr})`);
   if(!view.open){view.showModal();requestAnimationFrame(()=>typeof draw==='function'&&draw())}}
@@ -77,11 +86,11 @@ addEventListener('keydown',e=>{if(!view.open||e.target.matches('input,textarea')
 
 /* someone opened a card sent to them */
 function receive(){const m=location.hash.match(/card=([\w-]+)/);if(!m)return;let o;try{o=dec(m[1])}catch(e){return}
-  const p=P[o.c]||P[0];$('recv').hidden=false;$('rimg').src=`assets/${p[0]}.webp`;
+  const p=P[o.c]||P[0];$('recv').hidden=false;$('rimg').src=`assets/${p[0]}.webp`;envCard($('rcard'),p[0]);
   $('rFrom').textContent=o.f?T('A postcard from ','بطاقة بريدية من ')+o.f:T('A postcard from Gaza for you','بطاقة بريدية من غزة لكم');
   const back=`<div class="flip3"><div class="card3 back-on" id="rc3"><div class="fc front"><img src="assets/${p[0]}.webp" alt=""></div><div class="fc back"><div class="msg${isAr((o.m||'')+(o.f||''))?' ar':''}" dir="auto"></div><div class="addr"><span class="stampbox">${stampHTML(o.s)}</span><span class="pm on">GAZA<br>${today()}<br>✶</span><span class="to${isAr(o.t||'')?' ar':''}" dir="auto"></span><i></i><i></i><i></i></div><span class="cap2">${(AR?p[2]:p[1])}, ${T('Farah Al-Helou, Gaza','فرح الحلو، غزة')}</span></div></div></div>`;
   $('rfull').innerHTML=back;const mo=$('rfull').querySelector('.msg');mo.textContent=o.m||'';if(o.f){const s=document.createElement('span');s.className='from';s.textContent='— '+o.f;mo.append(s)}$('rfull').querySelector('.to').textContent=o.t||'';
-  $('rfull').querySelector('.card3').onclick=e=>e.currentTarget.classList.toggle('back-on');
+  cardBox($('rfull').querySelector('.card3'),p[0]);$('rfull').querySelector('.card3').onclick=e=>e.currentTarget.classList.toggle('back-on');
   $('renv').onclick=async()=>{$('renv').classList.add('open');await wait(1900);$('recv').classList.add('read');$('racts').hidden=false};
   const close=()=>{$('recv').hidden=true;history.replaceState(null,'',location.pathname)};$('rClose').onclick=close;$('rReply').onclick=()=>{close()}}
 receive();
