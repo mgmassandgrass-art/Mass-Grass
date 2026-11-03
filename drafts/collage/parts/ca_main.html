@@ -1,37 +1,39 @@
-
 <main>
-<section class="ch0" id="cal" aria-labelledby="ch-h">
+<section class="kb-hero" id="cal" aria-labelledby="ch-h">
   <div class="wrap">
-    <div>
-      <div class="year" dir="ltr" aria-hidden="true"><span class="paper" data-tear="5"><span class="fill"></span>2</span><span class="paper" data-tear="5"><span class="fill"></span>0</span><span class="paper" data-tear="5"><span class="fill"></span>2</span><span class="paper" data-tear="5"><span class="fill"></span>7</span></div>
-      <h1 id="ch-h" data-ar="التقويم السنوي">The calendar</h1>
-      <p class="lead" data-ar="اثنا عشر شهرًا، ولكل شهر لوحة رسمتها فرح في غزة.">Twelve months, each with a painting Farah made in Gaza.</p>
+    <div class="kb-txt">
+      <p class="kb-yr" dir="ltr">2027</p>
+      <h1 id="ch-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1>
+      <p class="lead" data-ar="تقويم 2027: اثنتا عشرة قارورة رسمتها فرح بالألوان المائية، لكل شهر قارورة وجملة.">The 2027 calendar: twelve watercolour bottles by Farah, one for every month, each with a line to keep.</p>
       <ul class="specs">
         <li data-ar="12 شهرًا وغلاف">12 months and a cover</li>
-        <li data-ar="ملف PDF بمقاسي A4 وA3">A PDF in A4 and A3</li>
+        <li data-ar="ملف PDF بمقاس A5 عرضي">A PDF in A5, landscape</li>
         <li data-ar="الأسبوع يبدأ يوم السبت">Weeks start on Saturday</li>
-        <li data-ar="بالعربية والإنجليزية">In Arabic and English</li>
       </ul>
-      <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" id="buy" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
+      <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
     </div>
-    <div>
-      <div class="wc" id="wc" aria-live="polite"><img class="mock" src="assets/calmock2.webp" alt=""><div class="sheets" id="sheets"></div></div>
+    <div class="kb-hang">
+      <div class="kb-cal" id="kbcal" aria-live="polite"><img class="kb-wire" src="assets/binding.webp" alt=""><div class="kb-pages" id="kbpages"></div></div>
       <div class="turnbar">
-        <button class="tbtn paper" data-tear="3" type="button" id="tback"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="الشهر السابق">Previous month</span></button>
-        <button class="tbtn paper" data-tear="3" type="button" id="tnext"><span class="fill"></span><span data-ar="الشهر التالي">Next month</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="tbtn paper" data-tear="3" type="button" id="tback"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="الصفحة السابقة">Previous page</span></button>
+        <span class="kb-at" id="kbat" aria-hidden="true"></span>
+        <button class="tbtn paper" data-tear="3" type="button" id="tnext"><span class="fill"></span><span data-ar="الصفحة التالية">Next page</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </div>
 </section>
 
-<section class="wrap months" aria-labelledby="mo-h">
-  <h2 class="big" id="mo-h" data-ar="الأشهر الاثنا عشر">The twelve months</h2>
-  <div class="mgrid" id="mgrid"></div>
+<section class="kb-shelf" aria-labelledby="sh-h">
+  <div class="wrap">
+    <div class="kb-shd"><h2 class="big" id="sh-h" data-ar="ما في القوارير">What the bottles keep</h2><p data-ar="أربعة أشهر من اثني عشر. افتحوا قارورة لتروا صفحتها.">Four months of the twelve. Open a bottle to see its page.</p></div>
+    <ul class="bottles" id="bottles"></ul>
+    <div class="ledge paper" data-tear="4" aria-hidden="true"><span class="fill"></span></div>
+  </div>
 </section>
 
 <section class="onwall" aria-labelledby="ow-h">
   <div class="wrap">
-    <div class="owhd"><h2 class="big" id="ow-h" data-ar="على الحائط">On the wall</h2><div class="mchips" id="mchips" aria-label="Months"></div></div>
+    <div class="owhd"><h2 class="big" id="ow-h" data-ar="في البيت">At home</h2><div class="mchips" id="mchips" aria-label="Pages"></div></div>
     <div class="scenes" id="scenes"></div>
   </div>
 </section>
@@ -40,13 +42,15 @@
 <dialog class="view" id="view" aria-labelledby="v-h">
   <button class="x paper" data-tear="3" type="button" id="vx" aria-label="Close"><span class="fill"></span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="sheetv paper" data-tear="6"><span class="fill"></span>
-    <div class="vpage" id="vpage"></div>
-    <div>
-      <h2 id="v-h"></h2><p class="where" id="vwhere"></p>
-      <p class="vnote" data-ar="هذه الصفحة جزء من التقويم الكامل: 12 شهرًا وغلاف، بـ 8€.">This page is part of the full calendar: 12 months and a cover, for €8.</p>
+    <img class="vpage" id="vpage" src="assets/c27-00.webp" alt="">
+    <div class="vside">
+      <p class="vseason" id="vseason"></p>
+      <h2 id="v-h"></h2>
+      <p class="vquote" id="vquote"></p>
+      <p class="vnote" data-ar="هذه الصفحة من التقويم الكامل: 12 شهرًا وغلاف.">This page is part of the full calendar: 12 months and a cover.</p>
       <div class="acts"><button class="ink" type="button" data-add="calendar" data-ar="أضيفوا التقويم إلى السلة">Add the calendar to bag</button></div>
-      <div class="nav"><button class="tbtn paper" data-tear="3" type="button" id="vprev"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="السابق">Previous</span></button>
-        <button class="tbtn paper" data-tear="3" type="button" id="vnext"><span class="fill"></span><span data-ar="التالي">Next</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+      <div class="nav"><button class="tbtn paper" data-tear="3" type="button" id="vprev"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="السابقة">Previous</span></button>
+        <button class="tbtn paper" data-tear="3" type="button" id="vnext"><span class="fill"></span><span data-ar="التالية">Next</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
     </div>
   </div>
 </dialog>

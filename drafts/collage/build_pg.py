@@ -6,7 +6,7 @@ header=s[s.index('<header>'):s.index('</header>')+9]
 footer=s[s.index('<footer'):s.index('</footer>')+9]
 a=s.index('/* newsletter');nl=s[a:s.index('/* torn edges',a)]
 a=s.index('/* torn edges');tail=s[a:s.index('</script>',a)]
-old="mlist.querySelectorAll('.mn').forEach((s,i)=>s.textContent=a?M[i][2]:M[i][1].slice(0,3));buildPages();cap();"
+old="mlist.querySelectorAll('.mn').forEach((s,i)=>s.textContent=a?M[i][2]:M[i][1]);buildPages();cap();"
 assert old in tail;tail=tail.replace(old,"document.querySelectorAll('[data-ph-ar]').forEach(e=>{e.dataset.phEn=e.dataset.phEn||e.placeholder;e.placeholder=a?e.dataset.phAr:e.dataset.phEn});render();if(view.open)open_(vi);")
 tail=tail.replace("const torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];","let torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];")
 head=head.replace('<title>Mass &amp; Grass · Collage</title>','<title>'+title+' · Mass &amp; Grass</title>')

@@ -20,7 +20,7 @@ function product(kind,k){return (CAT().products||[]).find(p=>p.kind===kind&&p.id
 function price(kind,k){const pr=CAT().prices||{},base=pr[kind]!=null?pr[kind]:DEF[kind];if(kind==='pack'||kind==='calendar'||!k)return base;
   const p=product(kind,k);if(!p)return base;const e=p.price!=null?p.price:base;return Math.round(e*(100-(p.sale||0)))/100}
 const fmt=e=>'€'+(Math.round(e*100)%100?e.toFixed(2):String(Math.round(e)));
-const KIND={painting:['Painting, PDF and PNG','لوحة، PDF وPNG'],postcard:['Postcard, PDF and PNG','بطاقة بريدية، PDF وPNG'],sticker:['Sticker, PNG','ملصق، PNG'],pack:['Sticker pack, PNG','مجموعة ملصقات، PNG'],calendar:['Calendar 2027, PDF in A3 and A4','تقويم 2027، PDF بمقاسي A3 وA4']};
+const KIND={painting:['Painting, PDF and PNG','لوحة، PDF وPNG'],postcard:['Postcard, PDF and PNG','بطاقة بريدية، PDF وPNG'],sticker:['Sticker, PNG','ملصق، PNG'],pack:['Sticker pack, PNG','مجموعة ملصقات، PNG'],calendar:['Calendar 2027, PDF in A5','تقويم 2027، PDF بمقاس A5']};
 
 /* ---------- the bag ---------- */
 const BAG={
@@ -83,7 +83,7 @@ function toast(msg){let el=$('.mgtoast');if(!el){el=document.createElement('p');
 
 /* any button with data-add="calendar" puts the calendar in the bag */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(!b)return;e.preventDefault();const kind=b.dataset.add;
-  if(kind==='calendar'){const added=BAG.add('calendar','calendar-2027','Calendar 2027','تقويم 2027',{img:'assets/calmock.webp'});toast(added?T('The calendar is in your bag.','أُضيف التقويم إلى السلة.'):T('The calendar is already in your bag.','التقويم في السلة.'))}});
+  if(kind==='calendar'){const added=BAG.add('calendar','calendar-2027','Things kept in bottles, 2027','أشياء نحفظها في قوارير، 2027',{img:'assets/c27-00.webp'});toast(added?T('The calendar is in your bag.','أُضيف التقويم إلى السلة.'):T('The calendar is already in your bag.','التقويم في السلة.'))}});
 window.MGShop={BAG,USER,price,fmt,id,img,product,toast,open:sheet,esc};
 /* the header stays on top: its height is shared as --head for anything sticky under it */
 function stick(){const h=$('header');if(!h)return;const set=()=>document.documentElement.style.setProperty('--head',h.offsetHeight+'px');set();new ResizeObserver(set).observe(h);

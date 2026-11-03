@@ -145,82 +145,76 @@ footer nav a{display:inline-block;padding:8px 2px}
 .linkb{background:none;border:0;padding:8px 0;font:500 var(--fs-sm)/1.3 var(--f);color:var(--ink);text-decoration:underline;text-underline-offset:4px;cursor:pointer;min-height:44px}
 .ar-on .linkb{font-family:var(--fa)}
 
-/* calendar page: the 2027 wall calendar, month by month, and on real walls */
-.ch0{position:relative;padding:clamp(40px,6vw,88px) 0 var(--sec);background:var(--tint,var(--c-e6ebee));transition:background-color 1.2s ease}
-.ch0 .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--col-gap);align-items:center}
-.year{display:flex;gap:clamp(8px,.8vw,12px);margin:0 0 24px}
-.year>span{display:grid;place-items:center;width:clamp(56px,6.4vw,92px);aspect-ratio:3/4;font:800 var(--fs-h1)/1 var(--f);color:var(--paper)}
-.year>span:nth-child(1){--c:var(--terra);rotate:-4deg}.year>span:nth-child(2){--c:var(--indigo);rotate:3deg;translate:0 8px}
-.year>span:nth-child(3){--c:var(--mustard);rotate:-2deg}.year>span:nth-child(4){--c:var(--olive);rotate:5deg;translate:0 6px}
-.ch0 h1{margin:0 0 16px;font:800 var(--fs-h1)/.98 var(--f);letter-spacing:-.035em}
-.ar-on .ch0 h1{font:700 var(--fs-h1)/1.2 var(--fa);letter-spacing:0}
-.ch0 .lead{margin:0 0 24px;font-size:var(--fs-lead);max-width:42ch;color:var(--soft)}
-.specs{list-style:none;margin:0 0 28px;padding:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 24px;max-width:460px}
-.specs li{position:relative;padding-inline-start:24px;font-size:var(--fs-sm);color:var(--ink)}
-.specs li::before{content:"";position:absolute;inset-inline-start:0;top:.55em;width:10px;height:10px;border-radius:2px;background:var(--terra);rotate:8deg}
-.buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.buy b{font:800 var(--fs-figure)/1 var(--f)}
-.wc{position:relative;width:min(100%,440px);margin:0 auto;aspect-ratio:911/1333;filter:drop-shadow(0 24px 28px rgba(var(--rgb-30-20-10),.3)) drop-shadow(0 5px 7px rgba(var(--rgb-30-20-10),.18))}
-.wc .mock{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.sheets{position:absolute;left:.4%;width:99.2%;top:5.9%;height:93.9%;container-type:size}
-.lf{position:absolute;inset:0;padding:7cqw 7cqw 6cqw;display:flex;flex-direction:column;transition:opacity .6s ease}
-.js .lf{opacity:0}
-.lf.front{opacity:1}
-.pg{display:flex;flex-direction:column;height:100%;padding:7cqw 7cqw 6cqw;container-type:inline-size}
-.lf .art,.pg .art{flex:0 0 auto;aspect-ratio:4/3;width:100%;object-fit:contain;display:block;mix-blend-mode:multiply}
-.mh{display:flex;justify-content:space-between;align-items:baseline;margin:6cqw 0 3cqw}
-.mh b{font:800 8.4cqw/1 var(--f);letter-spacing:-.02em}.ar-on .mh b{font:700 7.8cqw/1.2 var(--fa)}
-.mh span{font:700 4.4cqw/1 var(--f);color:var(--terra)}
-.lf table,.pg table{width:100%;flex:1;border-collapse:collapse;table-layout:fixed;font:600 3.8cqw/1 var(--f);text-align:center;mix-blend-mode:multiply}
-.ar-on .lf table,.ar-on .pg table{font-family:var(--fa)}
-th{font-weight:700;font-size:2.9cqw;color:var(--soft);padding:0 0 2cqw}
-.fri{color:var(--terra)}
-.turnbar{display:flex;justify-content:center;gap:8px;margin-top:32px}
+/* Things kept in bottles: the 2027 calendar, A5 landscape pages on a wire */
+:root{--hand:'Caveat',cursive;--handar:'Aref Ruqaa',serif}
+.kb-hero{background:var(--c-e9e1d2);padding:clamp(48px,7vw,104px) 0 var(--sec);overflow:hidden}
+.kb-hero .wrap{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:var(--col-gap);align-items:center}
+.kb-yr{margin:0 0 8px;font:500 var(--fs-lead)/1 var(--hand,'Caveat',cursive);color:var(--terra);letter-spacing:.02em}
+.kb-hero h1{margin:0 0 16px;font:800 var(--fs-h1)/.98 var(--f);letter-spacing:-.03em;text-wrap:balance}
+.ar-on .kb-hero h1{font:700 var(--fs-h2)/1.3 var(--fa);letter-spacing:0}
+.kb-hero .lead{margin:0 0 24px;font-size:var(--fs-lead);max-width:40ch;color:var(--soft)}
+.specs{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:8px}
+.specs li{position:relative;padding-inline-start:24px;font-size:var(--fs-sm)}
+.specs li::before{content:"";position:absolute;inset-inline-start:0;top:.55em;width:10px;height:10px;border-radius:2px;background:var(--olive);rotate:8deg}
+.buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.buy b{font:800 var(--fs-figure)/1 var(--f)}
+/* the calendar hanging on its wire; a page swings up and over the binding to show the next */
+.kb-cal{position:relative;padding-top:4.2%;perspective:1800px;rotate:.6deg}
+.kb-wire{position:absolute;left:3%;right:3%;width:94%;top:0;z-index:4;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(var(--ink-rgb),.3))}
+.kb-pages{position:relative;aspect-ratio:1820/1282;transform-style:preserve-3d}
+.kb-pages img{position:absolute;inset:0;width:100%;height:100%;display:block;transform-origin:50% 0;backface-visibility:hidden;box-shadow:0 1px 1px rgba(var(--ink-rgb),.12),0 26px 40px -22px rgba(var(--ink-rgb),.55);background:var(--paper)}
+.kb-pages img.up{transition:transform .9s cubic-bezier(.45,0,.2,1),opacity .2s .7s;transform:rotateX(178deg);opacity:0}
+.kb-pages img.down{transform:rotateX(178deg);opacity:0}
+.kb-pages img.drop{transition:transform .9s cubic-bezier(.45,0,.2,1),opacity .15s;transform:none;opacity:1}
+.turnbar{display:flex;justify-content:center;align-items:center;gap:16px;margin-top:32px}
+.kb-at{min-width:72px;text-align:center;font:500 var(--fs-sm)/1 var(--f);color:var(--soft)}
+.ar-on .kb-at{font-family:var(--fa)}
 .tbtn:disabled{--c:var(--c-e9e0ce);color:var(--soft);cursor:not-allowed;filter:none}
-@media(max-width:900px){.ch0 .wrap{grid-template-columns:minmax(0,1fr)}.wc{width:min(100%,340px)}}
-/* the twelve months */
-.months{padding-top:var(--sec)}
-.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(32px,3.6vw,52px) clamp(20px,2.6vw,36px)}
-.mo{border:0;padding:0;background:none;cursor:pointer;text-align:start;color:var(--ink);transition:transform .4s cubic-bezier(.22,1,.36,1)}
-.mo .sh{display:block;container-type:inline-size;aspect-ratio:911/1250;background:var(--paper);box-shadow:0 1px 1px rgba(var(--ink-rgb),.1),0 14px 22px -14px rgba(var(--ink-rgb),.38);position:relative}
-.mo .sh::before{content:"";position:absolute;left:8%;right:8%;top:-5px;height:10px;background:repeating-linear-gradient(90deg,var(--c-3a3936) 0 3px,transparent 3px 9px);border-radius:2px}
-.mo:nth-child(4n+1) .sh{rotate:-1.2deg}.mo:nth-child(4n+2) .sh{rotate:.8deg}.mo:nth-child(4n+3) .sh{rotate:-.4deg}.mo:nth-child(4n) .sh{rotate:1.3deg}
-@media(hover:hover){.mo:hover{transform:translateY(-6px)}}
-.mo:focus-visible{outline:3px solid var(--indigo);outline-offset:6px}
-.mo .cap{display:flex;justify-content:space-between;margin-top:16px;font:700 var(--fs-body)/1.2 var(--f)}.ar-on .mo .cap{font-family:var(--fa)}
-.mo .cap i{font-style:normal;font-weight:500;color:var(--soft);font-size:var(--fs-sm)}
-@media(max-width:980px){.mgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:620px){.mgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 16px}}
-/* on the wall */
+/* the bottles, torn out of their pages and stood on a strip of kraft */
+.kb-shelf{padding:var(--sec) 0 calc(var(--sec) - 24px)}
+.kb-shd{display:flex;justify-content:space-between;align-items:end;gap:16px 40px;flex-wrap:wrap;margin-bottom:var(--gh)}
+.kb-shd p{margin:0;max-width:34ch;color:var(--soft)}
+.bottles{list-style:none;margin:0;padding:0 2%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(12px,2vw,32px);align-items:end;position:relative;z-index:1}
+.bottle{display:flex;flex-direction:column;align-items:center;width:100%;border:0;padding:0;background:none;cursor:pointer;color:var(--ink);transition:transform .45s cubic-bezier(.22,1,.36,1)}
+.bottle .piece{--c:var(--paper-white);display:block;width:100%;padding:8% 6% 4%}
+.bottle .piece img{display:block;width:100%;height:auto;mix-blend-mode:multiply}
+.bottle .tag{position:relative;margin-top:-12px;padding:8px 16px 8px;--c:var(--paper-white);font:500 var(--fs-lead)/1.1 var(--hand,'Caveat',cursive);rotate:-3deg;filter:drop-shadow(0 4px 5px rgba(var(--ink-rgb),.2))}
+.ar-on .bottle .tag{font-family:var(--handar,'Aref Ruqaa',serif);font-size:var(--fs-body)}
+.bottle:nth-child(even) .tag{rotate:3deg}
+.bottle:nth-child(1) .piece{rotate:-1.5deg}.bottle:nth-child(2) .piece{rotate:1deg}.bottle:nth-child(3) .piece{rotate:-.6deg}.bottle:nth-child(4) .piece{rotate:1.4deg}.bottle:nth-child(5) .piece{rotate:-1deg}
+@media(hover:hover){.bottle:hover{transform:translateY(-10px)}}
+.bottle:focus-visible{outline:3px solid var(--indigo);outline-offset:6px}
+.ledge{height:28px;margin-top:-8px;--c:var(--kraft);filter:drop-shadow(0 10px 10px rgba(var(--ink-rgb),.25))}
+/* at home: the page printed into real photographs */
 .onwall{padding:var(--sec) 0}
 .owhd{display:flex;justify-content:space-between;align-items:end;gap:16px 24px;flex-wrap:wrap;margin-bottom:var(--gh)}
 .owhd h2.big{margin:0}
 .mchips{display:flex;flex-wrap:wrap;gap:8px 16px}
-.mchips button{border:0;background:none;padding:8px 0;font:600 var(--fs-sm)/1 var(--f);color:var(--soft);cursor:pointer;border-bottom:1.5px solid transparent}
+.mchips button{border:0;background:none;padding:8px 0;font:600 var(--fs-sm)/1 var(--f);color:var(--soft);cursor:pointer;border-bottom:1.5px solid transparent;min-height:44px}
 .ar-on .mchips button{font-family:var(--fa)}
-.mchips button[aria-pressed=true]{color:var(--ink);border-bottom-color:currentColor}
-.scenes{display:grid;grid-template-columns:minmax(0,1.333fr) minmax(0,1.333fr) minmax(0,.8fr);gap:clamp(16px,2vw,28px);align-items:start}
-.scn{position:relative;overflow:hidden;box-shadow:0 2px 3px rgba(var(--ink-rgb),.12),0 20px 30px -18px rgba(var(--ink-rgb),.4)}
-.scn img.room,.scn img.top{display:block;width:100%;height:auto}
-.scn img.top{position:absolute;inset:0}
-.scn .on{position:absolute;mix-blend-mode:multiply;container-type:inline-size}
-.scn .on .pg{padding:7cqw 7cqw 6cqw}
-@media(max-width:900px){.scenes{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.scenes .scn:last-child{grid-column:1/-1;max-width:420px;justify-self:center}}
-@media(max-width:560px){.scenes{grid-template-columns:minmax(0,1fr)}}
-/* one month up close */
-dialog.view{border:0;padding:0;background:none;width:min(1000px,calc(100% - 28px));max-height:calc(100svh - 28px);overflow:visible;color:var(--ink)}
+.mchips button[aria-pressed=true]{color:var(--ink);border-bottom-color:var(--olive)}
+.scenes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2vw,28px)}
+.scn{position:relative;overflow:hidden;margin:0;box-shadow:0 2px 3px rgba(var(--ink-rgb),.12),0 20px 30px -18px rgba(var(--ink-rgb),.4)}
+.scn img{display:block;width:100%;height:auto}
+.scn img.on{position:absolute;object-fit:cover;mix-blend-mode:multiply}
+.scn img.top{position:absolute;inset:0;height:100%}
+/* one page up close */
+dialog.view{border:0;padding:0;background:none;width:min(1100px,calc(100% - 28px));max-height:calc(100svh - 28px);overflow:visible;color:var(--ink)}
 dialog.view::backdrop{background:rgba(var(--ink-rgb),.55)}
-.view .sheetv{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr);gap:clamp(24px,3vw,44px);align-items:center;padding:clamp(24px,3vw,40px);--c:var(--paper);max-height:calc(100svh - 28px);overflow:auto}
-.vpage{container-type:inline-size;aspect-ratio:911/1250;background:var(--paper-white);box-shadow:0 2px 3px rgba(var(--ink-rgb),.12),0 18px 26px -14px rgba(var(--ink-rgb),.35);max-height:70svh;margin:0 auto;width:100%}
-.view h2{margin:0 0 8px;font:800 var(--fs-title)/1.05 var(--f);letter-spacing:-.02em}
+.view .sheetv{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(24px,3vw,44px);align-items:center;padding:clamp(24px,3vw,40px);--c:var(--paper);max-height:calc(100svh - 28px);overflow:auto}
+.vpage{width:100%;height:auto;display:block;box-shadow:0 18px 30px -16px rgba(var(--ink-rgb),.45)}
+.vseason{margin:0 0 8px;color:var(--soft);font-size:var(--fs-sm)}
+.view h2{margin:0 0 16px;font:800 var(--fs-title)/1.05 var(--f);letter-spacing:-.02em}
 .ar-on .view h2{font:700 var(--fs-h3)/1.3 var(--fa);letter-spacing:0}
-.view .where{color:var(--soft);margin:0 0 16px;font-size:var(--fs-body)}
+.vquote{margin:0 0 24px;font:500 var(--fs-h4)/1.35 var(--hand,'Caveat',cursive);color:var(--c-2d4f7c)}
+.ar-on .vquote{font:400 var(--fs-lead)/1.7 var(--handar,'Aref Ruqaa',serif)}
 .vnote{color:var(--soft);font-size:var(--fs-sm);margin:0 0 16px;max-width:36ch}
 .view .acts{display:flex;gap:12px;flex-wrap:wrap}
 .view .nav{display:flex;gap:8px;margin-top:24px}
 .view .x{position:absolute;top:-14px;inset-inline-end:-10px;z-index:3;width:48px;height:48px;border:0;cursor:pointer;--c:var(--ink);color:var(--paper);display:grid;place-items:center;filter:drop-shadow(0 4px 5px rgba(var(--rgb-20-18-14),.3))}
-@media(max-width:820px){.view .sheetv{grid-template-columns:minmax(0,1fr)}.vpage{max-width:340px}}
-
-.months h2.big{margin-bottom:var(--gh)}
+@media(max-width:900px){.kb-hero .wrap{grid-template-columns:minmax(0,1fr)}.kb-hang{order:-1}.bottles{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:40px}.view .sheetv{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:560px){.scenes{grid-template-columns:minmax(0,1fr)}.bottles{grid-template-columns:repeat(2,minmax(0,1fr))}.turnbar .tbtn span[data-ar]{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}}
+@media(prefers-reduced-motion:reduce){.kb-pages img.up,.kb-pages img.drop{transition:none}}
 .tbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:0;cursor:pointer;--c:var(--cream);color:var(--ink);font:700 var(--fs-sm)/1 var(--f);filter:drop-shadow(0 4px 4px rgba(var(--rgb-20-18-14),.18))}
 .ar-on .tbtn{font-family:var(--fa)}
 .ar-on .tbtn svg{transform:scaleX(-1)}
@@ -267,40 +261,42 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   </div>
   <nav class="mmenu" id="mmenu" hidden aria-label="Menu"><a href="index.html" data-ar="الرئيسية">Home</a><a href="shop.html" data-ar="المتجر">Shop</a><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a></nav>
 </header>
-
 <main>
-<section class="ch0" id="cal" aria-labelledby="ch-h">
+<section class="kb-hero" id="cal" aria-labelledby="ch-h">
   <div class="wrap">
-    <div>
-      <div class="year" dir="ltr" aria-hidden="true"><span class="paper" data-tear="5"><span class="fill"></span>2</span><span class="paper" data-tear="5"><span class="fill"></span>0</span><span class="paper" data-tear="5"><span class="fill"></span>2</span><span class="paper" data-tear="5"><span class="fill"></span>7</span></div>
-      <h1 id="ch-h" data-ar="التقويم السنوي">The calendar</h1>
-      <p class="lead" data-ar="اثنا عشر شهرًا، ولكل شهر لوحة رسمتها فرح في غزة.">Twelve months, each with a painting Farah made in Gaza.</p>
+    <div class="kb-txt">
+      <p class="kb-yr" dir="ltr">2027</p>
+      <h1 id="ch-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1>
+      <p class="lead" data-ar="تقويم 2027: اثنتا عشرة قارورة رسمتها فرح بالألوان المائية، لكل شهر قارورة وجملة.">The 2027 calendar: twelve watercolour bottles by Farah, one for every month, each with a line to keep.</p>
       <ul class="specs">
         <li data-ar="12 شهرًا وغلاف">12 months and a cover</li>
-        <li data-ar="ملف PDF بمقاسي A4 وA3">A PDF in A4 and A3</li>
+        <li data-ar="ملف PDF بمقاس A5 عرضي">A PDF in A5, landscape</li>
         <li data-ar="الأسبوع يبدأ يوم السبت">Weeks start on Saturday</li>
-        <li data-ar="بالعربية والإنجليزية">In Arabic and English</li>
       </ul>
-      <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" id="buy" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
+      <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
     </div>
-    <div>
-      <div class="wc" id="wc" aria-live="polite"><img class="mock" src="assets/calmock2.webp" alt=""><div class="sheets" id="sheets"></div></div>
+    <div class="kb-hang">
+      <div class="kb-cal" id="kbcal" aria-live="polite"><img class="kb-wire" src="assets/binding.webp" alt=""><div class="kb-pages" id="kbpages"></div></div>
       <div class="turnbar">
-        <button class="tbtn paper" data-tear="3" type="button" id="tback"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="الشهر السابق">Previous month</span></button>
-        <button class="tbtn paper" data-tear="3" type="button" id="tnext"><span class="fill"></span><span data-ar="الشهر التالي">Next month</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="tbtn paper" data-tear="3" type="button" id="tback"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="الصفحة السابقة">Previous page</span></button>
+        <span class="kb-at" id="kbat" aria-hidden="true"></span>
+        <button class="tbtn paper" data-tear="3" type="button" id="tnext"><span class="fill"></span><span data-ar="الصفحة التالية">Next page</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </div>
 </section>
 
-<section class="wrap months" aria-labelledby="mo-h">
-  <h2 class="big" id="mo-h" data-ar="الأشهر الاثنا عشر">The twelve months</h2>
-  <div class="mgrid" id="mgrid"></div>
+<section class="kb-shelf" aria-labelledby="sh-h">
+  <div class="wrap">
+    <div class="kb-shd"><h2 class="big" id="sh-h" data-ar="ما في القوارير">What the bottles keep</h2><p data-ar="أربعة أشهر من اثني عشر. افتحوا قارورة لتروا صفحتها.">Four months of the twelve. Open a bottle to see its page.</p></div>
+    <ul class="bottles" id="bottles"></ul>
+    <div class="ledge paper" data-tear="4" aria-hidden="true"><span class="fill"></span></div>
+  </div>
 </section>
 
 <section class="onwall" aria-labelledby="ow-h">
   <div class="wrap">
-    <div class="owhd"><h2 class="big" id="ow-h" data-ar="على الحائط">On the wall</h2><div class="mchips" id="mchips" aria-label="Months"></div></div>
+    <div class="owhd"><h2 class="big" id="ow-h" data-ar="في البيت">At home</h2><div class="mchips" id="mchips" aria-label="Pages"></div></div>
     <div class="scenes" id="scenes"></div>
   </div>
 </section>
@@ -309,13 +305,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 <dialog class="view" id="view" aria-labelledby="v-h">
   <button class="x paper" data-tear="3" type="button" id="vx" aria-label="Close"><span class="fill"></span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="sheetv paper" data-tear="6"><span class="fill"></span>
-    <div class="vpage" id="vpage"></div>
-    <div>
-      <h2 id="v-h"></h2><p class="where" id="vwhere"></p>
-      <p class="vnote" data-ar="هذه الصفحة جزء من التقويم الكامل: 12 شهرًا وغلاف، بـ 8€.">This page is part of the full calendar: 12 months and a cover, for €8.</p>
+    <img class="vpage" id="vpage" src="assets/c27-00.webp" alt="">
+    <div class="vside">
+      <p class="vseason" id="vseason"></p>
+      <h2 id="v-h"></h2>
+      <p class="vquote" id="vquote"></p>
+      <p class="vnote" data-ar="هذه الصفحة من التقويم الكامل: 12 شهرًا وغلاف.">This page is part of the full calendar: 12 months and a cover.</p>
       <div class="acts"><button class="ink" type="button" data-add="calendar" data-ar="أضيفوا التقويم إلى السلة">Add the calendar to bag</button></div>
-      <div class="nav"><button class="tbtn paper" data-tear="3" type="button" id="vprev"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="السابق">Previous</span></button>
-        <button class="tbtn paper" data-tear="3" type="button" id="vnext"><span class="fill"></span><span data-ar="التالي">Next</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+      <div class="nav"><button class="tbtn paper" data-tear="3" type="button" id="vprev"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="السابقة">Previous</span></button>
+        <button class="tbtn paper" data-tear="3" type="button" id="vnext"><span class="fill"></span><span data-ar="التالية">Next</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
     </div>
   </div>
 </dialog>
@@ -338,43 +336,46 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 <script src="assets/gsap.min.js"></script>
 <script src="assets/shop.js"></script>
 <script>
-let AR=false;const P=[];let vi=0;
+let AR=false;let vi=0;
 const $=id=>document.getElementById(id),T=(en,ar)=>AR?ar:en;
-/* the twelve months of 2027, each with one of Farah's paintings */
-const M=[['cal-01','January','كانون الثاني','The Waves','الموج'],['cal-02','February','شباط','Sea & Clouds','بحر وغيوم'],['cal-03','March','آذار','White Dove','الحمامة البيضاء'],['cal-04','April','نيسان','Big Flower','الزهرة الكبيرة'],
- ['cal-05','May','أيار','Moon Swing','أرجوحة القمر'],['cal-06','June','حزيران','Dove Girl','فتاة الحمام'],['cal-07','July','تموز','The Boat','القارب'],['cal-08','August','آب','Girl with Cart','فتاة والعربة'],
- ['cal-09','September','أيلول','',''],['cal-10','October','تشرين الأول','Elephant on a Bike','فيل على دراجة'],['cal-11','November','تشرين الثاني','Moon Sleeper','نائمة على القمر'],['cal-12','December','كانون الأول','','']];
-const TINT=['#E3E9ED','#E9EEDF','#F4EAD0','#F1E2D4'],seasonOf=m=>m===11||m<2?0:m<5?1:m<8?2:3;
-const DAYS_EN=['Sat','Sun','Mon','Tue','Wed','Thu','Fri'],DAYS_AR=['سبت','أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة'];
-function dates(m){const first=new Date(2027,m,1).getDay(),off=(first+1)%7,n=new Date(2027,m+1,0).getDate(),D=AR?DAYS_AR:DAYS_EN;
-  let h=`<div class="mh"><b>${AR?M[m][2]:M[m][1]}</b><span dir="ltr">2027</span></div><table dir="${AR?'rtl':'ltr'}"><thead><tr>`+D.map((d,k)=>`<th${k===6?' class="fri"':''}>${d}</th>`).join('')+'</tr></thead><tbody>';
-  for(let day=1-off;day<=n;){h+='<tr>';for(let k=0;k<7;k++,day++)h+=`<td${k===6?' class="fri"':''}>${day>=1&&day<=n?day:''}</td>`;h+='</tr>'}return h+'</tbody></table>'}
-const page=(m,lazy)=>`<div class="pg"><img class="art" src="assets/${M[m][0]}.webp" alt="" ${lazy?'loading="lazy"':''} draggable="false">${dates(m)}</div>`;
-/* 1 · the calendar on the wall at the top: the month fades in */
-let cm=Math.min(11,Math.max(0,new Date().getFullYear()===2027?new Date().getMonth():0));
-const sheets=$('sheets');
-function buildPages(){sheets.innerHTML=M.map((m,i)=>`<div class="lf" data-i="${i}"><img class="art" src="assets/${m[0]}.webp" alt="${m[1]} 2027, watercolour by Farah Al-Helou" draggable="false">${dates(i)}</div>`).join('');state()}
-function state(){sheets.querySelectorAll('.lf').forEach(l=>l.classList.toggle('front',+l.dataset.i===cm));$('cal').style.setProperty('--tint',TINT[seasonOf(cm)]);
-  $('tback').disabled=cm===0;$('tnext').disabled=cm===11;$('mchips')&&$('mchips').querySelectorAll('button').forEach((b,k)=>b.setAttribute('aria-pressed',k===cm));scenes()}
-$('tnext').onclick=()=>{if(cm<11){cm++;state()}};$('tback').onclick=()=>{if(cm>0){cm--;state()}};
-/* 2 · the twelve months */
-function grid(){$('mgrid').innerHTML=M.map((m,i)=>`<button type="button" class="mo" data-i="${i}" aria-label="${AR?m[2]:m[1]} 2027"><span class="sh">${page(i,true)}</span><span class="cap"><span>${AR?m[2]:m[1]}</span><i>${AR?m[4]:m[3]}</i></span></button>`).join('')}
-$('mgrid').addEventListener('click',e=>{const b=e.target.closest('.mo');if(b)open_(+b.dataset.i)});
-/* 3 · on real walls: the month is printed on each blank calendar */
-const WS={"cw-desk":{"x":0.376,"y":0.157,"ww":0.26,"wh":0.48,"occ":false},"cw-kitchen":{"x":0.617,"y":0.165,"ww":0.272,"wh":0.52,"occ":false},"cw-hands":{"x":0.2337,"y":0.1453,"ww":0.5404,"wh":0.663,"occ":true}};
-function scenes(){const el=$('scenes');if(!el)return;el.innerHTML=Object.entries(WS).map(([k,s])=>`<figure class="scn" style="margin:0"><img class="room" src="assets/${k}.webp" alt=""><div class="on" style="left:${s.x*100}%;top:${s.y*100}%;width:${s.ww*100}%;height:${s.wh*100}%">${page(cm)}</div>${s.occ?`<img class="top" src="assets/${k}-top.webp" alt="">`:''}</figure>`).join('')}
-function chips(){$('mchips').innerHTML=M.map((m,i)=>`<button type="button" aria-pressed="${i===cm}" data-i="${i}">${AR?m[2]:m[1].slice(0,3)}</button>`).join('')}
-$('mchips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cm=+b.dataset.i;state()});
-/* one month up close */
+/* Things kept in bottles: the pages Farah has sent so far (cover and four months) */
+const P=[
+ {k:'c27-00',n:['Cover','الغلاف'],s:['2027','2027'],q:['Things kept in bottles, watercolours by Farah Al-Helou.','أشياء نحفظها في قوارير، ألوان مائية لفرح الحلو.']},
+ {k:'c27-05',n:['May','أيار'],s:['Spring 2027','ربيع 2027'],q:['We carry whole worlds no one else can see.','نحمل عوالم كاملة لا يراها أحد سوانا.']},
+ {k:'c27-08',n:['August','آب'],s:['Summer 2027','صيف 2027'],q:['To leave is also to believe in somewhere.','أن نرحل يعني أيضًا أن نؤمن بمكانٍ ما.']},
+ {k:'c27-09',n:['September','أيلول'],s:['Autumn 2027','خريف 2027'],q:['Even the sun bows; looking up is a choice.','حتى الشمس تنحني، والنظر إلى الأعلى اختيار.']},
+ {k:'c27-12',n:['December','كانون الأول'],s:['Winter 2027','شتاء 2027'],q:['Every road we take is a way back to ourselves.','كل طريق نسلكه طريقُ عودةٍ إلى أنفسنا.']}];
+const nm=p=>AR?p.n[1]:p.n[0];
+/* 1 · the calendar on its wire */
+const pages=$('kbpages');let cur=0,busy=false;
+pages.innerHTML=P.map((p,i)=>`<img src="assets/${p.k}.webp" alt="" data-i="${i}" style="z-index:${P.length-i}"${i?' class="down"':''}>`).join('');
+const imgs=[...pages.querySelectorAll('img')];
+function at(){$('kbat').textContent=`${cur+1} / ${P.length}`;$('tback').disabled=cur===0;$('tnext').disabled=cur===P.length-1;
+  imgs.forEach((im,i)=>im.alt=i===cur?`${nm(P[i])} 2027, ${T('page of the calendar','صفحة من التقويم')}`:'')}
+function turn(d){const n=cur+d;if(busy||n<0||n>=P.length)return;busy=true;
+  if(d>0){imgs[n].classList.remove('down');imgs[cur].classList.add('up')}
+  else{imgs[n].classList.remove('up');imgs[n].classList.add('down');imgs[n].style.zIndex=P.length+1;void imgs[n].offsetWidth;imgs[n].classList.remove('down');imgs[n].classList.add('drop')}
+  const was=cur;cur=n;at();setTimeout(()=>{if(d<0){imgs[n].classList.remove('drop');imgs[n].style.zIndex=P.length-n;imgs[was].classList.add('down')}busy=false},matchMedia('(prefers-reduced-motion: reduce)').matches?0:920)}
+$('tnext').onclick=()=>turn(1);$('tback').onclick=()=>turn(-1);
+pages.addEventListener('click',()=>cur<P.length-1?turn(1):null);
+/* 2 · the bottles */
+function bottles(){$('bottles').innerHTML=P.map((p,i)=>`<li><button type="button" class="bottle" data-i="${i}" aria-label="${nm(p)} 2027"><span class="piece paper" data-tear="5"><span class="fill"></span><img src="assets/${p.k}-b.webp" alt="" loading="lazy"></span><span class="tag paper" data-tear="2"><span class="fill"></span>${nm(p)}</span></button></li>`).join('')}
+$('bottles').addEventListener('click',e=>{const b=e.target.closest('.bottle');if(b)open_(+b.dataset.i)});
+/* 3 · at home: the page printed into real photographs (fingers and the wire come back on top) */
+const WS={"c27-wall":{"x":0.291,"y":0.1701,"ww":0.4154,"wh":0.3941,"clip":"0% 0%,99.84% 0%,100% 100%,0% 100%"},"c27-hands":{"x":0.1641,"y":0.1953,"ww":0.6738,"wh":0.6016,"clip":"0% 0%,100% 0%,100% 99.13%,0% 100%"}};
+let cm=0;
+function scenes(){$('scenes').innerHTML=Object.entries(WS).map(([k,s])=>`<figure class="scn"><img src="assets/${k}.webp" alt="${T('The calendar at home','التقويم في البيت')}"><img class="on" src="assets/${P[cm].k}.webp" alt="" style="left:${s.x*100}%;top:${s.y*100}%;width:${s.ww*100}%;height:${s.wh*100}%;clip-path:polygon(${s.clip})"><img class="top" src="assets/${k}-top.webp" alt=""></figure>`).join('')}
+function chips(){$('mchips').innerHTML=P.map((p,i)=>`<button type="button" aria-pressed="${i===cm}" data-i="${i}">${nm(p)}</button>`).join('')}
+$('mchips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cm=+b.dataset.i;chips();scenes()});
+/* one page up close */
 const view=$('view');
-function open_(i){vi=(i+12)%12;$('vpage').innerHTML=page(vi);$('v-h').textContent=(AR?M[vi][2]:M[vi][1])+' 2027';
-  $('vwhere').textContent=(M[vi][3]?(AR?M[vi][4]:M[vi][3])+(AR?'، ':', '):'')+T('watercolour by Farah Al-Helou','ألوان مائية لفرح الحلو');
+function open_(i){vi=(i+P.length)%P.length;const p=P[vi];$('vpage').src=`assets/${p.k}.webp`;$('vpage').alt=`${nm(p)} 2027, ${T('page of the calendar','صفحة من التقويم')}`;
+  $('v-h').textContent=vi?nm(p)+' 2027':T('Things kept in bottles','أشياء نحفظها في قوارير');$('vseason').textContent=AR?p.s[1]:p.s[0];$('vquote').textContent=AR?p.q[1]:p.q[0];
   if(!view.open){view.showModal();requestAnimationFrame(()=>typeof draw==='function'&&draw())}}
 $('vnext').onclick=()=>open_(vi+1);$('vprev').onclick=()=>open_(vi-1);$('vx').onclick=()=>view.close();
 view.addEventListener('click',e=>{if(e.target===view)view.close()});
-addEventListener('keydown',e=>{if(!view.open)return;if(e.key==='ArrowRight')open_(vi+(AR?-1:1));if(e.key==='ArrowLeft')open_(vi-(AR?-1:1))});
-function render(){buildPages();grid();chips();state()}
-M.forEach(m=>{const im=new Image();im.src=`assets/${m[0]}.webp`});
+addEventListener('keydown',e=>{if(view.open){if(e.key==='ArrowRight')open_(vi+(AR?-1:1));if(e.key==='ArrowLeft')open_(vi-(AR?-1:1))}});
+function render(){bottles();chips();scenes();at();if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}}
 /* newsletter: posts to the shop's /api/subscribe; it only says thank you once the server has the address */
 document.getElementById('nl').onsubmit=async e=>{e.preventDefault();const v=document.getElementById('nl-mail'),ok=document.getElementById('nl-ok');
  if(!(v.validity.valid&&v.value)){ok.textContent=AR?'اكتبوا بريدًا إلكترونيًا صحيحًا، مثل name@mail.com':'Please enter a valid email, like name@mail.com';return}

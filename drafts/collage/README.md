@@ -21,3 +21,13 @@ Its design system is `DESIGN.md` at the repo root.
   Playwright at 1440 and 390, Arabic and English.
 - Preview artifact: https://claude.ai/artifact/4saBPLwjywiwbG2kMfHHkH (publish `site/index.html` with the
   other pages and assets as `files`, root `site`).
+
+## Calendar 2027: Things kept in bottles
+
+- Pages come from Farah's A5 PDFs: `pdftoppm -r 220 -png -singlefile <file>.pdf c27-MM` then WebP into `site/assets/c27-MM.webp`
+  (`00` is the cover). `c27-MM-b.webp` is the bottle torn out of each page for the shelf.
+- Only the cover, May, August, September and December exist so far; add the others to `P` in `parts/ca_js.txt` and to `M`
+  in the home calendar (`site/index.html`).
+- Mockup photos (Canva, exported through page 46 of `DAHWgLZfDEc`): `c27-wall`, `c27-hands`, `pcp-window`, `pcp-table`.
+- `occluder.py assets/<scene>.webp x y ww wh` cuts the fingers / wire that sit over the blank card or page into
+  `<scene>-top.webp` (keeps anything that is not the card's own tint and reaches the card's edge).

@@ -1,37 +1,40 @@
-let AR=false;const P=[];let vi=0;
+let AR=false;let vi=0;
 const $=id=>document.getElementById(id),T=(en,ar)=>AR?ar:en;
-/* the twelve months of 2027, each with one of Farah's paintings */
-const M=[['cal-01','January','كانون الثاني','The Waves','الموج'],['cal-02','February','شباط','Sea & Clouds','بحر وغيوم'],['cal-03','March','آذار','White Dove','الحمامة البيضاء'],['cal-04','April','نيسان','Big Flower','الزهرة الكبيرة'],
- ['cal-05','May','أيار','Moon Swing','أرجوحة القمر'],['cal-06','June','حزيران','Dove Girl','فتاة الحمام'],['cal-07','July','تموز','The Boat','القارب'],['cal-08','August','آب','Girl with Cart','فتاة والعربة'],
- ['cal-09','September','أيلول','',''],['cal-10','October','تشرين الأول','Elephant on a Bike','فيل على دراجة'],['cal-11','November','تشرين الثاني','Moon Sleeper','نائمة على القمر'],['cal-12','December','كانون الأول','','']];
-const TINT=['#E3E9ED','#E9EEDF','#F4EAD0','#F1E2D4'],seasonOf=m=>m===11||m<2?0:m<5?1:m<8?2:3;
-const DAYS_EN=['Sat','Sun','Mon','Tue','Wed','Thu','Fri'],DAYS_AR=['سبت','أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة'];
-function dates(m){const first=new Date(2027,m,1).getDay(),off=(first+1)%7,n=new Date(2027,m+1,0).getDate(),D=AR?DAYS_AR:DAYS_EN;
-  let h=`<div class="mh"><b>${AR?M[m][2]:M[m][1]}</b><span dir="ltr">2027</span></div><table dir="${AR?'rtl':'ltr'}"><thead><tr>`+D.map((d,k)=>`<th${k===6?' class="fri"':''}>${d}</th>`).join('')+'</tr></thead><tbody>';
-  for(let day=1-off;day<=n;){h+='<tr>';for(let k=0;k<7;k++,day++)h+=`<td${k===6?' class="fri"':''}>${day>=1&&day<=n?day:''}</td>`;h+='</tr>'}return h+'</tbody></table>'}
-const page=(m,lazy)=>`<div class="pg"><img class="art" src="assets/${M[m][0]}.webp" alt="" ${lazy?'loading="lazy"':''} draggable="false">${dates(m)}</div>`;
-/* 1 · the calendar on the wall at the top: the month fades in */
-let cm=Math.min(11,Math.max(0,new Date().getFullYear()===2027?new Date().getMonth():0));
-const sheets=$('sheets');
-function buildPages(){sheets.innerHTML=M.map((m,i)=>`<div class="lf" data-i="${i}"><img class="art" src="assets/${m[0]}.webp" alt="${m[1]} 2027, watercolour by Farah Al-Helou" draggable="false">${dates(i)}</div>`).join('');state()}
-function state(){sheets.querySelectorAll('.lf').forEach(l=>l.classList.toggle('front',+l.dataset.i===cm));$('cal').style.setProperty('--tint',TINT[seasonOf(cm)]);
-  $('tback').disabled=cm===0;$('tnext').disabled=cm===11;$('mchips')&&$('mchips').querySelectorAll('button').forEach((b,k)=>b.setAttribute('aria-pressed',k===cm));scenes()}
-$('tnext').onclick=()=>{if(cm<11){cm++;state()}};$('tback').onclick=()=>{if(cm>0){cm--;state()}};
-/* 2 · the twelve months */
-function grid(){$('mgrid').innerHTML=M.map((m,i)=>`<button type="button" class="mo" data-i="${i}" aria-label="${AR?m[2]:m[1]} 2027"><span class="sh">${page(i,true)}</span><span class="cap"><span>${AR?m[2]:m[1]}</span><i>${AR?m[4]:m[3]}</i></span></button>`).join('')}
-$('mgrid').addEventListener('click',e=>{const b=e.target.closest('.mo');if(b)open_(+b.dataset.i)});
-/* 3 · on real walls: the month is printed on each blank calendar */
-const WS={"cw-desk":{"x":0.376,"y":0.157,"ww":0.26,"wh":0.48,"occ":false},"cw-kitchen":{"x":0.617,"y":0.165,"ww":0.272,"wh":0.52,"occ":false},"cw-hands":{"x":0.2337,"y":0.1453,"ww":0.5404,"wh":0.663,"occ":true}};
-function scenes(){const el=$('scenes');if(!el)return;el.innerHTML=Object.entries(WS).map(([k,s])=>`<figure class="scn" style="margin:0"><img class="room" src="assets/${k}.webp" alt=""><div class="on" style="left:${s.x*100}%;top:${s.y*100}%;width:${s.ww*100}%;height:${s.wh*100}%">${page(cm)}</div>${s.occ?`<img class="top" src="assets/${k}-top.webp" alt="">`:''}</figure>`).join('')}
-function chips(){$('mchips').innerHTML=M.map((m,i)=>`<button type="button" aria-pressed="${i===cm}" data-i="${i}">${AR?m[2]:m[1].slice(0,3)}</button>`).join('')}
-$('mchips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cm=+b.dataset.i;state()});
-/* one month up close */
+/* Things kept in bottles: the pages Farah has sent so far (cover and four months) */
+const P=[
+ {k:'c27-00',n:['Cover','الغلاف'],s:['2027','2027'],q:['Things kept in bottles, watercolours by Farah Al-Helou.','أشياء نحفظها في قوارير، ألوان مائية لفرح الحلو.']},
+ {k:'c27-05',n:['May','أيار'],s:['Spring 2027','ربيع 2027'],q:['We carry whole worlds no one else can see.','نحمل عوالم كاملة لا يراها أحد سوانا.']},
+ {k:'c27-08',n:['August','آب'],s:['Summer 2027','صيف 2027'],q:['To leave is also to believe in somewhere.','أن نرحل يعني أيضًا أن نؤمن بمكانٍ ما.']},
+ {k:'c27-09',n:['September','أيلول'],s:['Autumn 2027','خريف 2027'],q:['Even the sun bows; looking up is a choice.','حتى الشمس تنحني، والنظر إلى الأعلى اختيار.']},
+ {k:'c27-12',n:['December','كانون الأول'],s:['Winter 2027','شتاء 2027'],q:['Every road we take is a way back to ourselves.','كل طريق نسلكه طريقُ عودةٍ إلى أنفسنا.']}];
+const nm=p=>AR?p.n[1]:p.n[0];
+/* 1 · the calendar on its wire */
+const pages=$('kbpages');let cur=0,busy=false;
+pages.innerHTML=P.map((p,i)=>`<img src="assets/${p.k}.webp" alt="" data-i="${i}" style="z-index:${P.length-i}"${i?' class="down"':''}>`).join('');
+const imgs=[...pages.querySelectorAll('img')];
+function at(){$('kbat').textContent=`${cur+1} / ${P.length}`;$('tback').disabled=cur===0;$('tnext').disabled=cur===P.length-1;
+  imgs.forEach((im,i)=>im.alt=i===cur?`${nm(P[i])} 2027, ${T('page of the calendar','صفحة من التقويم')}`:'')}
+function turn(d){const n=cur+d;if(busy||n<0||n>=P.length)return;busy=true;
+  if(d>0){imgs[n].classList.remove('down');imgs[cur].classList.add('up')}
+  else{imgs[n].classList.remove('up');imgs[n].classList.add('down');imgs[n].style.zIndex=P.length+1;void imgs[n].offsetWidth;imgs[n].classList.remove('down');imgs[n].classList.add('drop')}
+  const was=cur;cur=n;at();setTimeout(()=>{if(d<0){imgs[n].classList.remove('drop');imgs[n].style.zIndex=P.length-n;imgs[was].classList.add('down')}busy=false},matchMedia('(prefers-reduced-motion: reduce)').matches?0:920)}
+$('tnext').onclick=()=>turn(1);$('tback').onclick=()=>turn(-1);
+pages.addEventListener('click',()=>cur<P.length-1?turn(1):null);
+/* 2 · the bottles */
+function bottles(){$('bottles').innerHTML=P.map((p,i)=>`<li><button type="button" class="bottle" data-i="${i}" aria-label="${nm(p)} 2027"><span class="piece paper" data-tear="5"><span class="fill"></span><img src="assets/${p.k}-b.webp" alt="" loading="lazy"></span><span class="tag paper" data-tear="2"><span class="fill"></span>${nm(p)}</span></button></li>`).join('')}
+$('bottles').addEventListener('click',e=>{const b=e.target.closest('.bottle');if(b)open_(+b.dataset.i)});
+/* 3 · at home: the page printed into real photographs (fingers and the wire come back on top) */
+const WS={"c27-wall":{"x":0.291,"y":0.1701,"ww":0.4154,"wh":0.3941,"clip":"0% 0%,99.84% 0%,100% 100%,0% 100%"},"c27-hands":{"x":0.1641,"y":0.1953,"ww":0.6738,"wh":0.6016,"clip":"0% 0%,100% 0%,100% 99.13%,0% 100%"}};
+let cm=0;
+function scenes(){$('scenes').innerHTML=Object.entries(WS).map(([k,s])=>`<figure class="scn"><img src="assets/${k}.webp" alt="${T('The calendar at home','التقويم في البيت')}"><img class="on" src="assets/${P[cm].k}.webp" alt="" style="left:${s.x*100}%;top:${s.y*100}%;width:${s.ww*100}%;height:${s.wh*100}%;clip-path:polygon(${s.clip})"><img class="top" src="assets/${k}-top.webp" alt=""></figure>`).join('')}
+function chips(){$('mchips').innerHTML=P.map((p,i)=>`<button type="button" aria-pressed="${i===cm}" data-i="${i}">${nm(p)}</button>`).join('')}
+$('mchips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cm=+b.dataset.i;chips();scenes()});
+/* one page up close */
 const view=$('view');
-function open_(i){vi=(i+12)%12;$('vpage').innerHTML=page(vi);$('v-h').textContent=(AR?M[vi][2]:M[vi][1])+' 2027';
-  $('vwhere').textContent=(M[vi][3]?(AR?M[vi][4]:M[vi][3])+(AR?'، ':', '):'')+T('watercolour by Farah Al-Helou','ألوان مائية لفرح الحلو');
+function open_(i){vi=(i+P.length)%P.length;const p=P[vi];$('vpage').src=`assets/${p.k}.webp`;$('vpage').alt=`${nm(p)} 2027, ${T('page of the calendar','صفحة من التقويم')}`;
+  $('v-h').textContent=vi?nm(p)+' 2027':T('Things kept in bottles','أشياء نحفظها في قوارير');$('vseason').textContent=AR?p.s[1]:p.s[0];$('vquote').textContent=AR?p.q[1]:p.q[0];
   if(!view.open){view.showModal();requestAnimationFrame(()=>typeof draw==='function'&&draw())}}
 $('vnext').onclick=()=>open_(vi+1);$('vprev').onclick=()=>open_(vi-1);$('vx').onclick=()=>view.close();
 view.addEventListener('click',e=>{if(e.target===view)view.close()});
-addEventListener('keydown',e=>{if(!view.open)return;if(e.key==='ArrowRight')open_(vi+(AR?-1:1));if(e.key==='ArrowLeft')open_(vi-(AR?-1:1))});
-function render(){buildPages();grid();chips();state()}
-M.forEach(m=>{const im=new Image();im.src=`assets/${m[0]}.webp`});
+addEventListener('keydown',e=>{if(view.open){if(e.key==='ArrowRight')open_(vi+(AR?-1:1));if(e.key==='ArrowLeft')open_(vi-(AR?-1:1))}});
+function render(){bottles();chips();scenes();at();if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}}

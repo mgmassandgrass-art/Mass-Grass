@@ -202,29 +202,13 @@ footer nav a{display:inline-block;padding:8px 2px}
 .mlist button[aria-current=true]{border-bottom-color:currentColor}
 @media(hover:hover){.mlist button:hover{border-bottom-color:rgba(var(--ink-rgb),.4)}}
 /* the calendar: a photographed wall calendar (Canva mockup); the month is printed on its blank page and changes with a soft fade */
-.wc{position:relative;width:min(100%,460px);justify-self:center;aspect-ratio:911/1333;filter:drop-shadow(0 24px 28px rgba(var(--rgb-30-20-10),.3)) drop-shadow(0 5px 7px rgba(var(--rgb-30-20-10),.18))}
-.wc .mock{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.sheets{position:absolute;left:.4%;width:99.2%;top:5.9%;height:93.9%;container-type:size}
-.lf{position:absolute;inset:0;padding:7cqw 7cqw 6cqw;display:flex;flex-direction:column;transition:opacity .6s ease}
+.wc{position:relative;width:min(100%,600px);justify-self:center;padding-top:4.2%;rotate:.8deg;filter:drop-shadow(0 24px 28px rgba(var(--rgb-30-20-10),.3)) drop-shadow(0 5px 7px rgba(var(--rgb-30-20-10),.12))}
+.wc .mock{position:absolute;left:3%;width:94%;top:0;z-index:3;pointer-events:none}
+.sheets{position:relative;aspect-ratio:1820/1282;background:var(--paper)}
+.lf{position:absolute;inset:0;width:100%;height:100%;display:block;transition:opacity .6s ease}
 .js .lf{opacity:0}
 .lf.front{opacity:1}
-.lf .art{flex:0 0 auto;aspect-ratio:4/3;width:100%;object-fit:cover;display:block;mix-blend-mode:multiply}
-.lf .mh{display:flex;justify-content:space-between;align-items:baseline;margin:6cqw 0 3cqw}
-.lf .mh b{font:800 8.4cqw/1 var(--f);letter-spacing:-.02em}
-.ar-on .lf .mh b{font:700 7.8cqw/1.2 var(--fa)}
-.lf .mh span{font:700 4.4cqw/1 var(--f);color:var(--terra)}
-.lf table{width:100%;flex:1;border-collapse:collapse;table-layout:fixed;font:600 3.8cqw/1 var(--f);text-align:center;mix-blend-mode:multiply}
-.ar-on .lf table{font-family:var(--fa)}
-.lf th{font-weight:700;font-size:2.9cqw;color:var(--soft);padding:0 0 2cqw}
-.lf .fri{color:var(--terra)}
-.turnbar{display:flex;justify-content:center;gap:8px;margin-top:32px}
-.tbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:0;cursor:pointer;--c:var(--paper);color:var(--ink);font:700 var(--fs-sm)/1 var(--f);filter:drop-shadow(0 4px 5px rgba(var(--rgb-20-18-14),.22))}
-.ar-on .tbtn{font-family:var(--fa)}
-button:disabled{cursor:not-allowed}
-.ink:disabled{background:var(--c-e9e0ce);color:var(--soft)}
-.tbtn:disabled{--c:var(--c-e9e0ce);color:var(--soft);cursor:not-allowed;filter:none}
-.ar-on .tbtn svg{transform:scaleX(-1)}
-@media(max-width:900px){.cal .wrap{grid-template-columns:minmax(0,1fr)}.wc{margin-top:32px;width:min(100%,340px)}}
+@media(max-width:900px){.cal .wrap{grid-template-columns:minmax(0,1fr)}.wc{margin-top:32px}}
 
 /* 3 · collections */
 .cards{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,3.4vw,48px);max-width:1120px;margin:0 auto;padding:var(--sec) clamp(16px,6vw,72px) 0}
@@ -345,20 +329,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   <div class="wrap">
     <div>
       <div class="year" dir="ltr" aria-hidden="true"><span class="paper" data-tear="5"><span class="fill"></span>2</span><span class="paper" data-tear="5"><span class="fill"></span>0</span><span class="paper" data-tear="5"><span class="fill"></span>2</span><span class="paper" data-tear="5"><span class="fill"></span>7</span></div>
-      <h2 class="big" id="cal-h" data-ar="تقويم 2027">The 2027 Calendar</h2>
-      <p class="lead" data-ar="اثنا عشر شهرًا، ولكل شهر لوحة من غزة.">Twelve months, and every month a painting from Gaza.</p>
+      <h2 class="big" id="cal-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h2>
+      <p class="lead" data-ar="تقويم 2027: لكل شهر قارورة رسمتها فرح، وجملة تبقى معكم.">The 2027 calendar: a bottle for every month, painted by Farah, and a line to keep.</p>
       <p class="season paper" data-tear="3"><span class="fill"></span><span id="seasonT"></span></p>
       <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوا التقويم إلى السلة">Add the calendar to bag</button></div>
       <ul class="mlist" id="mlist" aria-label="Months"></ul>
     </div>
     <div>
       <div class="wc" id="wc" aria-live="polite">
-        <img class="mock" src="assets/calmock2.webp" alt="">
+        <img class="mock" src="assets/binding.webp" alt="">
         <div class="sheets" id="sheets"></div>
       </div>
       <div class="turnbar">
-        <button class="tbtn paper" data-tear="3" type="button" id="tback"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="الشهر السابق">Previous month</span></button>
-        <button class="tbtn paper" data-tear="3" type="button" id="tnext"><span class="fill"></span><span data-ar="الشهر التالي">Next month</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="tbtn paper" data-tear="3" type="button" id="tback"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="الصفحة السابقة">Previous page</span></button>
+        <button class="tbtn paper" data-tear="3" type="button" id="tnext"><span class="fill"></span><span data-ar="الصفحة التالية">Next page</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </div>
@@ -442,24 +426,17 @@ document.getElementById('snext').onclick=()=>{go(si+1);restart()};document.getEl
 if(G&&!still)G.fromTo(sl.children[0].querySelector("img"),{scale:1.12},{scale:1,duration:7,ease:"none"});cap();restart();
 
 /* 2 · the wall calendar */
-const M=[['cal-01','January','كانون الثاني'],['cal-02','February','شباط'],['cal-03','March','آذار'],['cal-04','April','نيسان'],['cal-05','May','أيار'],['cal-06','June','حزيران'],
- ['cal-07','July','تموز'],['cal-08','August','آب'],['cal-09','September','أيلول'],['cal-10','October','تشرين الأول'],['cal-11','November','تشرين الثاني'],['cal-12','December','كانون الأول']];
+const M=[['c27-00','Cover','الغلاف',1],['c27-05','May','أيار',1],['c27-08','August','آب',2],['c27-09','September','أيلول',3],['c27-12','December','كانون الأول',0]];
 const SEASON=[['rain','Winter','الشتاء','#9FB1BF'],['bloom','Spring','الربيع','#B6C79A'],['seeds','Summer','الصيف','#E2BD63'],['leaves','Autumn','الخريف','#C88A5A']];
-const seasonOf=m=>m===11||m<2?0:m<5?1:m<8?2:3;
-const DAYS_EN=['Sat','Sun','Mon','Tue','Wed','Thu','Fri'],DAYS_AR=['سبت','أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة'];
 const wc=document.getElementById('wc'),sheets=document.getElementById('sheets'),calSec=document.getElementById('cal');let cm=0,busy=false;
-function dates(m){const first=new Date(2027,m,1).getDay(),off=(first+1)%7,n=new Date(2027,m+1,0).getDate(),D=AR?DAYS_AR:DAYS_EN;
-  let h=`<div class="mh"><b>${AR?M[m][2]:M[m][1]}</b><span dir="ltr">2027</span></div><table dir="${AR?'rtl':'ltr'}"><thead><tr>`+D.map((d,k)=>`<th${k===6?' class="fri"':''}>${d}</th>`).join('')+'</tr></thead><tbody>';
-  for(let day=1-off;day<=n;){h+='<tr>';for(let k=0;k<7;k++,day++)h+=`<td${k===6?' class="fri"':''}>${day>=1&&day<=n?day:''}</td>`;h+='</tr>'}return h+'</tbody></table>'}
-function buildPages(){sheets.innerHTML='';M.forEach((m,i)=>{const l=document.createElement('div');l.className='lf';l.dataset.i=i;
-  l.innerHTML=`<img class="art" src="assets/${m[0]}.webp" alt="${m[1]} 2027, watercolour by Farah Al-Helou" draggable="false">${dates(i)}`;sheets.append(l)});state()}
+function buildPages(){sheets.innerHTML='';M.forEach((m,i)=>{const l=document.createElement('img');l.className='lf';l.dataset.i=i;l.src=`assets/${m[0]}.webp`;l.alt=`${m[1]} 2027, Things kept in bottles, watercolours by Farah Al-Helou`;l.draggable=false;sheets.append(l)});state()}
 function state(){sheets.querySelectorAll('.lf').forEach(l=>l.classList.toggle('front',+l.dataset.i===cm));
-  const s=SEASON[seasonOf(cm)];calSec.style.setProperty('--season',s[3]);document.getElementById('seasonT').textContent=(AR?s[2]:s[1])+' · '+(AR?M[cm][2]:M[cm][1]);
-  document.getElementById('tback').disabled=cm===0;document.getElementById('tnext').disabled=cm===11;
+  const s=SEASON[M[cm][3]];calSec.style.setProperty('--season',s[3]);document.getElementById('seasonT').textContent=(AR?s[2]:s[1])+(AR?'، ':', ')+(AR?M[cm][2]:M[cm][1]);
+  document.getElementById('tback').disabled=cm===0;document.getElementById('tnext').disabled=cm===M.length-1;
   document.querySelectorAll('#mlist button').forEach((b,k)=>b.setAttribute('aria-current',k===cm));sky.set(s[0])}
-const mlist=document.getElementById('mlist');M.forEach((m,i)=>{const li=document.createElement('li');li.innerHTML=`<button type="button" class="mn">${m[1].slice(0,3)}</button>`;li.firstChild.onclick=()=>{cm=i;state()};mlist.append(li)});
-document.getElementById('tnext').onclick=()=>{if(cm<11){cm++;state()}};document.getElementById('tback').onclick=()=>{if(cm>0){cm--;state()}};
-M.forEach(m=>{const im=new Image();im.src=`assets/${m[0]}.webp`});
+const mlist=document.getElementById('mlist');M.forEach((m,i)=>{const li=document.createElement('li');li.innerHTML=`<button type="button" class="mn">${m[1]}</button>`;li.firstChild.onclick=()=>{cm=i;state()};mlist.append(li)});
+document.getElementById('tnext').onclick=()=>{if(cm<M.length-1){cm++;state()}};document.getElementById('tback').onclick=()=>{if(cm>0){cm--;state()}};
+sheets.addEventListener('click',()=>{cm=(cm+1)%M.length;state()});
 
 /* the season on the wall: rain in winter, blossom in spring, drifting seeds in summer, falling leaves in autumn.
    Drawn on one canvas; the pointer pushes them aside like a breath of wind. */
@@ -536,7 +513,7 @@ new ResizeObserver(draw).observe(document.body);addEventListener('load',draw);dr
 document.querySelectorAll('[data-ar]').forEach(e=>e.dataset.en=e.innerHTML);
 function setLang(a){AR=a;document.documentElement.lang=a?'ar':'en';document.documentElement.dir=a?'rtl':'ltr';document.body.classList.toggle('ar-on',a);
   document.querySelectorAll('[data-ar]').forEach(e=>e.innerHTML=a?e.dataset.ar:e.dataset.en);
-  mlist.querySelectorAll('.mn').forEach((s,i)=>s.textContent=a?M[i][2]:M[i][1].slice(0,3));buildPages();cap();
+  mlist.querySelectorAll('.mn').forEach((s,i)=>s.textContent=a?M[i][2]:M[i][1]);buildPages();cap();
   document.getElementById('lang').textContent=a?'EN':'ع';try{localStorage.mgLang=a?'ar':'en'}catch(e){};requestAnimationFrame(draw)}
 document.getElementById('lang').onclick=()=>setLang(!AR);try{if(localStorage.mgLang==='ar')setLang(true)}catch(e){}
 </script>
