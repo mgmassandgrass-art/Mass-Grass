@@ -40,7 +40,7 @@ dialog.view{border:0;padding:0;background:none;width:min(1100px,calc(100% - 28px
 dialog.view::backdrop{background:rgba(var(--ink-rgb),.55)}
 .view .sheetv{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(24px,3vw,44px);align-items:center;padding:clamp(24px,3vw,40px);--c:var(--paper);max-height:calc(100svh - 28px);overflow:auto}
 .view .big{display:grid;place-items:center;background:var(--c-efe9dd);padding:clamp(16px,2vw,28px);height:min(70svh,620px);container-type:size}
-.view .big>img{max-width:100%;max-height:100%;width:auto;height:auto;background:var(--paper-white);padding:3%;box-shadow:0 10px 22px -10px rgba(var(--ink-rgb),.45);cursor:zoom-in;transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.view .big>img{max-width:100cqw;max-height:100cqh;width:auto;height:auto;background:var(--paper-white);padding:3%;box-shadow:0 10px 22px -10px rgba(var(--ink-rgb),.45);cursor:zoom-in;transition:transform .35s cubic-bezier(.22,1,.36,1)}
 .view .big.zoom>img{transform:scale(2.6);cursor:zoom-out;box-shadow:none}
 .view .big[data-mode=wall]>img{visibility:hidden}
 .zbtn{position:absolute;inset-inline-end:12px;bottom:12px;z-index:3;width:44px;height:44px;border-radius:50%;border:0;background:var(--paper-white);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(var(--ink-rgb),.25)}
@@ -76,3 +76,12 @@ dialog.view::backdrop{background:rgba(var(--ink-rgb),.55)}
 .view .big .mk .scene{width:min(100cqw,calc(100cqh * var(--ar)))}
 .view .big .mk .scene img{max-width:none;max-height:none;filter:none}
 .view .big .mk .scene .room{width:100%;height:100%}
+.vleft{display:grid;gap:12px;min-width:0}
+.vthumbs{display:flex;gap:8px;flex-wrap:wrap}
+.vthumbs button{border:0;padding:0;background:none;cursor:pointer;border-radius:3px;outline-offset:2px}
+.vthumbs .th{position:relative;display:block;width:72px;height:72px;overflow:hidden;background:var(--c-efe9dd);box-shadow:0 0 0 1px rgba(var(--ink-rgb),.12);transition:box-shadow .2s}
+.vthumbs .th.art{display:grid;place-items:center;padding:8px}.vthumbs .th.art img{max-width:100%;max-height:100%;box-shadow:0 2px 4px rgba(var(--ink-rgb),.25)}
+.vthumbs .th.mk{opacity:1;position:relative;inset:auto;z-index:auto}
+.vthumbs button[aria-pressed=true] .th{box-shadow:0 0 0 2.5px var(--olive)}
+@media(hover:hover){.vthumbs button:hover .th{box-shadow:0 0 0 1.5px var(--ink)}}
+@media(max-width:820px){.vthumbs .th{width:60px;height:60px}}
