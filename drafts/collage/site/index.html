@@ -197,7 +197,7 @@ footer nav a{display:inline-block;padding:8px 2px}
 .cstory{position:relative;height:500vh}
 .cstage{position:sticky;top:var(--head,64px);height:calc(100svh - var(--head,64px));overflow:hidden;background:var(--c-f2ede4)}
 .cscenes{position:absolute;inset:0;overflow:hidden}
-.csc{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,opacity;opacity:0}
+.csc{position:absolute;left:0;top:0;transform-origin:0 0;opacity:0}
 .cedge{position:absolute;top:0;bottom:0;left:-40px;width:40px;z-index:5;pointer-events:none;opacity:0;background:linear-gradient(90deg,transparent,rgba(var(--ink-rgb),.14) 85%,rgba(var(--rgb-251-248-242),.5));will-change:transform}
 .csc img{position:absolute;display:block;max-width:none}
 .csc .room,.csc .top{inset:0;width:100%;height:100%}
@@ -488,7 +488,7 @@ const story=$c('cstory'),stillC=matchMedia('(prefers-reduced-motion: reduce)').m
    holds still, so the cut is invisible), and the camera pulls back out into the new room. */
 const SC=[['sc-wall',[.375,.2431,.25,.3312],2560,1440],['sc-desk',[.3113,.3187,.3445,.4257],2560,1440],['sc-hands',[.2484,.1875,.4977,.6319],2560,1440],['sc-studio',[.3521,.1921,.2979,.2858],2048,1536],['sc-wall',[.375,.2431,.25,.3312],2560,1440]];
 const holder=$c('cscenes'),els=SC.map((sc,i)=>{const d=document.createElement('div');d.className='csc';const b=sc[1];
-  d.innerHTML=`<img class="room" src="assets/${sc[0]}.webp" alt="" ${i?'fetchpriority="low"':''} decoding="async"><div class="pg" style="left:${b[0]*100}%;top:${b[1]*100}%;width:${b[2]*100}%;height:${b[3]*100}%"><img src="assets/${M[i][0]}.webp" alt="" decoding="async"><img class="sh" src="assets/${sc[0]}-shade.webp" alt=""></div><img class="top" src="assets/${sc[0]}-top.webp" alt="">`;
+  d.innerHTML=`<img class="room" src="assets/${sc[0]}.webp" alt="" ${i?'fetchpriority="low"':''} decoding="async"><div class="pg" style="left:${b[0]*100}%;top:${b[1]*100}%;width:${b[2]*100}%;height:${b[3]*100}%"><img src="assets/${M[i][0]}-hd.webp" alt="" decoding="async"><img class="sh" src="assets/${sc[0]}-shade.webp" alt=""></div><img class="top" src="assets/${sc[0]}-top.webp" alt="">`;
   holder.append(d);return d});
 /* a scene's transform for zoom z: 0 = the whole room filling the stage, 1 = the page filling the stage */
 function place(i,z){const sc=SC[i],[bx,by,bw,bh]=sc[1],W=holder.clientWidth,H=holder.clientHeight,fw=sc[2],fh=sc[3],port=W<H;
