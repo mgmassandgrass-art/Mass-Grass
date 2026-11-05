@@ -36,3 +36,7 @@ Its design system is `DESIGN.md` at the repo root.
   page lands on the same rect, and the next place sweeps in from the right. Each place has `sc-<name>.webp`,
   `sc-<name>-shade.webp` (multiply light of the blank page) and `sc-<name>-top.webp` (wire / fingers over the page).
   On phones the scene is a band at the top and the caption sits under it.
+- Canva's generated photos are about 1500 px wide. The rooms are upscaled 4x with Real-ESRGAN on the CPU
+  (`python3 upscale.py IN OUT 1600 900 3840 2160`, weights `RealESRGAN_x4plus.pth` from the Real-ESRGAN GitHub release
+  next to the script, `pip install torch`), then given a light film grain. Calendar pages for the home use
+  `c27-MM-hd.webp`, the full-page art taken straight out of the PDFs (`pdfimages -j`, 2382 px).
