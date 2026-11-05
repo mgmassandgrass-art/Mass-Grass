@@ -174,5 +174,5 @@ function tear(el,o){
   return {tear:async()=>{if(busy||el.classList.contains('cs-empty'))return;await prepare();await rip(1.5,3,4)},
     reset:()=>{i=0;el.classList.remove('cs-empty');setImg(s.cur,o.pages[0],o.alt&&o.alt[0]);s.cur.style.visibility='';scraps.classList.remove('on');o.onchange&&o.onchange(0,false)},get i(){return i},N};
 }
-window.MGCal={flip,tear};
+window.MGCal={flip,tear,sheet:makeSheet,baked};
 })();
