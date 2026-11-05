@@ -31,3 +31,8 @@ Its design system is `DESIGN.md` at the repo root.
 - Mockup photos (Canva, exported through page 46 of `DAHWgLZfDEc`): `c27-wall`, `c27-hands`, `pcp-window`, `pcp-table`.
 - `occluder.py assets/<scene>.webp x y ww wh` cuts the fingers / wire that sit over the blank card or page into
   `<scene>-top.webp` (keeps anything that is not the card's own tint and reaches the card's edge).
+- Home calendar scroll: the calendar travels wall → desk → hands → studio → wall (`SC` in `site/index.html`: photo,
+  page box as fractions, photo size). Between two places the camera dives until the page fills the stage; every scene's
+  page lands on the same rect, and the next place sweeps in from the right. Each place has `sc-<name>.webp`,
+  `sc-<name>-shade.webp` (multiply light of the blank page) and `sc-<name>-top.webp` (wire / fingers over the page).
+  On phones the scene is a band at the top and the caption sits under it.
