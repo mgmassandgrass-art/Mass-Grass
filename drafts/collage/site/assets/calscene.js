@@ -118,7 +118,11 @@ function makeSheet(gl,glc){
     gl.uniform1i(mode,1);attr(bSP,'p',3);attr(bSA,'a',1);gl.drawElements(gl.TRIANGLES,idx.length,gl.UNSIGNED_SHORT,0);gl.disable(gl.BLEND);
     gl.enable(gl.DEPTH_TEST);gl.bindBuffer(gl.ARRAY_BUFFER,bP);gl.bufferData(gl.ARRAY_BUFFER,P,gl.DYNAMIC_DRAW);gl.bindBuffer(gl.ARRAY_BUFFER,bN);gl.bufferData(gl.ARRAY_BUFFER,Nn,gl.DYNAMIC_DRAW);
     gl.uniform1i(mode,0);attr(bP,'p',3);attr(bN,'n',3);attr(bA,'a',1);gl.drawElements(gl.TRIANGLES,idx.length,gl.UNSIGNED_SHORT,0)}
-  return {size,load,draw};
+  /* where a point on the bottom edge (u across, 0..1) shows on screen for angle an, in page pixels */
+  function tip(an,u){const H=ph,ds=H/NY,r=pw*.012,half=Math.sin(clamp(an,0,2*Math.PI)/2),sag=-1.05*half;let y=-r*Math.sin(an/2),z=-r+r*Math.cos(an/2);
+    for(let i=0;i<NY;i++){const th=an+sag*Math.pow((i+.5)/NY,1.3);y+=Math.cos(th)*ds;z+=Math.sin(th)*ds}
+    const D=pw*DIST,E=ph*EYE,k=D/(D-z);return [pw*.5+(u*pw-pw*.5)*k,E+(y-E)*k,z]}
+  return {size,load,draw,tip};
 }
 
 /* ---------- tearing pages off ---------- */

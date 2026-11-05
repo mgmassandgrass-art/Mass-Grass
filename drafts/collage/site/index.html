@@ -200,7 +200,10 @@ footer nav a{display:inline-block;padding:8px 2px}
 .croom,.ctop{position:absolute;inset:0;width:100%;height:100%;display:block}
 .ctop{pointer-events:none;z-index:3}
 .cpage{position:absolute}
-.cpage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply}
+.cpage img.pp{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cpage::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(var(--ink-rgb),.06);pointer-events:none;z-index:1}
+.cpage .cshade2{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:multiply;opacity:.85;pointer-events:none;z-index:1}
+.chand{position:absolute;z-index:4;width:46%;height:auto;pointer-events:none;opacity:0;-webkit-mask-image:linear-gradient(to bottom,var(--ink) 62%,transparent 92%);mask-image:linear-gradient(to bottom,var(--ink) 62%,transparent 92%);transform-origin:93% 11%;filter:drop-shadow(-6px 10px 10px rgba(var(--ink-rgb),.28));will-change:transform,opacity}
 .cgl{position:absolute;display:none;pointer-events:none;z-index:2}.cgl.on{display:block}
 .cshade{position:absolute;inset:0;pointer-events:none;background:var(--tint,transparent);mix-blend-mode:soft-light;transition:background 1.2s ease}
 .ccap{position:absolute;inset-inline-start:clamp(16px,6vw,72px);bottom:clamp(24px,6vh,72px);width:min(440px,calc(100% - 32px));padding:clamp(20px,2.4vw,32px);background:rgba(var(--rgb-251-248-242),.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:3px;box-shadow:0 20px 40px -20px rgba(var(--ink-rgb),.5)}
@@ -473,7 +476,7 @@ const M=[['c27-00',['Cover','الغلاف'],['Things kept in bottles, watercolou
  ['c27-12',['December','كانون الأول'],['Every road we take is a way back to ourselves.','كل طريق نسلكه طريقُ عودةٍ إلى أنفسنا.'],'rgba(120,140,170,.45)']];
 const $c=id=>document.getElementById(id);let cm=-1;
 {const b=BOX['cs-room'],pg=$c('cpage');Object.assign(pg.style,{left:b[0]*100+'%',top:b[1]*100+'%',width:b[2]*100+'%',height:b[3]*100+'%'});
- pg.innerHTML=M.map((m,i)=>`<img src="assets/${m[0]}.webp" alt="" decoding="async" style="opacity:${i?0:1}">`).join('');
+ pg.innerHTML=M.map((m,i)=>`<img class="pp" src="assets/${m[0]}.webp" alt="" decoding="async" style="opacity:${i?0:1}">`).join('')+'<img class="cshade2" src="assets/cs-shade.webp" alt=""><img class="chand" id="chand" src="assets/hand.webp" alt="">';
 }
 const STORY=[['The cover: a heart kept in a bottle, flowers growing from it, and someone sitting on the cork to keep watch.','الغلاف: قلب محفوظ في قارورة تنبت منه الأزهار، وعلى الفلّينة من يجلس ليحرسه.'],
  ['A girl sits on a small green planet inside a bottle of night, with the stars only she can see.','فتاة تجلس على كوكب أخضر صغير داخل قارورة من ليل، ومعها نجوم لا يراها سواها.'],
@@ -508,16 +511,29 @@ $c('cdots').addEventListener('click',e=>{const b=e.target.closest('button');if(!
 const toMonth=i=>{const h=story.offsetHeight-innerHeight;scrollTo({top:story.getBoundingClientRect().top+scrollY+(.12+i/(M.length-1)*.86)*h,behavior:stillC?'auto':'smooth'})};
 $c('cmgrid').addEventListener('click',e=>{const b=e.target.closest('button.pg');if(b)toMonth(+b.dataset.i)});
 /* the page turns with the scroll: a WebGL sheet lifted over the wire, the next page under it */
-const pgEl=$c('cpage'),imgs=[...pgEl.querySelectorAll('img')],glc=document.createElement('canvas');glc.className='cgl';pgEl.append(glc);
+const pgEl=$c('cpage'),imgs=[...pgEl.querySelectorAll('img.pp')],hand=$c('chand'),shadeImg=pgEl.querySelector('.cshade2'),glc=document.createElement('canvas');glc.className='cgl';pgEl.append(glc);
 let gl=null;try{gl=glc.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:true,depth:true})}catch(e){}
 const sheet=gl&&!stillC?MGCal.sheet(gl,glc):null,roomImg=document.querySelector('.croom'),bakedC={};let loadedI=-1,sized='',want=0;
-async function texFor(i){if(bakedC[i])return bakedC[i];const w=Math.round(pgEl.offsetWidth*1.5),h=Math.round(pgEl.offsetHeight*1.5);await roomImg.decode().catch(()=>{});
-  bakedC[i]=[await MGCal.baked(roomImg,BOX['cs-room'],`assets/${M[i][0]}.webp`,w,h),await MGCal.baked(roomImg,BOX['cs-room'],null,w,h)];return bakedC[i]}
+const loadI=src=>new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.src=src});
+async function texFor(i){if(bakedC[i])return bakedC[i];const w=Math.round(pgEl.offsetWidth*1.6),h=Math.round(pgEl.offsetHeight*1.6);
+  const [pg,sh]=await Promise.all([loadI(`assets/${M[i][0]}.webp`),loadI('assets/cs-shade.webp')]);
+  const mk=front=>{const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
+    if(front)x.drawImage(pg,0,0,w,h);else{x.fillStyle='#F2ECE0';x.fillRect(0,0,w,h);x.globalAlpha=.06;x.drawImage(pg,0,0,w,h);x.globalAlpha=1}
+    x.globalCompositeOperation='multiply';x.globalAlpha=.85;x.drawImage(sh,0,0,w,h);return c};
+  bakedC[i]=[mk(true),mk(false)];return bakedC[i]}
+/* the hand: it reaches the bottom corner, lifts the page with it over the wire, and lets go once the page is past the top */
+function placeHand(ang,f){if(!sheet){hand.style.opacity=0;return}
+  const W=pgEl.offsetWidth,H=pgEl.offsetHeight,hw=hand.offsetWidth||W*.46,hh=hw*900/650,ax=hw*.93,ay=hh*.11;
+  let x,y,op,rot;
+  if(f<.1){const k=f/.1,e=1-Math.pow(1-k,3);x=W*.94+(1-e)*W*.35;y=H*.98+(1-e)*H*.55;op=Math.min(1,k*2.2);rot=-8+(1-e)*-14}
+  else{const p=sheet.tip(ang,.94);x=p[0];y=p[1];const out=Math.max(0,(ang-Math.PI*1.05)/(Math.PI*.3));op=Math.max(0,1-out);rot=-8+Math.min(1,ang/Math.PI)*28;x+=out*W*.25;y-=out*H*.2}
+  hand.style.opacity=op;hand.style.transform=`translate(${x-ax}px,${y-ay}px) rotate(${rot}deg)`;hand.style.left='0';hand.style.top='0'}
 async function turnTo(t){want=t;const N=M.length,i=Math.min(N-1,Math.floor(t)),f=t-i;
   const ang=f<.1?0:f>.9?2*Math.PI:(f-.1)/.8*2*Math.PI,turning=sheet&&ang>0&&ang<2*Math.PI&&i<N-1;
-  setText(f>.55&&i<N-1?i+1:i);
-  if(!turning){const k=ang>=2*Math.PI&&i<N-1?i+1:(sheet||f<.5?i:Math.min(N-1,i+1));imgs.forEach((im,j)=>im.style.opacity=j===k?1:0);glc.classList.remove('on');return}
-  const sz=pgEl.offsetWidth+'x'+pgEl.offsetHeight;if(sz!==sized){sized=sz;sheet.size(pgEl.offsetWidth,pgEl.offsetHeight)}
+  setText(f>.42&&i<N-1?i+1:i);
+  if(sheet&&i<N-1&&pgEl.offsetWidth+'x'+pgEl.offsetHeight!==sized){sized=pgEl.offsetWidth+'x'+pgEl.offsetHeight;sheet.size(pgEl.offsetWidth,pgEl.offsetHeight)}
+  if(i<N-1&&f>0&&f<.75)placeHand(ang,f);else hand.style.opacity=0;
+  if(!turning){const k=ang>=2*Math.PI&&i<N-1?i+1:(sheet||f<.5?i:Math.min(N-1,i+1));imgs.forEach((im,j)=>im.style.opacity=j===k?1:0);glc.classList.remove('on');shadeImg.style.opacity='';return}
   if(loadedI!==i){const tex=await texFor(i);if(want!==t)return;sheet.load(tex[0],tex[1]);loadedI=i}
   imgs.forEach((im,j)=>im.style.opacity=j===i+1?1:0);glc.classList.add('on');sheet.draw(ang)}
 buildPages();onScroll();
