@@ -162,10 +162,19 @@ footer nav a{display:inline-block;padding:8px 2px}
 .kb-cal{position:relative;padding-top:4.2%;perspective:1800px;rotate:.6deg}
 .kb-wire{position:absolute;left:3%;right:3%;width:94%;top:0;z-index:4;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(var(--ink-rgb),.3))}
 .kb-pages{position:relative;aspect-ratio:1820/1282;transform-style:preserve-3d}
-.kb-pages img{position:absolute;inset:0;width:100%;height:100%;display:block;transform-origin:50% 0;backface-visibility:hidden;box-shadow:0 1px 1px rgba(var(--ink-rgb),.12),0 26px 40px -22px rgba(var(--ink-rgb),.55);background:var(--paper)}
-.kb-pages img.up{transition:transform .9s cubic-bezier(.45,0,.2,1),opacity .2s .7s;transform:rotateX(178deg);opacity:0}
-.kb-pages img.down{transform:rotateX(178deg);opacity:0}
-.kb-pages img.drop{transition:transform .9s cubic-bezier(.45,0,.2,1),opacity .15s;transform:none;opacity:1}
+.kb-pages{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;outline:0}
+.kb-pages.held{cursor:grabbing}
+.kb-pages:focus-visible{outline:3px solid var(--indigo);outline-offset:6px}
+.leaf{position:absolute;inset:0;transform-origin:50% 0;transform-style:preserve-3d;will-change:transform}
+.leaf .f,.leaf .lt,.leaf .cs,.leaf .bk{position:absolute;inset:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.leaf .f{display:block;background:var(--paper);box-shadow:0 0 0 1px rgba(var(--ink-rgb),.05);pointer-events:none}
+.kb-pages::before{content:"";position:absolute;inset:0;box-shadow:0 1px 1px rgba(var(--ink-rgb),.12),0 26px 40px -22px rgba(var(--ink-rgb),.55)}
+/* light falls off the page as it lifts toward you, and the lifted page throws a shadow on the next one */
+.leaf .lt{pointer-events:none;background:linear-gradient(180deg,rgba(var(--rgb-255-255-255),.18),rgba(var(--rgb-20-18-14),.34));opacity:var(--lt,0)}
+.leaf .cs{pointer-events:none;background:linear-gradient(180deg,rgba(var(--rgb-20-18-14),.42),rgba(var(--rgb-20-18-14),.12) 45%,transparent 80%);opacity:var(--cs,0)}
+.leaf .bk{transform:rotateX(180deg);background:var(--c-efe9d9);box-shadow:inset 0 0 0 1px rgba(var(--ink-rgb),.06)}
+.leaf .bk::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(var(--rgb-20-18-14),.28),transparent 70%);opacity:var(--bl,0)}
+.kb-hero{overflow:visible;overflow-x:clip}
 .turnbar{display:flex;justify-content:center;align-items:center;gap:16px;margin-top:32px}
 .kb-at{min-width:72px;text-align:center;font:500 var(--fs-sm)/1 var(--f);color:var(--soft)}
 .ar-on .kb-at{font-family:var(--fa)}
@@ -174,7 +183,7 @@ footer nav a{display:inline-block;padding:8px 2px}
 .kb-shelf{padding:var(--sec) 0 calc(var(--sec) - 24px)}
 .kb-shd{display:flex;justify-content:space-between;align-items:end;gap:16px 40px;flex-wrap:wrap;margin-bottom:var(--gh)}
 .kb-shd p{margin:0;max-width:34ch;color:var(--soft)}
-.bottles{list-style:none;margin:0;padding:0 2%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(12px,2vw,32px);align-items:end;position:relative;z-index:1}
+.bottles{list-style:none;margin:0;padding:0 2%;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:clamp(12px,2vw,32px);align-items:end;position:relative;z-index:1}
 .bottle{display:flex;flex-direction:column;align-items:center;width:100%;border:0;padding:0;background:none;cursor:pointer;color:var(--ink);transition:transform .45s cubic-bezier(.22,1,.36,1)}
 .bottle .piece{--c:var(--paper-white);display:block;width:100%;padding:8% 6% 4%}
 .bottle .piece img{display:block;width:100%;height:auto;mix-blend-mode:multiply}
@@ -183,9 +192,26 @@ footer nav a{display:inline-block;padding:8px 2px}
 .bottle:nth-child(even) .tag{rotate:3deg}
 .bottle:nth-child(1) .piece{rotate:-1.5deg}.bottle:nth-child(2) .piece{rotate:1deg}.bottle:nth-child(3) .piece{rotate:-.6deg}.bottle:nth-child(4) .piece{rotate:1.4deg}.bottle:nth-child(5) .piece{rotate:-1deg}
 @media(hover:hover){.bottle:hover{transform:translateY(-10px)}}
+.bottle[aria-pressed=true]{transform:translateY(-14px)}
+.bottle[aria-pressed=true] .tag{--c:var(--olive);color:var(--paper-white)}
 .bottle:focus-visible{outline:3px solid var(--indigo);outline-offset:6px}
 .ledge{height:28px;margin-top:-8px;--c:var(--kraft);filter:drop-shadow(0 10px 10px rgba(var(--ink-rgb),.25))}
-/* at home: the page printed into real photographs */
+/* one page up close, with a loupe for the lettering and the days */
+.close{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:var(--col-gap);align-items:center;margin-top:clamp(48px,6vw,88px)}
+.cpage{position:relative;overflow:hidden;background:var(--paper-white);padding:clamp(8px,1vw,12px);rotate:-.6deg;box-shadow:0 2px 3px rgba(var(--ink-rgb),.12),0 30px 44px -26px rgba(var(--ink-rgb),.5)}
+.cpage img{display:block;width:100%;height:auto;aspect-ratio:2382/1677}
+.loupe{position:absolute;left:0;top:0;width:clamp(160px,16vw,240px);aspect-ratio:1;border-radius:50%;pointer-events:none;background-repeat:no-repeat;background-color:var(--paper);box-shadow:0 0 0 3px var(--paper-white),0 14px 30px -8px rgba(var(--ink-rgb),.55);opacity:0;transition:opacity .2s}
+.cpage.lens{cursor:none}.cpage.lens .loupe{opacity:1}
+.cseason{margin:0 0 4px;color:var(--soft);font-size:var(--fs-sm)}
+.cname{margin:0 0 16px;font:500 var(--fs-display)/.9 var(--hand,'Caveat',cursive);color:var(--c-2d4f7c)}
+.ar-on .cname{font:400 var(--fs-h2)/1.3 var(--handar,'Aref Ruqaa',serif)}
+.cquote{margin:0 0 24px;font:500 var(--fs-h4)/1.3 var(--hand,'Caveat',cursive);color:var(--c-3b3731);max-width:22ch}
+.ar-on .cquote{font:400 var(--fs-lead)/1.8 var(--handar,'Aref Ruqaa',serif)}
+.cfacts{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:8px;font-size:var(--fs-sm);color:var(--soft)}
+.cfacts li{padding-inline-start:20px;position:relative}
+.cfacts li::before{content:"";position:absolute;inset-inline-start:0;top:.6em;width:8px;height:8px;border-radius:2px;background:var(--olive);rotate:8deg}
+.cnav{display:flex;gap:8px;flex-wrap:wrap}
+/* at home: the page in four real rooms */
 .onwall{padding:var(--sec) 0}
 .owhd{display:flex;justify-content:space-between;align-items:end;gap:16px 24px;flex-wrap:wrap;margin-bottom:var(--gh)}
 .owhd h2.big{margin:0}
@@ -193,28 +219,26 @@ footer nav a{display:inline-block;padding:8px 2px}
 .mchips button{border:0;background:none;padding:8px 0;font:600 var(--fs-sm)/1 var(--f);color:var(--soft);cursor:pointer;border-bottom:1.5px solid transparent;min-height:44px}
 .ar-on .mchips button{font-family:var(--fa)}
 .mchips button[aria-pressed=true]{color:var(--ink);border-bottom-color:var(--olive)}
-.scenes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2vw,28px)}
-.scn{position:relative;overflow:hidden;margin:0;box-shadow:0 2px 3px rgba(var(--ink-rgb),.12),0 20px 30px -18px rgba(var(--ink-rgb),.4)}
-.scn img{display:block;width:100%;height:auto}
-.scn img.on{position:absolute;object-fit:cover;mix-blend-mode:multiply}
-.scn img.top{position:absolute;inset:0;height:100%}
-/* one page up close */
-dialog.view{border:0;padding:0;background:none;width:min(1100px,calc(100% - 28px));max-height:calc(100svh - 28px);overflow:visible;color:var(--ink)}
-dialog.view::backdrop{background:rgba(var(--ink-rgb),.55)}
-.view .sheetv{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(24px,3vw,44px);align-items:center;padding:clamp(24px,3vw,40px);--c:var(--paper);max-height:calc(100svh - 28px);overflow:auto}
-.vpage{width:100%;height:auto;display:block;box-shadow:0 18px 30px -16px rgba(var(--ink-rgb),.45)}
-.vseason{margin:0 0 8px;color:var(--soft);font-size:var(--fs-sm)}
-.view h2{margin:0 0 16px;font:800 var(--fs-title)/1.05 var(--f);letter-spacing:-.02em}
-.ar-on .view h2{font:700 var(--fs-h3)/1.3 var(--fa);letter-spacing:0}
-.vquote{margin:0 0 24px;font:500 var(--fs-h4)/1.35 var(--hand,'Caveat',cursive);color:var(--c-2d4f7c)}
-.ar-on .vquote{font:400 var(--fs-lead)/1.7 var(--handar,'Aref Ruqaa',serif)}
-.vnote{color:var(--soft);font-size:var(--fs-sm);margin:0 0 16px;max-width:36ch}
-.view .acts{display:flex;gap:12px;flex-wrap:wrap}
-.view .nav{display:flex;gap:8px;margin-top:24px}
-.view .x{position:absolute;top:-14px;inset-inline-end:-10px;z-index:3;width:48px;height:48px;border:0;cursor:pointer;--c:var(--ink);color:var(--paper);display:grid;place-items:center;filter:drop-shadow(0 4px 5px rgba(var(--rgb-20-18-14),.3))}
-@media(max-width:900px){.kb-hero .wrap{grid-template-columns:minmax(0,1fr)}.kb-hang{order:-1}.bottles{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:40px}.view .sheetv{grid-template-columns:minmax(0,1fr)}}
-@media(max-width:560px){.scenes{grid-template-columns:minmax(0,1fr)}.bottles{grid-template-columns:repeat(2,minmax(0,1fr))}.turnbar .tbtn span[data-ar]{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}}
-@media(prefers-reduced-motion:reduce){.kb-pages img.up,.kb-pages img.drop{transition:none}}
+.mchips button:focus-visible{outline:3px solid var(--indigo);outline-offset:4px}
+.scenes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--col-gap);align-items:start}
+.scn{margin:0}
+.scn.s0{grid-column:1/-1}
+.scn .ph{position:relative;overflow:hidden;box-shadow:0 2px 3px rgba(var(--ink-rgb),.12),0 24px 36px -22px rgba(var(--ink-rgb),.45)}
+.scn img{position:absolute;display:block;max-width:none}
+.scn .room,.scn .top{inset:0;width:100%;height:100%}
+.scn .top{z-index:3;pointer-events:none}
+.scn .pg{position:absolute;z-index:1;background:var(--c-efe9d9);overflow:hidden}
+.scn .pg img{inset:0;width:100%;height:100%;object-fit:contain}
+.scn .pg .sh{mix-blend-mode:multiply;opacity:.8;object-fit:fill}
+.scn figcaption{margin-top:12px;font-size:var(--fs-sm);color:var(--soft)}
+.buynote{align-self:center;--c:var(--paper-white);padding:clamp(28px,3vw,48px);rotate:1deg;filter:drop-shadow(0 14px 18px rgba(var(--ink-rgb),.2))}
+.buynote h3{margin:0 0 8px;font:800 var(--fs-h3)/1.1 var(--f);letter-spacing:-.02em}
+.ar-on .buynote h3{font:700 var(--fs-h3)/1.3 var(--fa);letter-spacing:0}
+.buynote p{margin:0 0 24px;color:var(--soft);max-width:30ch}
+@media(max-width:900px){.kb-hero .wrap{grid-template-columns:minmax(0,1fr)}.kb-hang{order:-1}.close{grid-template-columns:minmax(0,1fr)}
+  .bottles{grid-auto-columns:minmax(120px,1fr);overflow-x:auto;padding-bottom:16px;scroll-snap-type:x mandatory}.bottles li{scroll-snap-align:center}}
+@media(max-width:560px){.scenes{grid-template-columns:minmax(0,1fr)}.turnbar .tbtn span[data-ar],.cnav .tbtn span[data-ar]{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}}
+@media(prefers-reduced-motion:reduce){.bottle,.loupe{transition:none}}
 .tbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:0;cursor:pointer;--c:var(--cream);color:var(--ink);font:700 var(--fs-sm)/1 var(--f);filter:drop-shadow(0 4px 4px rgba(var(--rgb-20-18-14),.18))}
 .ar-on .tbtn{font-family:var(--fa)}
 .ar-on .tbtn svg{transform:scaleX(-1)}
@@ -276,10 +300,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
       <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
     </div>
     <div class="kb-hang">
-      <div class="kb-cal" id="kbcal" aria-live="polite"><img class="kb-wire" src="assets/binding.webp" alt=""><div class="kb-pages" id="kbpages"></div></div>
+      <div class="kb-cal" id="kbcal"><img class="kb-wire" src="assets/binding.webp" alt=""><div class="kb-pages" id="kbpages" aria-live="polite"></div></div>
       <div class="turnbar">
         <button class="tbtn paper" data-tear="3" type="button" id="tback"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="الصفحة السابقة">Previous page</span></button>
-        <span class="kb-at" id="kbat" aria-hidden="true"></span>
+        <span class="kb-at" id="kbat" dir="ltr" aria-hidden="true"></span>
         <button class="tbtn paper" data-tear="3" type="button" id="tnext"><span class="fill"></span><span data-ar="الصفحة التالية">Next page</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </div>
     </div>
@@ -288,35 +312,39 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 
 <section class="kb-shelf" aria-labelledby="sh-h">
   <div class="wrap">
-    <div class="kb-shd"><h2 class="big" id="sh-h" data-ar="ما في القوارير">What the bottles keep</h2><p data-ar="أربعة أشهر من اثني عشر. افتحوا قارورة لتروا صفحتها.">Four months of the twelve. Open a bottle to see its page.</p></div>
+    <div class="kb-shd"><h2 class="big" id="sh-h" data-ar="ما في القوارير">What the bottles keep</h2><p data-ar="لكل شهر قارورة وجملة.">A bottle and a line for every month.</p></div>
     <ul class="bottles" id="bottles"></ul>
     <div class="ledge paper" data-tear="4" aria-hidden="true"><span class="fill"></span></div>
+
+    <div class="close" id="close" aria-live="polite">
+      <div class="cpage" id="cpage"><img id="cimg" src="assets/c27-05-hd.webp" alt=""><span class="loupe" id="loupe" aria-hidden="true"></span></div>
+      <div class="cside">
+        <p class="cseason" id="cseason"></p>
+        <h3 class="cname" id="cname"></h3>
+        <p class="cquote" id="cquote"></p>
+        <ul class="cfacts">
+          <li data-ar="الأسبوع يبدأ يوم السبت، والجمعة بلون الشهر">Weeks start on Saturday; Fridays take the month’s colour</li>
+          <li data-ar="مساحة واسعة حول كل يوم للكتابة">Room around every day to write in</li>
+          <li data-ar="القارورة مرسومة بالألوان المائية على ورق">The bottle is painted in watercolour on paper</li>
+        </ul>
+        <div class="cnav">
+          <button class="tbtn paper" data-tear="3" type="button" id="cprev"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="الشهر السابق">Previous month</span></button>
+          <button class="tbtn paper" data-tear="3" type="button" id="cnext"><span class="fill"></span><span data-ar="الشهر التالي">Next month</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section class="onwall" aria-labelledby="ow-h">
   <div class="wrap">
-    <div class="owhd"><h2 class="big" id="ow-h" data-ar="في البيت">At home</h2><div class="mchips" id="mchips" aria-label="Pages"></div></div>
-    <div class="scenes" id="scenes"></div>
+    <div class="owhd"><h2 class="big" id="ow-h" data-ar="في البيت">At home</h2><div class="mchips" id="mchips" role="group" aria-label="Pages"></div></div>
+    <div class="scenes" id="scenes">
+      <div class="buynote paper" data-tear="5"><span class="fill"></span><h3 data-ar="التقويم كاملًا">The whole calendar</h3><p data-ar="12 شهرًا وغلاف، ملف PDF تطبعونه في البيت.">12 months and a cover, a PDF you print at home.</p><div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div></div>
+    </div>
   </div>
 </section>
 </main>
-
-<dialog class="view" id="view" aria-labelledby="v-h">
-  <button class="x paper" data-tear="3" type="button" id="vx" aria-label="Close"><span class="fill"></span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <div class="sheetv paper" data-tear="6"><span class="fill"></span>
-    <img class="vpage" id="vpage" src="assets/c27-00.webp" alt="">
-    <div class="vside">
-      <p class="vseason" id="vseason"></p>
-      <h2 id="v-h"></h2>
-      <p class="vquote" id="vquote"></p>
-      <p class="vnote" data-ar="هذه الصفحة من التقويم الكامل: 12 شهرًا وغلاف.">This page is part of the full calendar: 12 months and a cover.</p>
-      <div class="acts"><button class="ink" type="button" data-add="calendar" data-ar="أضيفوا التقويم إلى السلة">Add the calendar to bag</button></div>
-      <div class="nav"><button class="tbtn paper" data-tear="3" type="button" id="vprev"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="السابقة">Previous</span></button>
-        <button class="tbtn paper" data-tear="3" type="button" id="vnext"><span class="fill"></span><span data-ar="التالية">Next</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
-    </div>
-  </div>
-</dialog>
 
 <footer class="paper" data-tear-top="10"><span class="fill"></span>
   <div class="letter paper" data-tear="5"><span class="fill"></span>
@@ -338,7 +366,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 <script>
 let AR=false;let vi=0;
 const $=id=>document.getElementById(id),T=(en,ar)=>AR?ar:en;
-/* Things kept in bottles: the pages Farah has sent so far (cover and four months) */
+const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* Things kept in bottles: the pages Farah has sent so far. Add a month here once its PDF is in assets (c27-MM). */
 const P=[
  {k:'c27-00',n:['Cover','الغلاف'],s:['2027','2027'],q:['Things kept in bottles, watercolours by Farah Al-Helou.','أشياء نحفظها في قوارير، ألوان مائية لفرح الحلو.']},
  {k:'c27-05',n:['May','أيار'],s:['Spring 2027','ربيع 2027'],q:['We carry whole worlds no one else can see.','نحمل عوالم كاملة لا يراها أحد سوانا.']},
@@ -346,36 +375,72 @@ const P=[
  {k:'c27-09',n:['September','أيلول'],s:['Autumn 2027','خريف 2027'],q:['Even the sun bows; looking up is a choice.','حتى الشمس تنحني، والنظر إلى الأعلى اختيار.']},
  {k:'c27-12',n:['December','كانون الأول'],s:['Winter 2027','شتاء 2027'],q:['Every road we take is a way back to ourselves.','كل طريق نسلكه طريقُ عودةٍ إلى أنفسنا.']}];
 const nm=p=>AR?p.n[1]:p.n[0];
-/* 1 · the calendar on its wire */
-const pages=$('kbpages');let cur=0,busy=false;
-pages.innerHTML=P.map((p,i)=>`<img src="assets/${p.k}.webp" alt="" data-i="${i}" style="z-index:${P.length-i}"${i?' class="down"':''}>`).join('');
-const imgs=[...pages.querySelectorAll('img')];
+const label=p=>p===P[0]?T('Things kept in bottles','أشياء نحفظها في قوارير'):nm(p)+' 2027';
+
+/* 1 · the calendar on its wire: pull a page up and it swings over the binding */
+const pages=$('kbpages');let cur=0,anim=false;
+pages.innerHTML=P.map((p,i)=>`<div class="leaf" style="z-index:${P.length-i}"><img class="f" src="assets/${p.k}.webp" alt="" draggable="false"><span class="lt"></span><span class="cs"></span><span class="bk"></span></div>`).join('');
+const leaves=[...pages.children],A=P.map(()=>0);
+function paint(i){const a=A[i],L=leaves[i],r=a*Math.PI/180;
+  L.style.transform=a?`rotateX(${Math.min(a,180)}deg) rotateZ(${(Math.sin(r)*1.4).toFixed(2)}deg) scaleY(${(1-Math.sin(r)*.05).toFixed(3)})`:'';
+  L.style.opacity=a<=160?1:Math.max(0,1-(a-160)/18);L.style.visibility=a>=178?'hidden':'visible';
+  L.style.setProperty('--lt',Math.min(1,a/95).toFixed(3));L.style.setProperty('--bl',Math.max(0,(180-a)/90).toFixed(3));
+  const nx=leaves[i+1];if(nx)nx.style.setProperty('--cs',a>0&&a<178?(Math.pow(Math.sin(Math.min(r,Math.PI*.55)),.7)*(a<110?1:(178-a)/68)).toFixed(3):0)}
 function at(){$('kbat').textContent=`${cur+1} / ${P.length}`;$('tback').disabled=cur===0;$('tnext').disabled=cur===P.length-1;
-  imgs.forEach((im,i)=>im.alt=i===cur?`${nm(P[i])} 2027, ${T('page of the calendar','صفحة من التقويم')}`:'')}
-function turn(d){const n=cur+d;if(busy||n<0||n>=P.length)return;busy=true;
-  if(d>0){imgs[n].classList.remove('down');imgs[cur].classList.add('up')}
-  else{imgs[n].classList.remove('up');imgs[n].classList.add('down');imgs[n].style.zIndex=P.length+1;void imgs[n].offsetWidth;imgs[n].classList.remove('down');imgs[n].classList.add('drop')}
-  const was=cur;cur=n;at();setTimeout(()=>{if(d<0){imgs[n].classList.remove('drop');imgs[n].style.zIndex=P.length-n;imgs[was].classList.add('down')}busy=false},matchMedia('(prefers-reduced-motion: reduce)').matches?0:920)}
+  leaves.forEach((L,i)=>{L.querySelector('img').alt=i===cur?label(P[i]):'';L.setAttribute('aria-hidden',i!==cur)})}
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+function tween(i,to,ms,done){const from=A[i];anim=true;if(still||ms<=0){A[i]=to;paint(i);anim=false;done&&done();return}
+  const t0=performance.now();const step=now=>{const k=Math.min(1,(now-t0)/ms);A[i]=from+(to-from)*ease(k);paint(i);if(k<1)requestAnimationFrame(step);else{anim=false;done&&done()}};requestAnimationFrame(step)}
+const DUR=a=>Math.max(260,Math.abs(a)/180*950);
+function turn(d){if(anim)return;if(d>0&&cur<P.length-1){const i=cur;cur++;at();tween(i,180,DUR(180-A[i]))}
+  else if(d<0&&cur>0){const i=cur-1;cur--;at();tween(i,0,DUR(A[i]))}}
 $('tnext').onclick=()=>turn(1);$('tback').onclick=()=>turn(-1);
-pages.addEventListener('click',()=>cur<P.length-1?turn(1):null);
-/* 2 · the bottles */
-function bottles(){$('bottles').innerHTML=P.map((p,i)=>`<li><button type="button" class="bottle" data-i="${i}" aria-label="${nm(p)} 2027"><span class="piece paper" data-tear="5"><span class="fill"></span><img src="assets/${p.k}-b.webp" alt="" loading="lazy"></span><span class="tag paper" data-tear="2"><span class="fill"></span>${nm(p)}</span></button></li>`).join('')}
-$('bottles').addEventListener('click',e=>{const b=e.target.closest('.bottle');if(b)open_(+b.dataset.i)});
-/* 3 · at home: the page printed into real photographs (fingers and the wire come back on top) */
-const WS={"c27-wall":{"x":0.291,"y":0.1701,"ww":0.4154,"wh":0.3941,"clip":"0% 0%,99.84% 0%,100% 100%,0% 100%"},"c27-hands":{"x":0.1641,"y":0.1953,"ww":0.6738,"wh":0.6016,"clip":"0% 0%,100% 0%,100% 99.13%,0% 100%"}};
-let cm=0;
-function scenes(){$('scenes').innerHTML=Object.entries(WS).map(([k,s])=>`<figure class="scn"><img src="assets/${k}.webp" alt="${T('The calendar at home','التقويم في البيت')}"><img class="on" src="assets/${P[cm].k}.webp" alt="" style="left:${s.x*100}%;top:${s.y*100}%;width:${s.ww*100}%;height:${s.wh*100}%;clip-path:polygon(${s.clip})"><img class="top" src="assets/${k}-top.webp" alt=""></figure>`).join('')}
-function chips(){$('mchips').innerHTML=P.map((p,i)=>`<button type="button" aria-pressed="${i===cm}" data-i="${i}">${nm(p)}</button>`).join('')}
-$('mchips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cm=+b.dataset.i;chips();scenes()});
-/* one page up close */
-const view=$('view');
-function open_(i){vi=(i+P.length)%P.length;const p=P[vi];$('vpage').src=`assets/${p.k}.webp`;$('vpage').alt=`${nm(p)} 2027, ${T('page of the calendar','صفحة من التقويم')}`;
-  $('v-h').textContent=vi?nm(p)+' 2027':T('Things kept in bottles','أشياء نحفظها في قوارير');$('vseason').textContent=AR?p.s[1]:p.s[0];$('vquote').textContent=AR?p.q[1]:p.q[0];
-  if(!view.open){view.showModal();requestAnimationFrame(()=>typeof draw==='function'&&draw())}}
-$('vnext').onclick=()=>open_(vi+1);$('vprev').onclick=()=>open_(vi-1);$('vx').onclick=()=>view.close();
-view.addEventListener('click',e=>{if(e.target===view)view.close()});
-addEventListener('keydown',e=>{if(view.open){if(e.key==='ArrowRight')open_(vi+(AR?-1:1));if(e.key==='ArrowLeft')open_(vi-(AR?-1:1))}});
-function render(){bottles();chips();scenes();at();if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}}
+let drag=null;
+pages.addEventListener('pointerdown',e=>{if(anim||e.button>0)return;drag={y:e.clientY,h:pages.clientHeight,dir:0,i:null,v:0,ly:e.clientY,lt:e.timeStamp};pages.setPointerCapture(e.pointerId);pages.classList.add('held')});
+pages.addEventListener('pointermove',e=>{if(!drag)return;const dy=drag.y-e.clientY;
+  const dt=Math.max(1,e.timeStamp-drag.lt);drag.v=drag.v*.6+((drag.ly-e.clientY)/dt)*.4;drag.ly=e.clientY;drag.lt=e.timeStamp;
+  if(!drag.dir&&Math.abs(dy)>6){drag.dir=dy>0?1:-1;drag.i=drag.dir>0?(cur<P.length-1?cur:null):(cur>0?cur-1:null)}
+  if(drag.i==null)return;/* the page's bottom edge follows the finger */
+  const ed=Math.max(-1,Math.min(1,(drag.dir>0?drag.h-dy*1.1:-drag.h-dy*1.1)/drag.h));
+  A[drag.i]=Math.min(176,Math.acos(ed)*180/Math.PI);paint(drag.i)});
+function release(){if(!drag)return;const d=drag;drag=null;pages.classList.remove('held');
+  if(!d.dir){if(cur<P.length-1)turn(1);return}if(d.i==null)return;const a=A[d.i];
+  if(d.dir>0){if(a>70||d.v>.45){cur=d.i+1;at();tween(d.i,180,DUR(180-a))}else tween(d.i,0,DUR(a)*.7)}
+  else{if(a<110||d.v<-.45){cur=d.i;at();tween(d.i,0,DUR(a))}else tween(d.i,180,DUR(180-a)*.7)}}
+pages.addEventListener('pointerup',release);pages.addEventListener('pointercancel',release);
+pages.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key==='PageDown'){e.preventDefault();turn(1)}if(e.key==='ArrowDown'||e.key==='PageUp'){e.preventDefault();turn(-1)}});
+
+/* 2 · the bottles on their shelf choose the page shown up close */
+let sel=1;
+function bottles(){$('bottles').innerHTML=P.map((p,i)=>`<li><button type="button" class="bottle" data-i="${i}" aria-pressed="${i===sel}" aria-label="${nm(p)} 2027"><span class="piece paper" data-tear="5"><span class="fill"></span><img src="assets/${p.k}-b.webp" alt="" loading="lazy"></span><span class="tag paper" data-tear="2"><span class="fill"></span>${nm(p)}</span></button></li>`).join('')}
+$('bottles').addEventListener('click',e=>{const b=e.target.closest('.bottle');if(b)pick(+b.dataset.i,true)});
+function closeup(){const p=P[sel];const im=$('cimg');if(!im.src.endsWith(p.k+'-hd.webp'))im.src=`assets/${p.k}-hd.webp`;
+  im.alt=label(p)+', '+T('page of the calendar','صفحة من التقويم');$('loupe').style.backgroundImage=`url(assets/${p.k}-hd.webp)`;
+  $('cseason').textContent=AR?p.s[1]:p.s[0];$('cname').textContent=sel?nm(p):T('The cover','الغلاف');$('cquote').textContent=AR?p.q[1]:p.q[0]}
+function pick(i,scroll){sel=(i+P.length)%P.length;document.querySelectorAll('.bottle').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===sel));closeup();chips();scenes();
+  if(scroll){const r=$('close').getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)$('close').scrollIntoView({behavior:still?'auto':'smooth',block:'center'})}}
+$('cnext').onclick=()=>pick(sel+1);$('cprev').onclick=()=>pick(sel-1);
+/* a loupe over the page, for the lettering and the days */
+const cp=$('cpage'),lp=$('loupe');
+if(matchMedia('(hover:hover) and (pointer:fine)').matches){
+  cp.addEventListener('pointermove',e=>{const r=cp.getBoundingClientRect(),q=$('cimg').getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,ix=e.clientX-q.left,iy=e.clientY-q.top,Z=2.6;
+    lp.style.backgroundSize=`${q.width*Z}px ${q.height*Z}px`;lp.style.backgroundPosition=`${-(ix*Z-lp.offsetWidth/2)}px ${-(iy*Z-lp.offsetHeight/2)}px`;
+    lp.style.transform=`translate(${x-lp.offsetWidth/2}px,${y-lp.offsetHeight/2}px)`;cp.classList.add('lens')});
+  cp.addEventListener('pointerleave',()=>cp.classList.remove('lens'))}
+
+/* 3 · at home: the page in four rooms (light from the room multiplied over it, the wire and fingers back on top) */
+const SC=[['sc-wall',[.375,.2431,.25,.3312],2560,1440,['On the wall','على الحائط']],['sc-hands',[.2484,.1875,.4977,.6319],2560,1440,['In the hands','بين اليدين']],['sc-desk',[.3113,.3187,.3445,.4257],2560,1440,['On the desk','على المكتب']],['sc-studio',[.3521,.1921,.2979,.2858],2048,1536,['In the studio','في المرسم']]];
+let built=false;
+function scenes(){const p=P[sel];
+  if(!built){built=true;$('scenes').insertAdjacentHTML('afterbegin',SC.map(([k,b,w,h],i)=>`<figure class="scn s${i}"><div class="ph" style="aspect-ratio:${w}/${h}"><img class="room" src="assets/${k}.webp" alt="" loading="lazy" decoding="async"><div class="pg" style="left:${b[0]*100}%;top:${b[1]*100}%;width:${b[2]*100}%;height:${b[3]*100}%"><img class="on" src="assets/${p.k}-hd.webp" alt="" loading="lazy" decoding="async"><img class="sh" src="assets/${k}-shade.webp" alt=""></div><img class="top" src="assets/${k}-top.webp" alt="" loading="lazy"></div><figcaption></figcaption></figure>`).join(''))}
+  $('scenes').querySelectorAll('.scn').forEach((f,i)=>{const im=f.querySelector('img.on');if(!im.src.endsWith(p.k+'-hd.webp'))im.src=`assets/${p.k}-hd.webp`;
+    f.querySelector('.room').alt=T(SC[i][4][0],SC[i][4][1])+', '+label(p);f.querySelector('figcaption').textContent=T(SC[i][4][0],SC[i][4][1])})}
+function chips(){$('mchips').innerHTML=P.map((p,i)=>`<button type="button" aria-pressed="${i===sel}" data-i="${i}">${nm(p)}</button>`).join('')}
+$('mchips').addEventListener('click',e=>{const b=e.target.closest('button');if(b)pick(+b.dataset.i)});
+/* the shared footer script asks for these */
+const view={open:false};function open_(i){pick(i,true)}
+function render(){bottles();chips();scenes();closeup();at();leaves.forEach((_,i)=>paint(i));
+  if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}}
 /* newsletter: posts to the shop's /api/subscribe; it only says thank you once the server has the address */
 document.getElementById('nl').onsubmit=async e=>{e.preventDefault();const v=document.getElementById('nl-mail'),ok=document.getElementById('nl-ok');
  if(!(v.validity.valid&&v.value)){ok.textContent=AR?'اكتبوا بريدًا إلكترونيًا صحيحًا، مثل name@mail.com':'Please enter a valid email, like name@mail.com';return}
