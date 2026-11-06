@@ -1,30 +1,31 @@
 /* Things kept in bottles: the 2027 calendar, A5 landscape pages on a wire */
 :root{--hand:'Caveat',cursive;--handar:'Aref Ruqaa',serif}
-/* the calendar travels through four rooms as you scroll (the same scenes as the home page) */
-.cstory{position:relative;height:500vh}
-.cstage{position:sticky;top:var(--head,64px);height:calc(100svh - var(--head,64px));overflow:hidden;background:var(--c-f2ede4)}
-.cscenes{position:absolute;inset:0;overflow:hidden}
-.csc{position:absolute;left:0;top:0;transform-origin:0 0;opacity:0}
-.cedge{position:absolute;top:0;bottom:0;left:-40px;width:40px;z-index:5;pointer-events:none;opacity:0;background:linear-gradient(90deg,transparent,rgba(var(--ink-rgb),.14) 85%,rgba(var(--rgb-251-248-242),.5));will-change:transform}
-.csc img{position:absolute;display:block;max-width:none}
-.csc .room,.csc .top{inset:0;width:100%;height:100%}
-.csc .top{z-index:3;pointer-events:none}
-.csc .pg{position:absolute;z-index:1;background:var(--c-efe9d9);overflow:hidden}
-.csc .pg img{inset:0;width:100%;height:100%;object-fit:contain}
-.csc .pg .sh{mix-blend-mode:multiply;opacity:.8;object-fit:fill}
-.ccap{z-index:6;transition:opacity .25s,transform .25s;position:absolute;inset-inline-start:clamp(16px,6vw,72px);bottom:clamp(24px,6vh,72px);width:min(400px,calc(100% - 32px));padding:clamp(20px,2.4vw,32px);background:rgba(var(--rgb-251-248-242),.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:3px;box-shadow:0 20px 40px -20px rgba(var(--ink-rgb),.5)}
-.ceyebrow{margin:0 0 8px;font:500 var(--fs-sm)/1 var(--f);color:var(--olive)}
-.ccap h1.big{margin:0;font-size:var(--fs-title)}
-.cline{margin:16px 0 24px;min-height:3em;font:500 var(--fs-h4)/1.4 var(--hand,'Caveat',cursive);color:var(--c-2d4f7c);transition:opacity .5s}
-.ar-on .cline{font:400 var(--fs-lead)/1.7 var(--handar,'Aref Ruqaa',serif)}
-.ccap .buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.ccap .buy b{font:800 var(--fs-figure)/1 var(--f)}
-.cdots{z-index:6;position:absolute;inset-inline-end:clamp(16px,3vw,40px);top:50%;translate:0 -50%;list-style:none;margin:0;padding:0;display:grid;gap:12px}
-.cdots button{display:flex;align-items:center;gap:12px;flex-direction:row-reverse;border:0;background:none;padding:4px 0;min-height:32px;color:var(--ink);font:500 var(--fs-caption)/1 var(--f);cursor:pointer;opacity:.45}
-.ar-on .cdots button{font-family:var(--fa)}
-.cdots button i{width:10px;height:10px;border-radius:50%;border:1.5px solid currentColor;transition:background .3s}
-.cdots button[aria-current=true]{opacity:1}.cdots button[aria-current=true] i{background:currentColor}
-@media(max-width:900px) and (orientation:portrait){.cscenes{bottom:auto;height:min(64%,calc(100vw * .9 + 120px))}}
-@media(max-width:900px){.cstory{height:420vh}.cdots{display:none}.ccap{bottom:16px;inset-inline:16px;width:auto;padding:16px}.ccap h1.big{font-size:var(--fs-h3)}.cline{margin:8px 0 16px;min-height:0}}
+/* the calendar at home: four photographs laid one over the other as you scroll, like prints on a table */
+.rooms{position:relative;background:var(--ink)}
+.room{position:sticky;top:var(--head,64px);height:calc(100svh - var(--head,64px));margin:0;overflow:hidden;background:var(--c-e9e1d2)}
+.room+.room{box-shadow:0 -24px 40px -20px rgba(var(--rgb-20-18-14),.45)}
+.rimg{position:absolute;inset:0;transform-origin:50% 40%}
+.rimg img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:50% 45%}
+.rimg::after{content:"";position:absolute;inset:0;background:var(--ink);opacity:var(--dim,0);pointer-events:none}
+.rcap{position:absolute;inset-inline-start:var(--gh);bottom:clamp(24px,6vh,64px);width:min(340px,calc(100% - 2 * var(--gh)));padding:clamp(20px,2.4vw,32px);background:var(--paper);color:var(--ink);box-shadow:0 18px 36px -18px rgba(var(--rgb-20-18-14),.45)}
+.rcap h1{margin:0 0 12px;font:800 var(--fs-title)/1.02 var(--f);letter-spacing:-.025em;text-wrap:balance}
+.ar-on .rcap h1{font:700 var(--fs-h3)/1.35 var(--fa);letter-spacing:0}
+.rlead{margin:0 0 20px;font-size:var(--fs-body);line-height:1.5}
+.rcap .buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.rcap .buy b{font:800 var(--fs-figure)/1 var(--f)}
+.rplace{margin:0 0 4px;font-size:var(--fs-sm);color:var(--soft)}
+.rmonth{margin:0;font:500 var(--fs-h2)/1 var(--hand,'Caveat',cursive);color:var(--c-2d4f7c)}
+.ar-on .rmonth{font:400 var(--fs-h3)/1.5 var(--handar,'Aref Ruqaa',serif)}
+.rline{margin:8px 0 0;font:500 var(--fs-lead)/1.35 var(--hand,'Caveat',cursive);color:var(--c-3b3731)}
+.ar-on .rline{font:400 var(--fs-body)/1.8 var(--handar,'Aref Ruqaa',serif)}
+.js .rcap>*{transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.js .room:not(.in) .rcap>*{opacity:0;transform:translateY(16px)}
+.js .room .rcap>:nth-child(2){transition-delay:.07s}.js .room .rcap>:nth-child(3){transition-delay:.14s}
+@media(max-width:900px) and (orientation:portrait){
+  .room{display:grid;grid-template-rows:auto minmax(0,1fr);background:var(--paper)}
+  .rimg{position:relative;inset:auto;aspect-ratio:1;overflow:hidden}
+  .rcap{position:relative;inset:auto;width:auto;margin:0;padding:24px var(--gh);box-shadow:none;background:none}
+  .r0 .rimg img{object-position:50% 40%}.r1 .rimg img{object-position:50% 50%}.r2 .rimg img{object-position:50% 50%}.r3 .rimg img{object-position:50% 25%}}
+@media(prefers-reduced-motion:reduce){.js .room:not(.in) .rcap>*{opacity:1;transform:none}}
 .tbtn:disabled{--c:var(--c-e9e0ce);color:var(--soft);cursor:not-allowed;filter:none}
 /* the bottles, torn out of their pages and stood on a strip of kraft */
 .kb-shelf{padding:var(--sec) 0}
