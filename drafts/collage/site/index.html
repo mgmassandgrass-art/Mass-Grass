@@ -483,12 +483,13 @@ const HAVE={4:1,7:2,8:3,11:4};
 const card=(i,n)=>`<li class="cmit"><button class="pg" type="button" data-i="${i}" aria-label="${n}"><img src="assets/${M[i][0]}.webp" alt="" loading="lazy"></button><h3>${n}<small>2027</small></h3><p class="q">${AR?M[i][2][1]:M[i][2][0]}</p><p class="st">${AR?STORY[i][1]:STORY[i][0]}</p></li>`;
 function months(){$c('cmgrid').innerHTML=card(0,AR?'الغلاف':'The cover')+ALLM.map((n,mi)=>HAVE[mi]==null?`<li class="cmit later"><div class="pg">${AR?'قريبًا':'Coming soon'}</div><h3>${AR?n[1]:n[0]}<small>2027</small></h3></li>`:card(HAVE[mi],AR?n[1]:n[0])).join('')}
 const story=$c('cstory'),stillC=matchMedia('(prefers-reduced-motion: reduce)').matches;
-/* the calendar travels: on a wall, on a desk, in someone's hands, in a studio, and home again.
+/* the calendar travels: on a wall, on a desk, in someone's hands, on a table, and home again.
    Between two places the camera dives into the page until it fills the screen, the place changes behind it (the page
    holds still, so the cut is invisible), and the camera pulls back out into the new room. */
-const SC=[['sc-wall',[.375,.2431,.25,.3312],2560,1440],['sc-desk',[.3113,.3187,.3445,.4257],2560,1440],['sc-hands',[.2484,.1875,.4977,.6319],2560,1440],['sc-studio',[.3521,.1921,.2979,.2858],2048,1536],['sc-wall',[.375,.2431,.25,.3312],2560,1440]];
-const holder=$c('cscenes'),els=SC.map((sc,i)=>{const d=document.createElement('div');d.className='csc';const b=sc[1];
-  d.innerHTML=`<img class="room" src="assets/${sc[0]}.webp" alt="" ${i?'fetchpriority="low"':''} decoding="async"><div class="pg" style="left:${b[0]*100}%;top:${b[1]*100}%;width:${b[2]*100}%;height:${b[3]*100}%"><img src="assets/${M[i][0]}-hd.webp" alt="" decoding="async"><img class="sh" src="assets/${sc[0]}-shade.webp" alt=""></div><img class="top" src="assets/${sc[0]}-top.webp" alt="">`;
+const SC=[['cr2-wall',[.2995,.2569,.4017,.463],3072,1728],['cr2-desk',[.3333,.3183,.3379,.3947],3072,1728],['cr2-hands',[.2812,.2106,.4362,.4954],3072,1728],['cr2-flat',[.3066,.2743,.3848,.4421],3072,1728],['cr2-wall-12',[.2995,.2569,.4017,.463],3072,1728]];
+/* each photograph already carries its page (baked in with the room's light), so a scene is one image */
+const holder=$c('cscenes'),els=SC.map((sc,i)=>{const d=document.createElement('div');d.className='csc';
+  d.innerHTML=`<img class="room" src="assets/${sc[0]}.webp" alt="" ${i?'fetchpriority="low"':''} decoding="async">`;
   holder.append(d);return d});
 /* a scene's transform for zoom z: 0 = the whole room filling the stage, 1 = the page filling the stage */
 function place(i,z){const sc=SC[i],[bx,by,bw,bh]=sc[1],W=holder.clientWidth,H=holder.clientHeight,fw=sc[2],fh=sc[3],port=W<H;
