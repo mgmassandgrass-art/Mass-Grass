@@ -76,7 +76,7 @@
 .cbuy{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 24px}.cbuy b{font:800 var(--fs-figure)/1 var(--f)}
 /* the calendar stays centred and whole: each photo is framed on its page (--fx/--fy) and drifts in slowly, like the home page */
 .slide{--fx:50%;--fy:45%}
-.slide.s0{--fy:41%}.slide.s1{--fy:53%}.slide.s2{--fy:47%}.slide.s3{--fy:28%}
+.slide.s0{--fy:49%}.slide.s1{--fy:55%}.slide.s2{--fy:46%}.slide.s3{--fy:50%}
 .slide img{object-position:var(--fx) var(--fy);transform-origin:var(--fx) var(--fy)}
 .slide.on img{animation:drift 7s linear both}
 @keyframes drift{from{transform:scale(1.08)}to{transform:scale(1)}}
@@ -86,7 +86,7 @@
   .show .card-h h1{font-size:var(--fs-h3)}.show .card-h p{font-size:var(--fs-body);margin-bottom:20px}
   .cap{right:32px;bottom:80px}.ar-on .cap{left:32px}.cap .lbl{min-width:0}}
 /* narrower screens: the photo on top, framed so the whole page shows, and the card under it */
-@media(max-width:1279px){.show{--sh:min(calc(100vw * 1.1),70svh);height:auto;min-height:0;max-height:none;padding-top:calc(var(--sh) - 4px);background:var(--cream)}
+@media(max-width:1279px){.show{--sh:min(calc(100vw * .95),70svh);height:auto;min-height:0;max-height:none;padding-top:calc(var(--sh) - 4px);background:var(--cream)}
   .slide{bottom:auto;height:var(--sh)}
   .show .card-h{position:relative;left:auto!important;right:auto!important;bottom:auto;margin:-24px 16px 24px;width:auto;max-width:560px}
   .cap{top:calc(var(--sh) - 76px);bottom:auto;right:14px}.ar-on .cap{left:14px}.cap .lbl{min-width:0}

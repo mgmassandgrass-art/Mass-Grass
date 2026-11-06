@@ -12,7 +12,7 @@ const nm=p=>AR?p.n[1]:p.n[0];
 const label=p=>p===P[0]?T('Things kept in bottles','أشياء نحفظها في قوارير'):nm(p)+' 2027';
 
 /* 1 · the calendar at home: one photograph at a time, arrows and dots, changes every 6s; a plain cut, no transition */
-const S=[['cr-wall',['On the wall','على الحائط'],1],['cr-hands',['In the hands','بين اليدين'],2],['cr-desk',['On the painting desk','على طاولة الرسم'],3],['cr-kitchen',['In the kitchen','في المطبخ'],4]];
+const S=[['cr2-wall',['On the wall','على الحائط']],['cr2-desk',['On the desk','على المكتب']],['cr2-hands',['In the hands','بين اليدين']],['cr2-flat',['On the table','على الطاولة']]];
 const PGI=[0,1,2,3];
 const sl=$('slides'),dots=$('dots');let si=0,stimer=null;
 S.forEach((s,i)=>{const d=document.createElement('div');d.className='slide s'+i+(i?'':' on');d.innerHTML=`<img src="assets/${s[0]}.webp" alt="" ${i?'loading="lazy"':'fetchpriority="high"'} decoding="async">`;sl.append(d);
