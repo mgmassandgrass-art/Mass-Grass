@@ -28,9 +28,9 @@ Its design system is `DESIGN.md` at the repo root.
   (`00` is the cover). `c27-MM-b.webp` is the bottle torn out of each page for the shelf.
 - Only the cover, May, August, September and December exist so far; add the others to `P` in `parts/ca_js.txt` and to `M`
   in the home calendar (`site/index.html`).
-- Calendar page: the hero pages turn by dragging (the page's bottom edge follows the pointer, `acos`, then it
-  completes past 70° or on a flick); the bottles choose the page shown up close (with a loupe on fine pointers) and the
-  page shown in the four rooms (`SC` in `parts/ca_js.txt`, the same photos as the home calendar).
+- Calendar page: the first section is the same travelling scroll as the home calendar (wall → hands → desk → studio → wall,
+  `SC` in `parts/ca_js.txt`, a different page in each room); then the bottles choose the page shown up close (loupe on
+  fine pointers).
 - Mockup photos (Canva, exported through page 46 of `DAHWgLZfDEc`): `c27-wall`, `c27-hands`, `pcp-window`, `pcp-table`.
 - `occluder.py assets/<scene>.webp x y ww wh` cuts the fingers / wire that sit over the blank card or page into
   `<scene>-top.webp` (keeps anything that is not the card's own tint and reaches the card's edge).

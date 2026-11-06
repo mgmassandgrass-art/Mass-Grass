@@ -500,6 +500,7 @@ function place(i,z){const sc=SC[i],[bx,by,bw,bh]=sc[1],W=holder.clientWidth,H=ho
   const ax=W*(port?.5:.5+.08*(1-z)),ay=H*(port?.42:.5);
   const tx=Math.min(0,Math.max(W-fw*s,ax-pcx*s)),ty=Math.min(0,Math.max(H-fh*s,ay-pcy*s));
   els[i].style.width=fw+'px';els[i].style.height=fh+'px';els[i].style.transform=`translate(${tx}px,${ty}px) scale(${s})`;return {tx,s}}
+addEventListener('load',()=>holder.querySelectorAll('img').forEach(im=>im.decode&&im.decode().catch(()=>{})));
 const sm=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
 const capEl=$c('ccap');const edge=document.createElement('div');edge.className='cedge';holder.appendChild(edge);
 let lastT=-1;
@@ -515,7 +516,7 @@ function onScroll(){const r=story.getBoundingClientRect(),h=story.offsetHeight-i
   const W=holder.clientWidth,X=W*(1-cut);
   if(stillC){b.style.opacity=cut;b.style.clipPath='none'}else{b.style.opacity=cut>0?1:0;b.style.clipPath=cut>=1?'none':`inset(0 0 0 ${Math.max(0,(X-pb.tx)/pb.s)}px)`}
   edge.style.opacity=!stillC&&cut>0&&cut<1?1:0;edge.style.transform=`translateX(${X}px)`;
-  const zz=Math.max(zin,zout*cut);const band=holder.clientHeight<capEl.offsetTop;capEl.style.opacity=stillC||band?1:Math.max(0,1-zz*2.2);capEl.style.transform=`translateY(${(stillC||band?0:Math.min(1,zz*2.2))*16}px)`;
+  const zz=(1-cut)*zin+cut*zout;const band=holder.clientHeight<capEl.offsetTop;capEl.style.opacity=stillC||band?1:Math.max(0,1-zz*2.2);capEl.style.transform=`translateY(${(stillC||band?0:Math.min(1,zz*2.2))*16}px)`;
   setText(u>.5?i+1:i)}
 addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',()=>{lastT=-1;onScroll()});
 const toMonth=i=>{const h=story.offsetHeight-innerHeight;scrollTo({top:story.getBoundingClientRect().top+scrollY+(.03+i/(SC.length-1)*.94)*h,behavior:stillC?'auto':'smooth'})};

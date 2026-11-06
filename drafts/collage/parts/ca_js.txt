@@ -11,47 +11,52 @@ const P=[
 const nm=p=>AR?p.n[1]:p.n[0];
 const label=p=>p===P[0]?T('Things kept in bottles','أشياء نحفظها في قوارير'):nm(p)+' 2027';
 
-/* 1 · the calendar on its wire: pull a page up and it swings over the binding */
-const pages=$('kbpages');let cur=0,anim=false;
-pages.innerHTML=P.map((p,i)=>`<div class="leaf" style="z-index:${P.length-i}"><img class="f" src="assets/${p.k}.webp" alt="" draggable="false"><span class="lt"></span><span class="cs"></span><span class="bk"></span></div>`).join('');
-const leaves=[...pages.children],A=P.map(()=>0);
-function paint(i){const a=A[i],L=leaves[i],r=a*Math.PI/180;
-  L.style.transform=a?`rotateX(${Math.min(a,180)}deg) rotateZ(${(Math.sin(r)*1.4).toFixed(2)}deg) scaleY(${(1-Math.sin(r)*.05).toFixed(3)})`:'';
-  L.style.opacity=a<=160?1:Math.max(0,1-(a-160)/18);L.style.visibility=a>=178?'hidden':'visible';
-  L.style.setProperty('--lt',Math.min(1,a/95).toFixed(3));L.style.setProperty('--bl',Math.max(0,(180-a)/90).toFixed(3));
-  const nx=leaves[i+1];if(nx)nx.style.setProperty('--cs',a>0&&a<178?(Math.pow(Math.sin(Math.min(r,Math.PI*.55)),.7)*(a<110?1:(178-a)/68)).toFixed(3):0)}
-function at(){$('kbat').textContent=`${cur+1} / ${P.length}`;$('tback').disabled=cur===0;$('tnext').disabled=cur===P.length-1;
-  leaves.forEach((L,i)=>{L.querySelector('img').alt=i===cur?label(P[i]):'';L.setAttribute('aria-hidden',i!==cur)})}
-const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-function tween(i,to,ms,done){const from=A[i];anim=true;if(still||ms<=0){A[i]=to;paint(i);anim=false;done&&done();return}
-  const t0=performance.now();const step=now=>{const k=Math.min(1,(now-t0)/ms);A[i]=from+(to-from)*ease(k);paint(i);if(k<1)requestAnimationFrame(step);else{anim=false;done&&done()}};requestAnimationFrame(step)}
-const DUR=a=>Math.max(260,Math.abs(a)/180*950);
-function turn(d){if(anim)return;if(d>0&&cur<P.length-1){const i=cur;cur++;at();tween(i,180,DUR(180-A[i]))}
-  else if(d<0&&cur>0){const i=cur-1;cur--;at();tween(i,0,DUR(A[i]))}}
-$('tnext').onclick=()=>turn(1);$('tback').onclick=()=>turn(-1);
-let drag=null;
-pages.addEventListener('pointerdown',e=>{if(anim||e.button>0)return;drag={y:e.clientY,h:pages.clientHeight,dir:0,i:null,v:0,ly:e.clientY,lt:e.timeStamp};pages.setPointerCapture(e.pointerId);pages.classList.add('held')});
-pages.addEventListener('pointermove',e=>{if(!drag)return;const dy=drag.y-e.clientY;
-  const dt=Math.max(1,e.timeStamp-drag.lt);drag.v=drag.v*.6+((drag.ly-e.clientY)/dt)*.4;drag.ly=e.clientY;drag.lt=e.timeStamp;
-  if(!drag.dir&&Math.abs(dy)>6){drag.dir=dy>0?1:-1;drag.i=drag.dir>0?(cur<P.length-1?cur:null):(cur>0?cur-1:null)}
-  if(drag.i==null)return;/* the page's bottom edge follows the finger */
-  const ed=Math.max(-1,Math.min(1,(drag.dir>0?drag.h-dy*1.1:-drag.h-dy*1.1)/drag.h));
-  A[drag.i]=Math.min(176,Math.acos(ed)*180/Math.PI);paint(drag.i)});
-function release(){if(!drag)return;const d=drag;drag=null;pages.classList.remove('held');
-  if(!d.dir){if(cur<P.length-1)turn(1);return}if(d.i==null)return;const a=A[d.i];
-  if(d.dir>0){if(a>70||d.v>.45){cur=d.i+1;at();tween(d.i,180,DUR(180-a))}else tween(d.i,0,DUR(a)*.7)}
-  else{if(a<110||d.v<-.45){cur=d.i;at();tween(d.i,0,DUR(a))}else tween(d.i,180,DUR(180-a)*.7)}}
-pages.addEventListener('pointerup',release);pages.addEventListener('pointercancel',release);
-pages.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key==='PageDown'){e.preventDefault();turn(1)}if(e.key==='ArrowDown'||e.key==='PageUp'){e.preventDefault();turn(-1)}});
+/* 1 · the calendar travels: on a wall, in someone's hands, on a desk, in a studio, and home again.
+   Between two places the camera dives into the page until it fills the screen, the place changes behind it and the
+   camera pulls back out into the new room (the same scenes as the home page). */
+const SC=[['sc-wall',[.375,.2431,.25,.3312],2560,1440],['sc-hands',[.2484,.1875,.4977,.6319],2560,1440],['sc-desk',[.3113,.3187,.3445,.4257],2560,1440],['sc-studio',[.3521,.1921,.2979,.2858],2048,1536],['sc-wall',[.375,.2431,.25,.3312],2560,1440]];
+const PG=SC.map((_,i)=>i%P.length);
+const holder=$('cscenes'),story=$('cstory'),els=SC.map((sc,i)=>{const d=document.createElement('div');d.className='csc';const b=sc[1];
+  d.innerHTML=`<img class="room" src="assets/${sc[0]}.webp" alt="" ${i?'fetchpriority="low"':''} decoding="async"><div class="pg" style="left:${b[0]*100}%;top:${b[1]*100}%;width:${b[2]*100}%;height:${b[3]*100}%"><img src="assets/${P[PG[i]].k}-hd.webp" alt="" decoding="async"><img class="sh" src="assets/${sc[0]}-shade.webp" alt=""></div><img class="top" src="assets/${sc[0]}-top.webp" alt="">`;
+  holder.append(d);return d});
+function place(i,z){const sc=SC[i],[bx,by,bw,bh]=sc[1],W=holder.clientWidth,H=holder.clientHeight,fw=sc[2],fh=sc[3],port=W<H;
+  const Rw=Math.max(Math.min(W*(port?.94:.8),H*(port?.6:.8)*1.34),...SC.map(c=>Math.max(W/c[2],H/c[3])*c[1][2]*c[2]));
+  const s0=Math.max(W/fw,H/fh)*1.02,s1=Rw/(bw*fw),s=s0*Math.pow(s1/s0,z),pcx=(bx+bw/2)*fw,pcy=(by+bh/2)*fh;
+  const ax=W*(port?.5:.5+.08*(1-z)),ay=H*(port?.42:.5);
+  const tx=Math.min(0,Math.max(W-fw*s,ax-pcx*s)),ty=Math.min(0,Math.max(H-fh*s,ay-pcy*s));
+  els[i].style.width=fw+'px';els[i].style.height=fh+'px';els[i].style.transform=`translate(${tx}px,${ty}px) scale(${s})`;return {tx,s}}
+/* decode every page ahead so no room shows a blank sheet when it first appears */
+addEventListener('load',()=>holder.querySelectorAll('img').forEach(im=>im.decode&&im.decode().catch(()=>{})));
+const sm=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
+const capEl=$('ccap'),edge=document.createElement('div');edge.className='cedge';holder.appendChild(edge);
+let lastT=-1,capAt=-1;
+function setText(i){if(i===capAt)return;capAt=i;const p=P[PG[i]];$('cline').textContent=AR?p.q[1]:p.q[0];
+  $('cyear').textContent=PG[i]?nm(p)+' 2027':'2027';$('cdots').querySelectorAll('button').forEach((b,k)=>b.setAttribute('aria-current',k===i))}
+function dots(){$('cdots').innerHTML=SC.map((s,i)=>`<li><button type="button" data-i="${i}" aria-current="${i===capAt}"><i></i>${nm(P[PG[i]])}</button></li>`).join('');const k=capAt;capAt=-1;setText(Math.max(0,k))}
+function onScroll(){const r=story.getBoundingClientRect(),h=story.offsetHeight-innerHeight,k=Math.min(1,Math.max(0,-r.top/Math.max(1,h)));
+  const t=Math.min(SC.length-1,Math.max(0,(k-.03)/.94*(SC.length-1)));if(t===lastT)return;lastT=t;
+  const i=Math.min(SC.length-2,Math.floor(t)),u=t-i;
+  const zin=sm((u-.08)/.32),zout=1-sm((u-.6)/.32),cut=sm((u-.42)/.16);
+  els.forEach((e,j)=>{if(j!==i&&j!==i+1){e.style.opacity=0;e.style.visibility='hidden'}});
+  const a=els[i],b=els[i+1];a.style.visibility=b.style.visibility='visible';
+  place(i,still?0:zin);const pb=place(i+1,still?0:zout);a.style.opacity=1;a.style.clipPath='none';a.style.zIndex=1;b.style.zIndex=2;
+  const W=holder.clientWidth,X=W*(1-cut);
+  if(still){b.style.opacity=cut;b.style.clipPath='none'}else{b.style.opacity=cut>0?1:0;b.style.clipPath=cut>=1?'none':`inset(0 0 0 ${Math.max(0,(X-pb.tx)/pb.s)}px)`}
+  edge.style.opacity=!still&&cut>0&&cut<1?1:0;edge.style.transform=`translateX(${X}px)`;
+  const zz=(1-cut)*zin+cut*zout,band=holder.clientHeight<capEl.offsetTop;capEl.style.opacity=still||band?1:Math.max(0,1-zz*2.2);capEl.style.transform=`translateY(${(still||band?0:Math.min(1,zz*2.2))*16}px)`;
+  setText(u>.5?i+1:i)}
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',()=>{lastT=-1;onScroll()});
+$('cdots').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const h=story.offsetHeight-innerHeight;
+  scrollTo({top:story.getBoundingClientRect().top+scrollY+(.03+(+b.dataset.i)/(SC.length-1)*.94)*h,behavior:still?'auto':'smooth'})});
 
-/* 2 · the bottles on their shelf choose the page shown up close */
+/* 2 · the bottles on their shelf choose the page capAt up close */
 let sel=1;
 function bottles(){$('bottles').innerHTML=P.map((p,i)=>`<li><button type="button" class="bottle" data-i="${i}" aria-pressed="${i===sel}" aria-label="${nm(p)} 2027"><span class="piece paper" data-tear="5"><span class="fill"></span><img src="assets/${p.k}-b.webp" alt="" loading="lazy"></span><span class="tag paper" data-tear="2"><span class="fill"></span>${nm(p)}</span></button></li>`).join('')}
 $('bottles').addEventListener('click',e=>{const b=e.target.closest('.bottle');if(b)pick(+b.dataset.i,true)});
 function closeup(){const p=P[sel];const im=$('cimg');if(!im.src.endsWith(p.k+'-hd.webp'))im.src=`assets/${p.k}-hd.webp`;
   im.alt=label(p)+', '+T('page of the calendar','صفحة من التقويم');$('loupe').style.backgroundImage=`url(assets/${p.k}-hd.webp)`;
   $('cseason').textContent=AR?p.s[1]:p.s[0];$('cname').textContent=sel?nm(p):T('The cover','الغلاف');$('cquote').textContent=AR?p.q[1]:p.q[0]}
-function pick(i,scroll){sel=(i+P.length)%P.length;document.querySelectorAll('.bottle').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===sel));closeup();chips();scenes();
+function pick(i,scroll){sel=(i+P.length)%P.length;document.querySelectorAll('.bottle').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===sel));closeup();
   if(scroll){const r=$('close').getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)$('close').scrollIntoView({behavior:still?'auto':'smooth',block:'center'})}}
 $('cnext').onclick=()=>pick(sel+1);$('cprev').onclick=()=>pick(sel-1);
 /* a loupe over the page, for the lettering and the days */
@@ -62,16 +67,7 @@ if(matchMedia('(hover:hover) and (pointer:fine)').matches){
     lp.style.transform=`translate(${x-lp.offsetWidth/2}px,${y-lp.offsetHeight/2}px)`;cp.classList.add('lens')});
   cp.addEventListener('pointerleave',()=>cp.classList.remove('lens'))}
 
-/* 3 · at home: the page in four rooms (light from the room multiplied over it, the wire and fingers back on top) */
-const SC=[['sc-wall',[.375,.2431,.25,.3312],2560,1440,['On the wall','على الحائط']],['sc-hands',[.2484,.1875,.4977,.6319],2560,1440,['In the hands','بين اليدين']],['sc-desk',[.3113,.3187,.3445,.4257],2560,1440,['On the desk','على المكتب']],['sc-studio',[.3521,.1921,.2979,.2858],2048,1536,['In the studio','في المرسم']]];
-let built=false;
-function scenes(){const p=P[sel];
-  if(!built){built=true;$('scenes').insertAdjacentHTML('afterbegin',SC.map(([k,b,w,h],i)=>`<figure class="scn s${i}"><div class="ph" style="aspect-ratio:${w}/${h}"><img class="room" src="assets/${k}.webp" alt="" loading="lazy" decoding="async"><div class="pg" style="left:${b[0]*100}%;top:${b[1]*100}%;width:${b[2]*100}%;height:${b[3]*100}%"><img class="on" src="assets/${p.k}-hd.webp" alt="" loading="lazy" decoding="async"><img class="sh" src="assets/${k}-shade.webp" alt=""></div><img class="top" src="assets/${k}-top.webp" alt="" loading="lazy"></div><figcaption></figcaption></figure>`).join(''))}
-  $('scenes').querySelectorAll('.scn').forEach((f,i)=>{const im=f.querySelector('img.on');if(!im.src.endsWith(p.k+'-hd.webp'))im.src=`assets/${p.k}-hd.webp`;
-    f.querySelector('.room').alt=T(SC[i][4][0],SC[i][4][1])+', '+label(p);f.querySelector('figcaption').textContent=T(SC[i][4][0],SC[i][4][1])})}
-function chips(){$('mchips').innerHTML=P.map((p,i)=>`<button type="button" aria-pressed="${i===sel}" data-i="${i}">${nm(p)}</button>`).join('')}
-$('mchips').addEventListener('click',e=>{const b=e.target.closest('button');if(b)pick(+b.dataset.i)});
 /* the shared footer script asks for these */
 const view={open:false};function open_(i){pick(i,true)}
-function render(){bottles();chips();scenes();closeup();at();leaves.forEach((_,i)=>paint(i));
+function render(){bottles();closeup();dots();lastT=-1;onScroll();
   if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}}
