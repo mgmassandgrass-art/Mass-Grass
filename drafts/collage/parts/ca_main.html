@@ -1,25 +1,18 @@
 <main>
-<section class="rooms" id="cal" aria-labelledby="ch-h">
-  <figure class="room r0">
-    <div class="rimg"><img src="assets/cr-wall.webp" alt="The 2027 calendar on a sunlit wall, open at its cover" data-ar-alt="تقويم 2027 معلّقًا على حائط مشمس، مفتوحًا على غلافه" fetchpriority="high" decoding="async"></div>
-    <figcaption class="rcap first">
-      <h1 id="ch-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1>
-      <p class="rlead" data-ar="تقويم 2027: اثنتا عشرة قارورة رسمتها فرح بالألوان المائية.">The 2027 calendar: twelve watercolour bottles by Farah.</p>
-      <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
-    </figcaption>
-  </figure>
-  <figure class="room r1">
-    <div class="rimg"><img src="assets/cr-hands.webp" alt="The calendar held in two hands, open at May" data-ar-alt="التقويم بين يدين، مفتوحًا على أيار" loading="lazy" decoding="async"></div>
-    <figcaption class="rcap"><p class="rplace" data-ar="بين اليدين">In the hands</p><p class="rmonth" data-ar="أيار">May</p><p class="rline" data-ar="نحمل عوالم كاملة لا يراها أحد سوانا.">We carry whole worlds no one else can see.</p></figcaption>
-  </figure>
-  <figure class="room r2">
-    <div class="rimg"><img src="assets/cr-desk.webp" alt="The calendar standing on a watercolour desk, open at August" data-ar-alt="التقويم على طاولة رسم بالألوان المائية، مفتوحًا على آب" loading="lazy" decoding="async"></div>
-    <figcaption class="rcap"><p class="rplace" data-ar="على طاولة الرسم">On the painting desk</p><p class="rmonth" data-ar="آب">August</p><p class="rline" data-ar="أن نرحل يعني أيضًا أن نؤمن بمكانٍ ما.">To leave is also to believe in somewhere.</p></figcaption>
-  </figure>
-  <figure class="room r3">
-    <div class="rimg"><img src="assets/cr-kitchen.webp" alt="The calendar on a kitchen wall above green tiles, open at September" data-ar-alt="التقويم على حائط مطبخ فوق بلاط أخضر، مفتوحًا على أيلول" loading="lazy" decoding="async"></div>
-    <figcaption class="rcap"><p class="rplace" data-ar="في المطبخ">In the kitchen</p><p class="rmonth" data-ar="أيلول">September</p><p class="rline" data-ar="حتى الشمس تنحني، والنظر إلى الأعلى اختيار.">Even the sun bows; looking up is a choice.</p></figcaption>
-  </figure>
+<section class="show" id="cal" aria-labelledby="ch-h" aria-roledescription="carousel">
+  <div id="slides"></div>
+  <div class="card-h paper" data-tear="5"><span class="fill"></span>
+    <h1 id="ch-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1>
+    <p data-ar="تقويم 2027: اثنتا عشرة قارورة رسمتها فرح بالألوان المائية.">The 2027 calendar: twelve watercolour bottles by Farah.</p>
+    <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
+  </div>
+  <div class="cap">
+    <button class="navb paper" data-tear="3" type="button" id="sprev" aria-label="Previous photo"><span class="fill"></span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <div class="lbl paper" data-tear="4" aria-live="polite"><span class="fill"></span><b id="sname"></b><span id="splace"></span></div>
+    <button class="navb paper" data-tear="3" type="button" id="snext" aria-label="Next photo"><span class="fill"></span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="tornb paper" data-tear-top="9"><span class="fill"></span></div>
 </section>
 
 <section class="kb-shelf" aria-labelledby="sh-h">

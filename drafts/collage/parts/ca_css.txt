@@ -1,31 +1,41 @@
 /* Things kept in bottles: the 2027 calendar, A5 landscape pages on a wire */
 :root{--hand:'Caveat',cursive;--handar:'Aref Ruqaa',serif}
-/* the calendar at home: four photographs laid one over the other as you scroll, like prints on a table */
-.rooms{position:relative;background:var(--ink)}
-.room{position:sticky;top:var(--head,64px);height:calc(100svh - var(--head,64px));margin:0;overflow:hidden;background:var(--c-e9e1d2)}
-.room+.room{box-shadow:0 -24px 40px -20px rgba(var(--rgb-20-18-14),.45)}
-.rimg{position:absolute;inset:0;transform-origin:50% 40%}
-.rimg img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:50% 45%}
-.rimg::after{content:"";position:absolute;inset:0;background:var(--ink);opacity:var(--dim,0);pointer-events:none}
-.rcap{position:absolute;inset-inline-start:var(--gh);bottom:clamp(24px,6vh,64px);width:min(340px,calc(100% - 2 * var(--gh)));padding:clamp(20px,2.4vw,32px);background:var(--paper);color:var(--ink);box-shadow:0 18px 36px -18px rgba(var(--rgb-20-18-14),.45)}
-.rcap h1{margin:0 0 12px;font:800 var(--fs-title)/1.02 var(--f);letter-spacing:-.025em;text-wrap:balance}
-.ar-on .rcap h1{font:700 var(--fs-h3)/1.35 var(--fa);letter-spacing:0}
-.rlead{margin:0 0 20px;font-size:var(--fs-body);line-height:1.5}
-.rcap .buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.rcap .buy b{font:800 var(--fs-figure)/1 var(--f)}
-.rplace{margin:0 0 4px;font-size:var(--fs-sm);color:var(--soft)}
-.rmonth{margin:0;font:500 var(--fs-h2)/1 var(--hand,'Caveat',cursive);color:var(--c-2d4f7c)}
-.ar-on .rmonth{font:400 var(--fs-h3)/1.5 var(--handar,'Aref Ruqaa',serif)}
-.rline{margin:8px 0 0;font:500 var(--fs-lead)/1.35 var(--hand,'Caveat',cursive);color:var(--c-3b3731)}
-.ar-on .rline{font:400 var(--fs-body)/1.8 var(--handar,'Aref Ruqaa',serif)}
-.js .rcap>*{transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
-.js .room:not(.in) .rcap>*{opacity:0;transform:translateY(16px)}
-.js .room .rcap>:nth-child(2){transition-delay:.07s}.js .room .rcap>:nth-child(3){transition-delay:.14s}
-@media(max-width:900px) and (orientation:portrait){
-  .room{display:grid;grid-template-rows:auto minmax(0,1fr);background:var(--paper)}
-  .rimg{position:relative;inset:auto;aspect-ratio:1;overflow:hidden}
-  .rcap{position:relative;inset:auto;width:auto;margin:0;padding:24px var(--gh);box-shadow:none;background:none}
-  .r0 .rimg img{object-position:50% 40%}.r1 .rimg img{object-position:50% 50%}.r2 .rimg img{object-position:50% 50%}.r3 .rimg img{object-position:50% 25%}}
-@media(prefers-reduced-motion:reduce){.js .room:not(.in) .rcap>*{opacity:1;transform:none}}
+/* the calendar at home: one photograph at a time, edge to edge, like the home page (no transition between them) */
+.show{position:relative;height:calc(100svh - 72px);min-height:560px;max-height:1000px;overflow:hidden;margin-top:-16px;background:var(--c-2e3b33)}
+.slide{position:absolute;inset:0}
+.js .slide{opacity:0;visibility:hidden}
+.slide.on{opacity:1;visibility:visible;z-index:1}
+.slide img{width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
+.show .tornb{position:absolute;left:0;right:0;bottom:-2px;height:34px;z-index:3;--c:var(--cream)}
+.show .card-h{position:absolute;z-index:4;left:clamp(18px,5vw,64px);bottom:clamp(54px,7vw,90px);width:min(470px,calc(100% - 36px));padding:clamp(28px,3vw,40px);--c:var(--paper);filter:drop-shadow(0 12px 18px rgba(var(--rgb-20-18-14),.3))}
+.ar-on .show .card-h{left:auto;right:clamp(18px,5vw,64px)}
+.card-h h1{margin:0 0 16px;font:800 var(--fs-h2)/1 var(--f);letter-spacing:-.025em}
+.ar-on .card-h h1{font:700 var(--fs-h2)/1.25 var(--fa);letter-spacing:0}
+.card-h p{margin:0 0 24px;color:var(--soft);font-size:var(--fs-lead);max-width:34ch}
+.card-h .buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.card-h .buy b{font:800 var(--fs-figure)/1 var(--f)}
+.card-h .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.card-h .row small{font:600 var(--fs-sm)/1 var(--f);color:var(--soft)}
+.ar-on .card-h .row small{font-family:var(--fa)}
+.cap{position:absolute;z-index:4;right:clamp(18px,5vw,64px);bottom:clamp(64px,8vw,100px);display:flex;align-items:center;gap:8px}
+.ar-on .cap{right:auto;left:clamp(18px,5vw,64px)}
+.cap .lbl{padding:16px 16px 12px;--c:var(--kraft);color:var(--c-2b2119);rotate:-2deg;min-width:200px;filter:drop-shadow(0 6px 8px rgba(var(--rgb-20-18-14),.3))}
+.cap .lbl b{display:block;font:800 var(--fs-h4)/1.1 var(--f)}
+.ar-on .cap .lbl b{font:700 var(--fs-lead)/1.3 var(--fa)}
+.cap .lbl span{font:500 var(--fs-sm)/1.4 var(--f)}
+.ar-on .cap .lbl span{font-family:var(--fa)}
+.navb{width:50px;height:50px;border:0;cursor:pointer;display:grid;place-items:center;--c:var(--paper);color:var(--ink);filter:drop-shadow(0 5px 6px rgba(var(--rgb-20-18-14),.3));transition:transform .2s}
+.navb:active{transform:scale(.94)}
+@media(hover:hover){.navb:hover{transform:translateY(-3px)}}
+.ar-on .navb svg{transform:scaleX(-1)}
+.dots{position:absolute;z-index:4;left:50%;translate:-50% 0;bottom:46px;display:flex;gap:8px}
+.dots button{width:30px;height:6px;border:0;padding:0;background:rgba(var(--rgb-251-248-242),.45);cursor:pointer}
+.dots button[aria-current=true]{background:var(--paper)}
+.dots button::before{content:"";display:block;height:28px;margin-top:-12px}
+@media(max-width:760px){.show{height:auto;min-height:0;max-height:none;padding-top:62svh}
+  .slide{bottom:auto;height:66svh}
+  .show .card-h{position:relative;left:auto!important;right:auto!important;bottom:auto;margin:-40px 16px 24px;width:auto}
+  .cap{top:calc(66svh - 150px);bottom:auto;right:14px}.ar-on .cap{left:14px}.cap .lbl{min-width:0}
+  .dots{top:calc(66svh - 66px);bottom:auto}.show .tornb{display:none}.show{background:var(--cream)}}
 .tbtn:disabled{--c:var(--c-e9e0ce);color:var(--soft);cursor:not-allowed;filter:none}
 /* the bottles, torn out of their pages and stood on a strip of kraft */
 .kb-shelf{padding:var(--sec) 0}
@@ -64,3 +74,8 @@
 @media(max-width:560px){.cnav .tbtn span[data-ar]{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}}
 @media(prefers-reduced-motion:reduce){.bottle,.loupe{transition:none}}
 .cbuy{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 24px}.cbuy b{font:800 var(--fs-figure)/1 var(--f)}
+/* keep the calendar clear of the card: a photo whose page reaches the card's side is drawn a little larger from that side */
+.show .card-h{width:min(380px,calc(100% - 36px))}
+@media(min-width:761px){.slide img{transform-origin:0 50%}.ar-on .slide img{transform-origin:100% 50%}
+  .slide.s1 img{transform:scale(1.2)}.slide.s2 img{transform:scale(1.08)}}
+.ar-on .show .card-h h1{font-size:var(--fs-h3)}

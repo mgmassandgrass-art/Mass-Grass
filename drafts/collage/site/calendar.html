@@ -147,32 +147,42 @@ footer nav a{display:inline-block;padding:8px 2px}
 
 /* Things kept in bottles: the 2027 calendar, A5 landscape pages on a wire */
 :root{--hand:'Caveat',cursive;--handar:'Aref Ruqaa',serif}
-/* the calendar at home: four photographs laid one over the other as you scroll, like prints on a table */
-.rooms{position:relative;background:var(--ink)}
-.room{position:sticky;top:var(--head,64px);height:calc(100svh - var(--head,64px));margin:0;overflow:hidden;background:var(--c-e9e1d2)}
-.room+.room{box-shadow:0 -24px 40px -20px rgba(var(--rgb-20-18-14),.45)}
-.rimg{position:absolute;inset:0;transform-origin:50% 40%}
-.rimg img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:50% 45%}
-.rimg::after{content:"";position:absolute;inset:0;background:var(--ink);opacity:var(--dim,0);pointer-events:none}
-.rcap{position:absolute;inset-inline-start:var(--gh);bottom:clamp(24px,6vh,64px);width:min(340px,calc(100% - 2 * var(--gh)));padding:clamp(20px,2.4vw,32px);background:var(--paper);color:var(--ink);box-shadow:0 18px 36px -18px rgba(var(--rgb-20-18-14),.45)}
-.rcap h1{margin:0 0 12px;font:800 var(--fs-title)/1.02 var(--f);letter-spacing:-.025em;text-wrap:balance}
-.ar-on .rcap h1{font:700 var(--fs-h3)/1.35 var(--fa);letter-spacing:0}
-.rlead{margin:0 0 20px;font-size:var(--fs-body);line-height:1.5}
-.rcap .buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.rcap .buy b{font:800 var(--fs-figure)/1 var(--f)}
-.rplace{margin:0 0 4px;font-size:var(--fs-sm);color:var(--soft)}
-.rmonth{margin:0;font:500 var(--fs-h2)/1 var(--hand,'Caveat',cursive);color:var(--c-2d4f7c)}
-.ar-on .rmonth{font:400 var(--fs-h3)/1.5 var(--handar,'Aref Ruqaa',serif)}
-.rline{margin:8px 0 0;font:500 var(--fs-lead)/1.35 var(--hand,'Caveat',cursive);color:var(--c-3b3731)}
-.ar-on .rline{font:400 var(--fs-body)/1.8 var(--handar,'Aref Ruqaa',serif)}
-.js .rcap>*{transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
-.js .room:not(.in) .rcap>*{opacity:0;transform:translateY(16px)}
-.js .room .rcap>:nth-child(2){transition-delay:.07s}.js .room .rcap>:nth-child(3){transition-delay:.14s}
-@media(max-width:900px) and (orientation:portrait){
-  .room{display:grid;grid-template-rows:auto minmax(0,1fr);background:var(--paper)}
-  .rimg{position:relative;inset:auto;aspect-ratio:1;overflow:hidden}
-  .rcap{position:relative;inset:auto;width:auto;margin:0;padding:24px var(--gh);box-shadow:none;background:none}
-  .r0 .rimg img{object-position:50% 40%}.r1 .rimg img{object-position:50% 50%}.r2 .rimg img{object-position:50% 50%}.r3 .rimg img{object-position:50% 25%}}
-@media(prefers-reduced-motion:reduce){.js .room:not(.in) .rcap>*{opacity:1;transform:none}}
+/* the calendar at home: one photograph at a time, edge to edge, like the home page (no transition between them) */
+.show{position:relative;height:calc(100svh - 72px);min-height:560px;max-height:1000px;overflow:hidden;margin-top:-16px;background:var(--c-2e3b33)}
+.slide{position:absolute;inset:0}
+.js .slide{opacity:0;visibility:hidden}
+.slide.on{opacity:1;visibility:visible;z-index:1}
+.slide img{width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
+.show .tornb{position:absolute;left:0;right:0;bottom:-2px;height:34px;z-index:3;--c:var(--cream)}
+.show .card-h{position:absolute;z-index:4;left:clamp(18px,5vw,64px);bottom:clamp(54px,7vw,90px);width:min(470px,calc(100% - 36px));padding:clamp(28px,3vw,40px);--c:var(--paper);filter:drop-shadow(0 12px 18px rgba(var(--rgb-20-18-14),.3))}
+.ar-on .show .card-h{left:auto;right:clamp(18px,5vw,64px)}
+.card-h h1{margin:0 0 16px;font:800 var(--fs-h2)/1 var(--f);letter-spacing:-.025em}
+.ar-on .card-h h1{font:700 var(--fs-h2)/1.25 var(--fa);letter-spacing:0}
+.card-h p{margin:0 0 24px;color:var(--soft);font-size:var(--fs-lead);max-width:34ch}
+.card-h .buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.card-h .buy b{font:800 var(--fs-figure)/1 var(--f)}
+.card-h .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.card-h .row small{font:600 var(--fs-sm)/1 var(--f);color:var(--soft)}
+.ar-on .card-h .row small{font-family:var(--fa)}
+.cap{position:absolute;z-index:4;right:clamp(18px,5vw,64px);bottom:clamp(64px,8vw,100px);display:flex;align-items:center;gap:8px}
+.ar-on .cap{right:auto;left:clamp(18px,5vw,64px)}
+.cap .lbl{padding:16px 16px 12px;--c:var(--kraft);color:var(--c-2b2119);rotate:-2deg;min-width:200px;filter:drop-shadow(0 6px 8px rgba(var(--rgb-20-18-14),.3))}
+.cap .lbl b{display:block;font:800 var(--fs-h4)/1.1 var(--f)}
+.ar-on .cap .lbl b{font:700 var(--fs-lead)/1.3 var(--fa)}
+.cap .lbl span{font:500 var(--fs-sm)/1.4 var(--f)}
+.ar-on .cap .lbl span{font-family:var(--fa)}
+.navb{width:50px;height:50px;border:0;cursor:pointer;display:grid;place-items:center;--c:var(--paper);color:var(--ink);filter:drop-shadow(0 5px 6px rgba(var(--rgb-20-18-14),.3));transition:transform .2s}
+.navb:active{transform:scale(.94)}
+@media(hover:hover){.navb:hover{transform:translateY(-3px)}}
+.ar-on .navb svg{transform:scaleX(-1)}
+.dots{position:absolute;z-index:4;left:50%;translate:-50% 0;bottom:46px;display:flex;gap:8px}
+.dots button{width:30px;height:6px;border:0;padding:0;background:rgba(var(--rgb-251-248-242),.45);cursor:pointer}
+.dots button[aria-current=true]{background:var(--paper)}
+.dots button::before{content:"";display:block;height:28px;margin-top:-12px}
+@media(max-width:760px){.show{height:auto;min-height:0;max-height:none;padding-top:62svh}
+  .slide{bottom:auto;height:66svh}
+  .show .card-h{position:relative;left:auto!important;right:auto!important;bottom:auto;margin:-40px 16px 24px;width:auto}
+  .cap{top:calc(66svh - 150px);bottom:auto;right:14px}.ar-on .cap{left:14px}.cap .lbl{min-width:0}
+  .dots{top:calc(66svh - 66px);bottom:auto}.show .tornb{display:none}.show{background:var(--cream)}}
 .tbtn:disabled{--c:var(--c-e9e0ce);color:var(--soft);cursor:not-allowed;filter:none}
 /* the bottles, torn out of their pages and stood on a strip of kraft */
 .kb-shelf{padding:var(--sec) 0}
@@ -211,6 +221,11 @@ footer nav a{display:inline-block;padding:8px 2px}
 @media(max-width:560px){.cnav .tbtn span[data-ar]{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}}
 @media(prefers-reduced-motion:reduce){.bottle,.loupe{transition:none}}
 .cbuy{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 24px}.cbuy b{font:800 var(--fs-figure)/1 var(--f)}
+/* keep the calendar clear of the card: a photo whose page reaches the card's side is drawn a little larger from that side */
+.show .card-h{width:min(380px,calc(100% - 36px))}
+@media(min-width:761px){.slide img{transform-origin:0 50%}.ar-on .slide img{transform-origin:100% 50%}
+  .slide.s1 img{transform:scale(1.2)}.slide.s2 img{transform:scale(1.08)}}
+.ar-on .show .card-h h1{font-size:var(--fs-h3)}
 .tbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:0;cursor:pointer;--c:var(--cream);color:var(--ink);font:700 var(--fs-sm)/1 var(--f);filter:drop-shadow(0 4px 4px rgba(var(--rgb-20-18-14),.18))}
 .ar-on .tbtn{font-family:var(--fa)}
 .ar-on .tbtn svg{transform:scaleX(-1)}
@@ -258,27 +273,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   <nav class="mmenu" id="mmenu" hidden aria-label="Menu"><a href="index.html" data-ar="الرئيسية">Home</a><a href="shop.html" data-ar="المتجر">Shop</a><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a></nav>
 </header>
 <main>
-<section class="rooms" id="cal" aria-labelledby="ch-h">
-  <figure class="room r0">
-    <div class="rimg"><img src="assets/cr-wall.webp" alt="The 2027 calendar on a sunlit wall, open at its cover" data-ar-alt="تقويم 2027 معلّقًا على حائط مشمس، مفتوحًا على غلافه" fetchpriority="high" decoding="async"></div>
-    <figcaption class="rcap first">
-      <h1 id="ch-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1>
-      <p class="rlead" data-ar="تقويم 2027: اثنتا عشرة قارورة رسمتها فرح بالألوان المائية.">The 2027 calendar: twelve watercolour bottles by Farah.</p>
-      <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
-    </figcaption>
-  </figure>
-  <figure class="room r1">
-    <div class="rimg"><img src="assets/cr-hands.webp" alt="The calendar held in two hands, open at May" data-ar-alt="التقويم بين يدين، مفتوحًا على أيار" loading="lazy" decoding="async"></div>
-    <figcaption class="rcap"><p class="rplace" data-ar="بين اليدين">In the hands</p><p class="rmonth" data-ar="أيار">May</p><p class="rline" data-ar="نحمل عوالم كاملة لا يراها أحد سوانا.">We carry whole worlds no one else can see.</p></figcaption>
-  </figure>
-  <figure class="room r2">
-    <div class="rimg"><img src="assets/cr-desk.webp" alt="The calendar standing on a watercolour desk, open at August" data-ar-alt="التقويم على طاولة رسم بالألوان المائية، مفتوحًا على آب" loading="lazy" decoding="async"></div>
-    <figcaption class="rcap"><p class="rplace" data-ar="على طاولة الرسم">On the painting desk</p><p class="rmonth" data-ar="آب">August</p><p class="rline" data-ar="أن نرحل يعني أيضًا أن نؤمن بمكانٍ ما.">To leave is also to believe in somewhere.</p></figcaption>
-  </figure>
-  <figure class="room r3">
-    <div class="rimg"><img src="assets/cr-kitchen.webp" alt="The calendar on a kitchen wall above green tiles, open at September" data-ar-alt="التقويم على حائط مطبخ فوق بلاط أخضر، مفتوحًا على أيلول" loading="lazy" decoding="async"></div>
-    <figcaption class="rcap"><p class="rplace" data-ar="في المطبخ">In the kitchen</p><p class="rmonth" data-ar="أيلول">September</p><p class="rline" data-ar="حتى الشمس تنحني، والنظر إلى الأعلى اختيار.">Even the sun bows; looking up is a choice.</p></figcaption>
-  </figure>
+<section class="show" id="cal" aria-labelledby="ch-h" aria-roledescription="carousel">
+  <div id="slides"></div>
+  <div class="card-h paper" data-tear="5"><span class="fill"></span>
+    <h1 id="ch-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1>
+    <p data-ar="تقويم 2027: اثنتا عشرة قارورة رسمتها فرح بالألوان المائية.">The 2027 calendar: twelve watercolour bottles by Farah.</p>
+    <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
+  </div>
+  <div class="cap">
+    <button class="navb paper" data-tear="3" type="button" id="sprev" aria-label="Previous photo"><span class="fill"></span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <div class="lbl paper" data-tear="4" aria-live="polite"><span class="fill"></span><b id="sname"></b><span id="splace"></span></div>
+    <button class="navb paper" data-tear="3" type="button" id="snext" aria-label="Next photo"><span class="fill"></span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="tornb paper" data-tear-top="9"><span class="fill"></span></div>
 </section>
 
 <section class="kb-shelf" aria-labelledby="sh-h">
@@ -342,24 +350,18 @@ const P=[
 const nm=p=>AR?p.n[1]:p.n[0];
 const label=p=>p===P[0]?T('Things kept in bottles','أشياء نحفظها في قوارير'):nm(p)+' 2027';
 
-/* 1 · the calendar at home: each photograph slides up over the last; the one underneath settles back and dims,
-   the new one arrives a little close and eases out to its frame */
-const rooms=[...document.querySelectorAll('.room')];
-document.querySelectorAll('[data-ar-alt]').forEach(i=>i.dataset.enAlt=i.alt);
-function alts(){document.querySelectorAll('[data-ar-alt]').forEach(i=>i.alt=AR?i.dataset.arAlt:i.dataset.enAlt)}
-let rAF=0;
-function roomsFrame(){rAF=0;const H=innerHeight;
-  rooms.forEach((r,i)=>{const nx=rooms[i+1],img=r.querySelector('.rimg'),pic=r.querySelector('img');
-    const top=r.getBoundingClientRect().top,head=r.offsetTop?parseFloat(getComputedStyle(r).top)||0:0;
-    /* arrival: how far this room still has to rise (1 = just entering at the bottom, 0 = in place) */
-    const arr=Math.min(1,Math.max(0,(top-head)/Math.max(1,H-head)));
-    /* cover: how far the next room has risen over this one */
-    const cov=nx?Math.min(1,Math.max(0,1-(nx.getBoundingClientRect().top-head)/Math.max(1,H-head))):0;
-    if(!still){pic.style.transform=`scale(${(1+arr*.14).toFixed(4)})`;img.style.transform=`scale(${(1-cov*.06).toFixed(4)}) translateY(${(-cov*4).toFixed(2)}%)`}
-    img.style.setProperty('--dim',(cov*.45).toFixed(3));
-    r.classList.toggle('in',arr<.35)})}
-const queue=()=>{if(!rAF)rAF=requestAnimationFrame(roomsFrame)};
-addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);
+/* 1 · the calendar at home: one photograph at a time, arrows and dots, changes every 6s; a plain cut, no transition */
+const S=[['cr-wall',['On the wall','على الحائط'],1],['cr-hands',['In the hands','بين اليدين'],2],['cr-desk',['On the painting desk','على طاولة الرسم'],3],['cr-kitchen',['In the kitchen','في المطبخ'],4]];
+const PGI=[0,1,2,3];
+const sl=$('slides'),dots=$('dots');let si=0,stimer=null;
+S.forEach((s,i)=>{const d=document.createElement('div');d.className='slide s'+i+(i?'':' on');d.innerHTML=`<img src="assets/${s[0]}.webp" alt="" ${i?'loading="lazy"':'fetchpriority="high"'} decoding="async">`;sl.append(d);
+  const b=document.createElement('button');b.type='button';b.onclick=()=>{go(i);restart()};dots.append(b)});
+function cap(){const s=S[si],p=P[PGI[si]];$('sname').textContent=PGI[si]?nm(p):T('The cover','الغلاف');$('splace').textContent=AR?s[1][1]:s[1][0];
+  [...sl.children].forEach((d,k)=>d.querySelector('img').alt=k===si?(AR?s[1][1]:s[1][0])+'، '+label(p):'');
+  [...dots.children].forEach((b,k)=>{b.setAttribute('aria-current',k===si);b.setAttribute('aria-label',AR?S[k][1][1]:S[k][1][0])})}
+function go(i){const old=sl.children[si];si=(i+S.length)%S.length;const nw=sl.children[si];if(old!==nw){old.classList.remove('on');nw.classList.add('on')}cap()}
+function restart(){clearInterval(stimer);if(!still)stimer=setInterval(()=>go(si+1),6000)}
+$('snext').onclick=()=>{go(si+1);restart()};$('sprev').onclick=()=>{go(si-1);restart()};restart();
 
 /* 2 · the bottles on their shelf choose the page shown up close */
 let sel=1;
@@ -381,7 +383,7 @@ if(matchMedia('(hover:hover) and (pointer:fine)').matches){
 
 /* the shared footer script asks for these */
 const view={open:false};function open_(i){pick(i,true)}
-function render(){bottles();closeup();alts();roomsFrame();
+function render(){bottles();closeup();cap();
   if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}}
 /* newsletter: posts to the shop's /api/subscribe; it only says thank you once the server has the address */
 document.getElementById('nl').onsubmit=async e=>{e.preventDefault();const v=document.getElementById('nl-mail'),ok=document.getElementById('nl-ok');

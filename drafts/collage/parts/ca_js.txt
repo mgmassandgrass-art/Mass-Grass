@@ -11,24 +11,18 @@ const P=[
 const nm=p=>AR?p.n[1]:p.n[0];
 const label=p=>p===P[0]?T('Things kept in bottles','أشياء نحفظها في قوارير'):nm(p)+' 2027';
 
-/* 1 · the calendar at home: each photograph slides up over the last; the one underneath settles back and dims,
-   the new one arrives a little close and eases out to its frame */
-const rooms=[...document.querySelectorAll('.room')];
-document.querySelectorAll('[data-ar-alt]').forEach(i=>i.dataset.enAlt=i.alt);
-function alts(){document.querySelectorAll('[data-ar-alt]').forEach(i=>i.alt=AR?i.dataset.arAlt:i.dataset.enAlt)}
-let rAF=0;
-function roomsFrame(){rAF=0;const H=innerHeight;
-  rooms.forEach((r,i)=>{const nx=rooms[i+1],img=r.querySelector('.rimg'),pic=r.querySelector('img');
-    const top=r.getBoundingClientRect().top,head=r.offsetTop?parseFloat(getComputedStyle(r).top)||0:0;
-    /* arrival: how far this room still has to rise (1 = just entering at the bottom, 0 = in place) */
-    const arr=Math.min(1,Math.max(0,(top-head)/Math.max(1,H-head)));
-    /* cover: how far the next room has risen over this one */
-    const cov=nx?Math.min(1,Math.max(0,1-(nx.getBoundingClientRect().top-head)/Math.max(1,H-head))):0;
-    if(!still){pic.style.transform=`scale(${(1+arr*.14).toFixed(4)})`;img.style.transform=`scale(${(1-cov*.06).toFixed(4)}) translateY(${(-cov*4).toFixed(2)}%)`}
-    img.style.setProperty('--dim',(cov*.45).toFixed(3));
-    r.classList.toggle('in',arr<.35)})}
-const queue=()=>{if(!rAF)rAF=requestAnimationFrame(roomsFrame)};
-addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);
+/* 1 · the calendar at home: one photograph at a time, arrows and dots, changes every 6s; a plain cut, no transition */
+const S=[['cr-wall',['On the wall','على الحائط'],1],['cr-hands',['In the hands','بين اليدين'],2],['cr-desk',['On the painting desk','على طاولة الرسم'],3],['cr-kitchen',['In the kitchen','في المطبخ'],4]];
+const PGI=[0,1,2,3];
+const sl=$('slides'),dots=$('dots');let si=0,stimer=null;
+S.forEach((s,i)=>{const d=document.createElement('div');d.className='slide s'+i+(i?'':' on');d.innerHTML=`<img src="assets/${s[0]}.webp" alt="" ${i?'loading="lazy"':'fetchpriority="high"'} decoding="async">`;sl.append(d);
+  const b=document.createElement('button');b.type='button';b.onclick=()=>{go(i);restart()};dots.append(b)});
+function cap(){const s=S[si],p=P[PGI[si]];$('sname').textContent=PGI[si]?nm(p):T('The cover','الغلاف');$('splace').textContent=AR?s[1][1]:s[1][0];
+  [...sl.children].forEach((d,k)=>d.querySelector('img').alt=k===si?(AR?s[1][1]:s[1][0])+'، '+label(p):'');
+  [...dots.children].forEach((b,k)=>{b.setAttribute('aria-current',k===si);b.setAttribute('aria-label',AR?S[k][1][1]:S[k][1][0])})}
+function go(i){const old=sl.children[si];si=(i+S.length)%S.length;const nw=sl.children[si];if(old!==nw){old.classList.remove('on');nw.classList.add('on')}cap()}
+function restart(){clearInterval(stimer);if(!still)stimer=setInterval(()=>go(si+1),6000)}
+$('snext').onclick=()=>{go(si+1);restart()};$('sprev').onclick=()=>{go(si-1);restart()};restart();
 
 /* 2 · the bottles on their shelf choose the page shown up close */
 let sel=1;
@@ -50,5 +44,5 @@ if(matchMedia('(hover:hover) and (pointer:fine)').matches){
 
 /* the shared footer script asks for these */
 const view={open:false};function open_(i){pick(i,true)}
-function render(){bottles();closeup();alts();roomsFrame();
+function render(){bottles();closeup();cap();
   if(typeof draw==='function'){torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];requestAnimationFrame(draw)}}
