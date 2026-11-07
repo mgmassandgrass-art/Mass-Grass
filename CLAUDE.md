@@ -204,6 +204,9 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   `hallmark`, `impeccable`, `design-taste-frontend` (taste-skill), `frontend-design`, `ui-ux-pro-max`,
   `typography-scale-builder`, `extract-design-md`, `interface-design` (app screens only), `hue` (new design
   languages), `shadcn` (only if a React/shadcn project appears). They live in `.claude/skills/`.
+- `unslop` (from theclaymethod/unslop) checks the English copy for AI writing patterns: extract the page text,
+  run `.claude/skills/unslop/scripts/banned_phrase_scan.py` and `structure_scan.py`, then fix only confirmed
+  defects (and the matching Arabic). Farah's story narration and quotes stay as they are.
 - `DESIGN.md` at the root is the locked system for the collage direction (tokens, type roles, spacing,
   components, mockup method). Read it first; new pages follow it.
 - The collage pages are in `drafts/collage/` (see its README). Before showing a page, run
