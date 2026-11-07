@@ -53,6 +53,9 @@ header nav{display:flex;gap:clamp(16px,2.4vw,32px);justify-self:center}
 header nav a{font:500 var(--fs-sm)/1 var(--f);letter-spacing:0;padding:8px 0}
 .ar-on header nav a{font:500 var(--fs-sm)/1 var(--fa);letter-spacing:0}
 @media(hover:hover){header nav a:hover{text-decoration:underline;text-underline-offset:6px}}
+/* Home and the whole shop stand apart from the collections, set off by a short faint rule */
+header nav .nsep{flex:none;width:1px;height:16px;align-self:center;background:currentColor;opacity:.22}
+header nav a[aria-current=page]{text-decoration:underline;text-underline-offset:6px}
 .lang{border:0;background:none;font:500 var(--fs-sm)/1 var(--fa);padding:8px;cursor:pointer;color:var(--ink)}
 .ar-on .lang{font:500 var(--fs-caption)/1 var(--f)}
 .bagb{position:relative;width:44px;height:44px;border:0;border-radius:50%;background:none;color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:background .2s}
@@ -65,8 +68,10 @@ header nav a{font:500 var(--fs-sm)/1 var(--f);letter-spacing:0;padding:8px 0}
 .menub[aria-expanded=true] i:nth-child(1){transform:translateY(7px) rotate(45deg)}.menub[aria-expanded=true] i:nth-child(2){opacity:0}.menub[aria-expanded=true] i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 .mmenu{position:fixed;inset:0;z-index:60;background:var(--cream);display:flex;flex-direction:column;justify-content:center;gap:8px;padding:88px clamp(24px,8vw,60px) 40px}
 .mmenu[hidden]{display:none}
+header nav.mmenu{justify-self:stretch}
 header .mmenu a{text-transform:none;font:800 var(--fs-h2)/1.25 var(--f);letter-spacing:-.02em;padding:4px 0}
 .ar-on header .mmenu a{font:700 var(--fs-title)/1.5 var(--fa);letter-spacing:0}
+header .mmenu .nsep{width:48px;height:1px;align-self:flex-start;margin:8px 0}
 header .mmenu a[aria-current=page]{text-decoration:underline;text-underline-offset:8px;text-decoration-thickness:2px}
 header .menub,header .bagb,header .lang,header .logo,header .acct{position:relative;z-index:61}
 /* the bag sheet, the account link and the small note (shop.js) */
@@ -196,14 +201,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 <header>
   <a class="logo" href="index.html" aria-label="Mass & Grass"><img src="assets/logo.svg" alt="Mass & Grass"></a>
   <nav>
-    <a href="shop.html" data-ar="المتجر">Shop</a><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a>
+    <a href="index.html" data-ar="الرئيسية">Home</a><i class="nsep" aria-hidden="true"></i><a href="shop.html" data-ar="المتجر">Shop</a><i class="nsep" aria-hidden="true"></i><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a>
   </nav>
   <div class="htools">
     <button class="lang" id="lang" type="button" aria-label="Arabic / English">ع</button>
     <button class="bagb" type="button" id="bagb" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8.5h13l-1.1 11.2a1 1 0 0 1-1 .9H7.6a1 1 0 0 1-1-.9z"/><path d="M9 10.5V7a3 3 0 0 1 6 0v3.5"/></svg><span class="sr" data-ar="السلة">Bag</span><span class="bn" id="bagn">0</span></button>
     <button class="menub" type="button" id="menub" aria-expanded="false" aria-controls="mmenu" aria-label="Menu"><i></i><i></i><i></i></button>
   </div>
-  <nav class="mmenu" id="mmenu" hidden aria-label="Menu"><a href="index.html" data-ar="الرئيسية">Home</a><a href="shop.html" data-ar="المتجر">Shop</a><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a></nav>
+  <nav class="mmenu" id="mmenu" hidden aria-label="Menu"><a href="index.html" data-ar="الرئيسية">Home</a><i class="nsep" aria-hidden="true"></i><a href="shop.html" data-ar="المتجر">Shop</a><i class="nsep" aria-hidden="true"></i><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a></nav>
 </header>
 <main class="wrap tm" id="main">
   <div class="pghd"><h1 data-ar="الشروط والخصوصية">Terms and privacy</h1><p data-ar="بكلام بسيط: ما تشترونه، وما يمكنكم فعله به، وما نفعله ببياناتكم.">In plain words: what you buy, what you may do with it, and what we do with your data.</p></div>

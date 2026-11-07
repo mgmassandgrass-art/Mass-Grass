@@ -10,7 +10,7 @@ old="buildPages();cap();"
 assert old in tail;tail=tail.replace(old,"document.querySelectorAll('[data-ph-ar]').forEach(e=>{e.dataset.phEn=e.dataset.phEn||e.placeholder;e.placeholder=a?e.dataset.phAr:e.dataset.phEn});render();if(view.open)open_(vi);")
 tail=tail.replace("const torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];","let torn=[...document.querySelectorAll('[data-tear],[data-tear-top]')];")
 head=head.replace('<title>Mass &amp; Grass · Collage</title>','<title>'+title+' · Mass &amp; Grass</title>')
-header=header.replace('href="#story"','href="story.html"').replace('<a href="'+nav+'" data-ar','<a href="'+nav+'" aria-current="page" data-ar',1).replace('href="#cal"','href="index.html#cal"').replace('href="#story"','href="index.html#story"').replace('<a class="logo" href="#"','<a class="logo" href="index.html"')
+header=header.replace(' aria-current="page"','').replace('href="#story"','href="story.html"').replace('<a href="'+nav+'" data-ar','<a href="'+nav+'" aria-current="page" data-ar',2).replace('href="#cal"','href="index.html#cal"').replace('href="#story"','href="index.html#story"').replace('<a class="logo" href="#"','<a class="logo" href="index.html"')
 footer=footer.replace('href="#story"','href="story.html"')
 import sys;pre,out,title,nav=sys.argv[1:5]
 main=open('parts/'+pre+'_main.html').read();js=open('parts/'+pre+'_js.txt').read()
