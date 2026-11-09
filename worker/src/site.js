@@ -4,7 +4,9 @@ import { json, fail, readJson, clean } from './util.js';
 import { getSetting, dropCache } from './shop.js';
 
 export const PAGES = MANIFEST.files.filter((f) => f.path.endsWith('.html')).map((f) => f.path);
-const SYSTEM_PAGES = ['index.html', 'checkout.html', 'account.html', 'profile.html', '404.html']; // never hidden
+const SYSTEM_PAGES = ['index.html', 'checkout.html', 'account.html', 'profile.html', '404.html', 'soon.html']; // never hidden
+// The script files each page loads: their texts are edited together with the page's own.
+const JS_OF = Object.fromEntries(MANIFEST.files.filter((f) => f.path.endsWith('.html')).map((f) => [f.path, f.js || []]));
 export const TYPES = { html: 'text/html; charset=utf-8', js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8' };
 
 // ---------- edited copies of files (D1 site_files.published), with every save kept in site_file_versions ----------
@@ -35,22 +37,26 @@ async function save(env, path, content, note) {
 
 // ---------- texts of a page: elements with data-ar (static) and t('en','ar') pairs (in page scripts) ----------
 const RE_ATTR = /(<([a-z][a-z0-9]*)\b[^>]*?\sdata-ar=")([^"]*)("[^>]*>)([^<]*)(<\/\2>)/g;
-const RE_T = /\bt\(\s*'((?:[^'\\\n]|\\.)*)'\s*,\s*'((?:[^'\\\n]|\\.)*)'\s*\)/g;
+const RE_T = /\b([tT])\(\s*'((?:[^'\\\n]|\\.)*)'\s*,\s*'((?:[^'\\\n]|\\.)*)'\s*\)/g;
 const unJs = (s) => s.replace(/\\(.)/g, '$1');
 const toJs = (s) => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/[\r\n\u2028\u2029]/g, ' ');
 const unHtml = (s) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 const toHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const editable = (en, ar) => (en.trim() || ar.trim()) && !/\$\{|<[a-z/]/i.test(en + ar) && (en + ar).length < 600;
 
-function texts(html) {
+// html: the page; scripts: [{path, src}] in the order the page loads them. Ids: a<n> for the page's elements, j<file>_<n> for script pairs.
+function texts(html, scripts = []) {
   const out = [];
   let i = 0;
   for (const m of html.matchAll(RE_ATTR)) { const en = unHtml(m[5]), ar = unHtml(m[3]); if (editable(en, ar)) out.push({ id: 'a' + i, en, ar }); i++; }
-  i = 0;
-  for (const m of html.matchAll(RE_T)) { const en = unJs(m[1]), ar = unJs(m[2]); if (editable(en, ar) && /[a-zA-Z؀-ۿ]/.test(en + ar)) out.push({ id: 't' + i, en, ar }); i++; }
+  scripts.forEach((f, k) => {
+    i = 0;
+    for (const m of f.src.matchAll(RE_T)) { const en = unJs(m[2]), ar = unJs(m[3]); if (editable(en, ar) && /[a-zA-Z؀-ۿ]/.test(en + ar)) out.push({ id: `j${k}_${i}`, en, ar, file: f.path }); i++; }
+  });
   return out;
 }
-function applyTexts(html, changes) {
+// Returns the changed copies: {html, scripts:[{path, src, changed}], n}.
+function applyTexts(html, scripts, changes) {
   const by = Object.fromEntries(changes.map((c) => [c.id, c]));
   let i = 0, n = 0;
   html = html.replace(RE_ATTR, (all, a, tag, ar, b, en, c) => {
@@ -58,14 +64,18 @@ function applyTexts(html, changes) {
     if (!ch || unHtml(en) !== ch.old_en || unHtml(ar) !== ch.old_ar) return all;
     n++; return a + toHtml(ch.ar) + b + toHtml(ch.en) + c;
   });
-  i = 0;
-  html = html.replace(RE_T, (all, en, ar) => {
-    const ch = by['t' + i++];
-    if (!ch || unJs(en) !== ch.old_en || unJs(ar) !== ch.old_ar) return all;
-    n++; return `t('${toJs(ch.en)}','${toJs(ch.ar)}')`;
+  const outScripts = scripts.map((f, k) => {
+    let j = 0, changed = false;
+    const src = f.src.replace(RE_T, (all, fn, en, ar) => {
+      const ch = by[`j${k}_${j++}`];
+      if (!ch || unJs(en) !== ch.old_en || unJs(ar) !== ch.old_ar) return all;
+      n++; changed = true; return `${fn}('${toJs(ch.en)}','${toJs(ch.ar)}')`;
+    });
+    return { path: f.path, src, changed };
   });
-  return { html, n };
+  return { html, scripts: outScripts, n };
 }
+const scriptsOf = async (env, origin, path) => Promise.all((JS_OF[path] || []).map(async (p) => ({ path: p, src: (await current(env, origin, p)) || '' })));
 const sections = (html) => [...html.matchAll(/<section\b[^>]*\bid="([a-zA-Z][\w-]*)"/g)].map((m) => m[1]);
 const titleOf = (html) => unHtml((html.match(/<title>([^<]*)/) || [, ''])[1]);
 
@@ -117,7 +127,7 @@ export async function siteAdmin(env, req, url, p) {
     for (const path of PAGES) {
       const h = (await current(env, origin, path)) || '';
       out.push({ path, title: titleOf(h), url: '/' + (path === 'index.html' ? '' : path.replace(/\.html$/, '')), hidden: (rules.hidden || []).includes(path),
-        system: SYSTEM_PAGES.includes(path), edited: edited.has(path), sections: sections(h).map((id) => ({ id, hidden: ((rules.sections || {})[path] || []).includes(id) })), texts: texts(h).length });
+        system: SYSTEM_PAGES.includes(path), edited: edited.has(path) || (JS_OF[path] || []).some((j) => edited.has(j)), sections: sections(h).map((id) => ({ id, hidden: ((rules.sections || {})[path] || []).includes(id) })), texts: texts(h, await scriptsOf(env, origin, path)).length });
     }
     return json({ pages: out });
   }
@@ -126,7 +136,7 @@ export async function siteAdmin(env, req, url, p) {
     if (!PAGES.includes(path)) return fail('not_found', 404);
     const h = await current(env, origin, path);
     const { results } = await env.DB.prepare('SELECT id, note, created_at FROM site_file_versions WHERE path=? ORDER BY id DESC LIMIT 20').bind(path).all();
-    return json({ path, title: titleOf(h), texts: texts(h), versions: results });
+    return json({ path, title: titleOf(h), texts: texts(h, await scriptsOf(env, origin, path)), versions: results });
   }
   if (p === '/api/admin/page' && m === 'PUT') {
     const b = await readJson(req);
@@ -134,9 +144,11 @@ export async function siteAdmin(env, req, url, p) {
     const ch = b.changes.slice(0, 500).map((c) => ({ id: String(c.id), old_en: String(c.old_en ?? ''), old_ar: String(c.old_ar ?? ''), en: String(c.en ?? '').slice(0, 600), ar: String(c.ar ?? '').slice(0, 600) }));
     // Texts stay plain text: a tag in a t('…') pair would land inside the page's <script> as HTML (e.g. </script>).
     if (ch.some((c) => /<[a-z/!?]/i.test(c.en + c.ar))) return fail('bad_text');
-    const { html, n } = applyTexts(await current(env, origin, b.path), ch);
+    const before = await current(env, origin, b.path);
+    const { html, scripts, n } = applyTexts(before, await scriptsOf(env, origin, b.path), ch);
     if (n !== ch.length) return fail('changed_meanwhile', 409, { applied: n });
-    await save(env, b.path, html, b.note || 'texts');
+    if (html !== before) await save(env, b.path, html, b.note || 'texts');
+    for (const f of scripts) if (f.changed) await save(env, f.path, f.src, 'texts of ' + b.path);
     return json({ ok: true, changed: n });
   }
   if (p === '/api/admin/page/restore' && m === 'POST') {
@@ -147,7 +159,9 @@ export async function siteAdmin(env, req, url, p) {
       if (!v) return fail('not_found', 404);
       await save(env, b.path, v.content, 'restore #' + b.version);
     } else {
-      await env.DB.prepare('UPDATE site_files SET published=NULL WHERE path=?').bind(b.path).run();
+      // back to the built-in page; scripts shared by every page (core.js) keep their edits
+      const own = (JS_OF[b.path] || []).filter((j) => !/\/(core|show)\.js$/.test(j));
+      await env.DB.batch([b.path, ...own].map((x) => env.DB.prepare('UPDATE site_files SET published=NULL WHERE path=?').bind(x)));
       pubCache = null;
     }
     return json({ ok: true });

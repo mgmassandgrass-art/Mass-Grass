@@ -1,0 +1,20 @@
+# The whole site + API on this machine (never deployed):
+#   npx wrangler d1 migrations apply mass-grass --local --persist-to .state -c wrangler.local.toml
+#   npx wrangler dev --local --persist-to .state -c wrangler.local.toml --port 8787
+name = "mass-grass-local"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+[assets]
+directory = "../web"
+binding = "ASSETS"
+run_worker_first = ["/*", "!/fonts/*"]
+[vars]
+ADMIN_EMAIL = "info@massandgrass.com"
+SITE_ORIGIN = "http://localhost:8787"
+SOON = "0"
+MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
+[[d1_databases]]
+binding = "DB"
+database_name = "mass-grass"
+database_id = "local"
+migrations_dir = "migrations"

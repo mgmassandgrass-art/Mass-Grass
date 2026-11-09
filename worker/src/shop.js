@@ -96,7 +96,7 @@ export async function createOrder(env, req, user) {
   return json({ id, access, total: total / 100, approve: approve && approve.href }, 201);
 }
 
-const orderOut = (o) => ({ id: o.id, email: o.email, name: o.name, items: JSON.parse(o.items), total: o.total_cents / 100, currency: o.currency, status: o.status, date: new Date(o.created_at).toISOString() });
+export const orderOut = (o) => ({ id: o.id, email: o.email, name: o.name, items: JSON.parse(o.items), total: o.total_cents / 100, currency: o.currency, status: o.status, date: new Date(o.created_at).toISOString() });
 
 const withFiles = async (env, o) => ({ ...orderOut(o), files: await orderFiles(env, o) });
 
@@ -158,6 +158,63 @@ export async function admin(env, req, url, p) {
     const [u, o, rev, pr] = await Promise.all([one('SELECT count(*) n FROM users'), one("SELECT count(*) n FROM orders WHERE status='paid'"),
       one("SELECT coalesce(sum(total_cents),0) n FROM orders WHERE status='paid'"), one('SELECT count(*) n FROM products WHERE deleted=0')]);
     return json({ users: u.n, orders: o.n, revenue: rev.n / 100, products: pr.n });
+  }
+  // Everything the dashboard's first screen shows, in one answer. All figures come from the tables; nothing is estimated.
+  if (p === '/api/admin/overview' && m === 'GET') {
+    const DAY = 864e5, now = Date.now(), days = Math.min(365, Math.max(7, parseInt(url.searchParams.get('days')) || 30)), from = now - days * DAY;
+    const one = (q, ...b) => env.DB.prepare(q).bind(...b).first(), all = async (q, ...b) => (await env.DB.prepare(q).bind(...b).all()).results;
+    const [tot, per, prev, pend, users, newUsers, subs, msgs, prods, hidden, files] = await Promise.all([
+      one("SELECT count(*) n, coalesce(sum(total_cents),0) c FROM orders WHERE status='paid'"),
+      one("SELECT count(*) n, coalesce(sum(total_cents),0) c FROM orders WHERE status='paid' AND paid_at>=?", from),
+      one("SELECT count(*) n, coalesce(sum(total_cents),0) c FROM orders WHERE status='paid' AND paid_at>=? AND paid_at<?", from - days * DAY, from),
+      one("SELECT count(*) n FROM orders WHERE status='pending' AND created_at>=?", now - 7 * DAY),
+      one('SELECT count(*) n FROM users'), one('SELECT count(*) n FROM users WHERE created_at>=?', from),
+      one('SELECT count(*) n FROM subscribers'), one('SELECT count(*) n, coalesce(sum(read=0),0) unread FROM messages'),
+      one('SELECT count(*) n FROM products WHERE deleted=0'), one('SELECT count(*) n FROM products WHERE deleted=0 AND hidden=1'),
+      one('SELECT count(*) n, coalesce(sum(size),0) bytes FROM product_files'),
+    ]);
+    const series = await all("SELECT cast((paid_at-?)/? AS INTEGER) d, count(*) n, sum(total_cents) c FROM orders WHERE status='paid' AND paid_at>=? GROUP BY d", from, DAY, from);
+    const signups = await all('SELECT cast((created_at-?)/? AS INTEGER) d, count(*) n FROM users WHERE created_at>=? GROUP BY d', from, DAY, from);
+    const byDay = [...Array(days)].map((_, i) => ({ date: new Date(from + (i + 1) * DAY).toISOString().slice(0, 10), orders: 0, revenue: 0, signups: 0 }));
+    for (const r of series) if (byDay[r.d]) { byDay[r.d].orders = r.n; byDay[r.d].revenue = r.c / 100; }
+    for (const r of signups) if (byDay[r.d]) byDay[r.d].signups = r.n;
+    const top = await all("SELECT json_extract(j.value,'$.kind') pkind, json_extract(j.value,'$.k') pid, max(json_extract(j.value,'$.t')) title, max(json_extract(j.value,'$.ta')) title_ar, count(*) n, sum(json_extract(j.value,'$.cents')) c FROM orders o, json_each(o.items) j WHERE o.status='paid' AND json_extract(j.value,'$.kind')<>'pack' GROUP BY pkind, pid ORDER BY n DESC, c DESC LIMIT 8");
+    const kinds = await all("SELECT json_extract(j.value,'$.kind') pkind, count(*) n, sum(json_extract(j.value,'$.cents')) c FROM orders o, json_each(o.items) j WHERE o.status='paid' GROUP BY pkind");
+    const recent = await all('SELECT * FROM orders ORDER BY created_at DESC LIMIT 6');
+    // Pieces on sale that have no file to deliver yet: the first thing to fix before payments open.
+    const noFile = await all("SELECT p.kind, p.id, p.title_en, p.title_ar FROM products p WHERE p.deleted=0 AND p.hidden=0 AND NOT EXISTS (SELECT 1 FROM product_files f WHERE f.kind=p.kind AND f.product_id=p.id) ORDER BY p.kind, p.sort LIMIT 200");
+    const calFile = await one("SELECT count(*) n FROM product_files WHERE kind='calendar'");
+    const alerts = await one("SELECT count(*) n FROM audit_log WHERE level='alert' AND at>=?", now - 7 * DAY);
+    return json({ days, totals: { orders: tot.n, revenue: tot.c / 100 }, period: { orders: per.n, revenue: per.c / 100 }, previous: { orders: prev.n, revenue: prev.c / 100 },
+      pending: pend.n, users: users.n, newUsers: newUsers.n, subscribers: subs.n, messages: msgs.n, unread: msgs.unread, products: prods.n, hidden: hidden.n,
+      files: files.n, fileBytes: files.bytes, byDay, top: top.map((t) => ({ kind: t.pkind, id: t.pid, title: t.title, title_ar: t.title_ar, n: t.n, revenue: (t.c || 0) / 100 })), kinds: kinds.map((k) => ({ kind: k.pkind, n: k.n, revenue: (k.c || 0) / 100 })),
+      recent: recent.map(orderOut), noFile, calendarFile: calFile.n > 0, alerts: alerts.n,
+      payments: env.PAYPAL_CLIENT_ID ? (env.PAYPAL_ENV === 'live' ? 'live' : 'sandbox') : 'off', mail: !!env.RESEND_API_KEY, google: !!env.GOOGLE_CLIENT_ID, soon: env.SOON === '1' });
+  }
+  if (p === '/api/admin/messages' && m === 'GET') {
+    const { results } = await env.DB.prepare('SELECT * FROM messages ORDER BY created_at DESC LIMIT 500').all();
+    return json({ messages: results.map((r) => ({ ...r, date: new Date(r.created_at).toISOString() })) });
+  }
+  if (p === '/api/admin/messages' && m === 'PUT') {
+    const b = await readJson(req);
+    await env.DB.prepare('UPDATE messages SET read=? WHERE id=?').bind(b && b.read ? 1 : 0, parseInt(b && b.id) || 0).run();
+    return json({ ok: true });
+  }
+  if (p === '/api/admin/messages' && m === 'DELETE') {
+    await env.DB.prepare('DELETE FROM messages WHERE id=?').bind(parseInt(url.searchParams.get('id')) || 0).run();
+    return json({ ok: true });
+  }
+  if (p === '/api/admin/audit' && m === 'GET') {
+    const lvl = url.searchParams.get('level');
+    const q = ['warn', 'alert'].includes(lvl) ? env.DB.prepare(lvl === 'alert' ? "SELECT * FROM audit_log WHERE level='alert' ORDER BY id DESC LIMIT 500" : "SELECT * FROM audit_log WHERE level<>'info' ORDER BY id DESC LIMIT 500")
+      : env.DB.prepare('SELECT * FROM audit_log ORDER BY id DESC LIMIT 500');
+    return json({ log: (await q.all()).results.map((r) => ({ ...r, date: new Date(r.at).toISOString() })) });
+  }
+  if (p === '/api/admin/order' && m === 'GET') {
+    const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(clean(url.searchParams.get('id'), 20)).first();
+    if (!o) return fail('not_found', 404);
+    const files = o.status === 'paid' ? await orderFiles(env, o) : [];
+    return json({ order: { ...orderOut(o), paypal_id: o.paypal_id, news: !!o.news, user_id: o.user_id, paid: o.paid_at ? new Date(o.paid_at).toISOString() : null, files: files.map((f) => ({ name: f.name, size: f.size, kind: f.kind, product_id: f.product_id })) } });
   }
   if (p === '/api/admin/products' && m === 'GET') {
     const { results } = await env.DB.prepare('SELECT * FROM products WHERE deleted=0 ORDER BY kind, sort, title_en').all();
@@ -238,8 +295,8 @@ export async function admin(env, req, url, p) {
   }
   if (p === '/api/admin/customers' && m === 'GET') {
     const { results } = await env.DB.prepare(
-      "SELECT u.id,u.email,u.name,u.role,u.created_at,u.google_sub IS NOT NULL g,(SELECT count(*) FROM orders o WHERE (o.user_id=u.id OR o.email=u.email) AND o.status='paid') orders,(SELECT coalesce(sum(total_cents),0) FROM orders o WHERE (o.user_id=u.id OR o.email=u.email) AND o.status='paid') spent FROM users u ORDER BY u.created_at DESC LIMIT 1000").all();
-    return json({ customers: results.map((c) => ({ ...c, spent: c.spent / 100, via: c.g ? 'google' : 'email', joined: new Date(c.created_at).toISOString() })) });
+      "SELECT u.id,u.email,u.name,u.role,u.created_at,u.last_login,u.totp_on,u.google_sub IS NOT NULL g,(SELECT count(*) FROM orders o WHERE (o.user_id=u.id OR o.email=u.email) AND o.status='paid') orders,(SELECT coalesce(sum(total_cents),0) FROM orders o WHERE (o.user_id=u.id OR o.email=u.email) AND o.status='paid') spent FROM users u ORDER BY u.created_at DESC LIMIT 1000").all();
+    return json({ customers: results.map((c) => ({ ...c, spent: c.spent / 100, via: c.g ? 'google' : 'email', twofa: !!c.totp_on, joined: new Date(c.created_at).toISOString(), last: c.last_login ? new Date(c.last_login).toISOString() : null })) });
   }
   if (p === '/api/admin/customers' && m === 'DELETE') {
     const id = url.searchParams.get('id');

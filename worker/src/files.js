@@ -30,7 +30,8 @@ export async function orderFiles(env, o) {
 // GET /api/dl/<file>?o=<order>&a=<order secret>
 export async function download(env, fileId, url) {
   const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(clean(url.searchParams.get('o'), 20)).first();
-  if (!o || !o.access || o.access !== url.searchParams.get('a') || o.status !== 'paid') return fail('not_found', 404);
+  const sameStr = (x, y) => { x = String(x ?? ''); y = String(y ?? ''); if (x.length !== y.length) return false; let d = 0; for (let i = 0; i < x.length; i++) d |= x.charCodeAt(i) ^ y.charCodeAt(i); return d === 0; };
+  if (!o || !o.access || !sameStr(o.access, url.searchParams.get('a')) || o.status !== 'paid') return fail('not_found', 404);
   const f = (await orderFiles(env, o)).find((x) => x.id === fileId);
   if (!f) return fail('not_found', 404);
   const row = await env.DB.prepare('SELECT type, size, chunks FROM product_files WHERE id=?').bind(fileId).first();

@@ -6,7 +6,8 @@
   "dev": "wrangler dev --local --persist-to .state",
   "deploy": "node tools/manifest.mjs && wrangler deploy",
   "db:local": "wrangler d1 migrations apply mass-grass --local --persist-to .state",
-  "test": "node test/auth.test.mjs"
+  "test": "node test/auth.test.mjs && node test/security.test.mjs",
+  "local": "sh test/local.sh"
  },
  "devDependencies": {
   "wrangler": "^4"
