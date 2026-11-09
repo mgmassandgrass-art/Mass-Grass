@@ -1,0 +1,30 @@
+<!--{"title":"Paintings","desc":"Watercolours Farah Al-Helou painted in Gaza, as high-resolution files you print and frame at home.","nav":"paintings.html","css":["paintings"],"js":["art","paintings"]}-->
+
+<main id="main">
+<section class="ph" aria-labelledby="ph-h">
+  <div class="wrap">
+    <div>
+      <h1 id="ph-h" data-ar="اللوحات">The paintings</h1>
+      <p class="lead" data-ar="لوحات مائية رسمتها فرح الحلو في غزة.">Watercolours Farah Al-Helou painted in Gaza.</p>
+    </div>
+    <p class="note paper" data-tear="4"><span class="fill"></span><b data-price="painting">€12</b><span data-ar="لكل لوحة. ملف عالي الدقة بصيغتي PDF وPNG، تحمّلونه فورًا وتطبعونه حتى مقاس A3.">for each painting. A high-res PDF and PNG you download at once and print up to A3.</span></p>
+  </div>
+</section>
+<section class="wrap" aria-label="Filter" data-label-ar="تصفية"><ul class="filt" id="filt"></ul></section>
+<section class="wrap" aria-label="All paintings"><div class="wall" id="wall"></div></section>
+</main>
+<dialog class="view" id="view" aria-labelledby="v-h">
+  <button class="x paper" data-tear="3" type="button" id="vx" aria-label="Close" data-label-ar="إغلاق"><span class="fill"></span><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="sheetv paper" data-tear="6"><span class="fill"></span>
+    <div class="vleft"><div class="big" data-mode="art"><img id="vimg" src="assets/t-hero.webp" alt="" decoding="async"><button class="zbtn" type="button" id="vzoom" aria-pressed="false" aria-label="Zoom in" data-label-ar="تكبير"><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M11 8v6M8 11h6"/></svg></button></div><div class="vthumbs" id="vthumbs" aria-label="Views"></div></div>
+    <div>
+      <h2 id="v-h"></h2><p class="where" id="vwhere"></p>
+      <p class="price" data-price="painting">€12</p>
+      <p class="fmt" data-ar="ملف PDF وPNG تحمّلونه فور الدفع.">A PDF and a PNG to download straight after paying.</p>
+      <dl class="spec" id="vspec"></dl>
+      <div class="acts"><button class="ink" type="button" id="vadd"></button></div>
+      <div class="nav"><button class="tbtn paper" data-tear="3" type="button" id="vprev"><span class="fill"></span><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="السابقة">Previous</span></button>
+        <button class="tbtn paper" data-tear="3" type="button" id="vnext"><span class="fill"></span><span data-ar="التالية">Next</span><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+    </div>
+  </div>
+</dialog>

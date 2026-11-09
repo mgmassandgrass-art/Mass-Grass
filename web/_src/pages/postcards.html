@@ -1,0 +1,80 @@
+<!--{"title":"Postcards","desc":"Farah Al-Helou's paintings from Gaza as postcards: write a note, stamp it and send it, or print the card at home.","nav":"postcards.html","css":["postcards"],"js":["art","postcards"]}-->
+
+<main id="main">
+<section class="pi" aria-labelledby="pi-h">
+  <div class="wrap">
+    <div class="pi-t">
+      <h1 id="pi-h" data-ar="البطاقات البريدية">Postcards</h1>
+      <p class="lead" data-ar="لوحات فرح على بطاقات، تكتبون عليها وترسلونها لمن تحبون.">Farah’s paintings as postcards, to write on and send.</p>
+      <div class="pi-a"><a class="ink" href="#write" data-ar="اكتبوا بطاقة">Write a card</a><a class="go" href="#cards2" data-ar="كل البطاقات">All the cards</a></div>
+      <p class="pi-p"><b data-price="postcard">€2</b> <span data-ar="لكل بطاقة للطباعة. والإرسال برسالة مجاني.">for each printable card. Sending one as a message is free.</span></p>
+    </div>
+    <button class="ienv" id="ienv" type="button" aria-label="Take another card out of the envelope" data-label-ar="أخرجوا بطاقة أخرى من الظرف">
+      <span class="env"><span class="ein"></span><span class="icard" id="icard"><img id="iimg" src="assets/hero.webp" alt=""></span><span class="epk"></span><span class="eflap"><span class="fo"></span><span class="fi"></span></span></span>
+    </button>
+  </div>
+</section>
+
+<section class="ws" id="write" aria-labelledby="ws-h">
+  <div class="wrap">
+    <h2 class="big" id="ws-h" data-ar="اكتبوا بطاقة">Write a card</h2>
+    <div class="studio2">
+      <div class="desk2" id="desk">
+        <div class="dst" id="dst">
+          <div class="env env2 eback" id="eback"><span class="ein"></span><span class="eflap"><span class="fo"></span><span class="fi"></span></span></div><div class="env env2 efront" id="efront"><span class="epk"></span><span class="eflap" id="eflap"><span class="fo"></span><span class="fi"></span></span><span class="seal" id="seal"></span></div>
+          <div class="dwrap2" id="dwrap"><div class="flip3"><div class="card3" id="card3">
+            <div class="fc front"><img id="dimg" src="assets/hero.webp" alt=""></div>
+            <div class="fc back"><div class="msg" id="msgOut" dir="auto"></div>
+              <div class="addr"><span class="stampbox" id="stampOut"></span><span class="pm" id="pm">GAZA<br><span id="pmd"></span><br>✶</span><span class="to" id="toOut" dir="auto"></span><i></i><i></i><i></i></div>
+              <span class="cap2" id="capOut"></span></div>
+          </div></div></div>
+        </div>
+        <button class="tbtn paper flipb" data-tear="3" type="button" id="dflip"><span class="fill"></span><span id="flipT"></span></button>
+      </div>
+      <div class="steps2">
+        <div class="st"><div class="sth"><span class="n">01</span><h3><span data-ar="اختاروا اللوحة">Choose the painting</span></h3></div><div class="thumbs" id="thumbs"></div></div>
+        <div class="st"><div class="sth"><span class="n">02</span><h3><span data-ar="اختاروا الطابع">Choose the stamp</span></h3></div><div class="stamps" id="stamps"></div></div>
+        <div class="st"><div class="sth"><span class="n">03</span><h3><span data-ar="اكتبوا رسالتكم">Write your message</span></h3></div>
+          <label class="fld"><span data-ar="إلى">To</span><input id="toIn" maxlength="40" autocomplete="off" placeholder="Grandma in Haifa" data-ph-ar="جدتي في حيفا"></label>
+          <label class="fld"><span data-ar="الرسالة">Message</span><textarea id="msgIn" maxlength="240" rows="4" placeholder="Thinking of you…" data-ph-ar="أفكر فيكم…"></textarea></label>
+          <label class="fld"><span data-ar="من">From</span><input id="fromIn" maxlength="30" autocomplete="off" placeholder="Your name" data-ph-ar="اسمكم"></label>
+        </div>
+        <div class="acts"><button class="ink" type="button" id="send" data-ar="اختموها وضعوها في الظرف">Stamp it and seal the envelope</button></div>
+        <div class="share paper" data-tear="5" id="share" hidden><span class="fill"></span>
+          <p class="sh-t" data-ar="البطاقة في الظرف. أرسلوها:">The card is in the envelope. Send it:</p>
+          <div class="sh-b"><a class="ink" id="sWa" target="_blank" rel="noopener">WhatsApp</a><a class="tbtn paper" data-tear="3" id="sMail"><span class="fill"></span><span data-ar="البريد الإلكتروني">Email</span></a><button class="tbtn paper" data-tear="3" type="button" id="sCopy"><span class="fill"></span><span id="copyT" data-ar="نسخ الرابط">Copy link</span></button><button class="go" type="button" id="again" data-ar="بطاقة جديدة">Write another</button></div>
+          <small data-ar="يفتح الرابط الظرف عند من ترسلون إليه. الرسالة محفوظة داخل الرابط نفسه، لا على أي خادم.">The link opens the envelope for whoever you send it to. The message lives inside the link itself, not on any server.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" aria-labelledby="all-h"><h2 class="big allh" id="all-h" data-ar="كل البطاقات">All the cards</h2><div class="cards2" id="cards2"></div></section>
+</main>
+
+<dialog class="view pcv" id="view" aria-labelledby="v-h">
+  <button class="x paper" data-tear="3" type="button" id="vx" aria-label="Close" data-label-ar="إغلاق"><span class="fill"></span><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="sheetv paper" data-tear="6"><span class="fill"></span>
+    <div class="vbig" id="vbig"></div>
+    <div>
+      <h2 id="v-h"></h2><p class="where" id="vwhere"></p>
+      <div class="vtabs" id="vtabs"></div>
+      <p class="price" data-price="postcard">€2</p>
+      <p class="fmt" data-ar="ملف عالي الدقة بصيغتي PDF وPNG: الوجه والظهر، للطباعة في البيت.">A high-res PDF and PNG of the front and back, to print at home.</p>
+      <div class="acts"><button class="ink" type="button" id="vadd"></button><button class="tbtn paper" data-tear="3" type="button" id="vwrite"><span class="fill"></span><span data-ar="اكتبوا عليها">Write on it</span></button></div>
+      <div class="nav"><button class="tbtn paper" data-tear="3" type="button" id="vprev"><span class="fill"></span><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="السابقة">Previous</span></button>
+        <button class="tbtn paper" data-tear="3" type="button" id="vnext"><span class="fill"></span><span data-ar="التالية">Next</span><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+    </div>
+  </div>
+</dialog>
+
+<div class="recv" id="recv" hidden>
+  <div class="rbox">
+    <p class="rk" id="rFrom"></p>
+    <button class="renv" id="renv" type="button" aria-label="Open the envelope" data-label-ar="افتحوا الظرف"><span class="env"><span class="ein"></span><span class="rcard" id="rcard"><img id="rimg" src="assets/hero.webp" alt=""></span><span class="epk"></span><span class="eflap"><span class="fo"></span><span class="fi"></span></span><span class="seal on"></span></span></button>
+    <p class="rtap" data-ar="اضغطوا لفتح الظرف">Tap to open the envelope</p>
+    <div class="rfull" id="rfull"></div>
+    <div class="racts" id="racts" hidden><a class="ink" href="#write" id="rReply" data-ar="اكتبوا بطاقة">Write a card back</a><button class="tbtn paper" data-tear="3" type="button" id="rClose"><span class="fill"></span><span data-ar="تصفّحوا البطاقات">See the cards</span></button></div>
+  </div>
+</div>

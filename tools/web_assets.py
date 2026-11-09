@@ -49,9 +49,14 @@ if sd:
 
 # 3 · everything that is not art (mockups, papers, envelope, faces, calendar pages) comes over as it is
 SKIP = {'pmoon', 'ppoppies', 'ptree', 's-dove', 's-gaza', 's-heart', 's-lemons'}   # watermarked or replaced above
-SKIP_PRE = ('cal-', 'sk-cal-', 'calmock', 'c27-hero', 'c27-wall', 'c27-hands', 'c27-kitchen', 'cw-', 'pcp-')
+SKIP_PRE = ('cal-', 'sk-cal-', 'calmock', 'c27-hero', 'c27-wall', 'c27-hands', 'c27-kitchen', 'cw-')
 for f in sorted(glob.glob(C + '*')):
     b = os.path.basename(f); k = b.rsplit('.', 1)[0]
     if os.path.isdir(f) or b.endswith('.js') or k in SKIP or k in ART or b.startswith(SKIP_PRE): continue
     if not os.path.exists(OUT + b) or sd: shutil.copy2(f, OUT + b)
+for f in glob.glob(C + 'p/sc-*.webp'): shutil.copy2(f, OUT + os.path.basename(f))   # small copies of the rooms, for thumbnails
+# 4 · the size of every painting's file, for the page's "prints sharp up to" table and the frame it suits
+import json
+dims = {k: list(cv2.imread(OUT + k + '.webp').shape[1::-1]) for k in ART}
+open('web/assets/js/art.js', 'w').write('/* written by tools/web_assets.py: [width, height] of every painting file */\nwindow.MG_ART = ' + json.dumps(dims) + ';\n')
 print(len(os.listdir(OUT)), 'files in', OUT)
