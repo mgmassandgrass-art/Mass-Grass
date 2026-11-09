@@ -1,0 +1,90 @@
+/* Mass & Grass · the shop's own list of pieces.
+   Product id == image file (assets/<id>.webp, thumbnail assets/t-<id>.webp for paintings).
+   The server's catalog (the admin's products, prices and hidden pieces) replaces this list when the page
+   is served by the Worker; opened as plain files (previews) the site sells from this list. */
+window.MG_DEFAULT = {
+  prices: { painting: 12, postcard: 2, sticker: 1, pack: 3, calendar: 8 },
+  products: [
+    /* paintings */
+    ['painting', 'hero', 'Gaza Coast', 'ساحل غزة'],
+    ['painting', 'sparklers', 'Sparkler Night', 'ليلة الشماريخ'],
+    ['painting', 'dovegirl', 'Dove Girl', 'فتاة الحمام'],
+    ['painting', 'boattop', 'The Boat', 'القارب'],
+    ['painting', 'guitar', 'Guitar Girl', 'فتاة الجيتار'],
+    ['painting', 'pmoon', 'Moon Swing', 'أرجوحة القمر'],
+    ['painting', 'house', 'Home', 'البيت'],
+    ['painting', 'alley', 'The Alley', 'الزقاق'],
+    ['painting', 'blueflowers', 'White Dove', 'الحمامة البيضاء'],
+    ['painting', 'seafish', 'Sea Fish', 'سمك البحر'],
+    ['painting', 'pcartgirl', 'Girl with Cart', 'فتاة والعربة'],
+    ['painting', 'hill', 'Hill & Boat', 'التلة والقارب'],
+    ['painting', 'pelephant', 'Elephant on a Bike', 'فيل على دراجة'],
+    ['painting', 'waves', 'The Waves', 'الموج'],
+    ['painting', 'deirbalah', 'Deir al-Balah', 'دير البلح'],
+    ['painting', 'pflower', 'Big Flower', 'الزهرة الكبيرة'],
+    ['painting', 'pmoonsleep', 'Moon Sleeper', 'نائمة على القمر'],
+    ['painting', 'psea', 'Sea & Clouds', 'بحر وغيوم'],
+    ['painting', 'bikeride', 'Bike Ride', 'مشوار بالدراجة'],
+    ['painting', 'snowglobe', 'Snow Globe', 'كرة الثلج'],
+    ['painting', 'boatman', 'The Boatman', 'الصياد'],
+    /* postcards */
+    ['postcard', 'hero', 'Gaza Coast', 'ساحل غزة'],
+    ['postcard', 'blueflowers', 'White Dove', 'الحمامة البيضاء'],
+    ['postcard', 'waves', 'The Waves', 'الموج'],
+    ['postcard', 'boatman', 'The Boatman', 'الصياد'],
+    ['postcard', 'house', 'Home', 'البيت'],
+    ['postcard', 'dovegirl', 'Dove Girl', 'فتاة الحمام'],
+    ['postcard', 'pcartgirl', 'Girl with Cart', 'فتاة والعربة'],
+    ['postcard', 'pflower', 'Big Flower', 'الزهرة الكبيرة'],
+    ['postcard', 'hill', 'Hill & Boat', 'التلة والقارب'],
+    ['postcard', 'boattop', 'The Boat', 'القارب'],
+    ['postcard', 'psea', 'Sea & Clouds', 'بحر وغيوم'],
+    ['postcard', 'alley', 'The Alley', 'الزقاق'],
+    ['postcard', 'sparklers', 'Sparkler Night', 'ليلة الشماريخ'],
+    ['postcard', 'guitar', 'Guitar Girl', 'فتاة الجيتار'],
+    ['postcard', 'pmoonsleep', 'Moon Sleeper', 'نائمة على القمر'],
+    /* stickers: Farah's own sheet first (die-cut), then cuts from the paintings */
+    ['sticker', 's-lemons', 'Lemons', 'ليمون', 'die'],
+    ['sticker', 's-pomegranate', 'Pomegranate of Palestine', 'رمّان فلسطين', 'die'],
+    ['sticker', 's-kaak', 'Jerusalem Ka’ak', 'كعك القدس', 'die'],
+    ['sticker', 's-olives', 'Olives', 'زيتون', 'die'],
+    ['sticker', 's-jaffa', 'Jaffa Orange', 'برتقال يافا', 'die'],
+    ['sticker', 's-cactus', 'Cactus & Watermelon', 'صبر وبطيخ', 'die'],
+    ['sticker', 's-jug', 'Clay Jug', 'إبريق الفخار', 'die'],
+    ['sticker', 's-family', 'Roots', 'جذور', 'die'],
+    ['sticker', 's-fishers', 'Gaza Fishers', 'صيادو غزة', 'die'],
+    ['sticker', 's-coast', 'Gaza Coast', 'ساحل غزة', 'die'],
+    ['sticker', 's-whale', 'Bike Ride', 'مشوار بالدراجة', 'die'],
+    ['sticker', 'girl-bike', 'Elephant on a Bike', 'فيل على دراجة', 'die'],
+    ['sticker', 'sparklers', 'Sparkler Night', 'ليلة الشماريخ', 'round'],
+    ['sticker', 'pmoon', 'Moon Swing', 'أرجوحة القمر', 'round'],
+    ['sticker', 'dovegirl', 'Dove Girl', 'فتاة الحمام', 'round'],
+    ['sticker', 'guitar', 'Guitar Girl', 'فتاة الجيتار', 'rect'],
+    ['sticker', 'house', 'Home', 'البيت', 'round'],
+    ['sticker', 'boattop', 'The Boat', 'القارب', 'round'],
+    ['sticker', 'seafish', 'Sea Fish', 'سمك البحر', 'rect'],
+    ['sticker', 'waves', 'The Waves', 'الموج', 'rect'],
+    ['sticker', 'psea', 'Sea & Clouds', 'بحر وغيوم', 'round'],
+    ['sticker', 'blueflowers', 'White Dove', 'الحمامة البيضاء', 'rect'],
+    ['sticker', 'pflower', 'Big Flower', 'الزهرة الكبيرة', 'round'],
+    ['sticker', 'pmoonsleep', 'Moon Sleeper', 'نائمة على القمر', 'round']
+  ].map(function (x) { return { kind: x[0], id: x[1], title_en: x[2], title_ar: x[3], extra: x[4] ? { shape: x[4] } : {} }; }),
+  /* the 2027 calendar, "Things kept in bottles": the pages Farah has finished (add a month once its PDF is in assets as c27-MM) */
+  calendar: {
+    id: 'calendar-2027', title: ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027'],
+    months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    monthsAr: ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'],
+    pages: [
+      { k: 'c27-00', m: 0, n: ['The cover', 'الغلاف'], s: ['2027', '2027'], q: ['Things kept in bottles, watercolours by Farah Al-Helou.', 'أشياء نحفظها في قوارير، ألوان مائية لفرح الحلو.'],
+        d: ['A heart kept in a bottle, flowers growing from it, and someone sitting on the cork to keep watch.', 'قلب محفوظ في قارورة تنبت منه الأزهار، وعلى الفلّينة من يجلس ليحرسه.'] },
+      { k: 'c27-05', m: 5, n: ['May', 'أيار'], s: ['Spring 2027', 'ربيع 2027'], q: ['We carry whole worlds no one else can see.', 'نحمل عوالم كاملة لا يراها أحد سوانا.'],
+        d: ['A girl sits on a small green planet inside a bottle of night, with the stars only she can see.', 'فتاة تجلس على كوكب أخضر صغير داخل قارورة من ليل، ومعها نجوم لا يراها سواها.'] },
+      { k: 'c27-08', m: 8, n: ['August', 'آب'], s: ['Summer 2027', 'صيف 2027'], q: ['To leave is also to believe in somewhere.', 'أن نرحل يعني أيضًا أن نؤمن بمكانٍ ما.'],
+        d: ['A ship on a small sea inside the bottle, and a tree growing out of its neck toward a bird that has just left.', 'سفينة على بحر صغير داخل القارورة، وشجرة تنمو من عنقها نحو طائر غادر للتوّ.'] },
+      { k: 'c27-09', m: 9, n: ['September', 'أيلول'], s: ['Autumn 2027', 'خريف 2027'], q: ['Even the sun bows; looking up is a choice.', 'حتى الشمس تنحني، والنظر إلى الأعلى اختيار.'],
+        d: ['A sunflower hangs upside down from the cork; a boy with his school bag stands below and looks up at it.', 'زهرة شمس معلّقة بالمقلوب من الفلّينة، وتحتها ولد بحقيبته المدرسية ينظر إليها.'] },
+      { k: 'c27-12', m: 12, n: ['December', 'كانون الأول'], s: ['Winter 2027', 'شتاء 2027'], q: ['Every road we take is a way back to ourselves.', 'كل طريق نسلكه طريقُ عودةٍ إلى أنفسنا.'],
+        d: ['A heart-shaped sun over a small house, and a yellow road that winds back to it through green hills.', 'شمس على شكل قلب فوق بيت صغير، وطريق أصفر يعود إليه بين التلال الخضراء.'] }
+    ]
+  }
+};

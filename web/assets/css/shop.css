@@ -1,0 +1,7 @@
+/* The shop: every piece, by category. */
+.shp{padding-bottom:var(--sec)}
+.cats{display:flex;flex-wrap:wrap;gap:8px 32px;margin-bottom:var(--gh);border-bottom:1.5px solid rgba(var(--ink-rgb),.15)}
+.cats button{background:none;border:0;padding:8px 0 16px;margin-bottom:-1.5px;border-bottom:2.5px solid transparent;color:var(--soft);font:600 var(--fs-body)/1 var(--f);cursor:pointer;min-height:44px}
+.ar-on .cats button{font-family:var(--fa)}
+.cats button sup{margin-inline-start:4px;font-size:var(--fs-caption);font-weight:500;vertical-align:super}
+.cats button[aria-pressed=true]{color:var(--ink);border-color:var(--olive)}

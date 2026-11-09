@@ -1,0 +1,49 @@
+/* The carousel shared by the home page (paintings) and the calendar page (the calendar at home):
+   one photograph at a time, edge to edge, a slow drift in, arrows and dots; captions on torn paper. A plain cut, no transition. */
+.show{position:relative;height:calc(100svh - 72px);min-height:560px;max-height:1000px;overflow:hidden;background:var(--c-2e3b33)}
+.slide{position:absolute;inset:0;--fx:50%;--fy:50%}
+.js .slide{opacity:0;visibility:hidden}
+.slide.on{opacity:1;visibility:visible;z-index:1}
+.slide img{width:100%;height:100%;object-fit:cover;object-position:var(--fx) var(--fy);transform-origin:var(--fx) var(--fy)}
+.slide.on img{animation:drift 7s linear both}
+@keyframes drift{from{transform:scale(1.08)}to{transform:scale(1)}}
+.show .tornb{position:absolute;left:0;right:0;bottom:-2px;height:34px;z-index:3;--c:var(--cream)}
+.show .card-h{position:absolute;z-index:4;inset-inline-start:clamp(18px,5vw,64px);bottom:clamp(54px,7vw,90px);width:min(470px,calc(100% - 36px));padding:clamp(28px,3vw,40px);--c:var(--paper);filter:drop-shadow(0 12px 18px rgba(var(--rgb-20-18-14),.3))}
+.card-h h1{margin:0 0 16px;font:800 var(--fs-h2)/1 var(--f);letter-spacing:-.025em;text-wrap:balance}
+.ar-on .card-h h1{font:700 var(--fs-title)/1.3 var(--fa);letter-spacing:0}
+.card-h p{margin:0 0 24px;color:var(--soft);font-size:var(--fs-lead);max-width:34ch}
+.card-h .buy,.card-h .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.card-h .buy b{font:800 var(--fs-figure)/1 var(--f)}
+.card-h .row small{font:600 var(--fs-sm)/1 var(--f);color:var(--soft)}
+.ar-on .card-h .row small{font-family:var(--fa)}
+.cap{position:absolute;z-index:4;inset-inline-end:clamp(18px,5vw,64px);bottom:clamp(64px,8vw,100px);display:flex;align-items:center;gap:8px}
+.cap .lbl{padding:16px 16px 12px;--c:var(--kraft);color:var(--c-2b2119);rotate:-2deg;min-width:200px;filter:drop-shadow(0 6px 8px rgba(var(--rgb-20-18-14),.3))}
+.cap .lbl b{display:block;font:800 var(--fs-h4)/1.1 var(--f)}
+.ar-on .cap .lbl b{font:700 var(--fs-lead)/1.3 var(--fa)}
+.cap .lbl span{font:500 var(--fs-sm)/1.4 var(--f)}
+.ar-on .cap .lbl span{font-family:var(--fa)}
+.navb{width:50px;height:50px;border:0;cursor:pointer;display:grid;place-items:center;--c:var(--paper);color:var(--ink);filter:drop-shadow(0 5px 6px rgba(var(--rgb-20-18-14),.3));transition:transform .2s}
+.navb:active{transform:scale(.94)}
+@media(hover:hover){.navb:hover{transform:translateY(-3px)}}
+.ar-on .navb svg{transform:scaleX(-1)}
+.dots{position:absolute;z-index:4;left:50%;translate:-50% 0;bottom:46px;display:flex;gap:8px}
+.dots button{width:30px;height:6px;border:0;padding:0;background:rgba(var(--rgb-251-248-242),.45);cursor:pointer}
+.dots button[aria-current=true]{background:var(--paper)}
+.dots button::before{content:"";display:block;height:28px;margin-top:-12px}
+/* phones and tablets: the photo on top and the card under it */
+@media(max-width:900px){.show{--sh:66svh;height:auto;min-height:0;max-height:none;padding-top:calc(var(--sh) - 4px);background:var(--cream)}
+  .slide{bottom:auto;height:var(--sh)}
+  .show .card-h{position:relative;inset-inline-start:auto;bottom:auto;margin:-40px 16px 24px;width:auto;max-width:560px}
+  .cap{top:calc(var(--sh) - 150px);bottom:auto;inset-inline-end:14px}.cap .lbl{min-width:0}
+  .dots{top:calc(var(--sh) - 66px);bottom:auto}.show .tornb{display:none}}
+/* the calendar's photos keep the whole calendar in frame: a compact card in the corner on wide screens, under the photo below that */
+.show.fit{background:var(--c-efe9dd)}
+@media(min-width:1280px){.show.fit .card-h{width:320px;inset-inline-start:32px;bottom:72px;padding:28px}
+  .show.fit .card-h h1{font-size:var(--fs-h3)}.show.fit .card-h p{font-size:var(--fs-body);margin-bottom:20px}
+  .show.fit .cap{inset-inline-end:32px;bottom:80px}.show.fit .cap .lbl{min-width:0}}
+@media(max-width:1279px){.show.fit{--sh:min(calc(100vw * .95),70svh);height:auto;min-height:0;max-height:none;padding-top:calc(var(--sh) - 4px);background:var(--cream)}
+  .show.fit .slide{bottom:auto;height:var(--sh)}
+  .show.fit .card-h{position:relative;inset-inline-start:auto;bottom:auto;margin:-24px 16px 24px;width:auto;max-width:560px}
+  .show.fit .cap{top:calc(var(--sh) - 76px);bottom:auto;inset-inline-end:14px}.show.fit .cap .lbl{min-width:0}
+  .show.fit .dots{top:calc(var(--sh) - 22px);bottom:auto}.show.fit .tornb{display:none}}
+@media(prefers-reduced-motion:reduce){.slide.on img{animation:none}}
