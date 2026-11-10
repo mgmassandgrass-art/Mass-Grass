@@ -15,6 +15,7 @@ let state=Q.get('order')?'capture':'bag',msg=Q.get('cancelled')?['The payment wa
 const kb=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
 function render(){const box=$('co'),h=$('co-h');
   if(state==='capture'){h.textContent=T('Confirming your payment','نؤكد الدفع');box.innerHTML=`<p class="fmsg ok" role="status">${T('One moment, we are collecting your files…','لحظة، نجهّز ملفاتكم…')}</p>`;return}
+  if(state==='held'){h.textContent=T('Thank you','شكرًا لكم');box.innerHTML=`<div class="co-empty"><p class="fmsg ok" role="status">${T(`PayPal received your payment for order ${esc(order.id)} and is checking it. Your files reach your email as soon as it clears, usually within a few hours.`,`استلم PayPal دفعتكم للطلب ${esc(order.id)} ويراجعها الآن. تصل ملفاتكم إلى بريدكم فور اعتمادها، عادةً خلال ساعات.`)}</p><a class="go" href="paintings.html">${T('Back to the paintings','العودة إلى اللوحات')}</a></div>`;return}
   if(state==='done'){h.textContent=T('Thank you','شكرًا لكم');const f=order.files||[];
     box.innerHTML=`<div class="co-done"><div><img class="seal" src="assets/sealA.webp" alt=""><h2>${T('Sealed in Gaza, sent to you.','خُتمت في غزة وأُرسلت إليكم.')}</h2>
       <p>${T(`Order ${esc(order.id)}. A copy of every link is in your email (${esc(order.email)}). Each piece you bought helps Farah keep painting.`,`الطلب ${esc(order.id)}. أرسلنا نسخة من كل رابط إلى بريدكم (${esc(order.email)}). كل قطعة اشتريتموها تساعد فرح على مواصلة الرسم.`)}</p>
@@ -36,13 +37,16 @@ function retear(){MG.tear()}
 async function pay(e){e.preventDefault();const f=e.target,btn=f.querySelector('[type=submit]'),say=(m,good)=>{msg=m;soon=!!good;const el=f.querySelector('.fmsg');el.textContent=T(...m);el.classList.toggle('ok',!!good)};
   const em=$('em').value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){say(ERR.email_invalid);$('em').focus();return}
   btn.disabled=true;const r=await U.api('POST','/api/orders',{email:em,name:$('nm').value.trim(),news:$('news').checked,items:B.get()});btn.disabled=false;
+  if(r.ok&&!r.data.approve&&r.data.payments!=='off'){say(ERR.payment_error);return}
   if(r.offline||(r.ok&&r.data.payments==='off')){say(['Payments open with the shop in a few days. Your bag stays here until then.','يُفتح الدفع مع افتتاح المتجر بعد أيام. ستبقى سلتكم هنا حتى ذلك الحين.'],true);return}
   if(!r.ok){say(ERR[r.data&&r.data.error]||['Something went wrong. Please try again.','حدث خطأ. حاولوا مرة أخرى.']);return}
   try{localStorage.mgPending=JSON.stringify({id:r.data.id,access:r.data.access})}catch(x){}
   if(r.data.approve)location.href=r.data.approve}
 async function capture(){const id=Q.get('order');let pend={};try{pend=JSON.parse(localStorage.mgPending||'{}')}catch(e){}
-  const r=await U.api('POST','/api/orders/'+encodeURIComponent(id)+'/capture',{access:pend.id===id?pend.access:''});history.replaceState(null,'','checkout.html');
+  const r=await U.api('POST','/api/orders/'+encodeURIComponent(id)+'/capture',{access:pend.id===id?pend.access:'',token:Q.get('token')||''});history.replaceState(null,'','checkout.html');
   if(r.ok&&r.data.order){order=r.data.order;state='done';B.clear();try{localStorage.removeItem('mgPending')}catch(e){}}
+  /* PayPal took the payment but holds it for review: the files come by email once it clears */
+  else if(r.status===202&&r.data.pending){order={id:r.data.id};state='held';B.clear();try{localStorage.removeItem('mgPending')}catch(e){}}
   else{state='bag';msg=ERR[r.data&&r.data.error]||ERR.not_paid}
   render()}
 if(state==='capture')capture();

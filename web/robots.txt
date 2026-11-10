@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /account
+Disallow: /profile
+Disallow: /checkout
+Sitemap: https://www.massandgrass.com/sitemap.xml

@@ -225,8 +225,13 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   Everything works except payment itself (waits for the owner's PayPal Business keys; until then checkout records the order
   and says payments open soon).
 - `worker/wrangler.toml` now serves `../web` (was `../prototype`). The live site still runs the last deployed version:
-  nothing was deployed. `SOON = "1"` stays until launch. Deploy only when the owner says so; migration `0008` must be applied
-  to the remote database first (`wrangler d1 migrations apply mass-grass --remote`).
+  nothing was deployed. `SOON = "1"` stays until launch. Deploy only when the owner says so, following `worker/DEPLOY.md`
+  (migration `0008` first: the session's Cloudflare token could not reach the D1 API on 10 Nov 2026).
+- PayPal (Nov 2026): the owner's PayPal Business app is Live; `PAYPAL_CLIENT_ID` / `PAYPAL_SECRET` are Worker secrets they set
+  themselves, `PAYPAL_ENV = "live"` is in `wrangler.toml`. A setup check created order `MG-94828A67` (pending, never paid).
+  The buyer may come back with the order secret or only PayPal's `?token=`; PayPal holds (capture `PENDING`) answer 202 and
+  the files follow when it clears; a cron every 15 minutes (`sweepPending`) and the admin's "ask PayPal" button capture
+  orders approved but never brought back. Local test: `sh test/local.sh paypal` + `node test/pay.test.cjs` (stand-in PayPal).
 - Images: one clean set in `web/assets` (`python3 tools/web_assets.py`). Watermarked copies (old `assets/*.jpg` with the tiled
   "MASS & GRASS © FARAH AL HELOU" mark, `pmoon`, `ppoppies`, `ptree`, `s-dove`, `s-gaza`, `s-heart`) are not used. Farah's own
   sticker sheet from Drive gives ten die-cut stickers. "Blue Poppies" was the same painting as "White Dove" and "Little Tree"

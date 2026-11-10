@@ -2,3 +2,5 @@
 __pycache__/
 *.pyc
 drafts/collage/.wstate/
+worker/.dryrun/
+worker/.state/

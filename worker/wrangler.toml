@@ -20,6 +20,13 @@ ADMIN_EMAIL = "info@massandgrass.com"
 SITE_ORIGIN = "https://www.massandgrass.com"
 SOON = "1"
 MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
+# Real money. Kept here because a deploy replaces variables set on the dashboard (secrets stay):
+# PAYPAL_CLIENT_ID and PAYPAL_SECRET are secrets (wrangler secret put / dashboard), never in this file.
+PAYPAL_ENV = "live"
+
+# Orders still awaiting payment are checked with PayPal every 15 minutes (src/shop.js sweepPending).
+[triggers]
+crons = ["*/15 * * * *"]
 
 [[d1_databases]]
 binding = "DB"

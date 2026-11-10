@@ -3,7 +3,7 @@ import { json, fail, readJson, clean } from './util.js';
 import { filesAdmin, download } from './files.js';
 import { sendMail, layout, contactEmail } from './mail.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
-import { catalog, createOrder, captureOrder, myOrders, serveImage, admin } from './shop.js';
+import { catalog, createOrder, captureOrder, myOrders, serveImage, admin, sweepPending } from './shop.js';
 import { audit, limitKey, clearKey, ipOf, newSecret, totpStep, otpauth, newRecovery, useRecovery } from './security.js';
 
 const enc = new TextEncoder();
@@ -363,7 +363,10 @@ async function api(req, env, url, p) {
     return createOrder(env, req, u);
   }
   const cap = p.match(/^\/api\/orders\/(MG-[A-F0-9]{8})\/capture$/);
-  if (cap && req.method === 'POST') { const b = await readJson(req); return captureOrder(env, cap[1], String(b?.access || '')); }
+  if (cap && req.method === 'POST') {
+    if (!(await limit(env, req, 'capture', 30, 900))) return fail('rate_limited', 429);
+    const b = await readJson(req); return captureOrder(env, cap[1], String(b?.access || ''), String(b?.token || '').slice(0, 40));
+  }
   const dl = p.match(/^\/api\/dl\/([a-f0-9]{20})$/);
   if (dl && req.method === 'GET') return download(env, dl[1], url);
   if (p.startsWith('/api/admin/')) {
@@ -409,6 +412,10 @@ function secure(res) {
 export default {
   async fetch(req, env0) {
     return secure(await handle(req, env0));
+  },
+  // cron (wrangler.toml [triggers]): payments that were approved but never brought back to the site
+  async scheduled(ev, env, ctx) {
+    ctx.waitUntil(sweepPending({ ...env, SITE_ORIGIN: env.SITE_ORIGIN || 'https://www.massandgrass.com' }).then((n) => n && console.log('sweep paid', n)));
   },
 };
 

@@ -45,7 +45,8 @@ function linePrice(cat, it) {
 }
 
 // ---------- PayPal (Orders v2, redirect flow: no PayPal script on our pages) ----------
-const ppBase = (env) => (env.PAYPAL_ENV === 'live' ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com');
+// PAYPAL_API only exists in the local test setup (a stand-in PayPal on this machine); production uses PayPal's own hosts.
+const ppBase = (env) => env.PAYPAL_API || (env.PAYPAL_ENV === 'live' ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com');
 async function ppToken(env) {
   const r = await fetch(`${ppBase(env)}/v1/oauth2/token`, {
     method: 'POST', body: 'grant_type=client_credentials',
@@ -106,15 +107,19 @@ const withFiles = async (env, o) => ({ ...orderOut(o), files: await orderFiles(e
 // constant-time compare for order secrets
 const sameStr = (a, b) => { a = String(a ?? ''); b = String(b ?? ''); if (a.length !== b.length) return false; let d = 0; for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; };
 
-export async function captureOrder(env, id, access) {
+// The buyer proves the order is theirs with the order secret their browser kept, or with PayPal's token for it
+// (PayPal adds ?token=<its order id> to the return address; it reaches only the buyer). `admin` skips the proof.
+export async function captureOrder(env, id, access, token, admin = false) {
   const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first();
-  if (!o || !o.access || !sameStr(o.access, access)) return fail('not_found', 404);
+  if (!o || (!admin && !((o.access && sameStr(o.access, access)) || (o.paypal_id && token && sameStr(o.paypal_id, token))))) return fail('not_found', 404);
   if (o.status === 'paid') return json({ order: await withFiles(env, o) });
   if (o.status !== 'pending' || !o.paypal_id || !env.PAYPAL_CLIENT_ID) return fail('not_paid', 402); // cancelled/refunded stay so
   let r = await pp(env, `/v2/checkout/orders/${o.paypal_id}/capture`);
   // Captured before (e.g. a second tab): read the order back, so the capture's state and amount are always checked.
   if (!r.ok && r.data?.details?.[0]?.issue === 'ORDER_ALREADY_CAPTURED') r = await pp(env, `/v2/checkout/orders/${o.paypal_id}`, null, 'GET');
   const capt = r.data?.purchase_units?.[0]?.payments?.captures?.[0];
+  // PayPal took the money but holds it for review (e.g. a currency the account does not hold yet): the files follow once it clears.
+  if (r.ok && capt && capt.status === 'PENDING') { console.log('capture pending', id, capt.status_details && capt.status_details.reason); return json({ pending: true, id: o.id }, 202); }
   if (!r.ok || r.data.status !== 'COMPLETED' || !capt || capt.status !== 'COMPLETED') return fail('not_paid', 402);
   const amt = capt.amount || {};
   if (amt.currency_code !== 'EUR' || Math.round(parseFloat(amt.value) * 100) !== o.total_cents) { console.error('amount mismatch', id); return fail('amount_mismatch', 409); }
@@ -131,6 +136,18 @@ async function markPaid(env, o) {
   dropCache();
   // Only the request that actually flipped the order to paid sends the e-mails.
   if (res[0].meta.changes) { try { await orderPaidEmails(env, { ...o, status: 'paid' }); } catch (e) { console.error('mail', e.message); } }
+}
+
+// Every 15 minutes (the Worker's cron): orders still awaiting payment from the last three days are checked with PayPal,
+// so a buyer who paid and closed the tab, or a payment PayPal held for review, still gets the files. At most 20 a run.
+export async function sweepPending(env) {
+  if (!env.PAYPAL_CLIENT_ID) return 0;
+  const now = Date.now();
+  const { results } = await env.DB.prepare("SELECT id FROM orders WHERE status='pending' AND paypal_id IS NOT NULL AND created_at BETWEEN ? AND ? ORDER BY created_at DESC LIMIT 20")
+    .bind(now - 3 * 864e5, now - 120e3).all();
+  let paid = 0;
+  for (const o of results) { try { const r = await captureOrder(env, o.id, '', '', true); if (r.status === 200) paid++; } catch (e) { console.error('sweep', o.id, e.message); } }
+  return paid;
 }
 
 export async function myOrders(env, u) {
@@ -320,6 +337,12 @@ export async function admin(env, req, url, p) {
   if (p === '/api/admin/orders' && m === 'GET') {
     const { results } = await env.DB.prepare('SELECT * FROM orders ORDER BY created_at DESC LIMIT 1000').all();
     return json({ orders: results.map(orderOut) });
+  }
+  // Ask PayPal about an order still awaiting payment: if the buyer approved it but never came back, this takes the payment and sends the files.
+  if (p === '/api/admin/orders/check' && m === 'POST') {
+    const b = await readJson(req);
+    if (!env.PAYPAL_CLIENT_ID) return fail('payments_off', 409);
+    return captureOrder(env, clean(b && b.id, 20), '', '', true);
   }
   if (p === '/api/admin/orders' && m === 'PUT') {
     const b = await readJson(req);
