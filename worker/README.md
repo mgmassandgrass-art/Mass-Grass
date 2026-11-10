@@ -1,6 +1,7 @@
 # Mass & Grass API (Cloudflare Worker + D1)
 
-Step 1: accounts and sign-in. Next: PayPal orders/subscriptions, R2 file delivery, admin.
+Serves the site in `../web`, the API (accounts, catalog, orders, files, contact, admin) and the security headers.
+See `../web/README.md` for the site and `test/` for the three test suites (`sh test/local.sh`, `npm test`, `node test/e2e.test.cjs`).
 
 Routes: `POST /api/signup|login|logout|forgot|reset`, `GET /api/me`, `PATCH|DELETE /api/me`,
 `GET /api/me/export`, `GET /api/auth/google` (+ `/callback`).
@@ -20,4 +21,4 @@ rate limits on signup/login/forgot/reset; same answer for unknown e-mails; a pas
    `npx wrangler secret put GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 4. Reset e-mails: a Resend key with massandgrass.com verified, `npx wrangler secret put RESEND_API_KEY`.
 5. `npx wrangler deploy` (route `www.massandgrass.com/api/*` sits in front of Pages).
-6. Make `prototype/` the Pages root when publishing.
+6. The Worker serves `../web` itself (`[assets]` in `wrangler.toml`).

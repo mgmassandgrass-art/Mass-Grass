@@ -215,3 +215,29 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   role tokens (`--fs-*`), spacing on a 4px scale, `minmax(0,1fr)` image tracks, no tracked-caps labels or
   eyebrows, no middle-dot meta strings or arrows glued to links, focus-visible everywhere, content visible
   without scripts (`.js` gates hidden states), no fake success messages.
+
+## The rebuilt site (Nov 2026): `web/` + Worker, not deployed yet
+
+- The owner asked for the whole site to be rebuilt and redesigned. It lives in `web/` (see `web/README.md` and the skill
+  `.claude/skills/site-build/`): pages built from `web/_src/` by `node tools/build-web.mjs`, one shared core (`MG` in
+  `assets/js/core.js`), external CSS/JS only, the collage design system of `DESIGN.md`. `drafts/collage/` is the old draft it grew from.
+- Pages: home, shop, paintings, postcards, stickers, calendar, story, account, profile, checkout, help, terms, 404, soon.
+  Everything works except payment itself (waits for the owner's PayPal Business keys; until then checkout records the order
+  and says payments open soon).
+- `worker/wrangler.toml` now serves `../web` (was `../prototype`). The live site still runs the last deployed version:
+  nothing was deployed. `SOON = "1"` stays until launch. Deploy only when the owner says so; migration `0008` must be applied
+  to the remote database first (`wrangler d1 migrations apply mass-grass --remote`).
+- Images: one clean set in `web/assets` (`python3 tools/web_assets.py`). Watermarked copies (old `assets/*.jpg` with the tiled
+  "MASS & GRASS © FARAH AL HELOU" mark, `pmoon`, `ppoppies`, `ptree`, `s-dove`, `s-gaza`, `s-heart`) are not used. Farah's own
+  sticker sheet from Drive gives ten die-cut stickers. "Blue Poppies" was the same painting as "White Dove" and "Little Tree"
+  had no clean scan: both left the catalog; "Bike Ride", "Snow Globe" and "The Boatman" joined the paintings.
+- Still missing from the owner: 8 calendar months (Jan, Feb, Mar, Apr, Jun, Jul, Oct, Nov) and the sale files (hi-res PDF/PNG)
+  for every piece; the admin's overview lists the pieces without a file.
+- Admin (`/admin/`, "دفتر المتجر"): overview with real figures and a before-launch list, orders, products and their files,
+  customers, subscribers, messages (the help form is now saved in the database), pages (hide, sections, every text in both
+  languages, versions), image library, settings (prices, links), security (two-step sign-in, devices, password, audit log).
+- Security added in the Worker: CSP without inline scripts, HSTS preload, COOP/CORP, audit log (`audit_log`), two-step sign-in
+  (TOTP + ten recovery codes) for accounts with a password, 8 tries per account per 15 minutes, sessions with device and
+  address that can be ended, admin sessions of 7 days, server-side product names in orders, constant-time order secrets.
+  The seed's sample "sold" figures were reset to what paid orders say.
+- Tests: `cd worker && sh test/local.sh`, then `npm test` and `node test/e2e.test.cjs` (all three must pass).

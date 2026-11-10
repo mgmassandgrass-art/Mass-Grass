@@ -49,10 +49,11 @@ if sd:
 
 # 3 · everything that is not art (mockups, papers, envelope, faces, calendar pages) comes over as it is
 SKIP = {'pmoon', 'ppoppies', 'ptree', 's-dove', 's-gaza', 's-heart', 's-lemons'}   # watermarked or replaced above
+UNUSED = set('''binding-mid.webp binding.webp coast.webp peg.webp pin.webp postmark.png pupil.png rope.webp sealB.webp sk-alley.webp sk-guitar.webp sk-hero.webp sk-hill.webp sk-house.webp sk-seafish.webp sk-sparklers.webp tear-edge.png pc-cork.webp pc-cork-top.webp pc-shelf.webp pc-shelf-top.webp pc-table.webp pc-hand.webp pc-hand-top.webp'''.split())   # in the old drafts, used by no page of the new site
 SKIP_PRE = ('cal-', 'sk-cal-', 'calmock', 'c27-hero', 'c27-wall', 'c27-hands', 'c27-kitchen', 'cw-')
 for f in sorted(glob.glob(C + '*')):
     b = os.path.basename(f); k = b.rsplit('.', 1)[0]
-    if os.path.isdir(f) or b.endswith('.js') or k in SKIP or k in ART or b.startswith(SKIP_PRE): continue
+    if os.path.isdir(f) or b.endswith('.js') or k in SKIP or k in ART or b in UNUSED or b.startswith(SKIP_PRE): continue
     if not os.path.exists(OUT + b) or sd: shutil.copy2(f, OUT + b)
 for f in glob.glob(C + 'p/sc-*.webp'): shutil.copy2(f, OUT + os.path.basename(f))   # small copies of the rooms, for thumbnails
 # 4 · the size of every painting's file, for the page's "prints sharp up to" table and the frame it suits

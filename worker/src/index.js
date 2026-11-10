@@ -100,7 +100,7 @@ async function signup(env, req) {
 }
 
 async function login(env, req) {
-  if (!(await limit(env, req, 'login', 10, 900))) return fail('rate_limited', 429);
+  if (!(await limit(env, req, 'login', 20, 900))) return fail('rate_limited', 429); // per address; each account has its own tighter lock below
   const b = await readJson(req);
   if (!b) return fail('bad_request');
   const email = clean(b.email, 120).toLowerCase(), pw = String(b.password ?? '');

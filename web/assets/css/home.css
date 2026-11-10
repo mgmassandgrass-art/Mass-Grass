@@ -57,7 +57,7 @@
 /* the 2027 calendar: a real photograph taped to the table, the words beside it, and the finished pages under it */
 .hcal{padding:var(--sec) 0 0}
 .hcal-in{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:var(--col-gap);align-items:center}
-.hcal-photo{position:relative;display:block;padding:clamp(8px,1vw,14px);background:var(--paper-white);rotate:-1.2deg;box-shadow:0 2px 3px rgba(var(--ink-rgb),.12),0 30px 44px -26px rgba(var(--ink-rgb),.5);transition:transform .45s cubic-bezier(.22,1,.36,1)}
+.hcal-photo{position:relative;display:block;padding:clamp(8px,1vw,16px);background:var(--paper-white);rotate:-1.2deg;box-shadow:0 2px 3px rgba(var(--ink-rgb),.12),0 30px 44px -26px rgba(var(--ink-rgb),.5);transition:transform .45s cubic-bezier(.22,1,.36,1)}
 .hcal-photo img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 62%}
 .hcal-photo .tape{top:-14px;left:calc(50% - 38px);rotate:3deg}
 @media(hover:hover){.hcal-photo:hover{transform:translateY(-6px) rotate(.6deg)}}
