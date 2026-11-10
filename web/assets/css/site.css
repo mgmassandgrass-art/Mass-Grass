@@ -182,3 +182,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 .skip:focus{top:12px}
 /* without scripting the bag and account controls have nothing to do */
 html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
+
+/* printed copies: the second button under a piece, and the note on its tile */
+.pbtn{border-style:dashed}
+.kd.pt{color:var(--olive);margin-top:-12px}
+.vprint{display:grid;gap:8px;justify-items:start;margin-top:16px}
+.vprint:empty{display:none}
+.vprint .pnote{margin:0;font-size:var(--fs-caption);color:var(--soft);max-width:36ch}

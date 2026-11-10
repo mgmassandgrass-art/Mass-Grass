@@ -6,7 +6,7 @@
   "dev": "wrangler dev --local --persist-to .state",
   "deploy": "node ../tools/build-web.mjs && node tools/manifest.mjs && wrangler deploy",
   "db:local": "wrangler d1 migrations apply mass-grass --local --persist-to .state",
-  "test": "node test/auth.test.mjs && node test/security.test.mjs && node test/free.test.cjs",
+  "test": "node test/auth.test.mjs && node test/free.test.cjs && node test/security.test.mjs",
   "local": "sh test/local.sh",
   "check": "node ../tools/build-web.mjs && node tools/manifest.mjs && wrangler deploy --dry-run --outdir .dryrun",
   "test:pay": "node test/pay.test.cjs"

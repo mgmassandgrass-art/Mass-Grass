@@ -31,7 +31,10 @@
     });
     cp.addEventListener('pointerleave', () => cp.classList.remove('lens'));
   }
+  function printBlock(kind,id){const pr=MG.printOf(kind,id);if(!pr)return '';const z=pr.size?MG.L(pr.size):'',sh=Object.values(MG.shipping);
+  return `${MG.printBtn(kind,id,'add')}<p class="pnote">${z?MG.esc(z)+MG.t('. ','. '):''}${sh.length?MG.t('Shipped to ','نشحنها إلى ')+sh.map(c=>MG.L(c.name)).join(MG.t(' and ',' و')):MG.t('Shipping opens soon.','الشحن قريبًا.')}</p>`}
   MG.page(function (why) {
+    const cp = document.getElementById('cprint'); if (cp) cp.innerHTML = printBlock('calendar', '');
     if (why === 'bag' || why === 'user') return;
     show.caption();
     $('#bottles').innerHTML = P.map((p, i) => `<li><button type="button" class="bottle" data-i="${i}" aria-pressed="${i === sel}" aria-label="${esc(label(p))}"><span class="piece paper" data-tear="5"><span class="fill"></span><img src="assets/${p.k}-b.webp" alt="" loading="lazy"></span><span class="tag paper" data-tear="2"><span class="fill"></span>${esc(name(p))}</span></button></li>`).join('');

@@ -1,7 +1,7 @@
 // Catalog, orders, PayPal and the admin API.
 import { json, fail, readJson, clean } from './util.js';
 import { orderFiles } from './files.js';
-import { orderPaidEmails } from './mail.js';
+import { orderPaidEmails, shippedEmail } from './mail.js';
 
 const KINDS = ['painting', 'postcard', 'sticker'];
 const ORDER_KINDS = [...KINDS, 'calendar', 'pack'];
@@ -24,13 +24,31 @@ export async function catalog(env) {
   if (cache && Date.now() - cacheAt < 30e3) return cache;
   const { results } = await env.DB.prepare('SELECT * FROM products WHERE hidden=0 AND deleted=0 ORDER BY kind, sort, title_en').all();
   const { results: off } = await env.DB.prepare('SELECT kind, id FROM products WHERE hidden=1 OR deleted=1').all();
-  cache = { off: off.map((r) => `${r.kind}:${r.id}`), pages: await getSetting(env, 'pages', { hidden: [], sections: {} }), products: results.map(pub), prices: await getSetting(env, 'prices', {}), rates: await getSetting(env, 'rates', {}), links: await getSetting(env, 'links', {}) };
+  cache = { off: off.map((r) => `${r.kind}:${r.id}`), pages: await getSetting(env, 'pages', { hidden: [], sections: {} }), products: results.map(pub), prices: await getSetting(env, 'prices', {}), rates: await getSetting(env, 'rates', {}), links: await getSetting(env, 'links', {}), shipping: openCountries(await getSetting(env, 'shipping', {})) };
   cacheAt = Date.now();
   return cache;
 }
 
+// The countries shipped to right now: switched on, with a fee set (0 means free shipping).
+export const COUNTRIES = { AE: ['United Arab Emirates', 'الإمارات العربية المتحدة'], DK: ['Denmark', 'الدنمارك'] };
+function openCountries(sh) {
+  const out = {};
+  for (const [c, v] of Object.entries(sh || {})) if (COUNTRIES[c] && v && v.on && typeof v.fee === 'number' && v.fee >= 0) out[c] = { fee: v.fee, days: String(v.days || '').slice(0, 60), name: COUNTRIES[c] };
+  return out;
+}
+// A printed copy of a piece: the admin switches it on per piece (extra.print = {on, price, size}); the calendar's printed
+// price is prices.calendarPrint. No sale on prints. Returns cents, or null when that piece is not printed.
+function printPrice(cat, it) {
+  if (it.pack) return null;
+  if (it.kind === 'calendar') { const e = cat.prices.calendarPrint; return e > 0 ? Math.round(e * 100) : null; }
+  const p = cat.products.find((x) => x.id === it.k && x.kind === it.kind);
+  const pr = p && p.extra && p.extra.print;
+  return pr && pr.on && Number(pr.price) > 0 ? Math.round(Number(pr.price) * 100) : null;
+}
+
 // Price of one bag line in euro cents, computed only from server data.
 function linePrice(cat, it) {
+  if (it.fmt === 'print') return printPrice(cat, it);
   const kind = it.pack ? 'pack' : it.kind;
   if (!ORDER_KINDS.includes(kind)) return null;
   const base = cat.prices[kind];
@@ -74,15 +92,27 @@ export async function createOrder(env, req, user) {
   const cat = await catalog(env);
   const items = [];
   let total = 0;
+  let printed = false;
   for (const it of b.items) {
-    const c = linePrice(cat, it || {});
-    if (c == null) return fail('item_unavailable', 400, { k: it && it.k });
+    const one = linePrice(cat, it || {});
+    if (one == null) return fail('item_unavailable', 400, { k: it && it.k });
+    const fmt = it.fmt === 'print' ? 'print' : undefined, q = fmt ? Math.max(1, Math.min(10, parseInt(it.q) || 1)) : 1, c = one * q;
+    if (fmt) printed = true;
     total += c;
     // Names come from the catalog, not from the browser (a pack and the calendar keep the shop's own wording).
     const pr = it.pack ? null : cat.products.find((x) => x.id === it.k && x.kind === it.kind);
     const cal = it.kind === 'calendar' && !it.pack;
     items.push({ k: clean(it.k, 40), kind: it.pack ? 'pack' : clean(it.kind, 20), t: pr ? pr.title_en : cal ? 'Things kept in bottles, 2027' : clean(it.t, 80), ta: pr ? pr.title_ar : cal ? 'أشياء نحفظها في قوارير، 2027' : clean(it.ta, 80), pack: Array.isArray(it.pack) ? it.pack.slice(0, 6).map((x) => clean(x, 40)) : undefined,
-      gift: it.gift ? { to: clean(it.gift.to, 60), em: clean(it.gift.em, 120), m: clean(it.gift.m, 500) } : undefined, cents: c });
+      gift: it.gift ? { to: clean(it.gift.to, 60), em: clean(it.gift.em, 120), m: clean(it.gift.m, 500) } : undefined, cents: c, fmt, q: fmt ? q : undefined });
+  }
+  // Printed pieces: an address in a country shipped to, and its fee once per order.
+  let ship = null, shipCents = 0;
+  if (printed) {
+    const s0 = b.ship || {}, c = String(s0.country || '').toUpperCase(), zone = cat.shipping[c];
+    if (!zone) return fail('ship_country', 400);
+    ship = { name: clean(s0.name, 80), phone: clean(s0.phone, 30), country: c, city: clean(s0.city, 60), line1: clean(s0.line1, 120), line2: clean(s0.line2, 120), postal: clean(s0.postal, 16) };
+    if (!ship.name || !ship.line1 || !ship.city || !/^[+\d][\d\s()-]{5,}$/.test(ship.phone) || (c === 'DK' && !/^\d{4}$/.test(ship.postal))) return fail('ship_address', 400);
+    shipCents = Math.round(zone.fee * 100); total += shipCents;
   }
   // Free downloads (every line priced 0): no payment. Each free piece must have its file, and the same address or
   // e-mail can only take so many, so the files cannot be pulled in bulk.
@@ -94,8 +124,8 @@ export async function createOrder(env, req, user) {
   const id = 'MG-' + crypto.randomUUID().slice(0, 8).toUpperCase();
   // The order secret: only the buyer's browser (and later their email) gets it; downloads need it.
   const access = [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, '0')).join('');
-  await env.DB.prepare('INSERT INTO orders(id,user_id,email,name,items,total_cents,news,created_at,access) VALUES(?,?,?,?,?,?,?,?,?)')
-    .bind(id, user ? user.id : null, email, clean(b.name, 60), JSON.stringify(items), total, b.news ? 1 : 0, Date.now(), access).run();
+  await env.DB.prepare('INSERT INTO orders(id,user_id,email,name,items,total_cents,news,created_at,access,ship,ship_cents,ship_status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
+    .bind(id, user ? user.id : null, email, clean(b.name, 60) || (ship ? ship.name : ''), JSON.stringify(items), total, b.news ? 1 : 0, Date.now(), access, ship ? JSON.stringify(ship) : null, shipCents, ship ? 'to_print' : null).run();
   if (b.news) await env.DB.prepare('INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?,?,?)').bind(email, 'checkout', Date.now()).run();
   if (total === 0) {
     const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first();
@@ -105,8 +135,10 @@ export async function createOrder(env, req, user) {
   if (!env.PAYPAL_CLIENT_ID) return json({ id, access, total: total / 100, payments: 'off' }, 201);
   const r = await pp(env, '/v2/checkout/orders', {
     intent: 'CAPTURE',
-    purchase_units: [{ reference_id: id, custom_id: id, description: 'Mass & Grass digital files', amount: { currency_code: 'EUR', value: (total / 100).toFixed(2) } }],
-    payment_source: { paypal: { experience_context: { brand_name: 'Mass & Grass', shipping_preference: 'NO_SHIPPING', user_action: 'PAY_NOW',
+    purchase_units: [{ reference_id: id, custom_id: id, description: ship ? 'Mass & Grass prints and files' : 'Mass & Grass digital files',
+      amount: { currency_code: 'EUR', value: (total / 100).toFixed(2), breakdown: { item_total: { currency_code: 'EUR', value: ((total - shipCents) / 100).toFixed(2) }, shipping: { currency_code: 'EUR', value: (shipCents / 100).toFixed(2) } } },
+      ...(ship ? { shipping: { name: { full_name: ship.name }, address: { address_line_1: ship.line1, address_line_2: ship.line2 || undefined, admin_area_2: ship.city, postal_code: ship.postal || undefined, country_code: ship.country } } } : {}) }],
+    payment_source: { paypal: { experience_context: { brand_name: 'Mass & Grass', shipping_preference: ship ? 'SET_PROVIDED_ADDRESS' : 'NO_SHIPPING', user_action: 'PAY_NOW',
       return_url: `${env.SITE_ORIGIN}/checkout.html?order=${id}`, cancel_url: `${env.SITE_ORIGIN}/checkout.html?cancelled=${id}` } } },
   });
   if (!r.ok) { console.error('paypal create', r.status, JSON.stringify(r.data)); return fail('payment_error', 502); }
@@ -115,7 +147,8 @@ export async function createOrder(env, req, user) {
   return json({ id, access, total: total / 100, approve: approve && approve.href }, 201);
 }
 
-export const orderOut = (o) => ({ id: o.id, email: o.email, name: o.name, items: JSON.parse(o.items), total: o.total_cents / 100, currency: o.currency, status: o.status, date: new Date(o.created_at).toISOString() });
+export const orderOut = (o) => ({ id: o.id, email: o.email, name: o.name, items: JSON.parse(o.items), total: o.total_cents / 100, currency: o.currency, status: o.status, date: new Date(o.created_at).toISOString(),
+  ship: o.ship ? JSON.parse(o.ship) : null, shipping: (o.ship_cents || 0) / 100, ship_status: o.ship_status || null, tracking: o.tracking || '' });
 
 const withFiles = async (env, o) => ({ ...orderOut(o), files: await orderFiles(env, o) });
 
@@ -220,10 +253,11 @@ export async function admin(env, req, url, p) {
     const noFile = await all("SELECT p.kind, p.id, p.title_en, p.title_ar FROM products p WHERE p.deleted=0 AND p.hidden=0 AND NOT EXISTS (SELECT 1 FROM product_files f WHERE f.kind=p.kind AND f.product_id=p.id) ORDER BY p.kind, p.sort LIMIT 200");
     const calFile = await one("SELECT count(*) n FROM product_files WHERE kind='calendar'");
     const alerts = await one("SELECT count(*) n FROM audit_log WHERE level='alert' AND at>=?", now - 7 * DAY);
+    const toShip = await one("SELECT count(*) n FROM orders WHERE status='paid' AND ship_status='to_print'");
     const free = await one("SELECT count(*) n FROM orders WHERE status='paid' AND total_cents=0 AND paid_at>=?", from);
     return json({ days, totals: { orders: tot.n, revenue: tot.c / 100 }, period: { orders: per.n, revenue: per.c / 100 }, previous: { orders: prev.n, revenue: prev.c / 100 },
       pending: pend.n, users: users.n, newUsers: newUsers.n, subscribers: subs.n, messages: msgs.n, unread: msgs.unread, products: prods.n, hidden: hidden.n,
-      files: files.n, fileBytes: files.bytes, freeDownloads: free.n, byDay, top: top.map((t) => ({ kind: t.pkind, id: t.pid, title: t.title, title_ar: t.title_ar, n: t.n, revenue: (t.c || 0) / 100 })), kinds: kinds.map((k) => ({ kind: k.pkind, n: k.n, revenue: (k.c || 0) / 100 })),
+      files: files.n, fileBytes: files.bytes, freeDownloads: free.n, toShip: toShip.n, byDay, top: top.map((t) => ({ kind: t.pkind, id: t.pid, title: t.title, title_ar: t.title_ar, n: t.n, revenue: (t.c || 0) / 100 })), kinds: kinds.map((k) => ({ kind: k.pkind, n: k.n, revenue: (k.c || 0) / 100 })),
       recent: recent.map(orderOut), noFile, calendarFile: calFile.n > 0, alerts: alerts.n,
       payments: env.PAYPAL_CLIENT_ID ? (env.PAYPAL_ENV === 'live' ? 'live' : 'sandbox') : 'off', mail: !!env.RESEND_API_KEY, google: !!env.GOOGLE_CLIENT_ID, soon: env.SOON === '1' });
   }
@@ -314,7 +348,7 @@ export async function admin(env, req, url, p) {
     return json({ ok: true });
   }
   if (p === '/api/admin/settings' && m === 'GET') {
-    return json({ prices: await getSetting(env, 'prices', {}), rates: await getSetting(env, 'rates', {}), links: await getSetting(env, 'links', {}) });
+    return json({ prices: await getSetting(env, 'prices', {}), rates: await getSetting(env, 'rates', {}), links: await getSetting(env, 'links', {}), shipping: await getSetting(env, 'shipping', {}), countries: COUNTRIES });
   }
   if (p === '/api/admin/settings' && m === 'PUT') {
     const b = await readJson(req);
@@ -325,6 +359,8 @@ export async function admin(env, req, url, p) {
     if (b.prices) ups.push(['prices', num(b.prices)]);
     if (b.rates) ups.push(['rates', num(b.rates)]);
     if (b.links) ups.push(['links', str(b.links)]);
+    if (b.shipping) ups.push(['shipping', Object.fromEntries(Object.keys(COUNTRIES).map((c) => { const v = b.shipping[c] || {}, f = v.fee === '' || v.fee == null ? null : Number(v.fee);
+      return [c, { on: v.on ? 1 : 0, fee: f != null && f >= 0 && f < 1000 ? f : null, days: clean(v.days, 60) }]; }))]);
     await env.DB.batch(ups.map(([k, v]) => env.DB.prepare('INSERT OR REPLACE INTO settings(k,v) VALUES(?,?)').bind(k, JSON.stringify(v))));
     dropCache();
     return json({ ok: true });
@@ -359,6 +395,18 @@ export async function admin(env, req, url, p) {
     const b = await readJson(req);
     if (!env.PAYPAL_CLIENT_ID) return fail('payments_off', 409);
     return captureOrder(env, clean(b && b.id, 20), '', '', true);
+  }
+  // A printed order's parcel: printed and sent (with a tracking number, the customer is told by e-mail), or delivered.
+  if (p === '/api/admin/orders/ship' && m === 'PUT') {
+    const b = await readJson(req);
+    if (!b || !['to_print', 'sent', 'delivered'].includes(b.status)) return fail('bad_status');
+    const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(clean(b.id, 20)).first();
+    if (!o || !o.ship) return fail('not_found', 404);
+    if (b.status !== 'to_print' && o.status !== 'paid') return fail('not_paid', 409);
+    const tracking = clean(b.tracking, 120);
+    await env.DB.prepare('UPDATE orders SET ship_status=?, tracking=? WHERE id=?').bind(b.status, tracking, o.id).run();
+    if (b.status === 'sent' && o.ship_status !== 'sent') { try { await shippedEmail(env, { ...o, tracking }); } catch (e) { console.error('mail', e.message); } }
+    return json({ ok: true });
   }
   if (p === '/api/admin/orders' && m === 'PUT') {
     const b = await readJson(req);

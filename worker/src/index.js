@@ -317,7 +317,7 @@ async function withCatalog(env, res, path) {
   if (!(res.headers.get('content-type') || '').includes('text/html')) return res;
   const cat = await catalog(env);
   // The catalog travels as data (a JSON block the page's own script reads), so pages need no inline script at all.
-  const data = JSON.stringify({ products: cat.products, prices: cat.prices, links: cat.links }).replace(/</g, '\\u003c');
+  const data = JSON.stringify({ products: cat.products, prices: cat.prices, links: cat.links, shipping: cat.shipping }).replace(/</g, '\\u003c');
   const js = data;
   const css = hideCss(cat.pages || {}, path || '');
   const out = new HTMLRewriter().on('head', { element(e) { e.append(`<script type="application/json" id="mg-cat">${js}</script>${css}`, { html: true }); } }).transform(res);

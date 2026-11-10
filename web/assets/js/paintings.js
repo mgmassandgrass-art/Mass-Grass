@@ -60,12 +60,14 @@
   wall.addEventListener('click', (e) => { const a = e.target.closest('.pp'); if (!a) return; e.preventDefault(); open_(+a.dataset.i); });
   $('#vthumbs').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; vmode = b.dataset.v; open_(vi); });
 
+  function printBlock(kind,id){const pr=MG.printOf(kind,id);if(!pr)return '';const z=pr.size?MG.L(pr.size):'',sh=Object.values(MG.shipping);
+  return `${MG.printBtn(kind,id,'add')}<p class="pnote">${z?MG.esc(z)+MG.t('. ','. '):''}${sh.length?MG.t('Shipped to ','نشحنها إلى ')+sh.map(c=>MG.L(c.name)).join(MG.t(' and ',' و')):MG.t('Shipping opens soon.','الشحن قريبًا.')}</p>`}
   function open_(i) {
     vi = (i + shown.length) % shown.length; const p = shown[vi]; if (!p) return; unzoom();
     if (vimg.dataset.k !== p.id) { vimg.src = MG.img(p.id, p); vimg.dataset.k = p.id; } vimg.alt = `${p.title_en}, watercolour by Farah Al-Helou`;
     $('#v-h').textContent = MG.title(p); $('#vspec').innerHTML = spec(p.id); $('#vwhere').textContent = L(place(p)) + t(', watercolour on paper', '، ألوان مائية على ورق');
     const b = $('#vadd'), inb = MG.bag.has('painting', p.id), pr = MG.fmt(MG.price('painting', p.id));
-    b.textContent = inb ? t('In your bag', 'في السلة') : (MG.isFree('painting', p.id) ? t('Free download', 'حمّلوها مجانًا') : t(`Add to bag (${pr})`, `أضيفوها إلى السلة (${pr})`)); b.setAttribute('aria-pressed', inb); $('.view .price').textContent = pr;
+    b.textContent = inb ? t('In your bag', 'في السلة') : (MG.isFree('painting', p.id) ? t('Free download', 'حمّلوها مجانًا') : t(`Add to bag (${pr})`, `أضيفوها إلى السلة (${pr})`)); b.setAttribute('aria-pressed', inb); $('.view .price').textContent = pr; $('#vprint').innerHTML = printBlock('painting', p.id);
     const sc = scenesOf(p.id); if (vmode !== 'art' && !sc.includes(vmode)) vmode = sc[0];
     $('#vthumbs').innerHTML = `<button type="button" data-v="art" aria-pressed="${vmode === 'art'}" aria-label="${t('The painting', 'اللوحة')}"><span class="th art"><img src="${esc(MG.thumb(p.id, p))}" alt=""></span></button>` +
       sc.map((k, j) => `<button type="button" data-v="${k}" aria-pressed="${vmode === k}" aria-label="${t('In a room ', 'في غرفة ') + (j + 1)}"><span class="th mk">${mock(p, 0, 'thumb', k)}</span></button>`).join('');

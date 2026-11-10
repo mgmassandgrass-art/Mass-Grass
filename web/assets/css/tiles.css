@@ -21,3 +21,4 @@
 @media(max-width:520px){.shgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 16px}.pr-it .add{padding:0 12px;font-size:var(--fs-caption)}.cats{gap:4px 20px}}
 
 .pr-it .cal img{background:var(--paper-white);padding:3%;box-shadow:0 6px 12px -6px rgba(var(--ink-rgb),.35);max-width:84%}
+.pr-it .kd.pt{margin:-12px 0 16px;color:var(--olive);font-weight:600}

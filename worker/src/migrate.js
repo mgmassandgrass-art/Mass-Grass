@@ -2,8 +2,12 @@
 // (this session's Cloudflare token cannot reach the D1 API). Each step runs as one transaction: all of it or none.
 // A step is applied when its check finds nothing; wrangler's own d1_migrations table records it as applied too.
 import M0008 from '../migrations/0008_security_catalog.sql';
+import M0009 from '../migrations/0009_shipping.sql';
 
-const STEPS = [{ name: '0008_security_catalog.sql', sql: M0008, done: "SELECT 1 FROM sqlite_master WHERE type='table' AND name='audit_log'" }];
+const STEPS = [
+  { name: '0008_security_catalog.sql', sql: M0008, done: "SELECT 1 FROM sqlite_master WHERE type='table' AND name='audit_log'" },
+  { name: '0009_shipping.sql', sql: M0009, done: "SELECT 1 FROM pragma_table_info('orders') WHERE name='ship'" },
+];
 const statements = (sql) => sql.split('\n').filter((l) => !/^\s*--/.test(l)).join('\n').split(/;\s*\n/).map((x) => x.trim().replace(/;$/, '')).filter(Boolean);
 let ready = null;
 export function migrate(env) {

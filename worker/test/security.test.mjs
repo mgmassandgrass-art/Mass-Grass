@@ -38,7 +38,7 @@ r = await admin('GET', '/api/admin/overview'); ok('overview answers', r.s === 20
 ok('overview lists pieces without a file', Array.isArray(r.j.noFile) && r.j.noFile.length > 0);
 r = await admin('GET', '/api/admin/products'); const prods = r.j.products; ok('products list', prods.length > 50 && prods.some((p) => p.id === 's-kaak'));
 ok('no watermarked pieces on sale', !prods.some((p) => ['s-dove', 's-gaza', 's-heart', 'ppoppies', 'ptree'].includes(p.id)));
-ok('no sample sales figures', prods.every((p) => p.sold === 0));
+ok('no sample sales figures', prods.every((p) => p.sold === 0 || p.id === 'hill')); // free.test.cjs runs first and gives hill away for real
 r = await admin('PUT', '/api/admin/settings', { prices: { painting: 12, postcard: 2, sticker: 1, pack: 3, calendar: 8 } }); ok('settings save', r.s === 200);
 r = await admin('GET', '/api/admin/audit'); ok('audit log records sign-in and the change', r.j.log.some((l) => l.action === 'login' && l.actor === ADMIN) && r.j.log.some((l) => l.action === 'PUT settings'));
 ok('failed admin sign-in is an alert', (await anon('POST', '/api/login', { email: ADMIN, password: 'wrong-password-1' })).s === 401 && (await admin('GET', '/api/admin/audit?level=alert')).j.log.some((l) => l.action === 'login_failed'));

@@ -50,6 +50,13 @@
     const e = p.price != null ? p.price : base;
     return Math.round(e * (100 - (p.sale || 0))) / 100;
   }
+  /* a printed copy, shipped: the admin switches it on per piece (extra.print = {on, price, size}); the calendar's is prices.calendarPrint */
+  function printOf(kind, id) {
+    if (kind === 'calendar') { const e = cat.prices.calendarPrint; return e > 0 ? { price: e, size: ['A5, landscape', 'A5 عرضي'] } : null; }
+    const p = id && product(kind, id), pr = p && p.extra && p.extra.print;
+    return pr && pr.on && Number(pr.price) > 0 ? { price: Number(pr.price), size: pr.size ? [pr.size, pr.size_ar || pr.size] : null } : null;
+  }
+  const shipping = (server && server.shipping) || {};
   const isFree = (kind, id) => { const p = id && product(kind, id); return !!p && p.price === 0; };
   const fmt = (e) => (e === 0 ? t('Free', 'مجانًا') : '€' + (Math.round(e * 100) % 100 ? e.toFixed(2) : String(Math.round(e))));
   const KIND = {
@@ -63,18 +70,23 @@
     get() { const a = store.get('mgBag', []); return Array.isArray(a) ? a : []; },
     set(a) { store.set('mgBag', a); paintBag(); rerender('bag'); },
     count() { return this.get().length; },
-    total() { return this.get().reduce((n, x) => n + (+x.p || 0), 0); },
-    has(kind, id) { return this.get().some((x) => x.kind === kind && x.k === id); },
+    total() { return this.get().reduce((n, x) => n + (+x.p || 0) * (x.q || 1), 0); },
+    printed() { return this.get().some((x) => x.fmt === 'print'); },
+    /* a line is one piece in one form: the file (fmt unset) or a printed copy (fmt 'print', with a quantity q) */
+    has(kind, id, fmt) { return this.get().some((x) => x.kind === kind && x.k === id && (x.fmt || '') === (fmt || '')); },
     add(kind, id, extra) {
-      const a = this.get(); if (kind !== 'pack' && a.some((x) => x.kind === kind && x.k === id)) return false;
+      const fmt = (extra && extra.fmt) || '', a = this.get();
+      if (kind !== 'pack' && a.some((x) => x.kind === kind && x.k === id && (x.fmt || '') === fmt)) return false;
       const p = product(kind, id), c = DEF.calendar;
       const line = kind === 'calendar' ? { k: c.id, kind, t: c.title[0], ta: c.title[1], p: price('calendar'), img: 'assets/c27-00.webp' }
         : { k: id, kind, t: p ? p.title_en : id, ta: p ? p.title_ar || p.title_en : id, p: price(kind, id), img: thumb(id, p) };
+      if (fmt === 'print') { const pr = printOf(kind, id); if (!pr) return false; line.p = pr.price; line.fmt = 'print'; line.q = 1; }
       a.push(Object.assign(line, extra || {})); this.set(a); bump(); return true;
     },
     remove(i) { const a = this.get(); a.splice(i, 1); this.set(a); },
-    drop(kind, id) { this.set(this.get().filter((x) => !(x.kind === kind && x.k === id))); },
-    toggle(kind, id) { if (this.has(kind, id)) { this.drop(kind, id); return false; } this.add(kind, id); return true; },
+    qty(i, q) { const a = this.get(); if (a[i] && a[i].fmt === 'print') { a[i].q = Math.max(1, Math.min(10, q)); this.set(a); } },
+    drop(kind, id, fmt) { this.set(this.get().filter((x) => !(x.kind === kind && x.k === id && (x.fmt || '') === (fmt || '')))); },
+    toggle(kind, id, fmt) { if (this.has(kind, id, fmt)) { this.drop(kind, id, fmt); return false; } this.add(kind, id, fmt ? { fmt } : undefined); return true; },
     clear() { this.set([]); },
     /* stickers: every six (or four and more left over) go in as one pack at the pack price, the rest one by one */
     stickers(ids) {
@@ -109,8 +121,8 @@
     const a = bag.get(); sheetEl.dir = AR ? 'rtl' : 'ltr';
     sheetEl.innerHTML = `<div class="bagd-in paper"><span class="fill"></span>
       <div class="bagd-hd"><h2 id="bagd-h">${t('Your bag', 'سلتكم')}</h2><button class="x" type="button" data-close aria-label="${t('Close', 'إغلاق')}">✕</button></div>
-      ${a.length ? `<ul class="bagd-ls">${a.map((x, i) => `<li><span class="th"><img src="${esc(x.img)}" alt=""></span><div class="nm"><b>${esc(AR ? x.ta || x.t : x.t)}</b><small>${esc(kindLabel(x.kind))}</small></div><div class="pr"><span>${fmt(+x.p || 0)}</span><button type="button" class="rm" data-rm="${i}">${t('Remove', 'إزالة')}</button></div></li>`).join('')}</ul>
-      <div class="bagd-ft"><p class="tt"><span>${t('Total', 'المجموع')}</span><b>${fmt(bag.total())}</b></p><a class="ink" href="checkout.html">${t('Checkout', 'إتمام الشراء')}</a><p class="note">${t('Digital files. The download links reach your email as soon as you pay.', 'ملفات رقمية. تصل روابط التحميل إلى بريدكم فور الدفع.')}</p></div>`
+      ${a.length ? `<ul class="bagd-ls">${a.map((x, i) => `<li><span class="th"><img src="${esc(x.img)}" alt=""></span><div class="nm"><b>${esc(AR ? x.ta || x.t : x.t)}</b><small>${x.fmt === 'print' ? esc(t('Printed and shipped', 'مطبوعة وتُشحن')) + (x.q > 1 ? ' × ' + x.q : '') : esc(kindLabel(x.kind))}</small></div><div class="pr"><span>${fmt((+x.p || 0) * (x.q || 1))}</span><button type="button" class="rm" data-rm="${i}">${t('Remove', 'إزالة')}</button></div></li>`).join('')}</ul>
+      <div class="bagd-ft"><p class="tt"><span>${t('Total', 'المجموع')}</span><b>${fmt(bag.total())}</b></p><a class="ink" href="checkout.html">${t('Checkout', 'إتمام الشراء')}</a><p class="note">${bag.printed() ? t('Shipping is added at checkout.', 'تُضاف أجرة الشحن عند إتمام الشراء.') : t('Digital files. The download links reach your email as soon as you pay.', 'ملفات رقمية. تصل روابط التحميل إلى بريدكم فور الدفع.')}</p></div>`
       : `<div class="bagd-em"><p>${t('Your bag is empty.', 'السلة فارغة.')}</p><a class="go" href="shop.html">${t('See the shop', 'تصفحوا المتجر')}</a></div>`}</div>`;
   }
 
@@ -200,7 +212,8 @@
     /* any [data-add="calendar"] puts the calendar in the bag; [data-add-kind][data-add-id] toggles one piece */
     doc.addEventListener('click', (e) => {
       const b = e.target.closest('[data-add]'); if (!b) return; e.preventDefault();
-      if (b.dataset.add === 'calendar') { if (b.classList.contains('add') && bag.has('calendar', DEF.calendar.id)) bag.drop('calendar', DEF.calendar.id); else { const added = bag.add('calendar', DEF.calendar.id); toast(added ? t('The calendar is in your bag.', 'أُضيف التقويم إلى السلة.') : t('The calendar is already in your bag.', 'التقويم في السلة.')); } }
+      if (b.dataset.fmt === 'print') { const on = bag.toggle(b.dataset.add, b.dataset.add === 'calendar' ? DEF.calendar.id : b.dataset.id, 'print'); if (on) toast(t('The printed copy is in your bag.', 'أُضيفت النسخة المطبوعة إلى السلة.')); }
+      else if (b.dataset.add === 'calendar') { if (b.classList.contains('add') && bag.has('calendar', DEF.calendar.id)) bag.drop('calendar', DEF.calendar.id); else { const added = bag.add('calendar', DEF.calendar.id); toast(added ? t('The calendar is in your bag.', 'أُضيف التقويم إلى السلة.') : t('The calendar is already in your bag.', 'التقويم في السلة.')); } }
       else if (isFree(b.dataset.add, b.dataset.id) && !bag.has(b.dataset.add, b.dataset.id)) { bag.add(b.dataset.add, b.dataset.id); location.href = 'checkout.html'; }
       else bag.toggle(b.dataset.add, b.dataset.id);
     });
@@ -211,6 +224,8 @@
   /* an add-to-bag button for one piece (kept in step by rerender) */
   const addBtn = (kind, id, cls) => { const on = bag.has(kind, id); return `<button type="button" class="${cls || 'add'}" data-add="${kind}" data-id="${esc(id)}" aria-pressed="${on}">${on ? t('In your bag', 'في السلة') : isFree(kind, id) ? t('Free download', 'حمّلوها مجانًا') : t('Add to bag', 'أضيفوها إلى السلة')}</button>`; };
 
+  const printBtn = (kind, id, cls) => { const pr = printOf(kind, id); if (!pr) return ''; const on = bag.has(kind, id, 'print');
+    return `<button type="button" class="${cls || 'add'} pbtn" data-add="${kind}" data-id="${esc(id)}" data-fmt="print" aria-pressed="${on}">${on ? t('Printed copy in your bag', 'النسخة المطبوعة في السلة') : t(`Printed and shipped, ${fmt(pr.price)}`, `مطبوعة وتُشحن، ${fmt(pr.price)}`)}</button>`; };
   /* one product as a tile (tiles.css): the piece on a coloured sheet, linked to its own page */
   const PAGE = { painting: 'paintings.html', postcard: 'postcards.html', sticker: 'stickers.html', calendar: 'calendar.html' };
   function tile(p) {
@@ -218,9 +233,9 @@
     const src = cal ? 'assets/c27-00.webp' : thumb(p.id, p), href = PAGE[p.kind] + (cal ? '' : '#' + p.id);
     const btn = cal ? `<button type="button" class="add" data-add="calendar" aria-pressed="${bag.has('calendar', DEF.calendar.id)}">${bag.has('calendar', DEF.calendar.id) ? t('In your bag', 'في السلة') : t('Add to bag', 'أضيفوه إلى السلة')}</button>` : addBtn(p.kind, p.id);
     return `<li class="pr-it"><a class="lk" href="${href}"><div class="bed paper ${cls}" data-tear="5"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
-      <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${btn}</li>`;
+      <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? '' : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}${btn}</li>`;
   }
-  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, tile, calendar: DEF.calendar };
+  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, tile, calendar: DEF.calendar };
 
   function boot() { applyLang(); shell(); ready = true; rerender('init'); user.sync(); }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', boot) : boot();

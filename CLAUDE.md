@@ -244,6 +244,13 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   page and by e-mail, no e-mail to the owner). A free piece needs its file (`not_ready` otherwise); 15 free orders per address
   an hour and 10 per e-mail a day. Free stickers never go into a priced pack. The overview counts free downloads apart from
   sales. Test: `node test/free.test.cjs` (part of `npm test`).
+- Printed pieces (Nov 2026): the admin offers a piece printed in its product sheet ("النسخة المطبوعة": on, price, size in both
+  languages → `extra.print`); the printed calendar's price is `prices.calendarPrint` (empty = not offered). Shipping countries are
+  the UAE and Denmark (`COUNTRIES` in `worker/src/shop.js`), each switched on with a fee and delivery time in Settings; a country
+  is offered only when it is on and has a fee (migration 0009 starts both with no fee, so shipping is closed until set). Bag lines
+  carry `fmt:'print'` and `q` (1-10); checkout asks for the address (postcode only for Denmark), the server prices everything and
+  sends PayPal the item total, shipping and address. Print lines have no files. Orders: "للشحن" filter, parcel state
+  (to_print / sent / delivered) with tracking; "sent" e-mails the buyer. Test: `sh test/local.sh paypal` + `node test/ship.test.cjs`.
 - Images: one clean set in `web/assets` (`python3 tools/web_assets.py`). Watermarked copies (old `assets/*.jpg` with the tiled
   "MASS & GRASS © FARAH AL HELOU" mark, `pmoon`, `ppoppies`, `ptree`, `s-dove`, `s-gaza`, `s-heart`) are not used. Farah's own
   sticker sheet from Drive gives ten die-cut stickers. "Blue Poppies" was the same painting as "White Dove" and "Little Tree"
@@ -257,7 +264,8 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   (TOTP + ten recovery codes) for accounts with a password, 8 tries per account per 15 minutes, sessions with device and
   address that can be ended, admin sessions of 7 days, server-side product names in orders, constant-time order secrets.
   The seed's sample "sold" figures were reset to what paid orders say.
-- Tests: `cd worker && sh test/local.sh`, then `npm test` and `node test/e2e.test.cjs` (all three must pass).
+- Tests: `cd worker && sh test/local.sh`, then `npm test` and `node test/e2e.test.cjs`; with `sh test/local.sh paypal`, `node test/pay.test.cjs`
+  and `node test/ship.test.cjs` (each on a fresh database). The security test runs last in `npm test` because it uses up the sign-in limit.
 - Preview of the rebuilt site (static, built-in catalog, no server): https://claude.ai/artifact/6P2BSgN7w62h8C7mYAkjo2
   (publish `web/index.html` with root `web` and every other file of `web/` except `_src/` and `admin/` as `files`). The admin
   needs the Worker, so it is shown to the owner as screenshots (Playwright against `sh test/local.sh`).

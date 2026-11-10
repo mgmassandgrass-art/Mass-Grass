@@ -30,13 +30,13 @@ const links = (env, fs) => fs.length ? fs.map((f) => btn(env.SITE_ORIGIN + f.url
 export async function orderPaidEmails(env, o) {
   const items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
   const files = await orderFiles(env, { ...o, status: 'paid' });
-  const rows = items.filter((it) => !it.gift).map((it) => `<div style="padding:10px 0;border-bottom:1px solid #e3d6bd"><b>${e(it.t || it.k)}</b>${it.ta ? ` · <span dir="rtl">${e(it.ta)}</span>` : ''}<br><small style="color:#6f604d">${KIND[it.kind] || ''}</small><br>${links(env, filesOf(it, files))}</div>`).join('');
+  const rows = items.filter((it) => !it.gift).map((it) => `<div style="padding:10px 0;border-bottom:1px solid #e3d6bd"><b>${e(it.t || it.k)}</b>${it.ta ? ` · <span dir="rtl">${e(it.ta)}</span>` : ''}<br><small style="color:#6f604d">${KIND[it.kind] || ''}${it.fmt === 'print' ? ` · printed${it.q > 1 ? ' × ' + it.q : ''}, shipped to you · مطبوعة وتُشحن إليكم` : ''}</small><br>${it.fmt === 'print' ? '' : links(env, filesOf(it, files))}</div>`).join('');
   const gifts = items.filter((it) => it.gift);
   await sendMail(env, o.email, `Your files from Gaza · ${o.id} · ملفاتك من غزة`, layout(`
     <h2 style="margin:0 0 6px;font:700 24px Arial">Sealed in Gaza ✉</h2>
     <p>Thank you${o.name ? ', ' + e(o.name) : ''}. Your order <b>${e(o.id)}</b> (${o.total_cents ? '€' + (o.total_cents / 100).toFixed(2) : 'free'}) is ready. Your files:</p>
     <p dir="rtl" style="text-align:right">شكرًا لكم. طلبكم جاهز، وهذه ملفاتكم:</p>
-    ${rows}${gifts.length ? `<p>Gifts on their way to: ${gifts.map((g) => e(g.gift.to)).join(', ')}.</p>` : ''}
+    ${rows}${shipBlock(o)}${gifts.length ? `<p>Gifts on their way to: ${gifts.map((g) => e(g.gift.to)).join(', ')}.</p>` : ''}
     <p style="font-size:13px;color:#6f604d">Keep this email: the links are yours. Signed-in buyers also find them in their profile.</p>`));
   for (const g of gifts) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(g.gift.em || '')) continue;
@@ -48,8 +48,22 @@ export async function orderPaidEmails(env, o) {
   }
   if (env.ADMIN_EMAIL && o.total_cents > 0) await sendMail(env, env.ADMIN_EMAIL, `New order ${o.id} · €${(o.total_cents / 100).toFixed(2)} · طلب جديد`, layout(`
     <p><b>${e(o.name || '')}</b> &lt;${e(o.email)}&gt; paid <b>€${(o.total_cents / 100).toFixed(2)}</b>.</p>
-    <ul>${items.map((it) => `<li>${e(it.t || it.k)} (${KIND[it.kind] || it.kind})${it.gift ? ` → gift for ${e(it.gift.to)}` : ''}</li>`).join('')}</ul>
+    <ul>${items.map((it) => `<li>${e(it.t || it.k)} (${KIND[it.kind] || it.kind})${it.fmt === 'print' ? ` <b>PRINTED × ${it.q || 1}</b>` : ''}${it.gift ? ` → gift for ${e(it.gift.to)}` : ''}</li>`).join('')}</ul>${shipBlock(o)}
     <p>${btn(env.SITE_ORIGIN + '/admin/#orders', 'Open orders')}</p>`), o.email);
+}
+
+// The shipping address on an order, for the buyer's and the owner's e-mails.
+function shipBlock(o) {
+  const s = o.ship ? (typeof o.ship === 'string' ? JSON.parse(o.ship) : o.ship) : null;
+  if (!s) return '';
+  return `<div style="margin:14px 0;padding:12px;background:#fff;border:1.5px dashed #2E241B"><b>Shipping to · الشحن إلى</b><br>${e(s.name)}<br>${e(s.line1)}${s.line2 ? '<br>' + e(s.line2) : ''}<br>${e(s.postal ? s.postal + ' ' : '')}${e(s.city)}, ${e(s.country)}<br>${e(s.phone)}</div>`;
+}
+// Sent when the admin marks a printed order as sent.
+export async function shippedEmail(env, o) {
+  return sendMail(env, o.email, `Your prints are on their way · ${o.id} · طلبكم في الطريق`, layout(`
+    <h2 style="margin:0 0 6px;font:700 24px Arial">On their way ✉</h2>
+    <p>Your printed pieces from order <b>${e(o.id)}</b> left Farah’s studio today.${o.tracking ? ` Tracking: <b>${e(o.tracking)}</b>.` : ''}</p>
+    <p dir="rtl" style="text-align:right">خرجت قطعكم المطبوعة من الطلب ${e(o.id)} اليوم.${o.tracking ? ` رقم التتبع: <b>${e(o.tracking)}</b>.` : ''}</p>${shipBlock(o)}`));
 }
 
 export async function contactEmail(env, b) {

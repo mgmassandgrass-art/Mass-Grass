@@ -11,6 +11,7 @@ const safeName = (s) => clean(s, 120).replace(/[^\w.\- ()؀-ۿ]/g, '_') || 'file
 function wanted(items) {
   const keys = [];
   for (const it of items) {
+    if (it.fmt === 'print') continue; // a printed piece is shipped, not downloaded
     if (it.kind === 'pack') for (const k of it.pack || []) keys.push(['sticker', k]);
     else if (it.kind === 'calendar') keys.push(['calendar', 'current']);
     else if (KINDS.includes(it.kind)) keys.push([it.kind, it.k]);

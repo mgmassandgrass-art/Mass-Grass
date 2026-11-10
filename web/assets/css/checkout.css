@@ -29,3 +29,13 @@
 .files a small{font-weight:500;color:var(--soft);font-size:var(--fs-caption)}
 @media(hover:hover){.files a:hover{background:var(--c-e9e1d2)}}
 @media(max-width:860px){.co-grid,.co-done{grid-template-columns:minmax(0,1fr)}.co .sheet{position:static}.co-ls li{grid-template-columns:72px minmax(0,1fr) auto;gap:16px}.co-ls .th{width:72px;height:72px}.co-ls .th img{max-width:62px;max-height:62px}}
+/* printed pieces: quantity, shipping line and the address */
+.qty{display:inline-flex;align-items:center;gap:8px;margin-top:8px}
+.qty button{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--ink);background:var(--paper-white);cursor:pointer;font:600 var(--fs-body)/1 var(--f)}
+.qty button[disabled]{opacity:.4;cursor:not-allowed}
+.qty b{min-width:20px;text-align:center;font-variant-numeric:tabular-nums}
+.co-sub{display:flex;justify-content:space-between;margin:16px 0 0;color:var(--soft)}
+.shipf{border:0;margin:8px 0 16px;padding:16px 0 0;border-top:1.5px dashed rgba(var(--ink-rgb),.25)}
+.shipf legend{padding:0 0 8px;font:700 var(--fs-body)/1.3 var(--f)}
+.ar-on .shipf legend{font-family:var(--fa)}
+.shipf [hidden]{display:none}
