@@ -6,9 +6,10 @@ const S={esc:MG.esc,fmt:MG.fmt,toast:MG.toast,img:k=>'assets/'+k+'.webp',BAG:MG.
 const Q=new URLSearchParams(location.search),resetTok=Q.get('reset');
 const safeNext=n=>/^[a-z0-9\-/]*(\.html)?(#[\w-]*)?$/i.test(n||'')&&!/^\/\//.test(n)?n:'profile.html';
 const next=safeNext(Q.get('next')||'profile.html');
-let mode=resetTok?'reset':Q.get('mode')==='up'?'up':'in',msg=Q.get('error')?{google_not_configured:['Google sign-in is not ready yet. Please use your email.','الدخول عبر Google غير متاح بعد. استخدموا البريد الإلكتروني.']}[Q.get('error')]||['Google sign-in did not work. Please try again.','لم ينجح الدخول عبر Google. حاولوا مرة أخرى.']:null,ok=false;
+let mode=resetTok?'reset':Q.get('mode')==='up'?'up':'in',msg=Q.get('error')?{google_not_configured:['Google sign-in is not ready yet. Please use your email.','الدخول عبر Google غير متاح بعد. استخدموا البريد الإلكتروني.'],use_password:['This account signs in with its password and a code.','هذا الحساب يدخل بكلمة المرور والرمز.']}[Q.get('error')]||['Google sign-in did not work. Please try again.','لم ينجح الدخول عبر Google. حاولوا مرة أخرى.']:null,ok=false;
 const ERR={bad_credentials:['That email and password do not match.','البريد الإلكتروني وكلمة المرور غير متطابقين.'],email_taken:['There is already an account with this email. Sign in instead.','يوجد حساب بهذا البريد. سجّلوا الدخول بدلًا من ذلك.'],
   email_invalid:['Please enter a valid email, like name@mail.com.','اكتبوا بريدًا إلكترونيًا صحيحًا، مثل name@mail.com.'],name_required:['Please write your name.','اكتبوا اسمكم.'],password_short:['The password needs at least 10 characters.','تحتاج كلمة المرور إلى 10 أحرف على الأقل.'],
+  totp_required:['This account asks for a second code.','هذا الحساب يطلب رمزًا إضافيًا.'],totp_invalid:['That code is not right. Try the newest one from the app.','الرمز غير صحيح. جرّبوا أحدث رمز في التطبيق.'],
   rate_limited:['Too many tries. Please wait a little and try again.','محاولات كثيرة. انتظروا قليلًا ثم حاولوا مرة أخرى.'],token_invalid:['This link has expired. Ask for a new one.','انتهت صلاحية هذا الرابط. اطلبوا رابطًا جديدًا.'],
   offline:['Accounts open with the shop. This preview cannot reach the server.','تُفتح الحسابات مع افتتاح المتجر. هذه المعاينة لا تصل إلى الخادم.']};
 const err=r=>T(...(ERR[r.offline?'offline':r.data&&r.data.error]||['Something went wrong. Please try again.','حدث خطأ. حاولوا مرة أخرى.']));
@@ -38,8 +39,12 @@ async function submit(e){e.preventDefault();const f=e.target,btn=f.querySelector
     if(r.ok)say([`If there is an account for ${em}, a link is on its way.`,`إذا كان هناك حساب بالبريد ${em}، فالرابط في طريقه إليكم.`],true);else say(err(r));return}
   if(mode==='reset'){r=await U.api('POST','/api/reset',{token:resetTok,password:v('pw')});btn.disabled=false;
     if(r.ok){history.replaceState(null,'','account.html');mode='in';msg=['Your password is saved. Sign in with it now.','حُفظت كلمة المرور. سجّلوا الدخول بها الآن.'];ok=true;render()}else say(err(r));return}
-  r=mode==='up'?await U.api('POST','/api/signup',{name:v('nm').trim(),email:em,password:v('pw')}):await U.api('POST','/api/login',{email:em,password:v('pw')});
-  btn.disabled=false;if(!r.ok){say(err(r));return}
+  r=mode==='up'?await U.api('POST','/api/signup',{name:v('nm').trim(),email:em,password:v('pw')}):await U.api('POST','/api/login',{email:em,password:v('pw'),code:v('tc').trim()||undefined});
+  btn.disabled=false;
+  /* an account with two-step sign-in: ask for the code from the authenticator app, then send the form again */
+  if(!r.ok&&r.data&&r.data.error==='totp_required'&&!$('tc')){const l=document.createElement('label');l.className='fld';l.innerHTML=`${T('Code from your authenticator app','الرمز من تطبيق المصادقة')}<input id="tc" inputmode="numeric" autocomplete="one-time-code" maxlength="12" dir="ltr" required><small>${T('Six digits, or one of your recovery codes.','ستة أرقام، أو أحد رموز الاسترجاع.')}</small>`;
+    $('pw').closest('label').after(l);say(ERR.totp_required,true);$('tc').focus();return}
+  if(!r.ok){say(err(r));return}
   U.set(r.data.user);location.href=next}
 /* already signed in: straight to the profile */
 U.sync().then(u=>{if(u&&!resetTok)location.replace(next)});

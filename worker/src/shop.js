@@ -74,7 +74,10 @@ export async function createOrder(env, req, user) {
     const c = linePrice(cat, it || {});
     if (c == null) return fail('item_unavailable', 400, { k: it && it.k });
     total += c;
-    items.push({ k: clean(it.k, 40), kind: it.pack ? 'pack' : clean(it.kind, 20), t: clean(it.t, 80), ta: clean(it.ta, 80), pack: Array.isArray(it.pack) ? it.pack.slice(0, 6).map((x) => clean(x, 40)) : undefined,
+    // Names come from the catalog, not from the browser (a pack and the calendar keep the shop's own wording).
+    const pr = it.pack ? null : cat.products.find((x) => x.id === it.k && x.kind === it.kind);
+    const cal = it.kind === 'calendar' && !it.pack;
+    items.push({ k: clean(it.k, 40), kind: it.pack ? 'pack' : clean(it.kind, 20), t: pr ? pr.title_en : cal ? 'Things kept in bottles, 2027' : clean(it.t, 80), ta: pr ? pr.title_ar : cal ? 'أشياء نحفظها في قوارير، 2027' : clean(it.ta, 80), pack: Array.isArray(it.pack) ? it.pack.slice(0, 6).map((x) => clean(x, 40)) : undefined,
       gift: it.gift ? { to: clean(it.gift.to, 60), em: clean(it.gift.em, 120), m: clean(it.gift.m, 500) } : undefined, cents: c });
   }
   const id = 'MG-' + crypto.randomUUID().slice(0, 8).toUpperCase();
