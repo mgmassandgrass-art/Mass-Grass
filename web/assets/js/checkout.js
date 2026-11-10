@@ -10,6 +10,7 @@ const ERR={email_invalid:['Please enter a valid email, like name@mail.com. Your 
   rate_limited:['Too many tries. Please wait a little and try again.','محاولات كثيرة. انتظروا قليلًا ثم حاولوا مرة أخرى.'],
   payment_error:['PayPal did not answer. Please try again in a moment.','لم يستجب PayPal. حاولوا مرة أخرى بعد قليل.'],
   not_paid:['We could not confirm the payment. If money left your account, write to info@massandgrass.com with your order number.','لم نتمكن من تأكيد الدفع. إن خُصم المبلغ، راسلونا على info@massandgrass.com مع رقم الطلب.'],
+  not_ready:['This free piece is not ready to download yet. Please try again soon.','هذه القطعة المجانية غير جاهزة للتنزيل بعد. حاولوا لاحقًا.'],
   amount_mismatch:['The amount paid does not match the order. Please write to info@massandgrass.com.','المبلغ المدفوع لا يطابق الطلب. راسلونا على info@massandgrass.com.']};
 let state=Q.get('order')?'capture':'bag',msg=Q.get('cancelled')?['The payment was cancelled. Your bag is still here.','أُلغي الدفع. سلتكم ما زالت هنا.']:null,order=null,soon=false;
 const kb=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
@@ -30,13 +31,15 @@ function render(){const box=$('co'),h=$('co-h');
     <label class="fld"><span>${T('Your name','الاسم')} <small>${T('(optional)','(اختياري)')}</small></span><input id="nm" autocomplete="name" maxlength="60" value="${esc(u?u.name:'')}"></label>
     <label class="chk"><input type="checkbox" id="news"><span>${T('Send me one new painting from Gaza each month.','أرسلوا لي لوحة جديدة من غزة كل شهر.')}</span></label>
     <p class="fmsg${soon?' ok':''}" role="status">${msg?esc(T(...msg)):''}</p>
-    <button class="ink full" type="submit">${T('Pay','ادفعوا')} ${S.fmt(B.total())} ${T('with PayPal or a card','عبر PayPal أو البطاقة')}</button>
+    <button class="ink full" type="submit">${B.total()===0?T('Get the files','احصلوا على الملفات'):`${T('Pay','ادفعوا')} ${S.fmt(B.total())} ${T('with PayPal or a card','عبر PayPal أو البطاقة')}`}</button>
     <p class="fine">${u?'':`${T('Have an account?','لديكم حساب؟')} <a href="account.html?next=checkout.html">${T('Sign in','سجّلوا الدخول')}</a> ${T('to keep your files in your profile.','لتبقى ملفاتكم في حسابكم.')} `}${T('Digital files, nothing is shipped. By paying you accept the','ملفات رقمية، لا شيء يُشحن. بالدفع توافقون على')} <a href="terms.html">${T('terms and licence','الشروط والرخصة')}</a>.</p></form></div>`;
   retear();$('f').onsubmit=pay;box.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{B.remove(+b.dataset.rm);render()})}
 function retear(){MG.tear()}
 async function pay(e){e.preventDefault();const f=e.target,btn=f.querySelector('[type=submit]'),say=(m,good)=>{msg=m;soon=!!good;const el=f.querySelector('.fmsg');el.textContent=T(...m);el.classList.toggle('ok',!!good)};
   const em=$('em').value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){say(ERR.email_invalid);$('em').focus();return}
   btn.disabled=true;const r=await U.api('POST','/api/orders',{email:em,name:$('nm').value.trim(),news:$('news').checked,items:B.get()});btn.disabled=false;
+  /* free pieces: no payment, the files are ready at once */
+  if(r.ok&&r.data.free&&r.data.order){order=r.data.order;state='done';B.clear();render();scrollTo(0,0);return}
   if(r.ok&&!r.data.approve&&r.data.payments!=='off'){say(ERR.payment_error);return}
   if(r.offline||(r.ok&&r.data.payments==='off')){say(['Payments open with the shop in a few days. Your bag stays here until then.','يُفتح الدفع مع افتتاح المتجر بعد أيام. ستبقى سلتكم هنا حتى ذلك الحين.'],true);return}
   if(!r.ok){say(ERR[r.data&&r.data.error]||['Something went wrong. Please try again.','حدث خطأ. حاولوا مرة أخرى.']);return}

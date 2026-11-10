@@ -50,7 +50,8 @@
     const e = p.price != null ? p.price : base;
     return Math.round(e * (100 - (p.sale || 0))) / 100;
   }
-  const fmt = (e) => '€' + (Math.round(e * 100) % 100 ? e.toFixed(2) : String(Math.round(e)));
+  const isFree = (kind, id) => { const p = id && product(kind, id); return !!p && p.price === 0; };
+  const fmt = (e) => (e === 0 ? t('Free', 'مجانًا') : '€' + (Math.round(e * 100) % 100 ? e.toFixed(2) : String(Math.round(e))));
   const KIND = {
     painting: ['Painting, PDF and PNG', 'لوحة، PDF وPNG'], postcard: ['Postcard, PDF and PNG', 'بطاقة بريدية، PDF وPNG'],
     sticker: ['Sticker, PNG', 'ملصق، PNG'], pack: ['Sticker pack, PNG', 'مجموعة ملصقات، PNG'], calendar: ['Calendar 2027, PDF in A5', 'تقويم 2027، PDF بمقاس A5'],
@@ -77,13 +78,13 @@
     clear() { this.set([]); },
     /* stickers: every six (or four and more left over) go in as one pack at the pack price, the rest one by one */
     stickers(ids) {
-      const a = this.get(); let rest = [...ids];
+      const a = this.get(); const free = ids.filter((id) => isFree('sticker', id)); let rest = ids.filter((id) => !free.includes(id));
       while (rest.length) {
         const n = rest.length >= 6 ? 6 : rest.length > 3 ? rest.length : 0; if (!n) break;
         const pk = rest.slice(0, n); rest = rest.slice(n);
         a.push({ k: 'pack-' + Date.now().toString(36) + a.length, kind: 'pack', t: `Sticker pack, ${pk.length} stickers`, ta: `مجموعة ملصقات، ${pk.length} ملصقات`, p: price('pack'), img: thumb(pk[0], product('sticker', pk[0])), pack: pk });
       }
-      rest.forEach((id) => { const p = product('sticker', id); a.push({ k: id, kind: 'sticker', t: p ? p.title_en : id, ta: p ? p.title_ar : id, p: price('sticker', id), img: thumb(id, p) }); });
+      rest.concat(free).forEach((id) => { const p = product('sticker', id); a.push({ k: id, kind: 'sticker', t: p ? p.title_en : id, ta: p ? p.title_ar : id, p: price('sticker', id), img: thumb(id, p) }); });
       this.set(a); bump();
     },
   };
@@ -200,6 +201,7 @@
     doc.addEventListener('click', (e) => {
       const b = e.target.closest('[data-add]'); if (!b) return; e.preventDefault();
       if (b.dataset.add === 'calendar') { if (b.classList.contains('add') && bag.has('calendar', DEF.calendar.id)) bag.drop('calendar', DEF.calendar.id); else { const added = bag.add('calendar', DEF.calendar.id); toast(added ? t('The calendar is in your bag.', 'أُضيف التقويم إلى السلة.') : t('The calendar is already in your bag.', 'التقويم في السلة.')); } }
+      else if (isFree(b.dataset.add, b.dataset.id) && !bag.has(b.dataset.add, b.dataset.id)) { bag.add(b.dataset.add, b.dataset.id); location.href = 'checkout.html'; }
       else bag.toggle(b.dataset.add, b.dataset.id);
     });
     addEventListener('storage', (e) => { if (e.key === 'mgBag') rerender('bag'); if (e.key === 'mgUser') rerender('user'); });
@@ -207,7 +209,7 @@
   }
 
   /* an add-to-bag button for one piece (kept in step by rerender) */
-  const addBtn = (kind, id, cls) => { const on = bag.has(kind, id); return `<button type="button" class="${cls || 'add'}" data-add="${kind}" data-id="${esc(id)}" aria-pressed="${on}">${on ? t('In your bag', 'في السلة') : t('Add to bag', 'أضيفوها إلى السلة')}</button>`; };
+  const addBtn = (kind, id, cls) => { const on = bag.has(kind, id); return `<button type="button" class="${cls || 'add'}" data-add="${kind}" data-id="${esc(id)}" aria-pressed="${on}">${on ? t('In your bag', 'في السلة') : isFree(kind, id) ? t('Free download', 'حمّلوها مجانًا') : t('Add to bag', 'أضيفوها إلى السلة')}</button>`; };
 
   /* one product as a tile (tiles.css): the piece on a coloured sheet, linked to its own page */
   const PAGE = { painting: 'paintings.html', postcard: 'postcards.html', sticker: 'stickers.html', calendar: 'calendar.html' };
@@ -218,7 +220,7 @@
     return `<li class="pr-it"><a class="lk" href="${href}"><div class="bed paper ${cls}" data-tear="5"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
       <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${btn}</li>`;
   }
-  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, tile, calendar: DEF.calendar };
+  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, tile, calendar: DEF.calendar };
 
   function boot() { applyLang(); shell(); ready = true; rerender('init'); user.sync(); }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', boot) : boot();

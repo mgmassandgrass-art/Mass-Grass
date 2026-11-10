@@ -65,7 +65,7 @@
     if (vimg.dataset.k !== p.id) { vimg.src = MG.img(p.id, p); vimg.dataset.k = p.id; } vimg.alt = `${p.title_en}, watercolour by Farah Al-Helou`;
     $('#v-h').textContent = MG.title(p); $('#vspec').innerHTML = spec(p.id); $('#vwhere').textContent = L(place(p)) + t(', watercolour on paper', '، ألوان مائية على ورق');
     const b = $('#vadd'), inb = MG.bag.has('painting', p.id), pr = MG.fmt(MG.price('painting', p.id));
-    b.textContent = inb ? t('In your bag', 'في السلة') : t(`Add to bag (${pr})`, `أضيفوها إلى السلة (${pr})`); b.setAttribute('aria-pressed', inb); $('.view .price').textContent = pr;
+    b.textContent = inb ? t('In your bag', 'في السلة') : (MG.isFree('painting', p.id) ? t('Free download', 'حمّلوها مجانًا') : t(`Add to bag (${pr})`, `أضيفوها إلى السلة (${pr})`)); b.setAttribute('aria-pressed', inb); $('.view .price').textContent = pr;
     const sc = scenesOf(p.id); if (vmode !== 'art' && !sc.includes(vmode)) vmode = sc[0];
     $('#vthumbs').innerHTML = `<button type="button" data-v="art" aria-pressed="${vmode === 'art'}" aria-label="${t('The painting', 'اللوحة')}"><span class="th art"><img src="${esc(MG.thumb(p.id, p))}" alt=""></span></button>` +
       sc.map((k, j) => `<button type="button" data-v="${k}" aria-pressed="${vmode === k}" aria-label="${t('In a room ', 'في غرفة ') + (j + 1)}"><span class="th mk">${mock(p, 0, 'thumb', k)}</span></button>`).join('');
@@ -81,7 +81,7 @@
   function toggleZoom(e) { if (big.dataset.mode !== 'art') return; zoomed = !zoomed; big.classList.toggle('zoom', zoomed); $('#vzoom').setAttribute('aria-pressed', zoomed); if (zoomed && e && e.clientX) zoomAt(e.clientX, e.clientY); else if (!zoomed) vimg.style.transformOrigin = ''; }
   vimg.addEventListener('click', toggleZoom); $('#vzoom').addEventListener('click', () => toggleZoom());
   big.addEventListener('pointermove', (e) => { if (zoomed) zoomAt(e.clientX, e.clientY); });
-  $('#vadd').addEventListener('click', () => { const p = shown[vi]; if (MG.bag.toggle('painting', p.id)) MG.toast(t('The painting is in your bag.', 'أُضيفت اللوحة إلى السلة.')); });
+  $('#vadd').addEventListener('click', () => { const p = shown[vi]; if (MG.isFree('painting', p.id) && !MG.bag.has('painting', p.id)) { MG.bag.add('painting', p.id); location.href = 'checkout.html'; return; } if (MG.bag.toggle('painting', p.id)) MG.toast(t('The painting is in your bag.', 'أُضيفت اللوحة إلى السلة.')); });
   $('#vnext').addEventListener('click', () => open_(vi + 1)); $('#vprev').addEventListener('click', () => open_(vi - 1));
   $('#vx').addEventListener('click', () => view.close()); view.addEventListener('close', () => history.replaceState(null, '', location.pathname));
   view.addEventListener('click', (e) => { if (e.target === view) view.close(); });

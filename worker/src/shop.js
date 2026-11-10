@@ -39,6 +39,7 @@ function linePrice(cat, it) {
   if (kind === 'pack' || kind === 'calendar') return base > 0 ? Math.round(base * 100) : null;
   const p = cat.products.find((x) => x.id === it.k && x.kind === kind);
   if (!p) return null;
+  if (p.price === 0) return 0; // a free piece: the admin set its price to 0
   const eur = p.price ?? base;
   if (!(eur > 0)) return null;
   return Math.round(eur * 100 * (100 - (p.sale || 0)) / 100);
@@ -63,6 +64,8 @@ async function pp(env, path, body, method = 'POST') {
   return { ok: r.ok, status: r.status, data: await r.json().catch(() => ({})) };
 }
 
+import { limitKey, ipOf } from './security.js';
+
 export async function createOrder(env, req, user) {
   const b = await readJson(req);
   if (!b || !Array.isArray(b.items) || !b.items.length || b.items.length > 50) return fail('bad_request');
@@ -81,12 +84,24 @@ export async function createOrder(env, req, user) {
     items.push({ k: clean(it.k, 40), kind: it.pack ? 'pack' : clean(it.kind, 20), t: pr ? pr.title_en : cal ? 'Things kept in bottles, 2027' : clean(it.t, 80), ta: pr ? pr.title_ar : cal ? 'أشياء نحفظها في قوارير، 2027' : clean(it.ta, 80), pack: Array.isArray(it.pack) ? it.pack.slice(0, 6).map((x) => clean(x, 40)) : undefined,
       gift: it.gift ? { to: clean(it.gift.to, 60), em: clean(it.gift.em, 120), m: clean(it.gift.m, 500) } : undefined, cents: c });
   }
+  // Free downloads (every line priced 0): no payment. Each free piece must have its file, and the same address or
+  // e-mail can only take so many, so the files cannot be pulled in bulk.
+  if (total === 0) {
+    const keys = items.flatMap((x) => (x.kind === 'pack' ? (x.pack || []).map((k) => ['sticker', k]) : x.kind === 'calendar' ? [['calendar', 'current']] : [[x.kind, x.k]]));
+    for (const [kd, pid] of keys) if (!(await env.DB.prepare('SELECT 1 FROM product_files WHERE kind=? AND product_id=?').bind(kd, pid).first())) return fail('not_ready', 409, { k: pid });
+    if (!(await limitKey(env, 'free:' + ipOf(req), 15, 3600)) || !(await limitKey(env, 'freem:' + email, 10, 86400))) return fail('rate_limited', 429);
+  }
   const id = 'MG-' + crypto.randomUUID().slice(0, 8).toUpperCase();
   // The order secret: only the buyer's browser (and later their email) gets it; downloads need it.
   const access = [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, '0')).join('');
   await env.DB.prepare('INSERT INTO orders(id,user_id,email,name,items,total_cents,news,created_at,access) VALUES(?,?,?,?,?,?,?,?,?)')
     .bind(id, user ? user.id : null, email, clean(b.name, 60), JSON.stringify(items), total, b.news ? 1 : 0, Date.now(), access).run();
   if (b.news) await env.DB.prepare('INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?,?,?)').bind(email, 'checkout', Date.now()).run();
+  if (total === 0) {
+    const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first();
+    await markPaid(env, o);
+    return json({ id, access, total: 0, free: true, order: await withFiles(env, { ...o, status: 'paid' }) }, 201);
+  }
   if (!env.PAYPAL_CLIENT_ID) return json({ id, access, total: total / 100, payments: 'off' }, 201);
   const r = await pp(env, '/v2/checkout/orders', {
     intent: 'CAPTURE',
@@ -184,16 +199,16 @@ export async function admin(env, req, url, p) {
     const DAY = 864e5, now = Date.now(), days = Math.min(365, Math.max(7, parseInt(url.searchParams.get('days')) || 30)), from = now - days * DAY;
     const one = (q, ...b) => env.DB.prepare(q).bind(...b).first(), all = async (q, ...b) => (await env.DB.prepare(q).bind(...b).all()).results;
     const [tot, per, prev, pend, users, newUsers, subs, msgs, prods, hidden, files] = await Promise.all([
-      one("SELECT count(*) n, coalesce(sum(total_cents),0) c FROM orders WHERE status='paid'"),
-      one("SELECT count(*) n, coalesce(sum(total_cents),0) c FROM orders WHERE status='paid' AND paid_at>=?", from),
-      one("SELECT count(*) n, coalesce(sum(total_cents),0) c FROM orders WHERE status='paid' AND paid_at>=? AND paid_at<?", from - days * DAY, from),
+      one("SELECT count(*) n, coalesce(sum(total_cents),0) c FROM orders WHERE status='paid' AND total_cents>0"),
+      one("SELECT count(*) n, coalesce(sum(total_cents),0) c FROM orders WHERE status='paid' AND total_cents>0 AND paid_at>=?", from),
+      one("SELECT count(*) n, coalesce(sum(total_cents),0) c FROM orders WHERE status='paid' AND total_cents>0 AND paid_at>=? AND paid_at<?", from - days * DAY, from),
       one("SELECT count(*) n FROM orders WHERE status='pending' AND created_at>=?", now - 7 * DAY),
       one('SELECT count(*) n FROM users'), one('SELECT count(*) n FROM users WHERE created_at>=?', from),
       one('SELECT count(*) n FROM subscribers'), one('SELECT count(*) n, coalesce(sum(read=0),0) unread FROM messages'),
       one('SELECT count(*) n FROM products WHERE deleted=0'), one('SELECT count(*) n FROM products WHERE deleted=0 AND hidden=1'),
       one('SELECT count(*) n, coalesce(sum(size),0) bytes FROM product_files'),
     ]);
-    const series = await all("SELECT cast((paid_at-?)/? AS INTEGER) d, count(*) n, sum(total_cents) c FROM orders WHERE status='paid' AND paid_at>=? GROUP BY d", from, DAY, from);
+    const series = await all("SELECT cast((paid_at-?)/? AS INTEGER) d, count(*) n, sum(total_cents) c FROM orders WHERE status='paid' AND total_cents>0 AND paid_at>=? GROUP BY d", from, DAY, from);
     const signups = await all('SELECT cast((created_at-?)/? AS INTEGER) d, count(*) n FROM users WHERE created_at>=? GROUP BY d', from, DAY, from);
     const byDay = [...Array(days)].map((_, i) => ({ date: new Date(from + (i + 1) * DAY).toISOString().slice(0, 10), orders: 0, revenue: 0, signups: 0 }));
     for (const r of series) if (byDay[r.d]) { byDay[r.d].orders = r.n; byDay[r.d].revenue = r.c / 100; }
@@ -205,9 +220,10 @@ export async function admin(env, req, url, p) {
     const noFile = await all("SELECT p.kind, p.id, p.title_en, p.title_ar FROM products p WHERE p.deleted=0 AND p.hidden=0 AND NOT EXISTS (SELECT 1 FROM product_files f WHERE f.kind=p.kind AND f.product_id=p.id) ORDER BY p.kind, p.sort LIMIT 200");
     const calFile = await one("SELECT count(*) n FROM product_files WHERE kind='calendar'");
     const alerts = await one("SELECT count(*) n FROM audit_log WHERE level='alert' AND at>=?", now - 7 * DAY);
+    const free = await one("SELECT count(*) n FROM orders WHERE status='paid' AND total_cents=0 AND paid_at>=?", from);
     return json({ days, totals: { orders: tot.n, revenue: tot.c / 100 }, period: { orders: per.n, revenue: per.c / 100 }, previous: { orders: prev.n, revenue: prev.c / 100 },
       pending: pend.n, users: users.n, newUsers: newUsers.n, subscribers: subs.n, messages: msgs.n, unread: msgs.unread, products: prods.n, hidden: hidden.n,
-      files: files.n, fileBytes: files.bytes, byDay, top: top.map((t) => ({ kind: t.pkind, id: t.pid, title: t.title, title_ar: t.title_ar, n: t.n, revenue: (t.c || 0) / 100 })), kinds: kinds.map((k) => ({ kind: k.pkind, n: k.n, revenue: (k.c || 0) / 100 })),
+      files: files.n, fileBytes: files.bytes, freeDownloads: free.n, byDay, top: top.map((t) => ({ kind: t.pkind, id: t.pid, title: t.title, title_ar: t.title_ar, n: t.n, revenue: (t.c || 0) / 100 })), kinds: kinds.map((k) => ({ kind: k.pkind, n: k.n, revenue: (k.c || 0) / 100 })),
       recent: recent.map(orderOut), noFile, calendarFile: calFile.n > 0, alerts: alerts.n,
       payments: env.PAYPAL_CLIENT_ID ? (env.PAYPAL_ENV === 'live' ? 'live' : 'sandbox') : 'off', mail: !!env.RESEND_API_KEY, google: !!env.GOOGLE_CLIENT_ID, soon: env.SOON === '1' });
   }

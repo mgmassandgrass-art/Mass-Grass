@@ -24,7 +24,7 @@ const KIND = { painting: 'Painting', postcard: 'Postcard', sticker: 'Sticker', p
 const filesOf = (it, files) => it.kind === 'pack' ? files.filter((f) => f.kind === 'sticker' && (it.pack || []).includes(f.product_id))
   : it.kind === 'calendar' ? files.filter((f) => f.kind === 'calendar') : files.filter((f) => f.kind === it.kind && f.product_id === it.k);
 const links = (env, fs) => fs.length ? fs.map((f) => btn(env.SITE_ORIGIN + f.url, `${f.name} ↓`)).join('')
-  : '<span style="color:#6f604d;font-size:13px">Your file is being prepared; it will appear in your profile and we will email you. · ملفك عم يتجهّز.</span>';
+  : '<span style="color:#6f604d;font-size:13px">Your file is being prepared; it will appear in your profile and we will email you. · ملفكم قيد التجهيز، وسنرسله إليكم.</span>';
 
 // Sent once, when an order becomes paid.
 export async function orderPaidEmails(env, o) {
@@ -34,19 +34,19 @@ export async function orderPaidEmails(env, o) {
   const gifts = items.filter((it) => it.gift);
   await sendMail(env, o.email, `Your files from Gaza · ${o.id} · ملفاتك من غزة`, layout(`
     <h2 style="margin:0 0 6px;font:700 24px Arial">Sealed in Gaza ✉</h2>
-    <p>Thank you${o.name ? ', ' + e(o.name) : ''}. Your order <b>${e(o.id)}</b> (€${(o.total_cents / 100).toFixed(2)}) is paid. Your files:</p>
-    <p dir="rtl" style="text-align:right">شكرًا إلك. طلبك مدفوع، وهاي ملفاتك:</p>
+    <p>Thank you${o.name ? ', ' + e(o.name) : ''}. Your order <b>${e(o.id)}</b> (${o.total_cents ? '€' + (o.total_cents / 100).toFixed(2) : 'free'}) is ready. Your files:</p>
+    <p dir="rtl" style="text-align:right">شكرًا لكم. طلبكم جاهز، وهذه ملفاتكم:</p>
     ${rows}${gifts.length ? `<p>Gifts on their way to: ${gifts.map((g) => e(g.gift.to)).join(', ')}.</p>` : ''}
     <p style="font-size:13px;color:#6f604d">Keep this email: the links are yours. Signed-in buyers also find them in their profile.</p>`));
   for (const g of gifts) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(g.gift.em || '')) continue;
-    await sendMail(env, g.gift.em, `A gift from Gaza for you · هدية من غزة إلك`, layout(`
+    await sendMail(env, g.gift.em, `A gift from Gaza for you · هدية لكم من غزة`, layout(`
       <h2 style="margin:0 0 6px;font:700 24px Arial">A gift for you, ${e(g.gift.to)} ✉</h2>
       <p>Someone sent you a watercolour from Gaza, painted by Farah Al-Helou: <b>${e(g.t || g.k)}</b>.</p>
       ${g.gift.m ? `<blockquote style="margin:12px 0;padding:10px 14px;border-inline-start:4px solid #C4593F;background:#fff">${e(g.gift.m)}</blockquote>` : ''}
-      <p>${links(env, filesOf(g, files))}</p><p dir="rtl" style="text-align:right">حدا بعتلك هدية من غزة. حمّلها من الأزرار فوق.</p>`), o.email);
+      <p>${links(env, filesOf(g, files))}</p><p dir="rtl" style="text-align:right">أرسل إليكم أحدهم هدية من غزة. حمّلوها من الأزرار أعلاه.</p>`), o.email);
   }
-  if (env.ADMIN_EMAIL) await sendMail(env, env.ADMIN_EMAIL, `New order ${o.id} · €${(o.total_cents / 100).toFixed(2)} · طلب جديد`, layout(`
+  if (env.ADMIN_EMAIL && o.total_cents > 0) await sendMail(env, env.ADMIN_EMAIL, `New order ${o.id} · €${(o.total_cents / 100).toFixed(2)} · طلب جديد`, layout(`
     <p><b>${e(o.name || '')}</b> &lt;${e(o.email)}&gt; paid <b>€${(o.total_cents / 100).toFixed(2)}</b>.</p>
     <ul>${items.map((it) => `<li>${e(it.t || it.k)} (${KIND[it.kind] || it.kind})${it.gift ? ` → gift for ${e(it.gift.to)}` : ''}</li>`).join('')}</ul>
     <p>${btn(env.SITE_ORIGIN + '/admin/#orders', 'Open orders')}</p>`), o.email);

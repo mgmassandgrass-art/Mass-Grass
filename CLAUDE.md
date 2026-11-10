@@ -239,6 +239,11 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   The buyer may come back with the order secret or only PayPal's `?token=`; PayPal holds (capture `PENDING`) answer 202 and
   the files follow when it clears; a cron every 15 minutes (`sweepPending`) and the admin's "ask PayPal" button capture
   orders approved but never brought back. Local test: `sh test/local.sh paypal` + `node test/pay.test.cjs` (stand-in PayPal).
+- Free downloads (Nov 2026): a piece with price 0 in the admin is free. The site shows "Free" / "مجانًا" and a "Free download"
+  button that goes straight to checkout ("Get the files"); an all-free order skips PayPal and is ready at once (files on the
+  page and by e-mail, no e-mail to the owner). A free piece needs its file (`not_ready` otherwise); 15 free orders per address
+  an hour and 10 per e-mail a day. Free stickers never go into a priced pack. The overview counts free downloads apart from
+  sales. Test: `node test/free.test.cjs` (part of `npm test`).
 - Images: one clean set in `web/assets` (`python3 tools/web_assets.py`). Watermarked copies (old `assets/*.jpg` with the tiled
   "MASS & GRASS © FARAH AL HELOU" mark, `pmoon`, `ppoppies`, `ptree`, `s-dove`, `s-gaza`, `s-heart`) are not used. Farah's own
   sticker sheet from Drive gives ten die-cut stickers. "Blue Poppies" was the same painting as "White Dove" and "Little Tree"

@@ -77,9 +77,9 @@ function open_(i){vi=(i+P.length)%P.length;const p=P[vi];
   $('vtabs').innerHTML=[['card',T('The card','البطاقة')],...scenesFor(p[0]).map(k=>[k,AR?MKN[k][1]:MKN[k][0]])].map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${v===vmode}">${l}</button>`).join('');
   $('vbig').innerHTML=vmode==='card'?`<div class="pk" style="rotate:0deg;translate:none;pointer-events:none"><div class="face" style="${faceW(p[0])}"><img src="${p[5]}" alt="${p[1]}" style="aspect-ratio:${pa(p[0])}"></div></div>`:`<div class="mkv">${sceneHTML(p[0],vmode)}</div>`;
   $('v-h').textContent=AR?p[2]:p[1];$('vwhere').textContent=(AR?p[4]:p[3])+(AR?'، ':', ')+T('postcard','بطاقة بريدية');
-  const b=$('vadd'),inb=SH.BAG.has('postcard',p[0]),pr=SH.fmt(SH.price('postcard',p[0]));b.textContent=inb?T('In your bag','في السلة'):T(`Add to bag (${pr})`,`أضيفوها إلى السلة (${pr})`);
+  const b=$('vadd'),inb=SH.BAG.has('postcard',p[0]),pr=SH.fmt(SH.price('postcard',p[0]));b.textContent=inb?T('In your bag','في السلة'):(MG.isFree('postcard',p[0])?T('Free download','حمّلوها مجانًا'):T(`Add to bag (${pr})`,`أضيفوها إلى السلة (${pr})`));
   if(!view.open){view.showModal();MG.tear()}}
-$('vadd').onclick=()=>{const p=P[vi];if(SH.BAG.toggle('postcard',p[0],p[1],p[2]))SH.toast(T('The postcard is in your bag.','أُضيفت البطاقة إلى السلة.'));};
+$('vadd').onclick=()=>{const p=P[vi];if(MG.isFree('postcard',p[0])&&!MG.bag.has('postcard',p[0])){MG.bag.add('postcard',p[0]);location.href='checkout.html';return}if(SH.BAG.toggle('postcard',p[0],p[1],p[2]))SH.toast(T('The postcard is in your bag.','أُضيفت البطاقة إلى السلة.'));};
 $('vwrite').onclick=()=>{S.c=vi;view.close();reset();pickers();flip(false);paint();$('write').scrollIntoView({behavior:'smooth'})};
 $('vnext').onclick=()=>open_(vi+1);$('vprev').onclick=()=>open_(vi-1);$('vx').onclick=()=>view.close();
 view.addEventListener('click',e=>{if(e.target===view)view.close()});
