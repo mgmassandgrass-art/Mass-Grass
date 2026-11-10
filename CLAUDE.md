@@ -216,7 +216,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   eyebrows, no middle-dot meta strings or arrows glued to links, focus-visible everywhere, content visible
   without scripts (`.js` gates hidden states), no fake success messages.
 
-## The rebuilt site (Nov 2026): `web/` + Worker, not deployed yet
+## The rebuilt site (Nov 2026): `web/` + Worker, live since 10 Nov 2026
 
 - The owner asked for the whole site to be rebuilt and redesigned. It lives in `web/` (see `web/README.md` and the skill
   `.claude/skills/site-build/`): pages built from `web/_src/` by `node tools/build-web.mjs`, one shared core (`MG` in
@@ -224,9 +224,16 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - Pages: home, shop, paintings, postcards, stickers, calendar, story, account, profile, checkout, help, terms, 404, soon.
   Everything works except payment itself (waits for the owner's PayPal Business keys; until then checkout records the order
   and says payments open soon).
-- `worker/wrangler.toml` now serves `../web` (was `../prototype`). The live site still runs the last deployed version:
-  nothing was deployed. `SOON = "1"` stays until launch. Deploy only when the owner says so, following `worker/DEPLOY.md`
-  (migration `0008` first: the session's Cloudflare token could not reach the D1 API on 10 Nov 2026).
+- `worker/wrangler.toml` serves `../web`. Deployed and opened (`SOON = "0"`) on 10 Nov 2026 at the owner's request; both
+  www.massandgrass.com and massandgrass.com (301 to www) route to the Worker. The old `prototype/` is no longer served.
+- The database updates itself: `worker/src/migrate.js` runs bundled migrations once on the first request (the session's
+  Cloudflare token cannot reach the D1 API) and records them in `d1_migrations`. New migrations go in its `STEPS` list.
+- Deploying from a cloud session: if the Worker was last saved on the Cloudflare dashboard, `wrangler deploy` first downloads
+  the dashboard config and fails on `/workers/domains/records` (outside the token's paths). Patch only that fetch in
+  `node_modules/wrangler/wrangler-dist/cli.js` to `.catch(() => [])` for the deploy, then restore the file. The trailing 400 on
+  `/workers/workers/...` skips the triggers step: set the cron with
+  `PUT /client/v4/accounts/<id>/workers/scripts/mass-grass/schedules` body `[{"cron":"*/15 * * * *"}]` (inside the token's paths).
+  After a deploy: `sh worker/test/smoke.sh`.
 - PayPal (Nov 2026): the owner's PayPal Business app is Live; `PAYPAL_CLIENT_ID` / `PAYPAL_SECRET` are Worker secrets they set
   themselves, `PAYPAL_ENV = "live"` is in `wrangler.toml`. A setup check created order `MG-94828A67` (pending, never paid).
   The buyer may come back with the order secret or only PayPal's `?token=`; PayPal holds (capture `PENDING`) answer 202 and

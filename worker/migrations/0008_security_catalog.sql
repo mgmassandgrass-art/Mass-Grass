@@ -22,6 +22,10 @@ CREATE INDEX orders_status ON orders(status, created_at);
 -- The seed carried sample sales figures. From here on "sold" is only what paid orders say.
 UPDATE products SET sold = (SELECT count(*) FROM orders o, json_each(o.items) j
   WHERE o.status='paid' AND json_extract(j.value,'$.kind')=products.kind AND json_extract(j.value,'$.k')=products.id);
+-- The rebuilt site replaces the old pages: copies of old pages edited in the old admin would otherwise be served instead
+-- (their versions stay in site_file_versions), and hidden sections named after old page sections are cleared.
+UPDATE site_files SET published=NULL;
+UPDATE settings SET v=json_set(v,'$.sections',json('{}')) WHERE k='pages';
 -- Prices the new pages need (the admin's own values are kept).
 INSERT OR IGNORE INTO settings(k,v) VALUES('prices','{"painting":12,"postcard":2,"sticker":1,"pack":3,"calendar":8}');
 -- The catalog of the new site: Farah's own stickers replace the watermarked ones, clean scans replace watermarked paintings.

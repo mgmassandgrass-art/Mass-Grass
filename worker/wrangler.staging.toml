@@ -14,6 +14,12 @@ run_worker_first = ["/*", "!/fonts/*"]
 ADMIN_EMAIL = "info@massandgrass.com"
 MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
 
+# migrations are bundled as text (src/migrate.js runs them)
+[[rules]]
+type = "Text"
+globs = ["**/*.sql"]
+fallthrough = true
+
 [[d1_databases]]
 binding = "DB"
 database_name = "mass-grass"

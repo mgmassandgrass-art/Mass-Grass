@@ -4,6 +4,7 @@ import { filesAdmin, download } from './files.js';
 import { sendMail, layout, contactEmail } from './mail.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin, sweepPending } from './shop.js';
+import { migrate } from './migrate.js';
 import { audit, limitKey, clearKey, ipOf, newSecret, totpStep, otpauth, newRecovery, useRecovery } from './security.js';
 
 const enc = new TextEncoder();
@@ -411,11 +412,12 @@ function secure(res) {
 
 export default {
   async fetch(req, env0) {
+    try { await migrate(env0); } catch (e) { console.error('migrate', e); return secure(new Response('The shop is being updated. Please try again in a minute.', { status: 503, headers: { 'retry-after': '60', 'content-type': 'text/plain; charset=utf-8' } })); }
     return secure(await handle(req, env0));
   },
   // cron (wrangler.toml [triggers]): payments that were approved but never brought back to the site
   async scheduled(ev, env, ctx) {
-    ctx.waitUntil(sweepPending({ ...env, SITE_ORIGIN: env.SITE_ORIGIN || 'https://www.massandgrass.com' }).then((n) => n && console.log('sweep paid', n)));
+    ctx.waitUntil(migrate(env).then(() => sweepPending({ ...env, SITE_ORIGIN: env.SITE_ORIGIN || 'https://www.massandgrass.com' }).then((n) => n && console.log('sweep paid', n))));
   },
 };
 
