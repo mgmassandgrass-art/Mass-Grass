@@ -241,3 +241,6 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   address that can be ended, admin sessions of 7 days, server-side product names in orders, constant-time order secrets.
   The seed's sample "sold" figures were reset to what paid orders say.
 - Tests: `cd worker && sh test/local.sh`, then `npm test` and `node test/e2e.test.cjs` (all three must pass).
+- Preview of the rebuilt site (static, built-in catalog, no server): https://claude.ai/artifact/6P2BSgN7w62h8C7mYAkjo2
+  (publish `web/index.html` with root `web` and every other file of `web/` except `_src/` and `admin/` as `files`). The admin
+  needs the Worker, so it is shown to the owner as screenshots (Playwright against `sh test/local.sh`).
