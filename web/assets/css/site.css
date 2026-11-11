@@ -344,12 +344,19 @@ html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
 @media(hover:hover){.where .nm button:hover{text-decoration:underline;text-underline-offset:4px}}
 @media(max-width:700px){.where-in{height:38px}.where .nm,.where .meta{height:38px}.where .meta{display:none}}
 
-/* the language: a drawn globe. Its meridians are half-circles squeezed from one side to the other; on hover they run,
-   so the globe turns, and it stops where it is when the pointer leaves */
+/* the language: the translate sign (a character and an A) drawn in pen; on hover each stroke is drawn again in turn,
+   the character tips and the A hops up beside it */
 .lang.ico{width:56px}
-.ic-globe .mr{transform-box:view-box;transform-origin:16px 16px;animation:globeTurn 2.4s cubic-bezier(.45,0,.55,1) infinite paused}
-.ic-globe .m0{animation-delay:-.3s}.ic-globe .m1{animation-delay:-.9s}.ic-globe .m2{animation-delay:-1.5s}.ic-globe .m3{animation-delay:-2.1s}
-@keyframes globeTurn{from{transform:scaleX(-1)}to{transform:scaleX(1)}}
-@media(hover:hover){.lang.ico:hover .mr,.lang.ico:focus-visible .mr{animation-play-state:running}}
-.lang.ico:active .mr{animation-play-state:running}
-@media(prefers-reduced-motion:reduce){.ic-globe .mr{animation-play-state:paused!important}}
+.ic-tr{stroke-width:1.7}
+.ic-tr .zh,.ic-tr .la{transform-box:view-box;transform-origin:16px 16px}
+@media(hover:hover){
+  .lang.ico:hover .ln,.lang.ico:focus-visible .ln{animation:icDraw .32s cubic-bezier(.65,0,.35,1) both}
+  .lang.ico:hover .s2,.lang.ico:focus-visible .s2{animation-delay:.08s}.lang.ico:hover .s3,.lang.ico:focus-visible .s3{animation-delay:.16s}
+  .lang.ico:hover .s4,.lang.ico:focus-visible .s4{animation-delay:.24s}.lang.ico:hover .s5,.lang.ico:focus-visible .s5{animation-delay:.34s}
+  .lang.ico:hover .s6,.lang.ico:focus-visible .s6{animation-delay:.48s}
+  .lang.ico:hover .zh,.lang.ico:focus-visible .zh{animation:trTip .7s cubic-bezier(.34,1.56,.64,1)}
+  .lang.ico:hover .la,.lang.ico:focus-visible .la{animation:trHop .6s .4s cubic-bezier(.34,1.56,.64,1) both}
+}
+.lang.ico:active .la{animation:trHop .6s cubic-bezier(.34,1.56,.64,1)}
+@keyframes trTip{0%{transform:none}40%{transform:rotate(-10deg) translate(-1px,-1px)}100%{transform:none}}
+@keyframes trHop{0%{transform:none}40%{transform:translateY(-3px) scale(1.08)}70%{transform:translateY(.5px)}100%{transform:none}}
