@@ -288,3 +288,34 @@ html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
 @media(max-width:1500px){.rl-n{display:none}}
 /* below the wide layout the chart is one thin stroke under the header */
 @media(max-width:1179px){.has-rail header::after{content:"";position:absolute;inset-inline-start:0;bottom:-3px;height:3px;width:100%;background:var(--pg,#2E8C97);transform-origin:0 50%;scale:var(--sf,0) 1}[dir=rtl].has-rail header::after{transform-origin:100% 50%}}
+
+/* the account and bag icons: thin pen lines that move when the pointer comes over them (after Risotto's animated icons) */
+.ic{width:26px;height:26px;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ic .ln{stroke-dasharray:1;stroke-dashoffset:0}
+.ic .hd,.ic .bd{transform-box:fill-box;transform-origin:50% 100%}
+.ic-bag .bd{transform-origin:50% 0}
+.ico{position:relative}
+.acct.ico{width:56px;padding:0;color:rgba(var(--ink-rgb),.62);border-inline-start:1px solid var(--line-2)}
+@media(hover:hover){.acct.ico:hover{color:var(--ink);background:rgba(var(--ink-rgb),.05)}}
+.acct .ini{position:absolute;top:9px;inset-inline-end:9px;display:none;min-width:16px;height:16px;padding:0 3px;place-items:center;background:var(--ink);color:var(--cream);font:700 10px/1 var(--mono2)}
+.acct.in .ini{display:grid}
+.cta.ico{gap:8px;padding:0 20px}
+.cta.ico .ic{width:24px;height:24px}
+/* account: the shoulders are drawn again from the middle out, the head drops in and settles */
+@media(hover:hover){
+  .acct.ico:hover .sh,.acct.ico:focus-visible .sh{animation:icDraw .7s cubic-bezier(.65,0,.35,1)}
+  .acct.ico:hover .hd,.acct.ico:focus-visible .hd{animation:icNod .7s cubic-bezier(.34,1.56,.64,1)}
+  .acct.ico:hover .hd .ln,.acct.ico:focus-visible .hd .ln{animation:icDraw .55s .08s cubic-bezier(.65,0,.35,1) both}
+  /* bag: it swings on its handle, the handle is drawn again and the smile comes last */
+  .bagb.ico:hover .bd,.bagb.ico:focus-visible .bd{animation:icSwing .9s cubic-bezier(.34,1.56,.64,1)}
+  .bagb.ico:hover .hn,.bagb.ico:focus-visible .hn{animation:icDraw .5s cubic-bezier(.65,0,.35,1)}
+  .bagb.ico:hover .sm,.bagb.ico:focus-visible .sm{animation:icDraw .45s .3s cubic-bezier(.65,0,.35,1) both}
+}
+/* a piece put in the bag: the same swing, and the count hops */
+.bagb.hop .bd{animation:icSwing .9s cubic-bezier(.34,1.56,.64,1)}
+.bagb.hop .sm{animation:icDraw .45s .25s cubic-bezier(.65,0,.35,1) both}
+@keyframes icDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes icNod{0%{transform:translateY(0)}30%{transform:translateY(-4px) scale(1.06)}60%{transform:translateY(1px)}100%{transform:none}}
+@keyframes icSwing{0%{transform:rotate(0)}20%{transform:rotate(-12deg)}45%{transform:rotate(9deg)}70%{transform:rotate(-4deg)}100%{transform:rotate(0)}}
+@media(prefers-reduced-motion:reduce){.ic *{animation:none!important}}
+.bagi .ic{width:24px;height:24px}

@@ -100,7 +100,7 @@
       this.set(a); bump();
     },
   };
-  function bump() { if (still) return; $$('.bagb .bn').forEach((b) => b.animate && b.animate([{ transform: 'translateY(-4px)' }, { transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.22,1,.36,1)' })); }
+  function bump() { if (still) return; $$('.bagb').forEach((b) => { b.classList.remove('hop'); void b.offsetWidth; b.classList.add('hop'); setTimeout(() => b.classList.remove('hop'), 1000); }); $$('.bagb .bn').forEach((b) => b.animate && b.animate([{ transform: 'translateY(-5px)' }, { transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.34,1.56,.64,1)' })); }
   function paintBag() {
     const n = bag.count();
     $$('[data-bagn]').forEach((e) => (e.textContent = n));
@@ -144,6 +144,8 @@
     const u = user.get();
     $$('.acct').forEach((a) => {
       a.href = u ? 'profile.html' : 'account.html';
+      /* the header's icon stays; signed in, it carries the first letter of the name */
+      if (a.classList.contains('ico')) { a.classList.toggle('in', !!u); a.setAttribute('aria-label', u ? t('Your account', 'حسابكم') : t('Sign in', 'الدخول')); a.querySelector('.ini').textContent = u ? (u.name || u.email || '?').trim()[0].toUpperCase() : ''; return; }
       a.innerHTML = u ? `<b aria-hidden="true">${esc((u.name || u.email || '?').trim()[0].toUpperCase())}</b><span class="sr">${t('Your account', 'حسابكم')}</span>` : `<span>${t('Sign in', 'الدخول')}</span>`;
     });
   }

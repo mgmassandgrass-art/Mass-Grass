@@ -298,5 +298,9 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   bordered list (hover with a mouse, click otherwise), then SIGN IN, the language cell and the ink BAG cell with its count. Phones:
   logo cell, language cell, bag icon cell, black menu cell; the menu is a sheet under the bar (shop pages indented under a grey
   label, BAG as an ink row, SIGN IN / HELP at the foot). Never put backdrop-filter on the header: it traps the fixed phone menu.
+- Header icons (after Risotto's Lordicon icons, drawn by us because the CSP blocks outside scripts): the account (`.acct.ico`,
+  a plain cell; signed in it shows the name's first letter in `.ini`) and the bag (`.bagb.ico`, the ink cell with its count;
+  the plain `.bagi` cell on phones) are pen-line SVGs (`.ic`, `pathLength=1`); on hover the lines are drawn again and the
+  head nods / the bag swings on its handle; `bump()` adds `.hop` so the bag swings when a piece goes in.
 - Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;
   the admin's link fields for facebook / tiktok. Not deployed yet.
