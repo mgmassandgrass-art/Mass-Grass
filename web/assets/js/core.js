@@ -203,7 +203,7 @@
       doc.addEventListener('click', (e) => { if (!sd.hidden && !e.target.closest('.dd')) open(false); });
       addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sd.hidden) { open(false); sb.focus(); } });
     }
-    paintSocial();
+    paintSocial(); pages.push((why) => { if (why === 'lang') paintSocial(); });
     const mb = $('#menub'), mm = $('#mmenu');
     if (mb && mm) {
       const toggle = (open) => { mm.hidden = !open; mb.setAttribute('aria-expanded', open); doc.body.style.overflow = open ? 'hidden' : ''; };
@@ -279,6 +279,11 @@
     const rows = [k.instagram && ['instagram', 'Instagram', url(k.instagram, 'https://instagram.com/')], k.facebook && ['facebook', 'Facebook', url(k.facebook, 'https://facebook.com/')], k.tiktok && ['tiktok', 'TikTok', url(k.tiktok, 'https://tiktok.com/@')],
       k.whatsapp && ['whatsapp', 'WhatsApp', url(k.whatsapp, 'https://wa.me/').replace(/[+\s]/g, '')], ['email', 'E-mail', 'mailto:' + mail]].filter(Boolean);
     el.innerHTML = rows.map((r) => `<a href="${esc(r[2])}" aria-label="${r[1]}"${r[0] === 'email' ? '' : ' target="_blank" rel="noopener noreferrer"'}>${IC[r[0]]}</a>`).join('');
+    /* the footer's contact list: help, the e-mail, WhatsApp and Instagram when set, and how to support Farah */
+    const fc = $('#ftc'); if (!fc) return; const ext = ' target="_blank" rel="noopener noreferrer"', sup = k.donate || k.kofi;
+    fc.innerHTML = `<li><a href="help.html">${t('Help and questions', 'المساعدة والأسئلة')}</a></li><li><a href="mailto:${esc(mail)}" dir="ltr">${esc(mail)}</a></li>` +
+      rows.filter((r) => r[0] === 'whatsapp' || r[0] === 'instagram').map((r) => `<li><a href="${esc(r[2])}"${ext}>${r[1]}</a></li>`).join('') +
+      `<li><a href="${sup ? esc(url(sup, 'https://')) + '"' + ext : 'story.html#support"'}>${t('Support Farah', 'ادعموا فرح')}</a></li>`;
   }
 
   /* an add-to-bag button for one piece (kept in step by rerender) */
@@ -291,7 +296,7 @@
     const cal = p.kind === 'calendar', cls = cal ? 'cal' : p.kind === 'sticker' ? 'stk ' + ((p.extra && p.extra.shape) || 'die') : p.kind === 'postcard' ? 'card' : 'print';
     const src = cal ? 'assets/c27-00.webp' : thumb(p.id, p), href = PAGE[p.kind] + (cal ? '' : '#' + p.id);
     const btn = cal ? `<button type="button" class="add" data-add="calendar" aria-pressed="${bag.has('calendar', DEF.calendar.id)}">${bag.has('calendar', DEF.calendar.id) ? t('In your bag', 'في السلة') : t('Add to bag', 'أضيفوه إلى السلة')}</button>` : addBtn(p.kind, p.id);
-    return `<li class="pr-it"><a class="lk" href="${href}"><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
+    return `<li class="pr-it"><a class="lk" href="${href}" data-peek="${p.kind}:${cal ? '' : esc(p.id)}"><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
       <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? '' : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${shareBtn(p.kind, cal ? '' : p.id)}</div></li>`;
   }
   window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar };

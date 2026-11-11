@@ -282,5 +282,14 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   admin's links; e-mail always), share button on every tile (`MG.shareBtn`; the phone's share sheet, else a menu), share
   pages `/s/<kind>/<id>` in the Worker (the piece's own title and picture), home page (orbit hero, collections, the large
   calendar stage with the four mock-up views, "just in" mosaic, story). "Calendar" carries no year in section names.
+- Second round (the owner found the orbit hero a copy of the reference and not selling): the hero is now "the wall", a real
+  photograph of a frame (`wall-l`) in which the chosen painting hangs (`#hang`, eight thumbnails, name in the hand face, add to
+  bag, share, "see it closer"). `web/assets/js/mock.js` (on every page, after `core.js`) holds: `MG.mock` (every piece in a real
+  photograph: rooms for paintings, hands for postcards, laptop / notebook / phone for stickers, the calendar's four photographs),
+  `MG.peek(kind,id)` the quick view any `[data-peek="kind:id"]` opens (tiles, just-in, the hero), the reveal on scroll
+  (`.rv` → `.in`: up 28px out of an 8px blur, staggered, as on the reference; the selector list is `RV`), and the colour chart
+  that follows the scroll (`.rail`: pencil rule, a stroke of paint growing in the section's pigment, a drop with the percent in
+  the hand face, the sections as swatches; under 1180px it is a thin stroke under the header). Scroll fraction is `--sf`
+  (never `--f`, which is the font token). Footer has a "Contact and support" column (`#ftc`).
 - Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;
   the admin's link fields for facebook / tiktok. Not deployed yet.

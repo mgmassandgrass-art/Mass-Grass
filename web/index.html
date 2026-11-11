@@ -18,9 +18,9 @@
 <link rel="preload" href="fonts/figtree-latin-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts/all.css">
 <link rel="stylesheet" href="fonts/figtree.css">
-<link rel="stylesheet" href="assets/css/site.css?v=8344ff2a">
-<link rel="stylesheet" href="assets/css/home.css?v=8344ff2a">
-<script src="assets/js/boot.js?v=8344ff2a"></script>
+<link rel="stylesheet" href="assets/css/site.css?v=d5451be5">
+<link rel="stylesheet" href="assets/css/home.css?v=d5451be5">
+<script src="assets/js/boot.js?v=d5451be5"></script>
 </head>
 <body>
 <a class="skip" href="#main" data-ar="انتقلوا إلى المحتوى">Skip to content</a>
@@ -56,17 +56,16 @@
 </header>
 
 <main id="main">
-<!-- 1 · the pieces circle the name -->
+<!-- 1 · one of Farah's paintings, framed on a real wall; pick another and it hangs there -->
 <section class="hero" id="hero" aria-labelledby="hero-h">
-  <svg class="rings" id="rings" aria-hidden="true"></svg>
-  <div class="orbit" id="orbit" aria-hidden="true"></div>
-  <div class="hero-in">
-    <img class="mark" src="assets/logo.svg" alt="Mass &amp; Grass" width="300" height="200">
-    <h1 id="hero-h" data-ar="غزة، بالألوان المائية.">Gaza, in watercolour.</h1>
-    <p class="lead" data-ar="لوحات فرح الحلو، مرسومة باليد في غزة. ملفات تطبعونها في البيت، أو نسخ مطبوعة تصلكم.">Farah Al-Helou’s paintings, made by hand in Gaza. Files you print at home, or prints shipped to you.</p>
-    <div class="row"><a class="ink" href="shop.html"><span data-ar="ادخلوا المتجر">Enter the shop</span><svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M3 9l6-6M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="ghost" href="story.html" data-ar="حكاية فرح">Farah’s story</a></div>
-    <p class="hand note" data-ar="كل قطعة تشترونها تذهب إلى فرح">every piece you buy goes to Farah</p>
+  <div class="hero-t">
+    <h1 id="hero-h" data-ar="غزة،<br>بالألوان المائية.">Gaza, in<br>watercolour.</h1>
+    <p class="lead" data-ar="لوحات فرح الحلو، مرسومة باليد في غزة. اختاروا لوحة وشاهدوها على حائطكم.">Farah Al-Helou’s paintings, made by hand in Gaza. Pick one and see it on your wall.</p>
+    <div class="now" id="now" aria-live="polite"></div>
+    <ul class="picks" id="picks" aria-label="Paintings to hang" data-label-ar="لوحات تُعلَّق"></ul>
+    <div class="row"><a class="ink" href="shop.html"><span data-ar="ادخلوا المتجر">Enter the shop</span><svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M3 9l6-6M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="go" href="story.html" data-ar="حكاية فرح">Farah’s story</a></div>
   </div>
+  <div class="hero-v" id="herov"><img class="room" src="assets/wall-l.webp" alt="A light oak frame on a plaster wall, above a sideboard with an olive branch" data-alt-ar="إطار من خشب البلوط على حائط أبيض، فوق خزانة عليها غصن زيتون" width="1600" height="1200" fetchpriority="high"><div class="hang" id="hang"></div></div>
 </section>
 
 <!-- 2 · the collections -->
@@ -145,6 +144,7 @@
   <div class="ft">
     <div class="ft-a"><img src="assets/logo.svg" alt="Mass &amp; Grass" width="60" height="40"><p data-ar="لوحات فرح الحلو المائية من غزة. كل قطعة تدعمها لتواصل الرسم.">Farah Al-Helou’s watercolours from Gaza. Every piece helps her keep painting.</p></div>
     <nav aria-label="Footer" class="ft-b"><a href="shop.html" data-ar="المتجر">Shop</a><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a><a href="help.html" data-ar="المساعدة">Help</a><a href="terms.html" data-ar="الشروط والخصوصية">Terms and privacy</a></nav>
+    <div class="ft-d"><h2 data-ar="التواصل والدعم">Contact and support</h2><ul id="ftc"><li><a href="help.html" data-ar="المساعدة والأسئلة">Help and questions</a></li><li><a href="mailto:info@massandgrass.com" dir="ltr">info@massandgrass.com</a></li></ul></div>
     <div class="ft-c">
       <h2 data-ar="لوحة جديدة كل شهر">One new painting a month</h2>
       <form id="nl" novalidate>
@@ -157,8 +157,10 @@
   <div class="ft-z"><small data-ar="© 2026 ماس آند غراس، غزة، فلسطين">© 2026 Mass &amp; Grass, Gaza, Palestine</small><div class="soc" id="soc"></div></div>
 </footer>
 
-<script src="assets/js/catalog.js?v=8344ff2a" defer></script>
-<script src="assets/js/core.js?v=8344ff2a" defer></script>
-<script src="assets/js/home.js?v=8344ff2a" defer></script>
+<script src="assets/js/catalog.js?v=d5451be5" defer></script>
+<script src="assets/js/art.js?v=d5451be5" defer></script>
+<script src="assets/js/core.js?v=d5451be5" defer></script>
+<script src="assets/js/mock.js?v=d5451be5" defer></script>
+<script src="assets/js/home.js?v=d5451be5" defer></script>
 </body>
 </html>
