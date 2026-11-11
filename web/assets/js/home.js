@@ -1,29 +1,28 @@
-/* Home: the pieces that circle the name, the calendar's views and pages, and a few pieces straight into the bag. */
+/* Home: the calendar's pages drifting on a table, the calendar on the wall tearing off its pages, the twelve months
+   unfolding as the page goes down, the shelves in real photographs, a few pieces straight into the bag. */
 (function () {
   'use strict';
   const { $, $$, esc, t, L } = MG;
-  const PAGE = MG.PAGE;
-
-  /* ---------- 1 · the table: every painting as a print with its white border, in rows on a light table seen from above
-     at an angle. The view drifts slowly along the rows and never ends (the prints wrap round), now and then one print
-     lifts off the table and settles back, the pointer lifts the one under it, and a click opens it in a real photograph. ---------- */
+  const PAGE = MG.PAGE, C = MG.calendar;
   if (!MG.still) document.documentElement.classList.add('home-intro');
-  const cam = $('#tbcam'), plane = $('#tbplane');
-  const ART = MG.products('painting');
-  const tiles = []; let CW = 0, CH = 0, COLS = 0, ROWS = 0, off = 0, last = 0, vis = true, hovered = null;
+  const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
+
+  /* ---------- 1 · the table: the calendar's pages, all the same size, in brick rows on a light table seen from above at
+     an angle. They drift slowly and never end (each wraps round), now and then one lifts off and settles back. Nothing
+     here is a link: it is the ground the name stands on. ---------- */
+  const cam = $('#tbcam'), plane = $('#tbplane'), KS = C.pages.map((p) => p.k);
+  const tiles = []; let CW = 0, CH = 0, COLS = 0, ROWS = 0, off = 0, last = 0, onScreen = true;
   function lay() {
-    if (!plane || !ART.length) return;
+    if (!plane || !KS.length) return;
     const phone = innerWidth < 700;
-    CW = phone ? 150 : 236; CH = phone ? 120 : 186; COLS = phone ? 8 : 11; ROWS = phone ? 10 : 9;
-    plane.innerHTML = ''; tiles.length = 0; let k = 0;
+    CW = phone ? 170 : 260; CH = Math.round(CW * .8); COLS = phone ? 7 : 10; ROWS = phone ? 10 : 9;
+    const w = Math.round(CW * .86), h = Math.round(w / 1.42);
+    plane.innerHTML = ''; tiles.length = 0;
     for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-      /* each row starts further along the list, so a painting never sits next to itself */
-      const pi = (c + r * 4 + (r % 2) * 2) % ART.length, pr = ART[pi], a = MG.mock.asp(pr.id);
-      const mw = CW * .76, mh = CH * .78; let w = mw, h = mw / a; if (h > mh) { h = mh; w = h * a; }
-      const el = document.createElement('a'); el.className = 'tb-t'; el.href = 'paintings.html#' + pr.id; el.dataset.peek = 'painting:' + pr.id; el.tabIndex = -1;
-      el.setAttribute('aria-label', pr.title_en);
-      el.innerHTML = `<i class="sh" style="width:${w.toFixed(0)}px;height:${h.toFixed(0)}px"></i><span class="pr" style="width:${w.toFixed(0)}px;height:${h.toFixed(0)}px"><img src="${esc(MG.thumb(pr.id, pr))}" alt="" decoding="async" draggable="false"></span>`;
-      plane.append(el); tiles.push({ el, c, r, x0: c * CW + (r % 2) * CW * .5, y0: r * CH }); k++;
+      const k = KS[(c + r * 2 + (r % 2)) % KS.length];
+      const el = document.createElement('div'); el.className = 'tb-t';
+      el.innerHTML = `<i class="sh" style="width:${w}px;height:${h}px"></i><span class="pr" style="width:${w}px;height:${h}px"><img src="assets/t-${k}.webp" alt="" decoding="async" draggable="false"></span>`;
+      plane.append(el); tiles.push({ el, x0: c * CW + (r % 2) * CW * .5, y0: r * CH });
     }
     place();
   }
@@ -35,47 +34,81 @@
       t.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
     });
   }
-  function drift(now) {
-    const dt = Math.min(64, now - (last || now)); last = now;
-    if (vis && !MG.still) { off += dt * .022; place(); }
-    requestAnimationFrame(drift);
-  }
-  /* now and then a print lifts off the table and settles back */
+  function drift(now) { const dt = Math.min(64, now - (last || now)); last = now; if (onScreen) { off += dt * .022; place(); } requestAnimationFrame(drift); }
   function lift() {
-    if (vis && !MG.still && tiles.length) {
-      const b = cam.getBoundingClientRect(), near = tiles.filter((t) => { const r = t.el.getBoundingClientRect(); return t.el !== hovered && r.left > b.left + 40 && r.right < b.right - 40 && r.top > b.top + 40 && r.bottom < b.bottom - 40; });
+    if (onScreen && tiles.length) {
+      const b = cam.getBoundingClientRect(), near = tiles.filter((t) => { const r = t.el.getBoundingClientRect(); return r.left > b.left + 40 && r.right < b.right - 40 && r.top > b.top + 40 && r.bottom < b.bottom - 40; });
       const t = near[Math.floor(Math.random() * near.length)]; if (t) { t.el.classList.add('up'); setTimeout(() => t.el.classList.remove('up'), 2600); }
     }
-    setTimeout(lift, 1500 + Math.random() * 1200);
+    setTimeout(lift, 1400 + Math.random() * 1200);
   }
   if (cam && plane) {
     lay(); let rw = innerWidth; addEventListener('resize', () => { if ((rw < 700) !== (innerWidth < 700)) lay(); rw = innerWidth; });
-    new IntersectionObserver((en) => { vis = en[0].isIntersecting; }).observe(cam);
-    plane.addEventListener('pointerover', (e) => { const a = e.target.closest('.tb-t'); hovered = a; });
-    plane.addEventListener('pointerout', () => { hovered = null; });
-    requestAnimationFrame(() => cam.classList.add('on'));
-    if (!MG.still) { requestAnimationFrame(drift); setTimeout(lift, 1400); }
+    vis(cam, (v) => { onScreen = v; }); requestAnimationFrame(() => cam.classList.add('on'));
+    if (!MG.still) { requestAnimationFrame(drift); setTimeout(lift, 1800); }
   }
 
-  /* ---------- 3 · the calendar's views ---------- */
-  const views = $$('#views img'), vnav = $('#vnav');
-  const VN = [['On the wall', 'على الحائط'], ['In the hands', 'بين اليدين'], ['On the desk', 'على المكتب'], ['The pages', 'الصفحات']];
-  let vi = 0, vt = 0;
-  function view(i, user) { vi = (i + views.length) % views.length; views.forEach((im, k) => im.classList.toggle('on', k === vi)); $$('button', vnav).forEach((b, k) => b.setAttribute('aria-pressed', k === vi)); quote();
-    clearInterval(vt); if (!user && !MG.still) vt = setInterval(() => view(vi + 1), 5200); }
-  function quote() { const pg = MG.calendar.pages, p = pg[vi % pg.length]; const q = $('#calq'); if (q && p) q.textContent = L(p.q); }
-  if (vnav) vnav.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) view(+b.dataset.v, true); });
+  /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds
+     the front page is torn up over the wire and goes to the back, so the next month shows ---------- */
+  const cwp = $('#cwp');
+  if (cwp) {
+    const ORDER = C.pages.map((p) => p.k);
+    ORDER.slice().reverse().forEach((k, i) => { const d = document.createElement('div'); d.className = 'cw-pg'; d.innerHTML = `<img src="assets/${k}.webp" alt="" loading="lazy" decoding="async" draggable="false">`; cwp.insertBefore(d, cwp.querySelector('.wire')); });
+    let seen = false, busy = false;
+    const tear = () => {
+      if (!seen || busy || document.hidden) return;
+      const pgs = $$('.cw-pg', cwp), top = pgs[pgs.length - 1]; if (!top || pgs.length < 2) return; busy = true;
+      top.classList.add('tear');
+      setTimeout(() => { top.classList.remove('tear'); cwp.insertBefore(top, pgs[0]); busy = false; }, 1100);
+    };
+    vis(cwp, (v) => { seen = v; });
+    if (!MG.still) setInterval(tear, 3000);
+    cwp.parentNode.addEventListener('click', () => { busy = false; tear(); });
+  }
 
-  /* a few pieces from each shelf */
+  /* ---------- 3 · the twelve months: a folded leaflet of thirteen panels (the cover and the months) that slides along as
+     the section is scrolled through. Months whose page Farah has not finished yet wait as a blank sheet with their name. ---------- */
+  const track = $('#motrack'), row = $('#morow');
+  let panels = [], step = 0, pw = 0;
+  function months() {
+    if (!row) return;
+    const list = [C.pages.find((p) => p.m === 0)].concat(C.months.map((n, i) => C.pages.find((p) => p.m === i + 1) || { m: i + 1, soon: true }));
+    row.innerHTML = list.map((p, i) => { const nm = p.m === 0 ? L(p.n) : (MG.ar ? C.monthsAr[p.m - 1] : C.months[p.m - 1]);
+      return `<li class="mo${p.soon ? ' soon' : ''}${i % 2 ? ' b' : ''}"><a href="calendar.html${p.soon ? '' : '#' + p.k}" tabindex="-1"><span class="pg">${p.soon ? `<span class="blank"><b class="hand">${esc(nm)}</b><small>${t('Being painted', 'قيد الرسم')}</small></span>` : `<img src="assets/t-${p.k}.webp" alt="${esc(nm)}" loading="lazy" decoding="async">`}</span><span class="nm"><b class="no">${String(p.m).padStart(2, '0')}</b><span class="hand">${esc(nm)}</span></span></a></li>`; }).join('');
+    panels = $$('.mo', row); size();
+  }
+  function size() {
+    if (!track || !panels.length) return;
+    const phone = innerWidth < 760, A = 24 * Math.PI / 180;
+    pw = phone ? 210 : Math.min(340, innerWidth * .24); step = pw * Math.cos(A);
+    const total = step * (panels.length - 1) + pw, run = Math.max(0, total - innerWidth + (phone ? 32 : 160));
+    track.style.setProperty('--pw', pw + 'px'); track.style.height = `calc(100svh + ${run}px)`; track.dataset.run = run;
+    panels.forEach((p, i) => { p.style.setProperty('--x', i * step + 'px'); });
+    slide();
+  }
+  function slide() {
+    if (!track || !panels.length) return;
+    const r = track.getBoundingClientRect(), run = +track.dataset.run || 0, f = run ? Math.min(1, Math.max(0, -r.top / (r.height - innerHeight))) : 0;
+    row.style.transform = `translateX(${(MG.ar ? 1 : -1) * f * run}px)`;
+  }
+  if (track) { addEventListener('scroll', () => requestAnimationFrame(slide), { passive: true }); addEventListener('resize', size); }
+
+  /* ---------- 4 · the shelves: four real photographs, each piece in its place, the shelf's name on it ---------- */
+  const SHELF = [['painting', 'dovegirl', 'mk-bench', 'paintings.html', ['Paintings', 'اللوحات']], ['postcard', 'hero', 'pc-hands', 'postcards.html', ['Postcards', 'البطاقات البريدية']],
+    ['sticker', 's-lemons', 'sk-laptop', 'stickers.html', ['Stickers', 'الملصقات']], ['calendar', '', 'cr2-hands', 'calendar.html', ['Calendar', 'التقويم']]];
+  function shelves() {
+    const g = $('#clgrid'); if (!g) return;
+    g.innerHTML = SHELF.map((s) => `<li class="ct"><a href="${s[3]}"><span class="ph">${MG.mock.scene(s[0], s[1], s[2])}</span><span class="lb">${esc(L(s[4]))}</span><span class="pr">${t('from', 'من')} ${MG.fmt(MG.price(s[0]))}</span></a></li>`).join('');
+  }
+
+  /* ---------- 5 · just in ---------- */
   const pick = (kind, ids) => ids.map((id) => MG.product(kind, id)).filter(Boolean);
   const J = [...pick('painting', ['psea', 'dovegirl', 'sparklers']), ...pick('sticker', ['s-kaak']), ...pick('painting', ['pcartgirl']), ...pick('postcard', ['pmoonsleep']), ...pick('sticker', ['s-jaffa']), ...pick('painting', ['snowglobe'])];
   const KN = { painting: ['Painting', 'لوحة'], postcard: ['Postcard', 'بطاقة بريدية'], sticker: ['Sticker', 'ملصق'] };
 
   MG.page(function (why) {
-    if (vnav && (why === 'init' || why === 'lang')) { vnav.innerHTML = VN.map((n, i) => `<button type="button" data-v="${i}" aria-pressed="${i === vi}">${L(n)}</button>`).join(''); view(vi, why !== 'init'); }
-    $('#calshare').innerHTML = MG.shareBtn('calendar', '');
-    const pr = MG.printOf('calendar', ''); $('#calprint').innerHTML = pr ? MG.printBtn('calendar', '') : '';
-    $('#hpages').innerHTML = MG.calendar.pages.map((p) => `<li><a href="calendar.html#${p.k}"><span class="pg"><img src="assets/${p.k}.webp" alt="" loading="lazy" width="910" height="641"></span><b class="hand">${esc(L(p.n))}</b></a></li>`).join('');
+    if (why === 'init' || why === 'lang') { months(); shelves(); }
+    const pr = MG.printOf('calendar', ''); const cp = $('#calprint'); if (cp) cp.innerHTML = pr ? MG.printBtn('calendar', '') : '';
     $('#grid').innerHTML = J.map((p, i) => `<li class="it${i === 0 ? ' big' : ''}${p.kind === 'sticker' ? ' stk' : ''}">
       <a class="im" href="${PAGE[p.kind]}#${esc(p.id)}" data-peek="${p.kind}:${esc(p.id)}"><img src="${esc(i === 0 ? MG.img(p.id, p) : MG.thumb(p.id, p))}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></a>
       <div class="cap"><h3 class="hand">${esc(MG.title(p))}</h3><span class="pr">${MG.fmt(MG.price(p.kind, p.id))}</span></div><span class="kind">${L(KN[p.kind])}</span>

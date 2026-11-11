@@ -122,7 +122,7 @@
     const names = () => { list.innerHTML = secs.map((x, i) => `<li><button type="button" tabindex="-1" data-go="${i}">${esc(name(x))}</button></li>`).join(''); lis = [...list.children]; };
     names(); MG.page((why) => { if (why === 'lang') { names(); tick(true); } });
     let z = 0, zt = 0, run = false, dragging = false;
-    const ZOOM = 3.2, ANCHOR = .34, GAP = 18, BIG = 1.75;
+    const ZOOM = 3.2, ANCHOR = .34, GAP = 18, BIG = 1.45;
     function tick(force) {
       const H = sc.clientHeight, docH = doc.documentElement.scrollHeight, max = Math.max(1, docH - innerHeight);
       const top = scrollY / docH, view = innerHeight / docH, prog = Math.min(1, Math.max(0, scrollY / max));
@@ -159,9 +159,13 @@
     el.addEventListener('pointerenter', () => open(true)); el.addEventListener('pointerleave', () => { if (!dragging) open(false); });
     const jump = (e) => { const r = sc.getBoundingClientRect(), f = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)), docH = doc.documentElement.scrollHeight;
       scrollTo({ top: f * docH - innerHeight / 2, behavior: dragging ? 'auto' : (MG.still ? 'auto' : 'smooth') }); };
-    sc.addEventListener('pointerdown', (e) => { dragging = true; sc.setPointerCapture(e.pointerId); jump(e); });
+    /* a press on the scale goes there and, held, drags; nothing on the ruler is ever selected as text, and letting go
+       anywhere (or the press being cancelled) ends the drag and closes the ruler if the pointer has left it */
+    const stop = () => { if (!dragging) return; dragging = false; if (!el.matches(':hover')) open(false); };
+    sc.addEventListener('pointerdown', (e) => { if (e.button) return; e.preventDefault(); dragging = true; try { sc.setPointerCapture(e.pointerId); } catch (er) {} jump(e); });
     sc.addEventListener('pointermove', (e) => { if (dragging) jump(e); });
-    sc.addEventListener('pointerup', () => { dragging = false; });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((ev) => sc.addEventListener(ev, stop));
+    addEventListener('blur', stop); el.addEventListener('selectstart', (e) => e.preventDefault()); el.addEventListener('dragstart', (e) => e.preventDefault());
     list.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) secs[+b.dataset.go].s.scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'start' }); });
   }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', rail) : rail();

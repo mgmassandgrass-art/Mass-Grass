@@ -310,19 +310,24 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   slides in after 120px of scroll and shows "03 / 05", the section's name (its heading, or `data-where`/`data-where-ar`) and a
   few words at the other end (`data-meta="a|b|c"` / `data-meta-ar` on the section, separated by small squares). Pages need
   at least two `main > section` with a heading to get it.
-- Home hero (Nov 2026), after a Risotto banner video the owner sent: "the table". Every painting as a print with its white
-  border, in brick rows on a light table seen from above at an angle (CSS 3D: `.tb-plane` rotateX 54deg rotateZ -34deg,
-  mirrored in RTL), drifting slowly and endlessly (`home.js` wraps each print's position), a print lifting off now and then
-  (`.up`) and under the pointer, its shadow spreading on the table; a click opens it in a real photograph (`data-peek`). The
-  words sit on a small frosted sheet in the middle with one ink button. Live code, not a video. The background is not
-  settled yet (the owner is still deciding); the wall hero was retired.
+- Home page order (Nov 2026, the owner's plan): (1) the table: the calendar's pages (`t-c27-*.webp`, all one size) drifting
+  in brick rows on a light table seen from above at an angle (CSS 3D `.tb-plane`), now and then one lifting; not clickable.
+  Over it, with no box (only a soft clearing `.tb-veil`): the logo, "Things kept in bottles", one line and "Buy the calendar"
+  with its price. (2) The calendar on the wall (`.cwall`): the photo `cr2-wall` zoomed 150%, its page replaced by the real
+  pages (`.cw-pages`, measured 917,444–2154,1245 of 3072×1728) under the wire cut out of the same photo (`cr2-wire.webp`,
+  alpha from darkness), the front page torn up over the wire every 3s (`.tear`, also on click); beside it the words, price,
+  buy, "browse the calendar", the shipping line. (3) The twelve months (`.months`): a zigzag leaflet of 13 panels (cover +
+  months, ±24deg so edges meet) that slides along while its tall sticky track is scrolled; months without a page show a ruled
+  blank with the name and "being painted". (4) The shelves (`.coll`), Risotto's way in ArtCraft's look: a statement on the left,
+  four square real photographs (`MG.mock.scene`) each with an ink label and "from €x". (5) Just in, (6) Farah's story, footer.
 - The opening, after getartcraft.com (`home-intro` on <html>, set by `boot.js` on the home page before paint, styles in
   `home.css`): the menu wakes from faint to clear, the logo (inline SVG `.mark`, its ten letter paths with `--d` order) arrives
-  letter by letter out of a blur, then the line, the words and the button, then the frosted sheet and last the table.
+  letter by letter out of a blur, then the name, the line and the button, then the clearing and last the table.
 - The ruler, after getartcraft.com (replaces the colour chart; `rail()` in `mock.js`, `.rail` in `site.css`, ≥1180px): while
   reading it is zoomed in (×3.2) round where you are, a blue line with the percent ("057%"), the current section's name large
   at the top, the earlier ones small and grey above it, the later ones at the foot; pointer on it → it opens to 0–100, names
-  at their places, a grey box for what is on screen, click or drag to go there. Narrower screens get a thin blue stroke
+  at their places, a grey box for what is on screen, click or drag to go there. Nothing on it can be selected as text, and
+  a drag ends (and the ruler closes) wherever the button is let go. Narrower screens get a thin blue stroke
   under the header (`--sf`).
 - Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;
   the admin's link fields for facebook / tiktok. Not deployed yet.
