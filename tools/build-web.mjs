@@ -28,6 +28,7 @@ for (const f of readdirSync(join(web, '_src/pages')).filter((x) => x.endsWith('.
     .replaceAll('{{v}}', v).replace('{{css}}', css).replace('{{js}}', js).replace('{{main}}', main);
   // the current page is marked in both menus
   if (meta.nav) out = out.replaceAll(`<a href="${meta.nav}" data-ar`, `<a href="${meta.nav}" aria-current="page" data-ar`);
+  if (meta.nav) out = out.replaceAll(`<a class="sub" href="${meta.nav}" data-ar`, `<a class="sub" href="${meta.nav}" aria-current="page" data-ar`);
   writeFileSync(join(web, f), out); n++;
 }
 console.log(`built ${n} pages, assets v=${v}`);

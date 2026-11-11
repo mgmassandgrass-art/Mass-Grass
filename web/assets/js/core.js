@@ -100,7 +100,7 @@
       this.set(a); bump();
     },
   };
-  function bump() { const b = $('#bagb'); if (b && b.animate && !still) b.animate([{ transform: 'scale(1.12) rotate(-4deg)' }, { transform: 'none' }], { duration: 320, easing: 'ease-out' }); }
+  function bump() { if (still) return; $$('.bagb .bn').forEach((b) => b.animate && b.animate([{ transform: 'translateY(-4px)' }, { transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.22,1,.36,1)' })); }
   function paintBag() {
     const n = bag.count();
     $$('[data-bagn]').forEach((e) => (e.textContent = n));
@@ -193,13 +193,17 @@
       const on = () => head.classList.toggle('stuck', scrollY > 4); on(); addEventListener('scroll', on, { passive: true });
     }
     const lb = $('#lang'); if (lb) lb.addEventListener('click', () => setLang(!AR));
-    const bb = $('#bagb'); if (bb) bb.addEventListener('click', openBag);
+    $$('.bagb').forEach((b) => b.addEventListener('click', openBag));
     const sb = $('#shopb'), sd = $('#shopdd');
     if (sb && sd) {
       const here = (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '');
       if (['shop', 'paintings', 'postcards', 'stickers', 'calendar'].includes(here)) { sb.classList.add('cur'); const a = sd.querySelector(`a[href="${here}.html"]`); if (a) a.setAttribute('aria-current', 'page'); }
       const open = (on) => { sd.hidden = !on; sb.setAttribute('aria-expanded', on); };
       sb.addEventListener('click', (e) => { e.stopPropagation(); open(sd.hidden); });
+      /* with a mouse the list opens on hover, as on the reference, and closes a moment after the pointer leaves */
+      if (matchMedia('(hover:hover)').matches) { const dd = sb.parentNode; let tm = 0;
+        dd.addEventListener('pointerenter', () => { clearTimeout(tm); open(true); });
+        dd.addEventListener('pointerleave', () => { tm = setTimeout(() => open(false), 160); }); }
       doc.addEventListener('click', (e) => { if (!sd.hidden && !e.target.closest('.dd')) open(false); });
       addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sd.hidden) { open(false); sb.focus(); } });
     }
@@ -208,7 +212,7 @@
     if (mb && mm) {
       const toggle = (open) => { mm.hidden = !open; mb.setAttribute('aria-expanded', open); doc.body.style.overflow = open ? 'hidden' : ''; };
       mb.addEventListener('click', () => toggle(mm.hidden));
-      mm.addEventListener('click', (e) => { if (e.target.closest('a')) toggle(false); });
+      mm.addEventListener('click', (e) => { if (e.target.closest('a')) toggle(false); if (e.target.closest('[data-openbag]')) { toggle(false); openBag(); } });
       addEventListener('keydown', (e) => { if (e.key === 'Escape' && !mm.hidden) toggle(false); });
     }
     /* newsletter: it only says thank you once the server has the address */

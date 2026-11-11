@@ -291,5 +291,12 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   that follows the scroll (`.rail`: pencil rule, a stroke of paint growing in the section's pigment, a drop with the percent in
   the hand face, the sections as swatches; under 1180px it is a thin stroke under the header). Scroll fraction is `--sf`
   (never `--f`, which is the font token). Footer has a "Contact and support" column (`#ftc`).
+- Third round (Nov 2026): the owner wants Risotto Studio's way of showing products with ArtCraft's colours and simplicity,
+  one piece at a time. The menu is done first, as on getartcraft.com: one 48px ruled bar, the logo in its own cell, HOME / SHOP /
+  STORY on the left in Geist Mono 11px capitals spaced .15em (`--mono2`, self-hosted `web/fonts/geist-mono-latin-*.woff2`, OFL;
+  Arabic stays Readex Pro 14px, no capitals), the current page in a small ink box (a background, no extra element), SHOP drops a
+  bordered list (hover with a mouse, click otherwise), then SIGN IN, the language cell and the ink BAG cell with its count. Phones:
+  logo cell, language cell, bag icon cell, black menu cell; the menu is a sheet under the bar (shop pages indented under a grey
+  label, BAG as an ink row, SIGN IN / HELP at the foot). Never put backdrop-filter on the header: it traps the fixed phone menu.
 - Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;
   the admin's link fields for facebook / tiktok. Not deployed yet.
