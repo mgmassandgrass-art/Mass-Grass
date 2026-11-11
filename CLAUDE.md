@@ -301,6 +301,11 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - Header icons (after Risotto's Lordicon icons, drawn by us because the CSP blocks outside scripts): the account (`.acct.ico`,
   a plain cell; signed in it shows the name's first letter in `.ini`) and the bag (`.bagb.ico`, the ink cell with its count;
   the plain `.bagi` cell on phones) are pen-line SVGs (`.ic`, `pathLength=1`); on hover the lines are drawn again and the
-  head nods / the bag swings on its handle; `bump()` adds `.hop` so the bag swings when a piece goes in.
+  head nods / the bag swings on its handle; `bump()` adds `.hop` so the bag swings when a piece goes in. The bag is a plain
+  cell with no colour (the owner rejected the ink/blue block); it also swings when pressed.
+- The glass strip under the menu (`.where`, built by `where()` in `mock.js` from the same sections as the colour chart): it
+  slides in after 120px of scroll and shows "03 / 05", the section's name (its heading, or `data-where`/`data-where-ar`) and a
+  few words at the other end (`data-meta="a|b|c"` / `data-meta-ar` on the section, separated by small squares). Pages need
+  at least two `main > section` with a heading to get it.
 - Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;
   the admin's link fields for facebook / tiktok. Not deployed yet.

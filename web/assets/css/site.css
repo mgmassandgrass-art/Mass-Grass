@@ -95,9 +95,9 @@ header .logo img{height:26px;width:auto}
 @media(hover:hover){.cta:hover{background:var(--blue)}}
 .cta .bn{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border:1px solid rgba(243,242,238,.4)}
 .cta.has .bn{background:var(--cream);color:var(--ink);border-color:var(--cream)}
-.bagi{position:relative;display:none}
+.bagi{position:relative}
 .bagi svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
-.bagi .bn{position:absolute;top:8px;inset-inline-end:6px;min-width:16px;height:16px;padding:0 3px;background:var(--ink);color:var(--cream);display:grid;place-items:center;font-size:10px}
+.bagi .bn{position:absolute;top:6px;inset-inline-end:5px;min-width:16px;height:16px;padding:0 3px;background:var(--ink);color:var(--cream);display:grid;place-items:center;font-size:10px}
 .bagi:not(.has) .bn{display:none}
 .menub{display:none;width:48px;height:48px;padding:0;border:0;background:var(--ink);cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:6px}
 .menub i{display:block;width:18px;height:1.5px;background:var(--cream);transition:transform .25s}
@@ -120,7 +120,7 @@ header .logo img{height:26px;width:auto}
 .ar-on .mrow>a{font:500 14px/1 var(--fa);letter-spacing:0}
 .mrow>a+a{border-inline-start:1px solid var(--line-2)}
 .mrow .acct{height:48px;padding:0}
-@media(max-width:900px){.mainnav,.htools>.acct,.cta{display:none}.bagi{display:grid}.menub{display:flex}}
+@media(max-width:900px){.mainnav,.htools>.acct{display:none}.menub{display:flex}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 @media(max-width:900px){.mainnav{display:none}header{grid-template-columns:auto minmax(0,1fr)}.menub{display:flex}.htools{gap:0}header .htools .acct span{font-size:var(--fs-caption)}}
 
@@ -318,4 +318,28 @@ html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
 @keyframes icNod{0%{transform:translateY(0)}30%{transform:translateY(-4px) scale(1.06)}60%{transform:translateY(1px)}100%{transform:none}}
 @keyframes icSwing{0%{transform:rotate(0)}20%{transform:rotate(-12deg)}45%{transform:rotate(9deg)}70%{transform:rotate(-4deg)}100%{transform:rotate(0)}}
 @media(prefers-reduced-motion:reduce){.ic *{animation:none!important}}
-.bagi .ic{width:24px;height:24px}
+.bagi{width:56px}.bagi .ic{width:26px;height:26px}
+
+/* the bag also swings when it is pressed */
+.bagb.ico:active .bd{animation:icSwing .9s cubic-bezier(.34,1.56,.64,1)}
+
+/* the glass strip under the menu: where we are on the page. The number and name of the section in view, a few words
+   about it at the other end; it slides in once the page is scrolled and changes as each section reaches the top */
+.where{position:sticky;top:var(--head,49px);z-index:45;height:0;overflow:visible}
+.where-in{position:absolute;inset-inline:0;top:0;height:42px;display:flex;align-items:center;gap:16px;padding-inline:clamp(16px,4vw,48px);
+  background:rgba(243,242,238,.62);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border-bottom:1px solid var(--line-2);
+  font:500 11px/1 var(--mono2);letter-spacing:.15em;text-transform:uppercase;color:rgba(var(--ink-rgb),.55);
+  transform:translateY(-100%);opacity:0;pointer-events:none;transition:transform .45s var(--ease),opacity .3s}
+.where.on .where-in{transform:none;opacity:1;pointer-events:auto}
+.ar-on .where-in{font:500 13px/1 var(--fa);letter-spacing:0;text-transform:none}
+.where .no{flex:none;font-variant-numeric:tabular-nums;font-family:var(--mono2);letter-spacing:.1em}
+.where .no b{font-weight:500;color:var(--ink)}
+.where .nm,.where .meta{position:relative;overflow:hidden;height:42px;display:flex;align-items:center}
+.where .nm{flex:none;color:var(--ink)}
+.where .meta{margin-inline-start:auto;min-width:0}
+.where .nm span,.where .meta span{display:flex;align-items:center;gap:14px;white-space:nowrap;animation:whereIn .45s var(--ease)}
+@keyframes whereIn{from{transform:translateY(70%);opacity:0;filter:blur(4px)}}
+.where .meta i{width:4px;height:4px;background:currentColor;opacity:.5;flex:none}
+.where .nm button{all:unset;cursor:pointer}
+@media(hover:hover){.where .nm button:hover{text-decoration:underline;text-underline-offset:4px}}
+@media(max-width:700px){.where-in{height:38px}.where .nm,.where .meta{height:38px}.where .meta{display:none}}

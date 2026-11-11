@@ -77,10 +77,37 @@
   }
   MG.page(() => requestAnimationFrame(reveal));
 
+  /* ---------- the glass strip under the menu: the section in view, its number and a few words about it ---------- */
+  function where(secs) {
+    const bar = doc.createElement('div'); bar.className = 'where'; bar.setAttribute('aria-hidden', 'true');
+    bar.innerHTML = '<div class="where-in"><span class="no"></span><span class="nm"></span><span class="meta"></span></div>';
+    const head = $('header'); head.after(bar);
+    const no = bar.querySelector('.no'), nm = bar.querySelector('.nm'), meta = bar.querySelector('.meta'), pad = (n) => String(n).padStart(2, '0');
+    const name = (x) => (x.s.dataset[MG.ar ? 'whereAr' : 'where'] || (x.h.innerText || x.h.textContent)).replace(/\s+/g, ' ').trim();
+    const words = (x) => (x.s.dataset[MG.ar ? 'metaAr' : 'meta'] || '').split('|').filter(Boolean);
+    let cur = -1, shown = false;
+    function paint(i, force) {
+      if (i === cur && !force) return; cur = i; const x = secs[i];
+      no.innerHTML = `<b>${pad(i + 1)}</b> / ${pad(secs.length)}`;
+      nm.innerHTML = `<span><button type="button" tabindex="-1">${esc(name(x))}</button></span>`;
+      meta.innerHTML = `<span>${words(x).map((w, k) => (k ? '<i></i>' : '') + esc(w)).join('')}</span>`;
+    }
+    nm.addEventListener('click', () => { if (cur >= 0) secs[cur].s.scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'start' }); });
+    let q = false;
+    function on() { q = false; const top = (parseFloat(getComputedStyle(doc.documentElement).getPropertyValue('--head')) || 49) + 60;
+      let ci = 0; secs.forEach((x, k) => { if (x.s.getBoundingClientRect().top <= top) ci = k; });
+      const show = scrollY > 120; if (show !== shown) { shown = show; bar.classList.toggle('on', show); }
+      paint(ci); }
+    addEventListener('scroll', () => { if (!q) { q = true; requestAnimationFrame(on); } }, { passive: true }); on();
+    MG.page((why) => { if (why === 'lang') paint(cur < 0 ? 0 : cur, true); });
+  }
+
   /* ---------- the colour chart: a pencil rule down the edge, a stroke of paint that grows with the scroll ---------- */
   const PIG = ['#2E8C97', '#E3A21A', '#C8402F', '#5E8B4A', '#27408B', '#B8577E', '#8A6A3B'];
   function rail() {
     const secs = $$('main > section').map((s) => { const h = s.querySelector('h1,h2'); return h ? { s, h } : null; }).filter(Boolean);
+    if (secs.length < 2) return;
+    where(secs);
     if (secs.length < 3) return;
     const el = doc.createElement('aside'); el.className = 'rail'; el.setAttribute('aria-hidden', 'true');
     el.innerHTML = `<div class="rl-t">${[...Array(41)].map((_, i) => `<i class="${i % 4 ? '' : 'b'}" style="top:${i * 2.5}%">${i % 8 ? '' : `<b>${i * 2.5}</b>`}</i>`).join('')}</div><div class="rl-p"><span></span></div><div class="rl-d"><b class="hand"></b></div><ol class="rl-n"></ol>`;
