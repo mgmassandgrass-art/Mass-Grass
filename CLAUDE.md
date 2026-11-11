@@ -269,3 +269,18 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - Preview of the rebuilt site (static, built-in catalog, no server): https://claude.ai/artifact/6P2BSgN7w62h8C7mYAkjo2
   (publish `web/index.html` with root `web` and every other file of `web/` except `_src/` and `admin/` as `files`). The admin
   needs the Worker, so it is shown to the owner as screenshots (Playwright against `sh test/local.sh`).
+
+## The light system (Nov 2026, in progress): after getartcraft.com
+
+- The owner rejected the torn-paper collage and a dark watercolour-wash direction, and pointed at https://getartcraft.com:
+  a light sheet (`--cream` #F3F2EE), hair-line rules framing cells, square corners, black square buttons (blue on hover),
+  bold tight headings, and things in orbit around the name. Ours adds a hand face (`--hand`: Caveat + Aref Ruqaa) for the
+  names under pieces and small asides. Tokens and shared parts: `web/assets/css/site.css`; tiles: `tiles.css`.
+  The old token names are kept and remapped; `MG.tear` does nothing now and `.tape` is hidden. `DESIGN.md` still
+  describes the collage and must be rewritten once the pages are all moved.
+- Done: header (Home, Shop with a dropdown, Story in the middle), compact footer with the social links (`#soc`, from the
+  admin's links; e-mail always), share button on every tile (`MG.shareBtn`; the phone's share sheet, else a menu), share
+  pages `/s/<kind>/<id>` in the Worker (the piece's own title and picture), home page (orbit hero, collections, the large
+  calendar stage with the four mock-up views, "just in" mosaic, story). "Calendar" carries no year in section names.
+- Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;
+  the admin's link fields for facebook / tiktok. Not deployed yet.

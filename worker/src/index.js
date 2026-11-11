@@ -410,6 +410,27 @@ function secure(res) {
   return new Response(res.body, { status: res.status, statusText: res.statusText, headers: h });
 }
 
+// A shared link, /s/<kind>/<id>: a small page whose title and picture are the piece's own (what WhatsApp, Facebook and X show),
+// which then takes the visitor to the piece on its page. Names come from the catalog; anything unknown goes to the shop.
+const SHARE_PAGE = { painting: 'paintings', postcard: 'postcards', sticker: 'stickers', calendar: 'calendar' };
+async function sharePage(env, url, p) {
+  const [, , kind, id = ''] = p.split('/'), page = SHARE_PAGE[kind], o = url.origin;
+  if (!page) return Response.redirect(`${o}/shop`, 302);
+  const h = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  let title = 'Things kept in bottles, the calendar', image = 'assets/c27-00.webp', to = `${o}/calendar`;
+  if (kind !== 'calendar') {
+    const cat = await catalog(env), pr = cat.products.find((x) => x.kind === kind && x.id === id);
+    if (!pr) return Response.redirect(`${o}/${page}`, 302);
+    title = pr.title_en; image = (pr.extra && pr.extra.img) || `assets/${pr.id}.webp`; to = `${o}/${page}#${encodeURIComponent(pr.id)}`;
+  }
+  const desc = 'A watercolour by Farah Al-Helou from Gaza, on Mass & Grass.', img = /^https?:/.test(image) ? image : `${o}/${image.replace(/^\//, '')}`;
+  return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${h(title)} · Mass &amp; Grass</title>
+<meta name="description" content="${h(desc)}"><meta name="robots" content="noindex"><link rel="canonical" href="${h(to)}">
+<meta property="og:type" content="product"><meta property="og:site_name" content="Mass &amp; Grass"><meta property="og:title" content="${h(title)}"><meta property="og:description" content="${h(desc)}"><meta property="og:url" content="${h(url.href)}"><meta property="og:image" content="${h(img)}">
+<meta name="twitter:card" content="summary_large_image"><meta http-equiv="refresh" content="0;url=${h(to)}"></head><body><p><a href="${h(to)}">${h(title)}</a></p></body></html>`,
+    { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=300' } });
+}
+
 export default {
   async fetch(req, env0) {
     try { await migrate(env0); } catch (e) { console.error('migrate', e); return secure(new Response('The shop is being updated. Please try again in a minute.', { status: 503, headers: { 'retry-after': '60', 'content-type': 'text/plain; charset=utf-8' } })); }
@@ -432,6 +453,7 @@ async function handle(req, env0) {
     const p = path.replace(/\/+$/, '') || '/';
     try {
       if (p.startsWith('/api/')) return await api(req, env, url, p);
+      if (p.startsWith('/s/')) return await sharePage(env, url, p);
       if (p === '/admin' || p.startsWith('/admin/')) {
         const u = await currentUser(env, req);
         if (!isAdmin(env, u)) {

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Account · Mass &amp; Grass</title>
 <meta name="description" content="Sign in to Mass &amp; Grass or create an account to keep your files in one place.">
-<meta name="theme-color" content="#F3EEE4">
+<meta name="theme-color" content="#F3F2EE">
 <link rel="canonical" href="https://www.massandgrass.com/account">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Mass &amp; Grass">
@@ -19,16 +19,27 @@
 <link rel="preload" href="fonts/figtree-latin-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts/all.css">
 <link rel="stylesheet" href="fonts/figtree.css">
-<link rel="stylesheet" href="assets/css/site.css?v=77fb69ef">
-<link rel="stylesheet" href="assets/css/account.css?v=77fb69ef">
-<script src="assets/js/boot.js?v=77fb69ef"></script>
+<link rel="stylesheet" href="assets/css/site.css?v=8344ff2a">
+<link rel="stylesheet" href="assets/css/account.css?v=8344ff2a">
+<script src="assets/js/boot.js?v=8344ff2a"></script>
 </head>
 <body>
 <a class="skip" href="#main" data-ar="انتقلوا إلى المحتوى">Skip to content</a>
 <header>
   <a class="logo" href="index.html" aria-label="Mass &amp; Grass, home"><img src="assets/logo.svg" alt="Mass &amp; Grass" width="60" height="40"></a>
-  <nav aria-label="Sections">
-    <a href="index.html" data-ar="الرئيسية">Home</a><i class="nsep" aria-hidden="true"></i><a href="shop.html" data-ar="المتجر">Shop</a><i class="nsep" aria-hidden="true"></i><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a>
+  <nav aria-label="Sections" class="mainnav">
+    <a href="index.html" data-ar="الرئيسية">Home</a>
+    <div class="dd">
+      <button type="button" class="ddb" id="shopb" aria-expanded="false" aria-controls="shopdd"><span data-ar="المتجر">Shop</span><svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 4.5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="ddp" id="shopdd" hidden>
+        <a href="shop.html"><b data-ar="كل المنتجات">All products</b><span data-ar="كل ما رسمته فرح في مكان واحد">Everything Farah has painted, in one place</span></a>
+        <a href="paintings.html"><b data-ar="اللوحات">Paintings</b><span data-ar="ألوان مائية للطباعة والتأطير">Watercolours to print and frame</span></a>
+        <a href="postcards.html"><b data-ar="البطاقات البريدية">Postcards</b><span data-ar="اكتبوا عليها وأرسلوها">Write one and send it</span></a>
+        <a href="stickers.html"><b data-ar="الملصقات">Stickers</b><span data-ar="ليمون ورمّان وكعك القدس">Lemons, pomegranates, Jerusalem ka’ak</span></a>
+        <a href="calendar.html"><b data-ar="التقويم">Calendar</b><span data-ar="لكل شهر قارورة">A bottle for every month</span></a>
+      </div>
+    </div>
+    <a href="story.html" data-ar="الحكاية">Story</a>
   </nav>
   <div class="htools">
     <button class="lang" id="lang" type="button" aria-label="العربية">ع</button>
@@ -37,7 +48,11 @@
     <button class="menub" type="button" id="menub" aria-expanded="false" aria-controls="mmenu" aria-label="Menu" data-label-ar="القائمة"><i></i><i></i><i></i></button>
   </div>
   <nav class="mmenu" id="mmenu" hidden aria-label="Menu">
-    <a href="index.html" data-ar="الرئيسية">Home</a><i class="nsep" aria-hidden="true"></i><a href="shop.html" data-ar="المتجر">Shop</a><i class="nsep" aria-hidden="true"></i><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a><a class="acct" href="account.html"><span data-ar="الدخول">Sign in</span></a>
+    <a href="index.html" data-ar="الرئيسية">Home</a>
+    <a href="shop.html" data-ar="المتجر">Shop</a>
+    <div class="msub"><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات البريدية">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a></div>
+    <a href="story.html" data-ar="الحكاية">Story</a>
+    <a class="acct" href="account.html"><span data-ar="الدخول">Sign in</span></a>
   </nav>
 </header>
 
@@ -52,23 +67,24 @@
   </section>
 </main>
 
-<footer class="paper" data-tear-top="10"><span class="fill"></span>
-  <div class="letter paper" data-tear="5"><span class="fill"></span>
-    <h2 data-ar="بطاقة بريدية في بريدكم">A postcard in your inbox</h2>
-    <p data-ar="لوحة جديدة من غزة كل شهر، ولا شيء غيرها.">One new painting from Gaza each month, and nothing else.</p>
-    <form id="nl" novalidate>
-      <input type="email" id="nl-mail" autocomplete="email" required aria-label="Email" data-label-ar="البريد الإلكتروني" placeholder="you@example.com">
-      <button class="ink" type="submit" data-ar="اشتركوا">Join</button>
-    </form>
-    <p class="ok" id="nl-ok" role="status" aria-live="polite"></p>
+<footer>
+  <div class="ft">
+    <div class="ft-a"><img src="assets/logo.svg" alt="Mass &amp; Grass" width="60" height="40"><p data-ar="لوحات فرح الحلو المائية من غزة. كل قطعة تدعمها لتواصل الرسم.">Farah Al-Helou’s watercolours from Gaza. Every piece helps her keep painting.</p></div>
+    <nav aria-label="Footer" class="ft-b"><a href="shop.html" data-ar="المتجر">Shop</a><a href="paintings.html" data-ar="اللوحات">Paintings</a><a href="postcards.html" data-ar="البطاقات">Postcards</a><a href="stickers.html" data-ar="الملصقات">Stickers</a><a href="calendar.html" data-ar="التقويم">Calendar</a><a href="story.html" data-ar="الحكاية">Story</a><a href="help.html" data-ar="المساعدة">Help</a><a href="terms.html" data-ar="الشروط والخصوصية">Terms and privacy</a></nav>
+    <div class="ft-c">
+      <h2 data-ar="لوحة جديدة كل شهر">One new painting a month</h2>
+      <form id="nl" novalidate>
+        <input type="email" id="nl-mail" autocomplete="email" required aria-label="Email" data-label-ar="البريد الإلكتروني" placeholder="you@example.com">
+        <button class="ink" type="submit" data-ar="اشتركوا">Join</button>
+      </form>
+      <p class="ok" id="nl-ok" role="status" aria-live="polite"></p>
+    </div>
   </div>
-  <nav aria-label="Footer"><a href="shop.html" data-ar="المتجر">Shop</a><i></i><a href="paintings.html" data-ar="اللوحات">Paintings</a><i></i><a href="postcards.html" data-ar="البطاقات">Postcards</a><i></i><a href="stickers.html" data-ar="الملصقات">Stickers</a><i></i><a href="calendar.html" data-ar="التقويم">Calendar</a><i></i><a href="story.html" data-ar="الحكاية">Story</a><i></i><a href="help.html" data-ar="المساعدة">Help</a><i></i><a href="terms.html" data-ar="الشروط والخصوصية">Terms and privacy</a></nav>
-  <div class="fseal"><span><img src="assets/logo.svg" alt="Mass &amp; Grass" width="45" height="30"></span></div>
-  <small data-ar="تحميل فوري<br>دفع آمن<br>كل قطعة تدعم فرح في غزة<br>© 2026 ماس آند غراس<br>غزة، فلسطين">Instant download<br>Secure checkout<br>Every piece supports Farah in Gaza<br>© 2026 Mass &amp; Grass<br>Gaza, Palestine</small>
+  <div class="ft-z"><small data-ar="© 2026 ماس آند غراس، غزة، فلسطين">© 2026 Mass &amp; Grass, Gaza, Palestine</small><div class="soc" id="soc"></div></div>
 </footer>
 
-<script src="assets/js/catalog.js?v=77fb69ef" defer></script>
-<script src="assets/js/core.js?v=77fb69ef" defer></script>
-<script src="assets/js/account.js?v=77fb69ef" defer></script>
+<script src="assets/js/catalog.js?v=8344ff2a" defer></script>
+<script src="assets/js/core.js?v=8344ff2a" defer></script>
+<script src="assets/js/account.js?v=8344ff2a" defer></script>
 </body>
 </html>

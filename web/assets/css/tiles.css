@@ -1,24 +1,21 @@
-/* Product tiles: one piece on a small coloured sheet, its name, price and an add-to-bag button (MG.tile). */
-.shgrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:48px 32px}
-.pr-it{display:flex;flex-direction:column}
-.pr-it .bed{--c:var(--c-e9e1d2);aspect-ratio:1;transition:transform .35s cubic-bezier(.22,1,.36,1)}
-.pr-it:nth-child(4n+2) .bed{--c:var(--c-c9d9e7)}.pr-it:nth-child(4n+3) .bed{--c:var(--c-c6d0ba)}.pr-it:nth-child(4n) .bed{--c:var(--c-e2d6c0)}
-.pr-it .bed img{position:absolute;inset:0;margin:auto;max-width:72%;max-height:72%;width:auto;height:auto;object-fit:contain}
-.pr-it .print img{background:var(--paper-white);padding:5%;box-shadow:0 8px 16px -6px rgba(var(--ink-rgb),.35);rotate:-1.5deg}
-.pr-it:nth-child(even) .print img{rotate:1.5deg}
-.pr-it .card img{background:var(--paper-white);padding:4%;box-shadow:0 6px 12px -6px rgba(var(--ink-rgb),.35)}
-.pr-it .stk img{filter:drop-shadow(0 4px 6px rgba(var(--ink-rgb),.3))}
+/* Product tiles (MG.tile): the piece in a ruled cell, its name as a pencil note, price, add-to-bag and share. */
+.shgrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));border-top:1px solid var(--line);border-inline-start:1px solid var(--line)}
+.pr-it{display:flex;flex-direction:column;padding:16px 16px 20px;border-bottom:1px solid var(--line);border-inline-end:1px solid var(--line);background:var(--cream);transition:background .3s}
+@media(hover:hover){.pr-it:hover{background:var(--paper)}}
+.pr-it .bed{--c:transparent;aspect-ratio:1;overflow:hidden}
+.pr-it .bed img{position:absolute;inset:0;margin:auto;max-width:78%;max-height:78%;width:auto;height:auto;object-fit:contain;transition:transform .5s var(--ease)}
+.pr-it .print img,.pr-it .card img,.pr-it .cal img{background:var(--paper-white);padding:4%;box-shadow:0 1px 1px rgba(var(--ink-rgb),.08),0 16px 28px -16px rgba(var(--ink-rgb),.4)}
+.pr-it .cal img{padding:3%;max-width:86%}
+.pr-it .stk img{filter:drop-shadow(0 6px 8px rgba(var(--ink-rgb),.22))}
 .pr-it .stk.round img{border-radius:50%;aspect-ratio:1;object-fit:cover;border:5px solid var(--paper-white);width:72%}
-.pr-it .stk.rect img{border-radius:8px;border:5px solid var(--paper-white)}
-@media(hover:hover){.pr-it a.lk:hover .bed{transform:translateY(-4px) rotate(-.6deg)}}
-.pr-it a.lk:focus-visible{outline:3px solid var(--indigo);outline-offset:4px}
-.pr-it .meta{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:16px}
-.pr-it h3{margin:0;font:700 var(--fs-body)/1.3 var(--f)}
-.ar-on .pr-it h3{font-family:var(--fa)}
+.pr-it .stk.rect img{border-radius:6px;border:5px solid var(--paper-white)}
+@media(hover:hover){.pr-it a.lk:hover img{transform:scale(1.04) rotate(-1deg)}}
+.pr-it .meta{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:8px}
+.pr-it h3{margin:0;font:400 24px/1.15 var(--hand);color:var(--ink)}
+.ar-on .pr-it h3{font-size:21px;line-height:1.5}
 .pr-it .pr{font:700 var(--fs-body)/1 var(--f);white-space:nowrap}
-.pr-it .kd{display:block;margin:4px 0 16px;color:var(--soft);font-size:var(--fs-sm)}
-.pr-it .add{margin-top:auto;align-self:flex-start}
-@media(max-width:520px){.shgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 16px}.pr-it .add{padding:0 12px;font-size:var(--fs-caption)}.cats{gap:4px 20px}}
-
-.pr-it .cal img{background:var(--paper-white);padding:3%;box-shadow:0 6px 12px -6px rgba(var(--ink-rgb),.35);max-width:84%}
-.pr-it .kd.pt{margin:-12px 0 16px;color:var(--olive);font-weight:600}
+.pr-it .kd{display:block;margin:4px 0 16px;color:var(--soft);font-size:var(--fs-caption)}
+.pr-it .kd.pt{margin:-12px 0 16px;color:var(--blue);font-weight:600}
+.pr-it .acts{margin-top:auto;display:flex;gap:8px}
+.pr-it .acts .add{flex:1;min-width:0}
+@media(max-width:520px){.shgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.pr-it{padding:12px 12px 16px}.pr-it h3{font-size:21px}.pr-it .acts .add{padding:0 8px;font-size:var(--fs-caption)}.cats{gap:4px 20px}}

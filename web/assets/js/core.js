@@ -61,7 +61,7 @@
   const fmt = (e) => (e === 0 ? t('Free', 'مجانًا') : '€' + (Math.round(e * 100) % 100 ? e.toFixed(2) : String(Math.round(e))));
   const KIND = {
     painting: ['Painting, PDF and PNG', 'لوحة، PDF وPNG'], postcard: ['Postcard, PDF and PNG', 'بطاقة بريدية، PDF وPNG'],
-    sticker: ['Sticker, PNG', 'ملصق، PNG'], pack: ['Sticker pack, PNG', 'مجموعة ملصقات، PNG'], calendar: ['Calendar 2027, PDF in A5', 'تقويم 2027، PDF بمقاس A5'],
+    sticker: ['Sticker, PNG', 'ملصق، PNG'], pack: ['Sticker pack, PNG', 'مجموعة ملصقات، PNG'], calendar: ['Calendar, PDF in A5', 'تقويم، PDF بمقاس A5'],
   };
   const kindLabel = (k) => L(KIND[k] || ['Digital file', 'ملف رقمي']);
 
@@ -157,6 +157,7 @@
   /* ---------- torn edges: a ragged polygon per element, redrawn when sizes change ---------- */
   const rnd = (seed) => () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
   function tearOne(el, amp, seed, topOnly) {
+    return; /* the collage's torn edges were retired with the Nov 2026 design system: sheets are flat now */
     const w = el.offsetWidth, h = el.offsetHeight; if (!w || !h) return;
     const key = w + 'x' + h; if (el._torn === key) return; el._torn = key;
     const r = rnd(seed), pts = [], step = Math.max(5, amp * 0.9);
@@ -193,6 +194,16 @@
     }
     const lb = $('#lang'); if (lb) lb.addEventListener('click', () => setLang(!AR));
     const bb = $('#bagb'); if (bb) bb.addEventListener('click', openBag);
+    const sb = $('#shopb'), sd = $('#shopdd');
+    if (sb && sd) {
+      const here = (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '');
+      if (['shop', 'paintings', 'postcards', 'stickers', 'calendar'].includes(here)) { sb.classList.add('cur'); const a = sd.querySelector(`a[href="${here}.html"]`); if (a) a.setAttribute('aria-current', 'page'); }
+      const open = (on) => { sd.hidden = !on; sb.setAttribute('aria-expanded', on); };
+      sb.addEventListener('click', (e) => { e.stopPropagation(); open(sd.hidden); });
+      doc.addEventListener('click', (e) => { if (!sd.hidden && !e.target.closest('.dd')) open(false); });
+      addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sd.hidden) { open(false); sb.focus(); } });
+    }
+    paintSocial();
     const mb = $('#menub'), mm = $('#mmenu');
     if (mb && mm) {
       const toggle = (open) => { mm.hidden = !open; mb.setAttribute('aria-expanded', open); doc.body.style.overflow = open ? 'hidden' : ''; };
@@ -211,14 +222,63 @@
     });
     /* any [data-add="calendar"] puts the calendar in the bag; [data-add-kind][data-add-id] toggles one piece */
     doc.addEventListener('click', (e) => {
+      const sh = e.target.closest('[data-share]'); if (sh) { e.preventDefault(); share(sh); return; }
+      if (shrm && !e.target.closest('.shrm')) closeShare();
       const b = e.target.closest('[data-add]'); if (!b) return; e.preventDefault();
       if (b.dataset.fmt === 'print') { const on = bag.toggle(b.dataset.add, b.dataset.add === 'calendar' ? DEF.calendar.id : b.dataset.id, 'print'); if (on) toast(t('The printed copy is in your bag.', 'أُضيفت النسخة المطبوعة إلى السلة.')); }
       else if (b.dataset.add === 'calendar') { if (b.classList.contains('add') && bag.has('calendar', DEF.calendar.id)) bag.drop('calendar', DEF.calendar.id); else { const added = bag.add('calendar', DEF.calendar.id); toast(added ? t('The calendar is in your bag.', 'أُضيف التقويم إلى السلة.') : t('The calendar is already in your bag.', 'التقويم في السلة.')); } }
       else if (isFree(b.dataset.add, b.dataset.id) && !bag.has(b.dataset.add, b.dataset.id)) { bag.add(b.dataset.add, b.dataset.id); location.href = 'checkout.html'; }
       else bag.toggle(b.dataset.add, b.dataset.id);
     });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape') closeShare(); }); addEventListener('scroll', closeShare, { passive: true });
     addEventListener('storage', (e) => { if (e.key === 'mgBag') rerender('bag'); if (e.key === 'mgUser') rerender('user'); });
     new ResizeObserver(() => tear()).observe(doc.body); addEventListener('load', () => tear());
+  }
+
+  /* ---------- share: the phone's own share sheet when there is one, else a small menu ---------- */
+  const PAGE = { painting: 'paintings.html', postcard: 'postcards.html', sticker: 'stickers.html', calendar: 'calendar.html' };
+  const IC = {
+    share: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M8 7.5L12 3.5l4 4M5 12.5v6.2c0 .7.6 1.3 1.3 1.3h11.4c.7 0 1.3-.6 1.3-1.3v-6.2"/></svg>',
+    whatsapp: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.2 21.8l4.9-1.3A9.8 9.8 0 1 0 12 2.2zm0 1.8a8 8 0 1 1-4.2 14.8l-.3-.2-2.8.8.8-2.7-.2-.3A8 8 0 0 1 12 4zm-3.300 3.900c-.2 0-.5.1-.7.4-.3.300-1 1-1 2.300s1 2.700 1.200 2.900c.1.2 2 3.200 5 4.300 2.400.9 2.900.7 3.400.7.500-.1 1.700-.7 1.900-1.400.2-.7.2-1.200.2-1.400-.1-.1-.3-.2-.600-.4l-2-.9c-.300-.1-.5-.2-.7.1l-.9 1.200c-.2.2-.3.2-.6.1-.300-.2-1.200-.5-2.300-1.400-.9-.800-1.400-1.700-1.600-2-.2-.3 0-.5.1-.600l.5-.5c.1-.2.2-.300.3-.5.1-.2 0-.4 0-.5l-.9-2.200c-.2-.5-.4-.5-.6-.5z"/></svg>',
+    facebook: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.500 21v-7.500h2.500l.4-3h-2.900V8.600c0-.9.300-1.500 1.500-1.500h1.500V4.400c-.3 0-1.200-.1-2.200-.1-2.200 0-3.800 1.400-3.800 3.900v2.300H8v3h2.500V21z"/></svg>',
+    x: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.700 3.500h3l-6.600 7.500 7.700 10.200h-6l-4.700-6.200-5.400 6.200h-3l7-8L2.300 3.500h6.200l4.300 5.600zm-1 15.900h1.700L7.500 5.200H5.700z"/></svg>',
+    pinterest: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.500a9.500 9.500 0 0 0-3.500 18.300c-.1-.8-.2-2 0-2.800l1.100-4.700s-.3-.6-.3-1.400c0-1.300.8-2.300 1.700-2.300.800 0 1.200.6 1.200 1.300 0 .8-.5 2-.8 3.100-.2.9.5 1.700 1.400 1.700 1.700 0 3-1.800 3-4.400 0-2.300-1.700-3.900-4-3.900a4.200 4.200 0 0 0-4.400 4.200c0 .8.3 1.700.7 2.200.1.100.1.200.1.300l-.3 1.100c0 .2-.1.200-.3.100-1.200-.6-1.900-2.300-1.900-3.700 0-3 2.200-5.800 6.300-5.800 3.300 0 5.900 2.400 5.900 5.500 0 3.300-2.100 6-5 6-1 0-1.900-.5-2.200-1.100l-.6 2.300c-.2.800-.8 1.900-1.200 2.500A9.500 9.500 0 1 0 12 2.500z"/></svg>',
+    telegram: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.700 4.300L3.600 10.900c-1.200.5-1.200 1.100-.2 1.400l4.400 1.400 1.700 5.100c.2.600.4.800.8.800s.600-.2.900-.5l2.100-2.100 4.400 3.300c.8.400 1.400.2 1.600-.8l2.900-13.600c.3-1.200-.5-1.800-1.500-1.600zM9.400 13.400l8.300-5.200c.4-.2.700-.1.4.2l-6.900 6.200-.3 3.200z"/></svg>',
+    link: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.600 13.400a4 4 0 0 0 5.700 0l3-3a4 4 0 0 0-5.700-5.700l-1 1 1.400 1.400 1-1a2 2 0 0 1 2.900 2.900l-3 3a2 2 0 0 1-2.900 0zm2.800-2.800a4 4 0 0 0-5.700 0l-3 3a4 4 0 0 0 5.700 5.700l1-1-1.400-1.400-1 1a2 2 0 0 1-2.900-2.900l3-3a2 2 0 0 1 2.900 0z"/></svg>',
+    instagram: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.300a4.700 4.700 0 1 0 0 9.400 4.700 4.700 0 0 0 0-9.400zm0 7.700a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm6-7.900a1.100 1.100 0 1 1-2.200 0 1.100 1.100 0 0 1 2.200 0zM16.300 3H7.700A4.700 4.700 0 0 0 3 7.700v8.600A4.700 4.700 0 0 0 7.700 21h8.600a4.700 4.700 0 0 0 4.700-4.700V7.700A4.700 4.700 0 0 0 16.300 3zm3 13.300a3 3 0 0 1-3 3H7.700a3 3 0 0 1-3-3V7.700a3 3 0 0 1 3-3h8.600a3 3 0 0 1 3 3z"/></svg>',
+    tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.500 3h-3v12.300a2.600 2.600 0 1 1-2.600-2.600c.3 0 .5 0 .8.100V9.700a5.700 5.700 0 1 0 4.800 5.600V9.100c1.200.9 2.600 1.300 4 1.300V7.400c-2.200 0-4-1.900-4-4.400z"/></svg>',
+    email: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.500 5.500h17a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-17a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1zm1.300 1.800v.4l7.200 5 7.200-5v-.4zm14.400 2.600L12 14.900 4.800 9.900v6.800h14.400z"/></svg>',
+  };
+  /* the address people share: on the live site a small page of its own (so the link shows the piece's picture), else the piece's place on its page */
+  const shareUrl = (kind, id) => { const base = 'https://www.massandgrass.com/'; return cat.live ? `${base}s/${kind}/${encodeURIComponent(id || 'calendar')}` : base + PAGE[kind].replace('.html', '') + (kind === 'calendar' ? '' : '#' + id); };
+  const shareName = (kind, id) => { const p = product(kind, id); return kind === 'calendar' ? t('Things kept in bottles, the calendar', 'أشياء نحفظها في قوارير، التقويم') : title(p) || id; };
+  const shareBtn = (kind, id) => `<button type="button" class="shr" data-share="${kind}" data-id="${esc(id || '')}" aria-label="${esc(t('Share', 'شاركوها') + ': ' + shareName(kind, id))}">${IC.share}</button>`;
+  let shrm = null;
+  function closeShare() { if (shrm) { shrm.remove(); shrm = null; } }
+  async function share(btn) {
+    const kind = btn.dataset.share, id = btn.dataset.id, url = shareUrl(kind, id), name = shareName(kind, id);
+    const text = t(`${name}, a watercolour by Farah Al-Helou from Gaza`, `${name}، لوحة مائية لفرح الحلو من غزة`);
+    if (navigator.share && matchMedia('(pointer:coarse)').matches) { try { await navigator.share({ title: 'Mass & Grass', text, url }); } catch (e) {} return; }
+    if (shrm && shrm._for === btn) return closeShare(); closeShare();
+    const u = encodeURIComponent(url), tx = encodeURIComponent(text), image = encodeURIComponent('https://www.massandgrass.com/' + (kind === 'calendar' ? 'assets/c27-00.webp' : img(id, product(kind, id))));
+    const rows = [['whatsapp', 'WhatsApp', `https://wa.me/?text=${tx}%20${u}`], ['facebook', 'Facebook', `https://www.facebook.com/sharer/sharer.php?u=${u}`], ['x', 'X', `https://twitter.com/intent/tweet?text=${tx}&url=${u}`],
+      ['pinterest', 'Pinterest', `https://pinterest.com/pin/create/button/?url=${u}&media=${image}&description=${tx}`], ['telegram', 'Telegram', `https://t.me/share/url?url=${u}&text=${tx}`]];
+    shrm = doc.createElement('div'); shrm.className = 'shrm'; shrm._for = btn; shrm.setAttribute('role', 'menu'); shrm.dir = AR ? 'rtl' : 'ltr';
+    shrm.innerHTML = rows.map((r) => `<a role="menuitem" href="${r[2]}" target="_blank" rel="noopener noreferrer">${IC[r[0]]}${r[1]}</a>`).join('') + `<button type="button" role="menuitem" data-copy>${IC.link}${t('Copy the link', 'انسخوا الرابط')}</button>`;
+    (btn.closest('dialog') || doc.body).append(shrm);
+    const r = btn.getBoundingClientRect(), host = btn.closest('dialog'), hr = host ? host.getBoundingClientRect() : { left: -scrollX, top: -scrollY };
+    const w = shrm.offsetWidth, h = shrm.offsetHeight, left = Math.max(8, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 8)), top = r.bottom + h + 8 > innerHeight ? r.top - h - 8 : r.bottom + 8;
+    shrm.style.left = left - hr.left + 'px'; shrm.style.top = top - hr.top + 'px';
+    shrm.addEventListener('click', async (e) => { if (e.target.closest('[data-copy]')) { try { await navigator.clipboard.writeText(url); toast(t('Link copied.', 'نُسخ الرابط.')); } catch (er) { toast(url); } } closeShare(); });
+    shrm.querySelector('a').focus();
+  }
+  /* the shop's own social links (the admin's settings); the contact e-mail is always there */
+  function paintSocial() {
+    const el = $('#soc'); if (!el) return; const k = cat.links || {}, mail = k.email || 'info@massandgrass.com';
+    const url = (v, base) => (/^https?:\/\//.test(v) ? v : base + String(v).replace(/^@/, ''));
+    const rows = [k.instagram && ['instagram', 'Instagram', url(k.instagram, 'https://instagram.com/')], k.facebook && ['facebook', 'Facebook', url(k.facebook, 'https://facebook.com/')], k.tiktok && ['tiktok', 'TikTok', url(k.tiktok, 'https://tiktok.com/@')],
+      k.whatsapp && ['whatsapp', 'WhatsApp', url(k.whatsapp, 'https://wa.me/').replace(/[+\s]/g, '')], ['email', 'E-mail', 'mailto:' + mail]].filter(Boolean);
+    el.innerHTML = rows.map((r) => `<a href="${esc(r[2])}" aria-label="${r[1]}"${r[0] === 'email' ? '' : ' target="_blank" rel="noopener noreferrer"'}>${IC[r[0]]}</a>`).join('');
   }
 
   /* an add-to-bag button for one piece (kept in step by rerender) */
@@ -227,15 +287,14 @@
   const printBtn = (kind, id, cls) => { const pr = printOf(kind, id); if (!pr) return ''; const on = bag.has(kind, id, 'print');
     return `<button type="button" class="${cls || 'add'} pbtn" data-add="${kind}" data-id="${esc(id)}" data-fmt="print" aria-pressed="${on}">${on ? t('Printed copy in your bag', 'النسخة المطبوعة في السلة') : t(`Printed and shipped, ${fmt(pr.price)}`, `مطبوعة وتُشحن، ${fmt(pr.price)}`)}</button>`; };
   /* one product as a tile (tiles.css): the piece on a coloured sheet, linked to its own page */
-  const PAGE = { painting: 'paintings.html', postcard: 'postcards.html', sticker: 'stickers.html', calendar: 'calendar.html' };
   function tile(p) {
     const cal = p.kind === 'calendar', cls = cal ? 'cal' : p.kind === 'sticker' ? 'stk ' + ((p.extra && p.extra.shape) || 'die') : p.kind === 'postcard' ? 'card' : 'print';
     const src = cal ? 'assets/c27-00.webp' : thumb(p.id, p), href = PAGE[p.kind] + (cal ? '' : '#' + p.id);
     const btn = cal ? `<button type="button" class="add" data-add="calendar" aria-pressed="${bag.has('calendar', DEF.calendar.id)}">${bag.has('calendar', DEF.calendar.id) ? t('In your bag', 'في السلة') : t('Add to bag', 'أضيفوه إلى السلة')}</button>` : addBtn(p.kind, p.id);
-    return `<li class="pr-it"><a class="lk" href="${href}"><div class="bed paper ${cls}" data-tear="5"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
-      <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? '' : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}${btn}</li>`;
+    return `<li class="pr-it"><a class="lk" href="${href}"><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
+      <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? '' : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${shareBtn(p.kind, cal ? '' : p.id)}</div></li>`;
   }
-  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, tile, calendar: DEF.calendar };
+  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar };
 
   function boot() { applyLang(); shell(); ready = true; rerender('init'); user.sync(); }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', boot) : boot();
