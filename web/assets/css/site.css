@@ -343,3 +343,14 @@ html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
 .where .nm button{all:unset;cursor:pointer}
 @media(hover:hover){.where .nm button:hover{text-decoration:underline;text-underline-offset:4px}}
 @media(max-width:700px){.where-in{height:38px}.where .nm,.where .meta{height:38px}.where .meta{display:none}}
+
+/* the language: a drawn globe; on hover its meridians turn and the lines are drawn again */
+.lang.ico{width:56px}
+.ic-globe .mer{transform-box:view-box;transform-origin:16px 16px}
+@media(hover:hover){
+  .lang.ico:hover .mer,.lang.ico:focus-visible .mer{animation:icTurn .8s cubic-bezier(.34,1.56,.64,1)}
+  .lang.ico:hover .lat,.lang.ico:focus-visible .lat{animation:icDraw .5s .15s cubic-bezier(.65,0,.35,1) both}
+  .lang.ico:hover circle,.lang.ico:focus-visible circle{animation:icDraw .6s cubic-bezier(.65,0,.35,1)}
+}
+.lang.ico:active .mer{animation:icTurn .8s cubic-bezier(.34,1.56,.64,1)}
+@keyframes icTurn{0%{transform:scaleX(1)}35%{transform:scaleX(.15)}65%{transform:scaleX(1.25)}100%{transform:scaleX(1)}}

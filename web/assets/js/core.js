@@ -23,7 +23,7 @@
     $$('[data-ar]').forEach((e) => { if (e.dataset.en == null) e.dataset.en = e.innerHTML; e.innerHTML = AR ? e.dataset.ar : e.dataset.en; });
     $$('[data-ph-ar]').forEach((e) => { if (e.dataset.phEn == null) e.dataset.phEn = e.placeholder; e.placeholder = AR ? e.dataset.phAr : e.dataset.phEn; });
     $$('[data-label-ar]').forEach((e) => { if (e.dataset.labelEn == null) e.dataset.labelEn = e.getAttribute('aria-label') || ''; e.setAttribute('aria-label', AR ? e.dataset.labelAr : e.dataset.labelEn); });
-    const lb = $('#lang'); if (lb) { lb.textContent = AR ? 'EN' : 'ع'; lb.setAttribute('aria-label', AR ? 'English' : 'العربية'); }
+    const lb = $('#lang'); if (lb) { const n = AR ? 'English' : 'العربية'; lb.setAttribute('aria-label', n); lb.title = n; }
   }
   function setLang(ar) { AR = !!ar; try { localStorage.mgLang = AR ? 'ar' : 'en'; } catch (e) {} applyLang(); rerender('lang'); }
 
