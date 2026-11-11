@@ -102,27 +102,67 @@
     MG.page((why) => { if (why === 'lang') paint(cur < 0 ? 0 : cur, true); });
   }
 
-  /* ---------- the colour chart: a pencil rule down the edge, a stroke of paint that grows with the scroll ---------- */
-  const PIG = ['#2E8C97', '#E3A21A', '#C8402F', '#5E8B4A', '#27408B', '#B8577E', '#8A6A3B'];
+  /* ---------- the ruler down the edge, after getartcraft.com ----------
+     While reading it is zoomed in round where you are: the scale slides past a blue line that carries the percent, the
+     section in view is named large at the top, those above it small and grey over it, those still to come small and grey
+     at the foot. Bring the pointer onto it and it opens out to the whole page, 0 to 100: every section's name stands at
+     its place, a grey box shows what is on screen, and a click or a drag goes there. */
   function rail() {
     const secs = $$('main > section').map((s) => { const h = s.querySelector('h1,h2'); return h ? { s, h } : null; }).filter(Boolean);
     if (secs.length < 2) return;
     where(secs);
     if (secs.length < 3) return;
     const el = doc.createElement('aside'); el.className = 'rail'; el.setAttribute('aria-hidden', 'true');
-    el.innerHTML = `<div class="rl-t">${[...Array(41)].map((_, i) => `<i class="${i % 4 ? '' : 'b'}" style="top:${i * 2.5}%">${i % 8 ? '' : `<b>${i * 2.5}</b>`}</i>`).join('')}</div><div class="rl-p"><span></span></div><div class="rl-d"><b class="hand"></b></div><ol class="rl-n"></ol>`;
+    el.innerHTML = `<div class="rl-sc"><div class="rl-k">${[...Array(101)].map((_, i) => `<i class="${i % 5 ? '' : 'b'}" style="top:${i}%">${i % 5 ? '' : `<b>${i}</b>`}</i>`).join('')}</div>
+      <div class="rl-w"></div><div class="rl-m"><b></b></div></div><ol class="rl-n"></ol>`;
     doc.body.append(el); doc.documentElement.classList.add('has-rail');
-    const paintEl = el.querySelector('.rl-p span'), dot = el.querySelector('.rl-d'), pct = dot.firstChild, list = el.querySelector('.rl-n');
-    const names = () => { list.innerHTML = secs.map((x, i) => `<li style="--pg:${PIG[i % PIG.length]}"><button type="button" tabindex="-1" data-go="${i}">${esc((x.h.innerText || x.h.textContent).replace(/\s+/g, ' ').trim())}</button></li>`).join(''); };
-    names(); MG.page((why) => { if (why === 'lang') { names(); on(); } });
-    let q = false;
-    function on() { q = false; const max = doc.documentElement.scrollHeight - innerHeight, f = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
-      let ci = 0; secs.forEach((x, i) => { if (x.s.getBoundingClientRect().top < innerHeight * .5) ci = i; });
-      const c = PIG[ci % PIG.length]; [el, doc.documentElement].forEach((n) => { n.style.setProperty('--pg', c); n.style.setProperty('--sf', f.toFixed(4)); }); pct.textContent = Math.round(f * 100) + '%';
-      [...list.children].forEach((li, i) => li.classList.toggle('on', i === ci)); }
-    addEventListener('scroll', () => { if (!q) { q = true; requestAnimationFrame(on); } }, { passive: true }); addEventListener('resize', on); on();
+    const sc = el.querySelector('.rl-sc'), ks = el.querySelector('.rl-k'), win = el.querySelector('.rl-w'), mk = el.querySelector('.rl-m'), pct = mk.firstChild, list = el.querySelector('.rl-n');
+    const name = (x) => (x.s.dataset[MG.ar ? 'whereAr' : 'where'] || (x.h.innerText || x.h.textContent)).replace(/\s+/g, ' ').trim();
+    let lis = [];
+    const names = () => { list.innerHTML = secs.map((x, i) => `<li><button type="button" tabindex="-1" data-go="${i}">${esc(name(x))}</button></li>`).join(''); lis = [...list.children]; };
+    names(); MG.page((why) => { if (why === 'lang') { names(); tick(true); } });
+    let z = 0, zt = 0, run = false, dragging = false;
+    const ZOOM = 3.2, ANCHOR = .34, GAP = 18, BIG = 1.75;
+    function tick(force) {
+      const H = sc.clientHeight, docH = doc.documentElement.scrollHeight, max = Math.max(1, docH - innerHeight);
+      const top = scrollY / docH, view = innerHeight / docH, prog = Math.min(1, Math.max(0, scrollY / max));
+      z += (zt - z) * (MG.still ? 1 : .16); if (Math.abs(zt - z) < .002) z = zt;
+      /* the scale: zoomed (z=0) the current place sits on the anchor; opened (z=1) the whole page fills the height */
+      const uO = H / 100, uZ = uO * ZOOM, u = uZ + (uO - uZ) * z;
+      const offZ = H * ANCHOR - top * 100 * uZ, off = offZ + (0 - offZ) * z;
+      ks.style.height = 100 * u + 'px'; ks.style.transform = `translateY(${off.toFixed(1)}px)`;
+      ks.classList.toggle('fine', z > .5);
+      const y = off + top * 100 * u;
+      mk.style.transform = `translateY(${y.toFixed(1)}px)`; pct.textContent = String(Math.round(prog * 100)).padStart(3, '0') + '%';
+      win.style.transform = `translateY(${y.toFixed(1)}px)`; win.style.height = Math.max(6, view * 100 * u) + 'px'; win.style.opacity = z;
+      /* the names */
+      let ci = 0; secs.forEach((x, i) => { if (x.s.getBoundingClientRect().top <= innerHeight * .4) ci = i; });
+      const n = secs.length, prev = ci, next = n - ci - 1, atTop = ci === 0 && scrollY < innerHeight * .5;
+      secs.forEach((x, i) => {
+        const li = lis[i]; if (!li) return;
+        const sy = off + (x.s.getBoundingClientRect().top + scrollY) / docH * 100 * u - 8;   /* opened: at its place */
+        let zy, zs = 1, zo = .42;                                                          /* zoomed: stacked */
+        if (i < ci) zy = 10 + i * GAP;
+        else if (i === ci) { zy = 10 + prev * GAP + 6; zs = BIG; zo = atTop ? 0 : 1; }
+        else zy = H - 14 - (n - i) * GAP;
+        if (atTop && i > ci) zy = H - 14 - (n - i) * GAP;
+        const yy = zy + (sy - zy) * z, ss = zs + (1 - zs) * z, oo = zo + (1 - zo) * z;
+        li.style.transform = `translateY(${yy.toFixed(1)}px) scale(${ss.toFixed(3)})`; li.style.opacity = oo.toFixed(3);
+        li.classList.toggle('on', i === ci);
+      });
+      if (!force && z !== zt) requestAnimationFrame(() => tick()); else run = false;
+    }
+    const go = () => { if (!run) { run = true; requestAnimationFrame(() => tick()); } };
+    addEventListener('scroll', go, { passive: true }); addEventListener('scroll', () => doc.documentElement.style.setProperty('--sf', (scrollY / Math.max(1, doc.documentElement.scrollHeight - innerHeight)).toFixed(4)), { passive: true }); addEventListener('resize', () => tick(true)); addEventListener('load', () => tick(true)); tick(true);
+    /* open out under the pointer; click or drag on the scale to go there */
+    const open = (on) => { zt = on ? 1 : 0; run = false; go(); };
+    el.addEventListener('pointerenter', () => open(true)); el.addEventListener('pointerleave', () => { if (!dragging) open(false); });
+    const jump = (e) => { const r = sc.getBoundingClientRect(), f = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)), docH = doc.documentElement.scrollHeight;
+      scrollTo({ top: f * docH - innerHeight / 2, behavior: dragging ? 'auto' : (MG.still ? 'auto' : 'smooth') }); };
+    sc.addEventListener('pointerdown', (e) => { dragging = true; sc.setPointerCapture(e.pointerId); jump(e); });
+    sc.addEventListener('pointermove', (e) => { if (dragging) jump(e); });
+    sc.addEventListener('pointerup', () => { dragging = false; });
     list.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) secs[+b.dataset.go].s.scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'start' }); });
-    el.querySelector('.rl-t').addEventListener('click', (e) => { const r = el.getBoundingClientRect(); scrollTo({ top: ((e.clientY - r.top) / r.height) * (doc.documentElement.scrollHeight - innerHeight), behavior: MG.still ? 'auto' : 'smooth' }); });
   }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', rail) : rail();
 })();

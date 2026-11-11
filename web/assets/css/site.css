@@ -268,26 +268,28 @@ html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
 .js .rv.in{opacity:1;transform:none;filter:none;transition:opacity .8s var(--ease) var(--rvd,0ms),transform .9s var(--ease) var(--rvd,0ms),filter .8s var(--ease) var(--rvd,0ms)}
 @media(prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none;filter:none}}
 
-/* the colour chart that follows the scroll: a pencil rule, a stroke of paint, the sections as swatches */
-.rail{position:fixed;z-index:40;inset-block:var(--head,57px) 0;inset-inline-end:0;width:64px;--sf:0;--pg:#2E8C97;pointer-events:none;display:none}
+/* the ruler down the edge (mock.js rail()): a scale in fine pencil, a blue line with the percent, the sections by name */
+.rail{position:fixed;z-index:40;inset-block:calc(var(--head,49px) + 42px) 0;inset-inline-end:0;width:300px;pointer-events:none;display:none}
 @media(min-width:1180px){.rail{display:block}}
-.rl-t{position:absolute;inset-block:16px;inset-inline-end:0;width:40px;pointer-events:auto;cursor:crosshair}
-.rl-t i{position:absolute;inset-inline-end:0;width:8px;height:1px;background:var(--ink);opacity:.3}
-.rl-t i.b{width:16px;opacity:.55}
-.rl-t i b{position:absolute;inset-inline-end:22px;top:-7px;font:500 10px/14px var(--mono);color:var(--soft)}
-.rl-p{position:absolute;inset-block:16px;inset-inline-end:26px;width:5px}
-.rl-p span{position:absolute;inset-inline:0;top:0;height:calc(var(--sf) * 100%);border-radius:3px 3px 4px 4px;background:var(--pg);opacity:.85;transition:background .6s}
-.rl-d{position:absolute;inset-inline-end:20px;top:calc(16px + (100% - 32px) * var(--sf));width:17px;height:17px;margin-top:-9px;border-radius:50% 50% 50% 50%/42% 42% 58% 58%;background:var(--pg);box-shadow:inset -2px -3px 0 rgba(0,0,0,.12);transition:background .6s}
-.rl-d b{position:absolute;inset-inline-end:26px;top:-6px;font-size:22px;line-height:1;color:var(--pg);white-space:nowrap;transition:color .6s}
-.rl-n{position:fixed;inset-inline-end:76px;bottom:24px;margin:0;padding:0;list-style:none;display:grid;justify-items:end;gap:2px;pointer-events:auto}
-.rl-n button{display:flex;align-items:center;gap:8px;border:0;background:none;padding:2px 0;cursor:pointer;font:400 18px/1.2 var(--hand);color:var(--soft);opacity:.55;transition:opacity .3s,color .3s,font-size .3s var(--ease)}
-.rl-n button::after{content:"";width:10px;height:10px;background:var(--pg);opacity:.35;transition:opacity .3s,scale .3s}
-.rl-n li.on button{opacity:1;color:var(--ink);font-size:24px}
-.rl-n li.on button::after{opacity:1;scale:1.3}
-@media(hover:hover){.rl-n button:hover{opacity:1}}
-@media(max-width:1500px){.rl-n{display:none}}
-/* below the wide layout the chart is one thin stroke under the header */
-@media(max-width:1179px){.has-rail header::after{content:"";position:absolute;inset-inline-start:0;bottom:-3px;height:3px;width:100%;background:var(--pg,#2E8C97);transform-origin:0 50%;scale:var(--sf,0) 1}[dir=rtl].has-rail header::after{transform-origin:100% 50%}}
+.rl-sc{position:absolute;inset-block:0;inset-inline-end:0;width:56px;overflow:hidden;pointer-events:auto;cursor:crosshair}
+.rl-k{position:absolute;inset-inline:0;top:0;will-change:transform}
+.rl-k i{position:absolute;inset-inline-end:0;width:6px;height:1px;background:rgba(var(--ink-rgb),.28)}
+.rl-k i.b{width:16px;background:rgba(var(--ink-rgb),.55)}
+.rl-k.fine i:not(.b){opacity:0}
+.rl-k i b{position:absolute;inset-inline-end:22px;top:-6px;font:500 10px/12px var(--mono2);letter-spacing:.04em;color:rgba(var(--ink-rgb),.5)}
+.rl-w{position:absolute;inset-inline-end:0;top:0;width:40px;background:rgba(var(--ink-rgb),.08);border-top:1px solid rgba(var(--ink-rgb),.45);border-bottom:1px solid rgba(var(--ink-rgb),.2);opacity:0;will-change:transform}
+.rl-m{position:absolute;inset-inline-end:0;top:0;width:56px;height:1.5px;background:var(--blue);will-change:transform}
+.rl-m b{position:absolute;inset-inline-end:2px;top:4px;font:500 10px/1 var(--mono2);letter-spacing:.04em;color:var(--blue)}
+.rl-n{position:absolute;inset:0;inset-inline-end:64px;margin:0;padding:0;list-style:none}
+.rl-n li{position:absolute;top:0;inset-inline-end:0;transform-origin:100% 0;will-change:transform,opacity}
+[dir=rtl] .rl-n li{transform-origin:0 0}
+.rl-n button{display:block;border:0;background:none;padding:0;cursor:pointer;pointer-events:auto;white-space:nowrap;font:800 13px/1.2 var(--f);letter-spacing:.02em;text-transform:uppercase;color:rgba(var(--ink-rgb),.5)}
+.ar-on .rl-n button{font:700 14px/1.3 var(--fa);letter-spacing:0;text-transform:none}
+.rl-n li.on button{color:var(--ink)}
+.rail:hover .rl-n button{color:var(--ink)}
+@media(hover:hover){.rl-n button:hover{color:var(--blue)!important}}
+/* below the wide layout the ruler is one thin stroke under the header */
+@media(max-width:1179px){.has-rail header::after{content:"";position:absolute;inset-inline-start:0;bottom:-2px;height:2px;width:100%;background:var(--blue);transform-origin:0 50%;scale:var(--sf,0) 1}[dir=rtl].has-rail header::after{transform-origin:100% 50%}}
 
 /* the account and bag icons: thin pen lines that move when the pointer comes over them (after Risotto's animated icons) */
 .ic{width:26px;height:26px;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}

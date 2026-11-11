@@ -4,22 +4,58 @@
   const { $, $$, esc, t, L } = MG;
   const PAGE = MG.PAGE;
 
-  /* ---------- 1 · the wall: the chosen painting hangs in the frame of a real photograph ---------- */
-  const HANG = ['hero', 'waves', 'dovegirl', 'blueflowers', 'boattop', 'pcartgirl', 'pflower', 'house'].map((id) => MG.product('painting', id)).filter(Boolean);
-  const hang = $('#hang'), picks = $('#picks'), now = $('#now'), M = MG.mock.ROOM['wall-l'];
-  let hi = 0, ht = 0;
-  function hangIt(i, user) {
-    hi = (i + HANG.length) % HANG.length; const p = HANG[hi];
-    const im = document.createElement('img'); im.className = 'art'; im.alt = ''; im.src = MG.img(p.id, p); im.style.cssText = MG.mock.artBox(p.id, M);
-    const go = () => { hang.append(im); requestAnimationFrame(() => requestAnimationFrame(() => im.classList.add('on')));
-      [...hang.children].slice(0, -1).forEach((o) => { o.classList.remove('on'); setTimeout(() => { if (o.parentNode) o.parentNode.removeChild(o); }, 900); }); };
-    im.decode ? im.decode().then(go, go) : go();
-    $$('button', picks).forEach((b, k) => b.setAttribute('aria-pressed', k === hi)); label();
-    clearInterval(ht); if (!user && !MG.still) ht = setInterval(() => hangIt(hi + 1), 4800);
+  /* ---------- 1 · the table: every painting as a print with its white border, in rows on a light table seen from above
+     at an angle. The view drifts slowly along the rows and never ends (the prints wrap round), now and then one print
+     lifts off the table and settles back, the pointer lifts the one under it, and a click opens it in a real photograph. ---------- */
+  if (!MG.still) document.documentElement.classList.add('home-intro');
+  const cam = $('#tbcam'), plane = $('#tbplane');
+  const ART = MG.products('painting');
+  const tiles = []; let CW = 0, CH = 0, COLS = 0, ROWS = 0, off = 0, last = 0, vis = true, hovered = null;
+  function lay() {
+    if (!plane || !ART.length) return;
+    const phone = innerWidth < 700;
+    CW = phone ? 150 : 236; CH = phone ? 120 : 186; COLS = phone ? 8 : 11; ROWS = phone ? 10 : 9;
+    plane.innerHTML = ''; tiles.length = 0; let k = 0;
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      /* each row starts further along the list, so a painting never sits next to itself */
+      const pi = (c + r * 4 + (r % 2) * 2) % ART.length, pr = ART[pi], a = MG.mock.asp(pr.id);
+      const mw = CW * .76, mh = CH * .78; let w = mw, h = mw / a; if (h > mh) { h = mh; w = h * a; }
+      const el = document.createElement('a'); el.className = 'tb-t'; el.href = 'paintings.html#' + pr.id; el.dataset.peek = 'painting:' + pr.id; el.tabIndex = -1;
+      el.setAttribute('aria-label', pr.title_en);
+      el.innerHTML = `<i class="sh" style="width:${w.toFixed(0)}px;height:${h.toFixed(0)}px"></i><span class="pr" style="width:${w.toFixed(0)}px;height:${h.toFixed(0)}px"><img src="${esc(MG.thumb(pr.id, pr))}" alt="" decoding="async" draggable="false"></span>`;
+      plane.append(el); tiles.push({ el, c, r, x0: c * CW + (r % 2) * CW * .5, y0: r * CH }); k++;
+    }
+    place();
   }
-  function label() { const p = HANG[hi]; if (!p) return;
-    now.innerHTML = `<div><span class="hand nm">${esc(MG.title(p))}</span><span class="pr">${MG.fmt(MG.price('painting', p.id))}</span></div><div class="acts">${MG.addBtn('painting', p.id)}${MG.shareBtn('painting', p.id)}<a class="add see" href="paintings.html#${esc(p.id)}" data-peek="painting:${esc(p.id)}">${t('See it closer', 'شاهدوها عن قرب')}</a></div>`; }
-  if (picks) picks.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) hangIt(+b.dataset.i, true); });
+  function place() {
+    const SW = COLS * CW, SH = ROWS * CH;
+    tiles.forEach((t) => {
+      let x = (t.x0 + off) % SW; if (x < 0) x += SW; x -= SW / 2;
+      let y = (t.y0 + off * .18) % SH; if (y < 0) y += SH; y -= SH / 2;
+      t.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+    });
+  }
+  function drift(now) {
+    const dt = Math.min(64, now - (last || now)); last = now;
+    if (vis && !MG.still) { off += dt * .022; place(); }
+    requestAnimationFrame(drift);
+  }
+  /* now and then a print lifts off the table and settles back */
+  function lift() {
+    if (vis && !MG.still && tiles.length) {
+      const b = cam.getBoundingClientRect(), near = tiles.filter((t) => { const r = t.el.getBoundingClientRect(); return t.el !== hovered && r.left > b.left + 40 && r.right < b.right - 40 && r.top > b.top + 40 && r.bottom < b.bottom - 40; });
+      const t = near[Math.floor(Math.random() * near.length)]; if (t) { t.el.classList.add('up'); setTimeout(() => t.el.classList.remove('up'), 2600); }
+    }
+    setTimeout(lift, 1500 + Math.random() * 1200);
+  }
+  if (cam && plane) {
+    lay(); let rw = innerWidth; addEventListener('resize', () => { if ((rw < 700) !== (innerWidth < 700)) lay(); rw = innerWidth; });
+    new IntersectionObserver((en) => { vis = en[0].isIntersecting; }).observe(cam);
+    plane.addEventListener('pointerover', (e) => { const a = e.target.closest('.tb-t'); hovered = a; });
+    plane.addEventListener('pointerout', () => { hovered = null; });
+    requestAnimationFrame(() => cam.classList.add('on'));
+    if (!MG.still) { requestAnimationFrame(drift); setTimeout(lift, 1400); }
+  }
 
   /* ---------- 3 · the calendar's views ---------- */
   const views = $$('#views img'), vnav = $('#vnav');
@@ -36,8 +72,6 @@
   const KN = { painting: ['Painting', 'لوحة'], postcard: ['Postcard', 'بطاقة بريدية'], sticker: ['Sticker', 'ملصق'] };
 
   MG.page(function (why) {
-    if (picks && HANG.length) { if (why === 'init' || why === 'lang') picks.innerHTML = HANG.map((p, i) => `<li><button type="button" data-i="${i}" aria-pressed="${i === hi}" aria-label="${esc(MG.title(p))}"><img src="${esc(MG.thumb(p.id, p))}" alt=""></button></li>`).join('');
-      if (why === 'init') hangIt(0); else label(); }
     if (vnav && (why === 'init' || why === 'lang')) { vnav.innerHTML = VN.map((n, i) => `<button type="button" data-v="${i}" aria-pressed="${i === vi}">${L(n)}</button>`).join(''); view(vi, why !== 'init'); }
     $('#calshare').innerHTML = MG.shareBtn('calendar', '');
     const pr = MG.printOf('calendar', ''); $('#calprint').innerHTML = pr ? MG.printBtn('calendar', '') : '';

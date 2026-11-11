@@ -310,5 +310,19 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   slides in after 120px of scroll and shows "03 / 05", the section's name (its heading, or `data-where`/`data-where-ar`) and a
   few words at the other end (`data-meta="a|b|c"` / `data-meta-ar` on the section, separated by small squares). Pages need
   at least two `main > section` with a heading to get it.
+- Home hero (Nov 2026), after a Risotto banner video the owner sent: "the table". Every painting as a print with its white
+  border, in brick rows on a light table seen from above at an angle (CSS 3D: `.tb-plane` rotateX 54deg rotateZ -34deg,
+  mirrored in RTL), drifting slowly and endlessly (`home.js` wraps each print's position), a print lifting off now and then
+  (`.up`) and under the pointer, its shadow spreading on the table; a click opens it in a real photograph (`data-peek`). The
+  words sit on a small frosted sheet in the middle with one ink button. Live code, not a video. The background is not
+  settled yet (the owner is still deciding); the wall hero was retired.
+- The opening, after getartcraft.com (`home-intro` on <html>, set by `boot.js` on the home page before paint, styles in
+  `home.css`): the menu wakes from faint to clear, the logo (inline SVG `.mark`, its ten letter paths with `--d` order) arrives
+  letter by letter out of a blur, then the line, the words and the button, then the frosted sheet and last the table.
+- The ruler, after getartcraft.com (replaces the colour chart; `rail()` in `mock.js`, `.rail` in `site.css`, ≥1180px): while
+  reading it is zoomed in (×3.2) round where you are, a blue line with the percent ("057%"), the current section's name large
+  at the top, the earlier ones small and grey above it, the later ones at the foot; pointer on it → it opens to 0–100, names
+  at their places, a grey box for what is on screen, click or drag to go there. Narrower screens get a thin blue stroke
+  under the header (`--sf`).
 - Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;
   the admin's link fields for facebook / tiktok. Not deployed yet.
