@@ -303,7 +303,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   the plain `.bagi` cell on phones) are pen-line SVGs (`.ic`, `pathLength=1`); on hover the lines are drawn again and the
   head nods / the bag swings on its handle; `bump()` adds `.hop` so the bag swings when a piece goes in. The bag is a plain
   cell with no colour (the owner rejected the ink/blue block); it also swings when pressed. The language switch is a drawn
-  globe (`.lang.ico`, title and aria-label name the other language); its meridians turn on hover. Only English and Arabic:
+  globe (`.lang.ico`, title and aria-label name the other language); its meridians (half-circles squeezed side to side, `globeTurn`) run on hover so it spins, and stop where they are. Only English and Arabic:
   the owner asked for French, Spanish and Danish, then withdrew it.
 - The glass strip under the menu (`.where`, built by `where()` in `mock.js` from the same sections as the colour chart): it
   slides in after 120px of scroll and shows "03 / 05", the section's name (its heading, or `data-where`/`data-where-ar`) and a

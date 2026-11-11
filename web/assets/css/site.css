@@ -344,13 +344,12 @@ html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
 @media(hover:hover){.where .nm button:hover{text-decoration:underline;text-underline-offset:4px}}
 @media(max-width:700px){.where-in{height:38px}.where .nm,.where .meta{height:38px}.where .meta{display:none}}
 
-/* the language: a drawn globe; on hover its meridians turn and the lines are drawn again */
+/* the language: a drawn globe. Its meridians are half-circles squeezed from one side to the other; on hover they run,
+   so the globe turns, and it stops where it is when the pointer leaves */
 .lang.ico{width:56px}
-.ic-globe .mer{transform-box:view-box;transform-origin:16px 16px}
-@media(hover:hover){
-  .lang.ico:hover .mer,.lang.ico:focus-visible .mer{animation:icTurn .8s cubic-bezier(.34,1.56,.64,1)}
-  .lang.ico:hover .lat,.lang.ico:focus-visible .lat{animation:icDraw .5s .15s cubic-bezier(.65,0,.35,1) both}
-  .lang.ico:hover circle,.lang.ico:focus-visible circle{animation:icDraw .6s cubic-bezier(.65,0,.35,1)}
-}
-.lang.ico:active .mer{animation:icTurn .8s cubic-bezier(.34,1.56,.64,1)}
-@keyframes icTurn{0%{transform:scaleX(1)}35%{transform:scaleX(.15)}65%{transform:scaleX(1.25)}100%{transform:scaleX(1)}}
+.ic-globe .mr{transform-box:view-box;transform-origin:16px 16px;animation:globeTurn 2.4s cubic-bezier(.45,0,.55,1) infinite paused}
+.ic-globe .m0{animation-delay:-.3s}.ic-globe .m1{animation-delay:-.9s}.ic-globe .m2{animation-delay:-1.5s}.ic-globe .m3{animation-delay:-2.1s}
+@keyframes globeTurn{from{transform:scaleX(-1)}to{transform:scaleX(1)}}
+@media(hover:hover){.lang.ico:hover .mr,.lang.ico:focus-visible .mr{animation-play-state:running}}
+.lang.ico:active .mr{animation-play-state:running}
+@media(prefers-reduced-motion:reduce){.ic-globe .mr{animation-play-state:paused!important}}
