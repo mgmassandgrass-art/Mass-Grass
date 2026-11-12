@@ -310,10 +310,11 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   slides in after 120px of scroll and shows "03 / 05", the section's name (its heading, or `data-where`/`data-where-ar`) and a
   few words at the other end (`data-meta="a|b|c"` / `data-meta-ar` on the section, separated by small squares). Pages need
   at least two `main > section` with a heading to get it.
-- Home page order (Nov 2026, the owner's plan): (1) the wall of pages (`.wallp`, after a printed calendar spread the owner showed):
-  every calendar page (`c27-*.webp`) in three rows framed by ink gutters, all rows sliding one way without end (CSS `wpSlide` on a
-  doubled strip, 9s a page, mirrored in Arabic; each row starts on another page), not clickable; under it one ink button
-  "Browse the 2027 calendar" / "تصفّحوا تقويم 2027" to `calendar.html`; the h1 is screen-reader only. (2) The calendar on the wall (`.cwall`): the photo `cr2-wall` zoomed 150%, its page replaced by the real
+- Home page order (Nov 2026, the owner's plan): (1) the calendar full screen (`.hshow`, the owner's request): the cover first, then the months
+  (`SHOW` in `home.js`, `c27-*-hd.webp`), one after another with a slow cross-fade every 4.5s; each page whole (`contain`) on its own
+  flat paper colour `--c-efe9d9`, so the sides join seamlessly; the page under the pointer zooms in slowly; under it the ruled
+  `.ghost` button (no ink) "Browse the 2027 calendar" / "تصفّحوا تقويم 2027"; the h1 is screen-reader only. The owner's full set of
+  2027 pages is on their computer (`D:\MASS & GRASS\Calender 2027`), not reachable from a cloud session: ask for Drive or an upload. (2) The calendar on the wall (`.cwall`): the photo `cr2-wall` zoomed 150%, its page replaced by the real
   pages (`.cw-pages`, measured 917,444–2154,1245 of 3072×1728) under the wire cut out of the same photo (`cr2-wire.webp`,
   alpha from darkness), the front page torn up over the wire every 3s (`.tear`, also on click); beside it the words, price,
   buy, "browse the calendar", the shipping line. (3) The twelve months (`.months`): a zigzag leaflet of 13 panels (cover +

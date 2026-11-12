@@ -1,4 +1,4 @@
-/* Home: every page of the calendar sliding by in rows, the calendar on the wall tearing off its pages, the twelve months
+/* Home: the calendar full screen, page after page, the calendar on the wall tearing off its pages, the twelve months
    unfolding as the page goes down, the shelves in real photographs, a few pieces straight into the bag. */
 (function () {
   'use strict';
@@ -25,20 +25,18 @@
 
   const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
 
-  /* ---------- 1 · the wall of pages: every page of the calendar side by side in rows, framed by dark gutters, all
-     rows sliding the same way without end (CSS animation on a doubled strip). Nothing here is a link. ---------- */
-  const rowsEl = $('#wprows'), KS = C.pages.map((p) => p.k);
-  function wall() {
-    if (!rowsEl || !KS.length) return;
-    const n = 3, rep = Math.max(2, Math.ceil(10 / KS.length));
-    rowsEl.innerHTML = Array.from({ length: n }, (_, r) => {
-      const seq = []; for (let i = 0; i < KS.length * rep; i++) seq.push(KS[(i + r * 3) % KS.length]);
-      const one = seq.map((k) => `<span class="wp-pg"><img src="assets/${k}.webp" alt="" decoding="async" draggable="false"></span>`).join('');
-      return `<div class="wp-row" style="--n:${seq.length};--r:${r}"><div class="wp-strip">${one}${one}</div></div>`;
-    }).join('');
-    requestAnimationFrame(() => rowsEl.classList.add('on'));
+  /* ---------- 1 · the calendar, full screen: the cover first, then a few months, one after another (a slow cross-fade
+     every 4.5s); the picture under the pointer comes closer. The first picture is in the page from the start. ---------- */
+  const stage = $('#hsstage'), SHOW = ['c27-00', 'c27-05', 'c27-08', 'c27-09', 'c27-12'].filter((k) => C.pages.some((p) => p.k === k));
+  if (stage && SHOW.length) {
+    stage.innerHTML = SHOW.map((k, i) => `<img class="hs-pg${i ? '' : ' on'}" src="assets/${k}-hd.webp" alt="" decoding="async" draggable="false"${i ? ' loading="lazy"' : ' fetchpriority="high"'}>`).join('');
+    const pgs = $$('.hs-pg', stage); let at = 0, seen = true;
+    vis(stage, (v) => { seen = v; });
+    if (!MG.still && pgs.length > 1) setInterval(() => {
+      if (!seen || document.hidden) return;
+      pgs[at].classList.toggle('on', false); at = (at + 1) % pgs.length; pgs[at].classList.add('on');
+    }, 4500);
   }
-  wall();
 
   /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds
      the front page is torn up over the wire and goes to the back, so the next month shows ---------- */
