@@ -1,4 +1,4 @@
-/* Home: the calendar's pages side by side, moved by scroll and pointer, the calendar on the wall tearing off its pages, the twelve months
+/* Home: the calendar full screen, a page for each stretch of scroll, the calendar on the wall tearing off its pages, the twelve months
    unfolding as the page goes down, the shelves in real photographs, a few pieces straight into the bag. */
 (function () {
   'use strict';
@@ -25,39 +25,21 @@
 
   const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
 
-  /* ---------- 1 · the calendar's pages side by side in three rows, split by hair-lines. They rest until something moves:
-     the rows follow the scroll (a quarter of it, down one way, up the other) and lean a little towards the pointer,
-     always gliding there slowly. Each row wraps round without end and starts on another page. ---------- */
-  const rowsEl = $('#hsrows'), KS = C.pages.map((p) => p.k);
-  if (rowsEl && KS.length) {
-    let rows = [], cur = 0, aim = 0, mx = 0, run = false;
-    const SPEED = [1, 1.08, .93];
-    const build = () => {
-      const n = 3, h = Math.max(80, (rowsEl.clientHeight - 2) / n), w = h * 1820 / 1282 + 1;
-      const rep = Math.max(1, Math.ceil((innerWidth + w * 2) / (KS.length * w)));
-      rowsEl.innerHTML = Array.from({ length: n }, (_, r) => {
-        const seq = []; for (let i = 0; i < KS.length * rep; i++) seq.push(KS[(i + r * 3) % KS.length]);
-        const one = seq.map((k) => `<span class="hs-pg"><img src="assets/${k}.webp" alt="" decoding="async" draggable="false"></span>`).join('');
-        return `<div class="hs-row"><div class="hs-strip">${one}${one}</div></div>`;
-      }).join('');
-      rows = $$('.hs-strip', rowsEl).map((el, r) => ({ el, x0: -(r * .5 + .25) * w, W: el.scrollWidth / 2 }));
-      place();
+  /* ---------- 1 · the calendar full screen, held while the page scrolls: the cover first, then each month takes its
+     place as you go down (and gives it back going up), settling in from a little closer. The picture under the pointer
+     comes slowly nearer. Each page is shown whole on its own paper colour. ---------- */
+  const htrack = $('#hstrack'), inEl = $('#hsin'), SHOW = ['c27-00', 'c27-05', 'c27-08', 'c27-09', 'c27-12'].filter((k) => C.pages.some((p) => p.k === k));
+  if (htrack && inEl && SHOW.length) {
+    inEl.innerHTML = SHOW.map((k, i) => `<img class="hs-pg${i ? '' : ' on'}" src="assets/${k}-hd.webp" alt="" decoding="async" draggable="false"${i ? '' : ' fetchpriority="high"'}>`).join('');
+    htrack.style.setProperty('--n', SHOW.length);
+    const pgs = $$('.hs-pg', inEl); let at = 0, q = false;
+    const pick = () => {
+      q = false; const r = htrack.getBoundingClientRect(), stick = htrack.firstElementChild.offsetHeight, run = r.height - stick;
+      const f = run > 0 ? Math.min(.999, Math.max(0, -r.top / run)) : 0, i = Math.floor(f * pgs.length);
+      if (i !== at) { pgs[at].classList.remove('on'); pgs[i].classList.add('on'); at = i; }
     };
-    const place = () => rows.forEach((o, i) => { if (!o.W) return; let x = o.x0 + cur * SPEED[i % 3]; x = ((x % o.W) + o.W) % o.W - o.W; o.el.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`; });
-    /* where the rows want to be: a quarter of the scroll, and up to 48px towards the pointer; they glide there slowly */
-    const target = () => (MG.ar ? 1 : -1) * scrollY * .25 + mx;
-    const tick = () => {
-      aim = target(); cur += (aim - cur) * .045; place();
-      if (Math.abs(aim - cur) > .1) requestAnimationFrame(tick); else { cur = aim; place(); run = false; }
-    };
-    const go = () => { if (!run && !MG.still) { run = true; requestAnimationFrame(tick); } };
-    addEventListener('scroll', () => { if (scrollY < innerHeight * 1.6) go(); }, { passive: true });
-    rowsEl.addEventListener('pointermove', (e) => { if (e.pointerType !== 'mouse') return; const r = rowsEl.getBoundingClientRect(); mx = ((e.clientX - r.left) / r.width - .5) * 96; go(); });
-    rowsEl.addEventListener('pointerleave', () => { mx = 0; go(); });
-    build();
-    let rw = innerWidth, rh = rowsEl.clientHeight;
-    addEventListener('resize', () => { if (innerWidth !== rw || Math.abs(rowsEl.clientHeight - rh) > 40) { rw = innerWidth; rh = rowsEl.clientHeight; build(); } });
-    addEventListener('load', () => { rows.forEach((o) => { o.W = o.el.scrollWidth / 2; }); place(); }, { once: true });
+    addEventListener('scroll', () => { if (!q) { q = true; requestAnimationFrame(pick); } }, { passive: true });
+    addEventListener('resize', pick); pick();
   }
 
   /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds

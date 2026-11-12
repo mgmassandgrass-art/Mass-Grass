@@ -310,13 +310,13 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   slides in after 120px of scroll and shows "03 / 05", the section's name (its heading, or `data-where`/`data-where-ar`) and a
   few words at the other end (`data-meta="a|b|c"` / `data-meta-ar` on the section, separated by small squares). Pages need
   at least two `main > section` with a heading to get it.
-- Home page order (Nov 2026, the owner's plan): (1) the calendar's pages side by side (`.hshow` / `.hs-rows`, the owner's request): three rows split only by
-  1px hair-lines (`--line-2`), at rest until something moves: the rows follow a quarter of the scroll (down = left, mirrored in
-  Arabic) and lean up to 48px towards the mouse, always gliding there (`cur += (aim - cur) * .045`; the owner found impulses fast
-  and silly); each row wraps round and starts on another page. Smooth wheel scrolling for the whole site is in `mock.js` (mouse
-  wheels only, lerp .1; scrollable panels, open dialogs and the locked menu keep the native wheel).
-  Under them the ruled `.ghost` button lettered like the menu (Geist Mono capitals; Readex in Arabic), "Browse the 2027
-  calendar" / "تصفّحوا تقويم 2027"; the h1 is screen-reader only. The owner's full set of
+- Home page order (Nov 2026, the owner's plan): (1) the calendar full screen and held while scrolling (`.hshow` > `.hs-track` > sticky `.hs-stick`, the owner's
+  request): the cover first, then each month takes the screen for its stretch of scroll (70svh a page, 50svh on phones; `htrack`
+  in `home.js`), fading in from a little closer; each page whole (`contain`) on its own paper colour `--c-efe9d9`; the picture
+  under the pointer comes slowly nearer; a small light ink button over it (`.hs-btn`, lettered like the menu) "Browse the 2027
+  calendar" / "تصفّحوا تقويم 2027"; the h1 is screen-reader only. Tried and dropped: rows of pages moved by scroll and pointer.
+  Smooth wheel scrolling for the whole site is in `mock.js` (mouse wheels only, lerp .1; scrollable panels, open dialogs and the
+  locked menu keep the native wheel). The owner's full set of
   2027 pages is on their computer (`D:\MASS & GRASS\Calender 2027`), not reachable from a cloud session: ask for Drive or an upload. (2) The calendar on the wall (`.cwall`): the photo `cr2-wall` zoomed 150%, its page replaced by the real
   pages (`.cw-pages`, measured 917,444–2154,1245 of 3072×1728) under the wire cut out of the same photo (`cr2-wire.webp`,
   alpha from darkness), the front page torn up over the wire every 3s (`.tear`, also on click); beside it the words, price,
