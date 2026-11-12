@@ -1,4 +1,4 @@
-/* Home: the calendar's pages drifting on a table, the calendar on the wall tearing off its pages, the twelve months
+/* Home: every page of the calendar sliding by in rows, the calendar on the wall tearing off its pages, the twelve months
    unfolding as the page goes down, the shelves in real photographs, a few pieces straight into the bag. */
 (function () {
   'use strict';
@@ -25,46 +25,20 @@
 
   const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
 
-  /* ---------- 1 · the table: the calendar's pages, all the same size, in brick rows on a light table seen from above at
-     an angle. They drift slowly and never end (each wraps round), now and then one lifts off and settles back. Nothing
-     here is a link: it is the ground the name stands on. ---------- */
-  const cam = $('#tbcam'), plane = $('#tbplane'), KS = C.pages.map((p) => p.k);
-  const tiles = []; let CW = 0, CH = 0, COLS = 0, ROWS = 0, off = 0, last = 0, onScreen = true;
-  function lay() {
-    if (!plane || !KS.length) return;
-    const phone = innerWidth < 700;
-    CW = phone ? 170 : 260; CH = Math.round(CW * .8); COLS = phone ? 7 : 10; ROWS = phone ? 10 : 9;
-    const w = Math.round(CW * .86), h = Math.round(w / 1.42);
-    plane.innerHTML = ''; tiles.length = 0;
-    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-      const k = KS[(c + r * 2 + (r % 2)) % KS.length];
-      const el = document.createElement('div'); el.className = 'tb-t';
-      el.innerHTML = `<i class="sh" style="width:${w}px;height:${h}px"></i><span class="pr" style="width:${w}px;height:${h}px"><img src="assets/t-${k}.webp" alt="" decoding="async" draggable="false"></span>`;
-      plane.append(el); tiles.push({ el, x0: c * CW + (r % 2) * CW * .5, y0: r * CH });
-    }
-    place();
+  /* ---------- 1 · the wall of pages: every page of the calendar side by side in rows, framed by dark gutters, all
+     rows sliding the same way without end (CSS animation on a doubled strip). Nothing here is a link. ---------- */
+  const rowsEl = $('#wprows'), KS = C.pages.map((p) => p.k);
+  function wall() {
+    if (!rowsEl || !KS.length) return;
+    const n = 3, rep = Math.max(2, Math.ceil(10 / KS.length));
+    rowsEl.innerHTML = Array.from({ length: n }, (_, r) => {
+      const seq = []; for (let i = 0; i < KS.length * rep; i++) seq.push(KS[(i + r * 3) % KS.length]);
+      const one = seq.map((k) => `<span class="wp-pg"><img src="assets/${k}.webp" alt="" decoding="async" draggable="false"></span>`).join('');
+      return `<div class="wp-row" style="--n:${seq.length};--r:${r}"><div class="wp-strip">${one}${one}</div></div>`;
+    }).join('');
+    requestAnimationFrame(() => rowsEl.classList.add('on'));
   }
-  function place() {
-    const SW = COLS * CW, SH = ROWS * CH;
-    tiles.forEach((t) => {
-      let x = (t.x0 + off) % SW; if (x < 0) x += SW; x -= SW / 2;
-      let y = (t.y0 + off * .18) % SH; if (y < 0) y += SH; y -= SH / 2;
-      t.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
-    });
-  }
-  function drift(now) { const dt = Math.min(64, now - (last || now)); last = now; if (onScreen) { off += dt * .022; place(); } requestAnimationFrame(drift); }
-  function lift() {
-    if (onScreen && tiles.length) {
-      const b = cam.getBoundingClientRect(), near = tiles.filter((t) => { const r = t.el.getBoundingClientRect(); return r.left > b.left + 40 && r.right < b.right - 40 && r.top > b.top + 40 && r.bottom < b.bottom - 40; });
-      const t = near[Math.floor(Math.random() * near.length)]; if (t) { t.el.classList.add('up'); setTimeout(() => t.el.classList.remove('up'), 2600); }
-    }
-    setTimeout(lift, 1400 + Math.random() * 1200);
-  }
-  if (cam && plane) {
-    lay(); let rw = innerWidth; addEventListener('resize', () => { if ((rw < 700) !== (innerWidth < 700)) lay(); rw = innerWidth; });
-    vis(cam, (v) => { onScreen = v; }); requestAnimationFrame(() => cam.classList.add('on'));
-    if (!MG.still) { requestAnimationFrame(drift); setTimeout(lift, 1800); }
-  }
+  wall();
 
   /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds
      the front page is torn up over the wire and goes to the back, so the next month shows ---------- */

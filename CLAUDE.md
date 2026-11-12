@@ -310,10 +310,10 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   slides in after 120px of scroll and shows "03 / 05", the section's name (its heading, or `data-where`/`data-where-ar`) and a
   few words at the other end (`data-meta="a|b|c"` / `data-meta-ar` on the section, separated by small squares). Pages need
   at least two `main > section` with a heading to get it.
-- Home page order (Nov 2026, the owner's plan): (1) the table: the calendar's pages (`t-c27-*.webp`, all one size) drifting
-  in brick rows on a light table seen from above at an angle (CSS 3D `.tb-plane`), now and then one lifting; not clickable.
-  Over it, with no box (only a soft clearing `.tb-veil`): the logo, "Things kept in bottles", one line and "Buy the calendar"
-  with its price. (2) The calendar on the wall (`.cwall`): the photo `cr2-wall` zoomed 150%, its page replaced by the real
+- Home page order (Nov 2026, the owner's plan): (1) the wall of pages (`.wallp`, after a printed calendar spread the owner showed):
+  every calendar page (`c27-*.webp`) in three rows framed by ink gutters, all rows sliding one way without end (CSS `wpSlide` on a
+  doubled strip, 9s a page, mirrored in Arabic; each row starts on another page), not clickable; under it one ink button
+  "Browse the 2027 calendar" / "تصفّحوا تقويم 2027" to `calendar.html`; the h1 is screen-reader only. (2) The calendar on the wall (`.cwall`): the photo `cr2-wall` zoomed 150%, its page replaced by the real
   pages (`.cw-pages`, measured 917,444–2154,1245 of 3072×1728) under the wire cut out of the same photo (`cr2-wire.webp`,
   alpha from darkness), the front page torn up over the wire every 3s (`.tear`, also on click); beside it the words, price,
   buy, "browse the calendar", the shipping line. (3) The twelve months (`.months`): a zigzag leaflet of 13 panels (cover +
