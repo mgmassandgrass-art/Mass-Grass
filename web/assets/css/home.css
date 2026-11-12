@@ -5,19 +5,20 @@
 .ar-on .sech .hand{font-size:22px}
 .ar-on .ink svg,.ar-on .go svg,.ar-on .lk svg,.ar-on .all svg{scale:-1 1}
 
-/* 1 · the calendar full screen: the cover, then a few months, cross-fading one after another; under the pointer the page
-   comes slowly closer. Each page is shown whole; its own flat paper colour (#EFE9D9) fills the sides. The button under it is the plain ruled one, no ink. */
+/* 1 · the calendar's pages side by side in three rows, split only by hair-lines in the site's rule colour; they move
+   with the scroll and the pointer (home.js). Rows are laid left to right in both languages so the wrap-round sums hold.
+   The button under them is the ruled one, lettered like the menu. */
 .hshow{display:grid;grid-template-rows:minmax(0,1fr) auto;height:calc(100svh - var(--head,49px));min-height:480px;background:var(--cream);border-bottom:1px solid var(--line-2)}
-.hs-stage{position:relative;display:block;overflow:hidden;min-height:0;background:var(--c-efe9d9);cursor:zoom-in}
-.hs-pg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(1);transition:opacity 1.4s ease,transform 2.4s cubic-bezier(.22,1,.36,1);user-select:none;-webkit-user-drag:none}
-.hs-pg.on{opacity:1}
-.hs-stage:hover .hs-pg{transform:scale(1.08)}
-html:not(.js) .hs-pg:first-child{opacity:1}
+.hs-rows{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:1px;min-height:0;overflow:hidden;background:var(--line-2);border-bottom:1px solid var(--line-2)}
+.hs-row{position:relative;overflow:hidden;min-height:0;direction:ltr}
+.hs-strip{display:flex;height:100%;width:max-content;will-change:transform}
+.hs-pg{flex:none;height:100%;aspect-ratio:1820/1282;margin-inline-end:1px;background:var(--c-efe9d9)}
+.hs-pg img{display:block;width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
 .hs-bar{display:flex;justify-content:center;padding:20px 16px}
-.hs-bar .ghost{width:auto;min-width:240px;border-color:var(--ink)}
+.hs-bar .ghost{width:auto;min-width:240px;border-color:var(--ink);font:500 11px/1 var(--mono2);letter-spacing:.15em;text-transform:uppercase}
+.ar-on .hs-bar .ghost{font:500 14px/1 var(--fa);letter-spacing:0;text-transform:none}
 .hs-bar .ghost:hover{background:var(--ink);color:var(--cream)}
-@media(max-width:700px){.hshow{height:auto;min-height:0}.hs-stage{aspect-ratio:1820/1282}}
-@media(prefers-reduced-motion:reduce){.hs-pg{transition:none}.hs-stage:hover .hs-pg{transform:none}}
+@media(max-width:700px){.hshow{height:auto;min-height:0}.hs-rows{height:min(62svh,560px)}}
 
 /* 2 · the calendar on the wall: the photograph, its page replaced by the real pages, the wire cut from the photo on top */
 .cw{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);border:1px solid var(--line)}
@@ -149,6 +150,6 @@ html:not(.js) .hs-pg:first-child{opacity:1}
 .home-intro.flying .mainnav,.home-intro.flying .htools{opacity:1}
 .home-intro .hs-bar>*{opacity:0;transform:translateY(16px);filter:blur(6px);transition:opacity .8s var(--ease) .9s,transform .9s var(--ease) .9s,filter .8s var(--ease) .9s}
 .home-intro.flying .hs-bar>*{opacity:1;transform:none;filter:none}
-.home-intro .hs-stage{opacity:0;transition:opacity 1.4s ease .45s}
-.home-intro.flying .hs-stage{opacity:1}
+.home-intro .hs-rows{opacity:0;transition:opacity 1.4s ease .45s}
+.home-intro.flying .hs-rows{opacity:1}
 @media(prefers-reduced-motion:reduce){.splash{display:none!important}}

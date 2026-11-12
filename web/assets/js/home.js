@@ -1,4 +1,4 @@
-/* Home: the calendar full screen, page after page, the calendar on the wall tearing off its pages, the twelve months
+/* Home: the calendar's pages side by side, moved by scroll and pointer, the calendar on the wall tearing off its pages, the twelve months
    unfolding as the page goes down, the shelves in real photographs, a few pieces straight into the bag. */
 (function () {
   'use strict';
@@ -25,17 +25,38 @@
 
   const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
 
-  /* ---------- 1 · the calendar, full screen: the cover first, then a few months, one after another (a slow cross-fade
-     every 4.5s); the picture under the pointer comes closer. The first picture is in the page from the start. ---------- */
-  const stage = $('#hsstage'), SHOW = ['c27-00', 'c27-05', 'c27-08', 'c27-09', 'c27-12'].filter((k) => C.pages.some((p) => p.k === k));
-  if (stage && SHOW.length) {
-    stage.innerHTML = SHOW.map((k, i) => `<img class="hs-pg${i ? '' : ' on'}" src="assets/${k}-hd.webp" alt="" decoding="async" draggable="false"${i ? ' loading="lazy"' : ' fetchpriority="high"'}>`).join('');
-    const pgs = $$('.hs-pg', stage); let at = 0, seen = true;
-    vis(stage, (v) => { seen = v; });
-    if (!MG.still && pgs.length > 1) setInterval(() => {
-      if (!seen || document.hidden) return;
-      pgs[at].classList.toggle('on', false); at = (at + 1) % pgs.length; pgs[at].classList.add('on');
-    }, 4500);
+  /* ---------- 1 · the calendar's pages side by side in three rows, split by hair-lines. They rest until something moves:
+     scrolling pushes every row along (down one way, up the other), and a pointer moving over them drags them its way;
+     the push fades out softly. Each row wraps round without end and starts on another page. ---------- */
+  const rowsEl = $('#hsrows'), KS = C.pages.map((p) => p.k);
+  if (rowsEl && KS.length) {
+    let rows = [], v = 0, run = false, lastY = scrollY;
+    const SPEED = [1, 1.18, .88];
+    const build = () => {
+      const n = 3, h = Math.max(80, (rowsEl.clientHeight - 2) / n), w = h * 1820 / 1282 + 1;
+      const rep = Math.max(1, Math.ceil((innerWidth + w * 2) / (KS.length * w)));
+      rowsEl.innerHTML = Array.from({ length: n }, (_, r) => {
+        const seq = []; for (let i = 0; i < KS.length * rep; i++) seq.push(KS[(i + r * 3) % KS.length]);
+        const one = seq.map((k) => `<span class="hs-pg"><img src="assets/${k}.webp" alt="" decoding="async" draggable="false"></span>`).join('');
+        return `<div class="hs-row"><div class="hs-strip">${one}${one}</div></div>`;
+      }).join('');
+      rows = $$('.hs-strip', rowsEl).map((el, r) => ({ el, x: -(r * .5 + .25) * w, W: seq(el) }));
+      place();
+    };
+    const seq = (el) => el.scrollWidth / 2;
+    const place = () => rows.forEach((o) => { if (!o.W) return; o.x = ((o.x % o.W) + o.W) % o.W - o.W; o.el.style.transform = `translate3d(${o.x.toFixed(1)}px,0,0)`; });
+    const tick = () => {
+      rows.forEach((o, i) => { o.x += v * SPEED[i % 3]; }); place();
+      v *= .93; if (Math.abs(v) > .02) requestAnimationFrame(tick); else { v = 0; run = false; }
+    };
+    const push = (d) => { v = Math.max(-40, Math.min(40, v + d)); if (!run && !MG.still) { run = true; requestAnimationFrame(tick); } };
+    const dir = () => (MG.ar ? 1 : -1);
+    addEventListener('scroll', () => { const y = scrollY, d = y - lastY; lastY = y; if (y < innerHeight * 1.5) push(d * .35 * dir()); }, { passive: true });
+    rowsEl.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') push(e.movementX * .45); });
+    build();
+    let rw = innerWidth, rh = rowsEl.clientHeight;
+    addEventListener('resize', () => { if (innerWidth !== rw || Math.abs(rowsEl.clientHeight - rh) > 40) { rw = innerWidth; rh = rowsEl.clientHeight; build(); } });
+    addEventListener('load', () => rows.forEach((o) => { o.W = seq(o.el); }), { once: true });
   }
 
   /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds
