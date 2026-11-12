@@ -4,7 +4,25 @@
   'use strict';
   const { $, $$, esc, t, L } = MG;
   const PAGE = MG.PAGE, C = MG.calendar;
-  if (!MG.still) document.documentElement.classList.add('home-intro');
+  /* ---------- 0 · the opening: MASS & GRASS arrives letter by letter in the middle of an empty page, then rises and
+     shrinks into the logo cell of the menu, the page appearing round it ---------- */
+  (function () {
+    const root = document.documentElement, sp = $('#splash');
+    if (!sp) return;
+    if (!root.classList.contains('home-intro')) { sp.remove(); return; }
+    const big = sp.querySelector('.mark'), dest = $('header .logo img');
+    const lettersDone = 1250, wait = Math.max(0, lettersDone - performance.now());
+    setTimeout(() => {
+      const a = big.getBoundingClientRect(), b = dest.getBoundingClientRect();
+      const dx = (b.left + b.width / 2) - (a.left + a.width / 2), dy = (b.top + b.height / 2) - (a.top + a.height / 2), k = b.width / a.width;
+      root.classList.add('flying');
+      const ease = 'cubic-bezier(.7,0,.2,1)';
+      const fl = big.animate([{ transform: 'none' }, { transform: `translate(${dx}px,${dy}px) scale(${k})` }], { duration: 950, easing: ease, fill: 'forwards' });
+      sp.animate([{ backgroundColor: getComputedStyle(sp).backgroundColor }, { backgroundColor: 'rgba(243,242,238,0)' }], { duration: 700, delay: 300, easing: 'ease', fill: 'forwards' });
+      fl.finished.then(() => { root.classList.add('landed'); sp.remove(); });
+    }, wait);
+  })();
+
   const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
 
   /* ---------- 1 · the table: the calendar's pages, all the same size, in brick rows on a light table seen from above at

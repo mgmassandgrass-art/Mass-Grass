@@ -280,7 +280,7 @@ html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
 .rl-w{position:absolute;inset-inline-end:0;top:0;width:40px;background:rgba(var(--ink-rgb),.08);border-top:1px solid rgba(var(--ink-rgb),.45);border-bottom:1px solid rgba(var(--ink-rgb),.2);opacity:0;will-change:transform}
 .rl-m{position:absolute;inset-inline-end:0;top:0;width:56px;height:1.5px;background:var(--blue);will-change:transform}
 .rl-m b{position:absolute;inset-inline-end:2px;top:4px;font:500 10px/1 var(--mono2);letter-spacing:.04em;color:var(--blue)}
-.rl-n{position:absolute;inset:0;inset-inline-end:64px;margin:0;padding:0;list-style:none}
+.rl-n{display:none}
 .rl-n li{position:absolute;top:0;inset-inline-end:0;transform-origin:100% 0;will-change:transform,opacity}
 [dir=rtl] .rl-n li{transform-origin:0 0}
 .rl-n button{display:block;border:0;background:rgba(243,242,238,.86);padding:2px 6px;cursor:pointer;pointer-events:auto;white-space:nowrap;font:800 13px/1.2 var(--f);letter-spacing:.02em;text-transform:uppercase;color:rgba(var(--ink-rgb),.5)}

@@ -320,13 +320,15 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   months, ±24deg so edges meet) that slides along while its tall sticky track is scrolled; months without a page show a ruled
   blank with the name and "being painted". (4) The shelves (`.coll`), Risotto's way in ArtCraft's look: a statement on the left,
   four square real photographs (`MG.mock.scene`) each with an ink label and "from €x". (5) Just in, (6) Farah's story, footer.
-- The opening, after getartcraft.com (`home-intro` on <html>, set by `boot.js` on the home page before paint, styles in
-  `home.css`): the menu wakes from faint to clear, the logo (inline SVG `.mark`, its ten letter paths with `--d` order) arrives
-  letter by letter out of a blur, then the name, the line and the button, then the clearing and last the table.
+- The opening (Nov 2026, the owner's request): an empty page, MASS & GRASS large in the middle (`#splash`, the logo's ten
+  letter paths arriving one by one), then it flies up and shrinks into the menu's logo cell (`home.js`, WAAPI, measured from
+  `header .logo img`), the menu and the hero's words come in, and last the table of pages. `home-intro` is set by `boot.js`
+  only when `<html data-page="home">` (the build adds it for `"home":true` pages); `.flying` / `.landed` drive the rest, and
+  a 4.5s safety in `boot.js` (plus a CSS fade) clears the splash if the script never runs.
 - The ruler, after getartcraft.com (replaces the colour chart; `rail()` in `mock.js`, `.rail` in `site.css`, ≥1180px): while
-  reading it is zoomed in (×3.2) round where you are, a blue line with the percent ("057%"), the current section's name large
-  at the top, the earlier ones small and grey above it, the later ones at the foot; pointer on it → it opens to 0–100, names
-  at their places, a grey box for what is on screen, click or drag to go there. Nothing on it can be selected as text, and
+  reading it is zoomed in (×3.2) round where you are, a blue line with the percent ("057%"); pointer on it → it opens to
+  0–100 with a grey box for what is on screen, click or drag to go there. The section names were removed at the owner's
+  request (`.rl-n{display:none}`; the code still builds them). Nothing on it can be selected as text, and
   a drag ends (and the ruler closes) wherever the button is let go. Narrower screens get a thin blue stroke
   under the header (`--sf`).
 - Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;

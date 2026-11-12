@@ -3,7 +3,7 @@
   var d = document.documentElement, ar = false;
   d.classList.add('js');
   /* the home page's opening (home.css): set before paint so nothing shows and then hides */
-  try { if (/(^\/$|\/index(\.html)?$|^\/$)/.test(location.pathname) && !matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('home-intro'); } catch (e) {}
+  try { if (d.dataset.page === 'home' && !matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('home-intro'); setTimeout(function () { d.classList.add('flying', 'landed'); var x = document.getElementById('splash'); if (x) x.remove(); }, 4500); } catch (e) {}
   try {
     var s = localStorage.mgLang;
     ar = s ? s === 'ar' : /^ar\b/i.test(navigator.language || '');

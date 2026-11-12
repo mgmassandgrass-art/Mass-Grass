@@ -26,6 +26,7 @@ for (const f of readdirSync(join(web, '_src/pages')).filter((x) => x.endsWith('.
   let out = layout.replaceAll('{{title}}', title.replace(/&/g, '&amp;')).replaceAll('{{desc}}', meta.desc.replace(/&/g, '&amp;').replace(/"/g, '&quot;'))
     .replaceAll('{{canon}}', f === 'index.html' ? '' : f.replace(/\.html$/, '')).replace('{{robots}}', meta.noindex ? '\n<meta name="robots" content="noindex">' : '')
     .replaceAll('{{v}}', v).replace('{{css}}', css).replace('{{js}}', js).replace('{{main}}', main);
+  if (meta.home) out = out.replace('<html lang="en">', '<html lang="en" data-page="home">');
   // the current page is marked in both menus
   if (meta.nav) out = out.replaceAll(`<a href="${meta.nav}" data-ar`, `<a href="${meta.nav}" aria-current="page" data-ar`);
   if (meta.nav) out = out.replaceAll(`<a class="sub" href="${meta.nav}" data-ar`, `<a class="sub" href="${meta.nav}" aria-current="page" data-ar`);
