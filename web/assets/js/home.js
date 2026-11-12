@@ -1,4 +1,4 @@
-/* Home: the calendar full screen, a page for each stretch of scroll, the calendar on the wall tearing off its pages, the twelve months
+/* Home: the calendar full screen and pinned while the page scrolls over it, the calendar on the wall tearing off its pages, the twelve months
    unfolding as the page goes down, the shelves in real photographs, a few pieces straight into the bag. */
 (function () {
   'use strict';
@@ -25,21 +25,18 @@
 
   const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
 
-  /* ---------- 1 · the calendar full screen, held while the page scrolls: the cover first, then each month takes its
-     place as you go down (and gives it back going up), settling in from a little closer. The picture under the pointer
-     comes slowly nearer. Each page is shown whole on its own paper colour. ---------- */
-  const htrack = $('#hstrack'), inEl = $('#hsin'), SHOW = ['c27-00', 'c27-05', 'c27-08', 'c27-09', 'c27-12'].filter((k) => C.pages.some((p) => p.k === k));
-  if (htrack && inEl && SHOW.length) {
-    inEl.innerHTML = SHOW.map((k, i) => `<img class="hs-pg${i ? '' : ' on'}" src="assets/${k}-hd.webp" alt="" decoding="async" draggable="false"${i ? '' : ' fetchpriority="high"'}>`).join('');
-    htrack.style.setProperty('--n', SHOW.length);
-    const pgs = $$('.hs-pg', inEl); let at = 0, q = false;
-    const pick = () => {
-      q = false; const r = htrack.getBoundingClientRect(), stick = htrack.firstElementChild.offsetHeight, run = r.height - stick;
-      const f = run > 0 ? Math.min(.999, Math.max(0, -r.top / run)) : 0, i = Math.floor(f * pgs.length);
-      if (i !== at) { pgs[at].classList.remove('on'); pgs[i].classList.add('on'); at = i; }
-    };
-    addEventListener('scroll', () => { if (!q) { q = true; requestAnimationFrame(pick); } }, { passive: true });
-    addEventListener('resize', pick); pick();
+  /* ---------- 1 · the calendar full screen, pinned: it stays where it is while the rest of the page scrolls up over it.
+     The cover first, then the months one after another (a slow cross-fade every 4.5s, paused when out of sight); the
+     picture under the pointer comes slowly nearer. Each page is shown whole on its own paper colour. ---------- */
+  const inEl = $('#hsin'), SHOW = ['c27-00', 'c27-05', 'c27-08', 'c27-09', 'c27-12'].filter((k) => C.pages.some((p) => p.k === k));
+  if (inEl && SHOW.length) {
+    inEl.innerHTML = SHOW.map((k, i) => `<img class="hs-pg${i ? '' : ' on'}" src="assets/${k}-hd.webp" alt="" decoding="async" draggable="false"${i ? ' loading="lazy"' : ' fetchpriority="high"'}>`).join('');
+    const pgs = $$('.hs-pg', inEl); let at = 0, seen = true;
+    vis(inEl, (v) => { seen = v; });
+    if (!MG.still && pgs.length > 1) setInterval(() => {
+      if (!seen || document.hidden || scrollY > innerHeight * .9) return;
+      pgs[at].classList.toggle('on', false); at = (at + 1) % pgs.length; pgs[at].classList.add('on');
+    }, 4500);
   }
 
   /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds

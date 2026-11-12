@@ -5,23 +5,26 @@
 .ar-on .sech .hand{font-size:22px}
 .ar-on .ink svg,.ar-on .go svg,.ar-on .lk svg,.ar-on .all svg{scale:-1 1}
 
-/* 1 · the calendar full screen and held (sticky) while the section scrolls by: one stretch of scroll per page (home.js
-   picks it); the new page fades in from a little closer. Each page whole on its own flat paper colour (#EFE9D9), so the
-   sides join seamlessly. Under the pointer the picture comes slowly nearer. The button: a small, light ink box. */
-.hshow{background:var(--c-efe9d9);border-bottom:1px solid var(--line-2)}
-.hs-track{position:relative;height:calc(100svh - var(--head,49px) + (var(--n,5) - 1) * 70svh)}
-.hs-stick{position:sticky;top:var(--head,49px);height:calc(100svh - var(--head,49px));min-height:420px;overflow:hidden}
+/* 1 · the calendar full screen and pinned: the section sticks under the menu and everything after it (opaque, above it)
+   scrolls up over it like a sheet drawn over a print. The pages cross-fade one after another (home.js). Each page whole on
+   its own flat paper colour (#EFE9D9), so the sides join seamlessly. Under the pointer the picture comes slowly nearer.
+   The button: a small, light ink box. */
+.hshow{position:sticky;top:var(--head,49px);z-index:0;background:var(--c-efe9d9)}
+.hs-track{position:relative;height:calc(100svh - var(--head,49px))}
+.hs-stick{position:relative;height:100%;min-height:420px;overflow:hidden}
+main>section:not(.hshow){position:relative;z-index:1;background:var(--cream)}
+main>section.hshow+section{box-shadow:0 -1px 0 var(--line-2),0 -24px 48px -24px rgba(var(--ink-rgb),.18)}
 .hs-stage{position:absolute;inset:0;display:block;overflow:hidden;background:var(--c-efe9d9);cursor:zoom-in}
 .hs-in{position:absolute;inset:0;display:block;transition:transform 2.4s cubic-bezier(.22,1,.36,1)}
 .hs-stage:hover .hs-in{transform:scale(1.06)}
-.hs-pg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(1.05);transition:opacity .9s ease,transform 1.6s cubic-bezier(.22,1,.36,1);user-select:none;-webkit-user-drag:none}
+.hs-pg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(1.03);transition:opacity 1.4s ease,transform 2.4s cubic-bezier(.22,1,.36,1);user-select:none;-webkit-user-drag:none}
 .hs-pg.on{opacity:1;transform:none}
 html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 .hs-btn{position:absolute;z-index:2;left:50%;bottom:32px;translate:-50% 0;display:inline-flex;align-items:center;min-height:36px;padding:0 16px;background:rgba(var(--ink-rgb),.86);color:var(--cream);font:500 11px/1 var(--mono2);letter-spacing:.15em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:background .2s}
 .ar-on .hs-btn{font:500 14px/1 var(--fa);letter-spacing:0;text-transform:none}
 .hs-btn:hover{background:var(--blue)}
 .hs-btn:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
-@media(max-width:700px){.hs-track{height:calc(100svh - var(--head,49px) + (var(--n,5) - 1) * 50svh)}.hs-stage{bottom:80px}.hs-btn{bottom:24px}}
+@media(max-width:700px){.hs-stage{bottom:80px}.hs-btn{bottom:24px}}
 @media(prefers-reduced-motion:reduce){.hs-pg,.hs-in{transition:none}.hs-stage:hover .hs-in{transform:none}}
 
 /* 2 · the calendar on the wall: the photograph, its page replaced by the real pages, the wire cut from the photo on top */
