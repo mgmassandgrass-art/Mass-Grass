@@ -311,8 +311,10 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   few words at the other end (`data-meta="a|b|c"` / `data-meta-ar` on the section, separated by small squares). Pages need
   at least two `main > section` with a heading to get it.
 - Home page order (Nov 2026, the owner's plan): (1) the calendar's pages side by side (`.hshow` / `.hs-rows`, the owner's request): three rows split only by
-  1px hair-lines (`--line-2`), at rest until something moves: scrolling pushes the rows along (down = left, mirrored in Arabic),
-  a mouse moving over them drags them its way, the push fades (`v *= .93`); each row wraps round and starts on another page.
+  1px hair-lines (`--line-2`), at rest until something moves: the rows follow a quarter of the scroll (down = left, mirrored in
+  Arabic) and lean up to 48px towards the mouse, always gliding there (`cur += (aim - cur) * .045`; the owner found impulses fast
+  and silly); each row wraps round and starts on another page. Smooth wheel scrolling for the whole site is in `mock.js` (mouse
+  wheels only, lerp .1; scrollable panels, open dialogs and the locked menu keep the native wheel).
   Under them the ruled `.ghost` button lettered like the menu (Geist Mono capitals; Readex in Arabic), "Browse the 2027
   calendar" / "تصفّحوا تقويم 2027"; the h1 is screen-reader only. The owner's full set of
   2027 pages is on their computer (`D:\MASS & GRASS\Calender 2027`), not reachable from a cloud session: ask for Drive or an upload. (2) The calendar on the wall (`.cwall`): the photo `cr2-wall` zoomed 150%, its page replaced by the real

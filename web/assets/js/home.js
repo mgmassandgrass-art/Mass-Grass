@@ -26,12 +26,12 @@
   const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
 
   /* ---------- 1 · the calendar's pages side by side in three rows, split by hair-lines. They rest until something moves:
-     scrolling pushes every row along (down one way, up the other), and a pointer moving over them drags them its way;
-     the push fades out softly. Each row wraps round without end and starts on another page. ---------- */
+     the rows follow the scroll (a quarter of it, down one way, up the other) and lean a little towards the pointer,
+     always gliding there slowly. Each row wraps round without end and starts on another page. ---------- */
   const rowsEl = $('#hsrows'), KS = C.pages.map((p) => p.k);
   if (rowsEl && KS.length) {
-    let rows = [], v = 0, run = false, lastY = scrollY;
-    const SPEED = [1, 1.18, .88];
+    let rows = [], cur = 0, aim = 0, mx = 0, run = false;
+    const SPEED = [1, 1.08, .93];
     const build = () => {
       const n = 3, h = Math.max(80, (rowsEl.clientHeight - 2) / n), w = h * 1820 / 1282 + 1;
       const rep = Math.max(1, Math.ceil((innerWidth + w * 2) / (KS.length * w)));
@@ -40,23 +40,24 @@
         const one = seq.map((k) => `<span class="hs-pg"><img src="assets/${k}.webp" alt="" decoding="async" draggable="false"></span>`).join('');
         return `<div class="hs-row"><div class="hs-strip">${one}${one}</div></div>`;
       }).join('');
-      rows = $$('.hs-strip', rowsEl).map((el, r) => ({ el, x: -(r * .5 + .25) * w, W: seq(el) }));
+      rows = $$('.hs-strip', rowsEl).map((el, r) => ({ el, x0: -(r * .5 + .25) * w, W: el.scrollWidth / 2 }));
       place();
     };
-    const seq = (el) => el.scrollWidth / 2;
-    const place = () => rows.forEach((o) => { if (!o.W) return; o.x = ((o.x % o.W) + o.W) % o.W - o.W; o.el.style.transform = `translate3d(${o.x.toFixed(1)}px,0,0)`; });
+    const place = () => rows.forEach((o, i) => { if (!o.W) return; let x = o.x0 + cur * SPEED[i % 3]; x = ((x % o.W) + o.W) % o.W - o.W; o.el.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`; });
+    /* where the rows want to be: a quarter of the scroll, and up to 48px towards the pointer; they glide there slowly */
+    const target = () => (MG.ar ? 1 : -1) * scrollY * .25 + mx;
     const tick = () => {
-      rows.forEach((o, i) => { o.x += v * SPEED[i % 3]; }); place();
-      v *= .93; if (Math.abs(v) > .02) requestAnimationFrame(tick); else { v = 0; run = false; }
+      aim = target(); cur += (aim - cur) * .045; place();
+      if (Math.abs(aim - cur) > .1) requestAnimationFrame(tick); else { cur = aim; place(); run = false; }
     };
-    const push = (d) => { v = Math.max(-40, Math.min(40, v + d)); if (!run && !MG.still) { run = true; requestAnimationFrame(tick); } };
-    const dir = () => (MG.ar ? 1 : -1);
-    addEventListener('scroll', () => { const y = scrollY, d = y - lastY; lastY = y; if (y < innerHeight * 1.5) push(d * .35 * dir()); }, { passive: true });
-    rowsEl.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') push(e.movementX * .45); });
+    const go = () => { if (!run && !MG.still) { run = true; requestAnimationFrame(tick); } };
+    addEventListener('scroll', () => { if (scrollY < innerHeight * 1.6) go(); }, { passive: true });
+    rowsEl.addEventListener('pointermove', (e) => { if (e.pointerType !== 'mouse') return; const r = rowsEl.getBoundingClientRect(); mx = ((e.clientX - r.left) / r.width - .5) * 96; go(); });
+    rowsEl.addEventListener('pointerleave', () => { mx = 0; go(); });
     build();
     let rw = innerWidth, rh = rowsEl.clientHeight;
     addEventListener('resize', () => { if (innerWidth !== rw || Math.abs(rowsEl.clientHeight - rh) > 40) { rw = innerWidth; rh = rowsEl.clientHeight; build(); } });
-    addEventListener('load', () => rows.forEach((o) => { o.W = seq(o.el); }), { once: true });
+    addEventListener('load', () => { rows.forEach((o) => { o.W = o.el.scrollWidth / 2; }); place(); }, { once: true });
   }
 
   /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds

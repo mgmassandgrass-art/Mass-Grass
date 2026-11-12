@@ -169,4 +169,29 @@
     list.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b) secs[+b.dataset.go].s.scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'start' }); });
   }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', rail) : rail();
+
+  /* ---------- smooth scrolling: a mouse wheel moves a target and the page glides to it (as on the reference). Anything that
+     scrolls on its own (the bag, menus, dialogs) keeps its native wheel; keys, the scrollbar and touch are untouched. ---------- */
+  (function () {
+    if (MG.still || !matchMedia('(pointer:fine)').matches) return;
+    let aim = scrollY, cur = scrollY, run = false, mine = false;
+    const max = () => doc.documentElement.scrollHeight - innerHeight;
+    const inner = (el, dy) => { for (; el && el !== doc.body && el.nodeType === 1; el = el.parentElement) {
+      const cs = getComputedStyle(el); if (/(auto|scroll)/.test(cs.overflowY) && el.scrollHeight > el.clientHeight + 1) {
+        if ((dy < 0 && el.scrollTop > 0) || (dy > 0 && el.scrollTop + el.clientHeight < el.scrollHeight - 1)) return true; } } return false; };
+    const step = () => {
+      cur += (aim - cur) * .1; if (Math.abs(aim - cur) < .5) cur = aim;
+      mine = true; scrollTo({ top: cur, behavior: 'instant' });
+      if (cur !== aim) requestAnimationFrame(step); else run = false;
+    };
+    addEventListener('wheel', (e) => {
+      if (e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY) || doc.body.style.overflow === 'hidden' || doc.querySelector('dialog[open]') || inner(e.target, e.deltaY)) return;
+      e.preventDefault();
+      const d = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
+      if (!run) { aim = cur = scrollY; }
+      aim = Math.max(0, Math.min(max(), aim + d));
+      if (!run) { run = true; requestAnimationFrame(step); }
+    }, { passive: false });
+    addEventListener('scroll', () => { if (mine) { mine = false; return; } if (!run) aim = cur = scrollY; }, { passive: true });
+  })();
 })();
