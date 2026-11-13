@@ -5,15 +5,12 @@
 .ar-on .sech .hand{font-size:22px}
 .ar-on .ink svg,.ar-on .go svg,.ar-on .lk svg,.ar-on .all svg{scale:-1 1}
 
-/* 1 · the calendar full screen and pinned: the section sticks under the menu and everything after it (opaque, above it)
-   scrolls up over it like a sheet drawn over a print. The pages cross-fade one after another (home.js). Each page whole on
+/* 1 · the calendar full screen: the pages cross-fade one after another (home.js), the section scrolls away as usual. Each page whole on
    its own flat paper colour (#EFE9D9), so the sides join seamlessly. Under the pointer the picture comes slowly nearer.
    The button: a small, light ink box. */
-.hshow{position:sticky;top:var(--head,49px);z-index:0;background:var(--c-efe9d9)}
+.hshow{position:relative;background:var(--c-efe9d9)}
 .hs-track{position:relative;height:calc(100svh - var(--head,49px))}
 .hs-stick{position:relative;height:100%;min-height:420px;overflow:hidden}
-main>section:not(.hshow){position:relative;z-index:1;background:var(--cream)}
-main>section.hshow+section{box-shadow:0 -1px 0 var(--line-2),0 -24px 48px -24px rgba(var(--ink-rgb),.18)}
 .hs-stage{position:absolute;inset:0;display:block;overflow:hidden;background:var(--c-efe9d9);cursor:zoom-in}
 .hs-in{position:absolute;inset:0;display:block;transition:transform 2.4s cubic-bezier(.22,1,.36,1)}
 .hs-stage:hover .hs-in{transform:scale(1.06)}

@@ -271,15 +271,16 @@ html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
 /* the ruler down the edge (mock.js rail()): a scale in fine pencil, a blue line with the percent, the sections by name */
 .rail{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none;position:fixed;z-index:40;inset-block:calc(var(--head,49px) + 42px) 0;inset-inline-end:0;width:300px;pointer-events:none;display:none}
 @media(min-width:1180px){.rail{display:block}}
-.rl-sc{position:absolute;inset-block:0;inset-inline-end:0;width:56px;overflow:hidden;pointer-events:auto;cursor:crosshair}
+.rl-sc{position:absolute;inset-block:0;inset-inline-end:0;width:64px;overflow:hidden;pointer-events:auto;cursor:crosshair;background:linear-gradient(to left,rgba(243,242,238,.82),rgba(243,242,238,.55) 60%,rgba(243,242,238,0))}
+[dir=rtl] .rl-sc{background:linear-gradient(to right,rgba(243,242,238,.82),rgba(243,242,238,.55) 60%,rgba(243,242,238,0))}
 .rl-k{position:absolute;inset-inline:0;top:0;will-change:transform}
 .rl-k i{position:absolute;inset-inline-end:0;width:6px;height:1px;background:rgba(var(--ink-rgb),.28)}
 .rl-k i.b{width:16px;background:rgba(var(--ink-rgb),.55)}
 .rl-k.fine i:not(.b){opacity:0}
 .rl-k i b{position:absolute;inset-inline-end:22px;top:-6px;font:500 10px/12px var(--mono2);letter-spacing:.04em;color:rgba(var(--ink-rgb),.5)}
 .rl-w{position:absolute;inset-inline-end:0;top:0;width:40px;background:rgba(var(--ink-rgb),.08);border-top:1px solid rgba(var(--ink-rgb),.45);border-bottom:1px solid rgba(var(--ink-rgb),.2);opacity:0;will-change:transform}
-.rl-m{position:absolute;inset-inline-end:0;top:0;width:56px;height:1.5px;background:var(--blue);will-change:transform}
-.rl-m b{position:absolute;inset-inline-end:2px;top:4px;font:500 10px/1 var(--mono2);letter-spacing:.04em;color:var(--blue)}
+.rl-m{position:absolute;inset-inline-end:0;top:0;width:64px;height:1.5px;background:var(--blue);will-change:transform}
+.rl-m b{position:absolute;inset-inline-end:20px;top:-7px;padding:2px 4px;background:var(--cream);box-shadow:0 0 0 1px var(--blue);font:500 10px/1 var(--mono2);letter-spacing:.04em;color:var(--blue)}
 .rl-n{display:none}
 .rl-n li{position:absolute;top:0;inset-inline-end:0;transform-origin:100% 0;will-change:transform,opacity}
 [dir=rtl] .rl-n li{transform-origin:0 0}

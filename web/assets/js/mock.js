@@ -129,11 +129,12 @@
       z += (zt - z) * (MG.still ? 1 : .16); if (Math.abs(zt - z) < .002) z = zt;
       /* the scale: zoomed (z=0) the current place sits on the anchor; opened (z=1) the whole page fills the height */
       const uO = H / 100, uZ = uO * ZOOM, u = uZ + (uO - uZ) * z;
-      const offZ = H * ANCHOR - top * 100 * uZ, off = offZ + (0 - offZ) * z;
+      const offZ = H * ANCHOR - prog * 100 * uZ, off = offZ + (0 - offZ) * z;
       ks.style.height = 100 * u + 'px'; ks.style.transform = `translateY(${off.toFixed(1)}px)`;
       ks.classList.toggle('fine', z > .5);
-      const y = off + top * 100 * u;
-      mk.style.transform = `translateY(${y.toFixed(1)}px)`; pct.textContent = String(Math.round(prog * 100)).padStart(3, '0') + '%';
+      /* the blue line reads the same number as its percent (how far down the page you are), the grey box is what is on screen */
+      const y = off + top * 100 * u, ym = off + prog * 100 * u;
+      mk.style.transform = `translateY(${ym.toFixed(1)}px)`; pct.textContent = String(Math.round(prog * 100)).padStart(3, '0') + '%';
       win.style.transform = `translateY(${y.toFixed(1)}px)`; win.style.height = Math.max(6, view * 100 * u) + 'px'; win.style.opacity = z;
       /* the names */
       let ci = 0; secs.forEach((x, i) => { if (x.s.getBoundingClientRect().top <= innerHeight * .4) ci = i; });

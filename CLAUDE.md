@@ -310,8 +310,8 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   slides in after 120px of scroll and shows "03 / 05", the section's name (its heading, or `data-where`/`data-where-ar`) and a
   few words at the other end (`data-meta="a|b|c"` / `data-meta-ar` on the section, separated by small squares). Pages need
   at least two `main > section` with a heading to get it.
-- Home page order (Nov 2026, the owner's plan): (1) the calendar full screen and pinned (`.hshow` is `position:sticky` under the menu; every later `main > section`
-  is opaque and above it, so the page scrolls up over it like a sheet over a print; the owner's request): the cover first, then
+- Home page order (Nov 2026, the owner's plan): (1) the calendar full screen (`.hshow`, scrolls away as usual; pinning it under the page was tried and dropped):
+  the cover first, then
   the months cross-fading every 4.5s (`SHOW` in `home.js`); each page whole (`contain`) on its own paper colour `--c-efe9d9`; the
   picture under the pointer comes slowly nearer; a small light ink button over it (`.hs-btn`, lettered like the menu) "Browse the
   2027 calendar" / "تصفّحوا تقويم 2027"; the h1 is screen-reader only. The cover's tag now reads "2027 Calendar" (`c27-00*.webp`,
@@ -332,7 +332,9 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   only when `<html data-page="home">` (the build adds it for `"home":true` pages); `.flying` / `.landed` drive the rest, and
   a 4.5s safety in `boot.js` (plus a CSS fade) clears the splash if the script never runs.
 - The ruler, after getartcraft.com (replaces the colour chart; `rail()` in `mock.js`, `.rail` in `site.css`, ≥1180px): while
-  reading it is zoomed in (×3.2) round where you are, a blue line with the percent ("057%"); pointer on it → it opens to
+  reading it is zoomed in (×3.2) round where you are, a blue line with the percent ("057%") in a small chip that sits where the numbers are, so the line always
+  reads the same number as its percent (both use the scroll fraction; the grey box shows what is on screen), on a faint paper
+  wash so it reads over pictures; pointer on it → it opens to
   0–100 with a grey box for what is on screen, click or drag to go there. The section names were removed at the owner's
   request (`.rl-n{display:none}`; the code still builds them). Nothing on it can be selected as text, and
   a drag ends (and the ruler closes) wherever the button is let go. Narrower screens get a thin blue stroke

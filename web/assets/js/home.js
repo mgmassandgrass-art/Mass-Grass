@@ -1,4 +1,4 @@
-/* Home: the calendar full screen and pinned while the page scrolls over it, the calendar on the wall tearing off its pages, the twelve months
+/* Home: the calendar full screen, page after page, the calendar on the wall tearing off its pages, the twelve months
    unfolding as the page goes down, the shelves in real photographs, a few pieces straight into the bag. */
 (function () {
   'use strict';
@@ -25,7 +25,7 @@
 
   const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
 
-  /* ---------- 1 · the calendar full screen, pinned: it stays where it is while the rest of the page scrolls up over it.
+  /* ---------- 1 · the calendar full screen.
      The cover first, then the months one after another (a slow cross-fade every 4.5s, paused when out of sight); the
      picture under the pointer comes slowly nearer. Each page is shown whole on its own paper colour. ---------- */
   const inEl = $('#hsin'), SHOW = ['c27-00', 'c27-05', 'c27-08', 'c27-09', 'c27-12'].filter((k) => C.pages.some((p) => p.k === k));
