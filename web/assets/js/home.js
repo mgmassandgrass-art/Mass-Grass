@@ -39,6 +39,14 @@
     }, 4500);
   }
 
+  /* ---------- 2a · the film of the calendar: plays while it is on screen, rests when it is not ---------- */
+  const film = $('#cwv');
+  if (film) {
+    if (MG.still) film.removeAttribute('loop');
+    vis(film, (v) => { if (v && !MG.still) { const p = film.play(); if (p && p.catch) p.catch(() => {}); } else film.pause(); });
+    MG.page(() => { if (film.dataset.enLabel == null) film.dataset.enLabel = film.getAttribute('aria-label'); film.setAttribute('aria-label', MG.ar ? film.dataset.arLabel : film.dataset.enLabel); });
+  }
+
   /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds
      the front page is torn up over the wire and goes to the back, so the next month shows ---------- */
   const cwp = $('#cwp');

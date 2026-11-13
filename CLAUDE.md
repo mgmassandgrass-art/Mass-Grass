@@ -333,10 +333,12 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   only when `<html data-page="home">` (the build adds it for `"home":true` pages); `.flying` / `.landed` drive the rest, and
   a 4.5s safety in `boot.js` (plus a CSS fade) clears the splash if the script never runs. It plays once per visit
   (`sessionStorage.mgIntro`): coming back to the home page from another page shows no splash.
-- Wanted next to the wall calendar (owner, Nov 2026): a realistic video of the hanging calendar turning its pages, as on
-  risottostudio.com. Frames are ready (the lavender close-up mockup with each real page, pages 51-55 of Canva `DAHWgLZfDEc`);
-  the plan is Kling 4.0 image-to-video with first frame + keyframes + tail. Blocked: no Kling / Higgsfield credits, and the
-  session network cannot reach kling.ai (uploads go through Canva exports, which are public links).
+- The calendar film (section 2 of home, `#cwv`, replaces the code-torn wall photo): `assets/cal-tear.{webm,mp4,webp}`, the
+  hanging calendar (lavender close-up mockup) whose cover is torn off the wire to show January. Made with HeyGen image-to-video
+  (`heygen-video-1`, first frame = cover mockup, end frame = January mockup, 6s, 1080p). Route: mockup frames uploaded to Canva
+  (`create-upload-url`, raw POST) and placed on holder pages 51-52 of `DAHWgLZfDEc`, exported as JPG for public links; the
+  HeyGen result host is blocked here, so the MP4 goes back through Canva (`upload-asset-from-url` -> page 56 -> export MP4).
+  Plays only while on screen. Next films (other months) the same way; Kling has no credits.
 - The ruler, after getartcraft.com (replaces the colour chart; `rail()` in `mock.js`, `.rail` in `site.css`, ≥1180px): while
   reading it is zoomed in (×3.2) round where you are, a blue line with the percent ("057%") in a small chip that sits where the numbers are, so the line always
   reads the same number as its percent (both use the scroll fraction; the grey box shows what is on screen), on a faint paper
