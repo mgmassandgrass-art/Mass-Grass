@@ -326,7 +326,13 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   alpha from darkness), the front page torn up over the wire every 3s (`.tear`, also on click); beside it the words, price,
   buy, "browse the calendar", the shipping line. (The twelve-months leaflet was removed at the owner's request; its code in `home.js` waits on `#morow`.) (4) The shelves (`.coll`), Risotto's way in ArtCraft's look: a statement on the left,
   four square real photographs (`MG.mock.scene`) each with an ink label and "from €x". (5) Just in, (6) Farah's story, footer.
-- Full screen (owner, Nov 2026): `.wrap` has no max width and only a hair of gutter (`clamp(12px,1.4vw,24px)`).
+- The column (owner, Nov 2026, after getartcraft.com; replaces "full screen"): every `main > section` except the full-bleed
+  `.hshow` keeps its `.wrap` between wide side margins (`--side`, 12.5vw from 1000px) framed by two hair-lines down the page,
+  a ruled top line with small crosses where the lines meet, and a head row inserted by `frame()` in `mock.js` (`.sx-hd`:
+  "02 / THE CALENDAR" and the section's `data-meta` words). The right margin (`.sx-side`, from 1180px, kept inside the margin
+  so it never covers the column) names the section in view and lists all of them (click to go). Blocks with their own frame
+  (`.cw`, `.cl`, `.st`) meet the column's lines. The glass strip keeps to the column. Tried and dropped: the twelve bottles
+  orbiting the name (the owner wanted the full-page calendar pictures back).
 - The opening (Nov 2026, the owner's request): an empty page, MASS & GRASS large in the middle (`#splash`, the logo's ten
   letter paths arriving one by one), then it flies up and shrinks into the menu's logo cell (`home.js`, WAAPI, measured from
   `header .logo img`), the menu and the hero's words come in, and last the table of pages. `home-intro` is set by `boot.js`

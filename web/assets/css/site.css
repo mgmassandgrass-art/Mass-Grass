@@ -364,3 +364,39 @@ html:not(.js) .bagb,html:not(.js) .lang,html:not(.js) .menub{display:none}
 .lang.ico:active .la{animation:trHop .6s cubic-bezier(.34,1.56,.64,1)}
 @keyframes trTip{0%{transform:none}40%{transform:rotate(-10deg) translate(-1px,-1px)}100%{transform:none}}
 @keyframes trHop{0%{transform:none}40%{transform:translateY(-3px) scale(1.08)}70%{transform:translateY(.5px)}100%{transform:none}}
+
+/* ---------- the column, after getartcraft.com (owner, Nov 2026): wide margins on both sides, the content in a middle column
+   between two hair-lines that run the length of the page, every section opened by a ruled row ("02 / THE CALENDAR" and a few
+   words), small crosses where the rules meet, and the section in view named large in the right margin with the others under
+   it (mock.js, frame()). Full-bleed openings (.hshow) stay edge to edge. ---------- */
+:root{--side:0px;--colpad:clamp(16px,2.4vw,40px)}
+@media(min-width:1000px){:root{--side:clamp(56px,12.5vw,260px)}}
+main>section:not(.hshow)>.wrap{max-width:none;margin-inline:var(--side);padding-inline:var(--colpad);padding-bottom:var(--sec);border-inline:1px solid var(--line-2)}
+main>section:not(.hshow){position:relative;padding-top:0;border-top:1px solid var(--line-2)}
+main>section:not(.hshow)::before,main>section:not(.hshow)::after{content:"";position:absolute;top:-5px;width:9px;height:9px;z-index:2;pointer-events:none;
+  background:linear-gradient(var(--ink),var(--ink)) center/1px 100% no-repeat,linear-gradient(var(--ink),var(--ink)) center/100% 1px no-repeat;opacity:.55}
+main>section:not(.hshow)::before{inset-inline-start:calc(var(--side) - 4px)}
+main>section:not(.hshow)::after{inset-inline-end:calc(var(--side) - 4px)}
+@media(max-width:999px){main>section:not(.hshow)::before,main>section:not(.hshow)::after{display:none}main>section:not(.hshow)>.wrap{border-inline:0}}
+.sx-hd{display:flex;align-items:center;justify-content:space-between;gap:16px;height:44px;margin:0 calc(-1 * var(--colpad)) var(--gh);padding-inline:var(--colpad);border-bottom:1px solid var(--line-2);
+  font:500 11px/1 var(--mono2);letter-spacing:.15em;text-transform:uppercase;color:rgba(var(--ink-rgb),.55);white-space:nowrap;overflow:hidden}
+.sx-hd b{font-weight:500;color:var(--ink)}
+.sx-hd .m{display:flex;gap:22px;overflow:hidden;text-overflow:ellipsis}
+.ar-on .sx-hd{font:500 13px/1 var(--fa);letter-spacing:0;text-transform:none}
+@media(max-width:700px){.sx-hd .m{display:none}}
+/* the right margin: the section in view, large, and the list of sections at the foot */
+.sx-side{position:fixed;z-index:30;inset-inline-end:72px;top:calc(var(--head,49px) + 120px);bottom:28px;width:max(96px,calc(var(--side) - 88px));display:none;flex-direction:column;justify-content:space-between;align-items:flex-end;text-align:end;pointer-events:none;opacity:0;transition:opacity .4s}
+.sx-side.on{opacity:1}
+@media(min-width:1180px){.sx-side{display:flex}}
+.sx-side .now{margin:0;font:800 clamp(15px,1.25vw,24px)/1.05 var(--f);letter-spacing:-.01em;text-transform:uppercase;color:var(--ink);text-wrap:balance}
+.ar-on .sx-side .now{font:700 clamp(15px,1.25vw,22px)/1.35 var(--fa);text-transform:none}
+.sx-side ol{margin:0;padding:0;list-style:none;display:grid;gap:2px;pointer-events:auto}
+.sx-side button{border:0;background:none;padding:0;cursor:pointer;font:700 clamp(11px,.85vw,13px)/1.25 var(--f);text-transform:uppercase;letter-spacing:.02em;color:rgba(var(--ink-rgb),.32);text-align:end;transition:color .2s}
+.ar-on .sx-side button{font:600 13px/1.45 var(--fa);text-transform:none}
+.sx-side button[aria-current=true],.sx-side button:hover{color:var(--ink)}
+.sx-side button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+/* the glass strip under the menu keeps to the column */
+@media(min-width:1000px){.where-in{margin-inline:var(--side)}}
+
+/* blocks that carry their own frame meet the column's rules instead of drawing a second frame inside them */
+@media(min-width:1000px){main>section:not(.hshow)>.wrap>:is(.cw,.cl,.st){margin-inline:calc(-1 * var(--colpad));border-inline:0}}

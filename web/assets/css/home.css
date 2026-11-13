@@ -1,5 +1,5 @@
 /* Home: the table of calendar pages, the calendar on the wall, the twelve months, the shelves, just in and Farah. */
-.sec{padding-top:var(--sec)}
+.sec{padding-top:0}
 .sech{display:flex;align-items:baseline;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid var(--ink)}
 .sech .hand{font-size:26px}
 .ar-on .sech .hand{font-size:22px}
@@ -25,7 +25,7 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.hs-pg,.hs-in{transition:none}.hs-stage:hover .hs-in{transform:none}}
 
 /* 2 · the calendar on the wall: the photograph, its page replaced by the real pages, the wire cut from the photo on top */
-.cw{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);border:1px solid var(--line)}
+.cw{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);border:1px solid var(--line-2)}
 .cw-photo{position:relative;overflow:hidden;min-height:100%;border-inline-end:1px solid var(--line);background:#EDEBE6;cursor:pointer;display:flex;align-items:center}
 /* the film: a real-looking calendar on a wall whose cover is torn off (HeyGen, from our mockup frames), played while in view */
 .cw-film{cursor:default;background:#E9E6DF}

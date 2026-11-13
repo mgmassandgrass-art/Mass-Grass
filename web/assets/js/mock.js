@@ -78,6 +78,32 @@
   MG.page(() => requestAnimationFrame(reveal));
 
   /* ---------- the glass strip under the menu: the section in view, its number and a few words about it ---------- */
+  /* ---------- the column's furniture (after getartcraft.com): a ruled head row on each section ("02 / THE CALENDAR" and a few
+     words) and, in the right margin, the section in view named large over the list of all of them ---------- */
+  function frame(secs) {
+    const pad = (n) => String(n).padStart(2, '0');
+    const name = (x) => (x.s.dataset[MG.ar ? 'whereAr' : 'where'] || (x.h.innerText || x.h.textContent)).replace(/\s+/g, ' ').trim();
+    const words = (x) => (x.s.dataset[MG.ar ? 'metaAr' : 'meta'] || '').split('|').filter(Boolean);
+    const heads = secs.map((x, i) => { if (x.s.classList.contains('hshow')) return null; const w = x.s.querySelector(':scope > .wrap'); if (!w) return null;
+      const hd = doc.createElement('div'); hd.className = 'sx-hd'; hd.setAttribute('aria-hidden', 'true'); w.prepend(hd); return { hd, i }; }).filter(Boolean);
+    const side = doc.createElement('aside'); side.className = 'sx-side'; side.setAttribute('aria-label', t('Sections', 'الأقسام'));
+    side.innerHTML = '<p class="now" aria-hidden="true"></p><ol></ol>'; doc.body.append(side);
+    const now = side.querySelector('.now'), ol = side.querySelector('ol');
+    let cur = -1;
+    const paint = () => {
+      heads.forEach(({ hd, i }) => { hd.innerHTML = `<span><b>${pad(i + 1)}</b> / ${esc(name(secs[i]))}</span><span class="m">${words(secs[i]).map((w) => `<span>${esc(w)}</span>`).join('')}</span>`; });
+      ol.innerHTML = secs.map((x, i) => `<li><button type="button" data-i="${i}">${esc(name(x))}</button></li>`).join('');
+      cur = -1; spot();
+    };
+    const spot = () => { let ci = 0; secs.forEach((x, k) => { if (x.s.getBoundingClientRect().top <= innerHeight * .4) ci = k; });
+      side.classList.toggle('on', scrollY > innerHeight * .5);
+      if (ci === cur) return; cur = ci; now.textContent = name(secs[ci]);
+      [...ol.querySelectorAll('button')].forEach((b, k) => b.setAttribute('aria-current', k === ci)); };
+    ol.addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) secs[+b.dataset.i].s.scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'start' }); });
+    let q = false; addEventListener('scroll', () => { if (!q) { q = true; requestAnimationFrame(() => { q = false; spot(); }); } }, { passive: true });
+    paint(); MG.page((why) => { if (why === 'lang') paint(); });
+  }
+
   function where(secs) {
     const bar = doc.createElement('div'); bar.className = 'where'; bar.setAttribute('aria-hidden', 'true');
     bar.innerHTML = '<div class="where-in"><span class="no"></span><span class="nm"></span><span class="meta"></span></div>';
@@ -111,6 +137,7 @@
     const secs = $$('main > section').map((s) => { const h = s.querySelector('h1,h2'); return h ? { s, h } : null; }).filter(Boolean);
     if (secs.length < 2) return;
     where(secs);
+    frame(secs);
     if (secs.length < 3) return;
     const el = doc.createElement('aside'); el.className = 'rail'; el.setAttribute('aria-hidden', 'true');
     el.innerHTML = `<div class="rl-sc"><div class="rl-k">${[...Array(101)].map((_, i) => `<i class="${i % 5 ? '' : 'b'}" style="top:${i}%">${i % 5 ? '' : `<b>${i}</b>`}</i>`).join('')}</div>
