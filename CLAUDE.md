@@ -322,15 +322,18 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   2027 pages is on their computer (`D:\MASS & GRASS\Calender 2027`), not reachable from a cloud session: ask for Drive or an upload. (2) The calendar on the wall (`.cwall`): the photo `cr2-wall` zoomed 150%, its page replaced by the real
   pages (`.cw-pages`, measured 917,444–2154,1245 of 3072×1728) under the wire cut out of the same photo (`cr2-wire.webp`,
   alpha from darkness), the front page torn up over the wire every 3s (`.tear`, also on click); beside it the words, price,
-  buy, "browse the calendar", the shipping line. (3) The twelve months (`.months`): a zigzag leaflet of 13 panels (cover +
-  months, ±24deg so edges meet) that slides along while its tall sticky track is scrolled; months without a page show a ruled
-  blank with the name and "being painted". (4) The shelves (`.coll`), Risotto's way in ArtCraft's look: a statement on the left,
+  buy, "browse the calendar", the shipping line. (The twelve-months leaflet was removed at the owner's request; its code in `home.js` waits on `#morow`.) (4) The shelves (`.coll`), Risotto's way in ArtCraft's look: a statement on the left,
   four square real photographs (`MG.mock.scene`) each with an ink label and "from €x". (5) Just in, (6) Farah's story, footer.
 - The opening (Nov 2026, the owner's request): an empty page, MASS & GRASS large in the middle (`#splash`, the logo's ten
   letter paths arriving one by one), then it flies up and shrinks into the menu's logo cell (`home.js`, WAAPI, measured from
   `header .logo img`), the menu and the hero's words come in, and last the table of pages. `home-intro` is set by `boot.js`
   only when `<html data-page="home">` (the build adds it for `"home":true` pages); `.flying` / `.landed` drive the rest, and
-  a 4.5s safety in `boot.js` (plus a CSS fade) clears the splash if the script never runs.
+  a 4.5s safety in `boot.js` (plus a CSS fade) clears the splash if the script never runs. It plays once per visit
+  (`sessionStorage.mgIntro`): coming back to the home page from another page shows no splash.
+- Wanted next to the wall calendar (owner, Nov 2026): a realistic video of the hanging calendar turning its pages, as on
+  risottostudio.com. Frames are ready (the lavender close-up mockup with each real page, pages 51-55 of Canva `DAHWgLZfDEc`);
+  the plan is Kling 4.0 image-to-video with first frame + keyframes + tail. Blocked: no Kling / Higgsfield credits, and the
+  session network cannot reach kling.ai (uploads go through Canva exports, which are public links).
 - The ruler, after getartcraft.com (replaces the colour chart; `rail()` in `mock.js`, `.rail` in `site.css`, ≥1180px): while
   reading it is zoomed in (×3.2) round where you are, a blue line with the percent ("057%") in a small chip that sits where the numbers are, so the line always
   reads the same number as its percent (both use the scroll fraction; the grey box shows what is on screen), on a faint paper
