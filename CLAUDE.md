@@ -339,6 +339,14 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   (`create-upload-url`, raw POST) and placed on holder pages 51-52 of `DAHWgLZfDEc`, exported as JPG for public links; the
   HeyGen result host is blocked here, so the MP4 goes back through Canva (`upload-asset-from-url` -> page 56 -> export MP4).
   Plays only while on screen. Next films (other months) the same way; Kling has no credits.
+- Owner's next request (Nov 2026): replace that film with ALL the months torn off one after another, as in Risotto Studio's
+  calendar video (6.3s): a portrait wall calendar on a plain wall, static camera; each page is torn down from the wire, its
+  bottom edge curling toward the camera and the sheet dropping out of the bottom of the frame while the next month shows; the
+  tears come fast (about 0.3-0.5s each) with a short hold on some pages (a longer hold on the hero page). Plan: HeyGen
+  image-to-video per pair (month N -> N+1, start + end frame, 5s each, same prompt and seed), trim each clip to its tear plus a
+  short hold, then join with ffmpeg in order (cover -> Jan ... Dec) and loop. The 13 frames are ready in
+  `drafts/mockups/calendar/flip/close-00..12.jpg` (lavender close-up mockup, 1600x1200). HeyGen and Canva failed to connect in
+  the session that prepared them; with no Canva, upload frames with HeyGen's own `create_asset_upload` if its host is reachable.
 - The ruler, after getartcraft.com (replaces the colour chart; `rail()` in `mock.js`, `.rail` in `site.css`, ≥1180px): while
   reading it is zoomed in (×3.2) round where you are, a blue line with the percent ("057%") in a small chip that sits where the numbers are, so the line always
   reads the same number as its percent (both use the scroll fraction; the grey box shows what is on screen), on a faint paper
