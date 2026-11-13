@@ -93,3 +93,4 @@ dialog.view::backdrop{background:rgba(var(--ink-rgb),.55)}
 
 .pp{animation:ppin .6s cubic-bezier(.22,1,.36,1) both}@keyframes ppin{from{opacity:0;translate:0 24px}}
 @media(prefers-reduced-motion:reduce){.pp{animation:none}}
+

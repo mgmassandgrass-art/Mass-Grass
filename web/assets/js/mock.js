@@ -135,10 +135,9 @@
      its place, a grey box shows what is on screen, and a click or a drag goes there. */
   function rail() {
     const secs = $$('main > section').map((s) => { const h = s.querySelector('h1,h2'); return h ? { s, h } : null; }).filter(Boolean);
-    if (secs.length < 2) return;
-    where(secs);
-    frame(secs);
-    if (secs.length < 3) return;
+    /* the ruler is on every page (owner, Nov 2026); the glass strip and the margin's list need sections to name */
+    if (secs.length >= 2) where(secs);
+    if (secs.length) frame(secs);
     const el = doc.createElement('aside'); el.className = 'rail'; el.setAttribute('aria-hidden', 'true');
     el.innerHTML = `<div class="rl-sc"><div class="rl-k">${[...Array(101)].map((_, i) => `<i class="${i % 5 ? '' : 'b'}" style="top:${i}%">${i % 5 ? '' : `<b>${i}</b>`}</i>`).join('')}</div>
       <div class="rl-w"></div><div class="rl-m"><b></b></div></div><ol class="rl-n"></ol>`;

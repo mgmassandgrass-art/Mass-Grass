@@ -171,3 +171,12 @@ dialog.view::backdrop{background:rgba(var(--ink-rgb),.55)}
 .racts{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:24px}
 .racts .tbtn{color:var(--ink)}
 @media(prefers-reduced-motion:reduce){.card3,.icard,.dwrap2,.env .eflap{transition:none!important}}
+
+/* the ArtCraft grid takes over the cards: no tilt, no lift, no gaps (site.css .ac-grid / .ac-cell) */
+.cards2.ac-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:0}
+@media(max-width:1100px){.cards2.ac-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.cards2.ac-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cards2 .pk.ac-cell{rotate:none;translate:none;transform:none}
+.cards2 .pk.ac-cell:hover{transform:none}
+.cards2 .pk.ac-cell .face{position:relative;width:70%;padding:0;overflow:hidden}
+.pw-bar .pw-n{flex:1}

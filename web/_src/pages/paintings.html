@@ -10,8 +10,12 @@
     <p class="note paper" data-tear="4"><span class="fill"></span><b data-price="painting">€12</b><span data-ar="لكل لوحة. ملف عالي الدقة بصيغتي PDF وPNG، تحمّلونه فورًا وتطبعونه حتى مقاس A3.">for each painting. A high-res PDF and PNG you download at once and print up to A3.</span></p>
   </div>
 </section>
-<section class="wrap" aria-label="Filter" data-label-ar="تصفية"><ul class="filt" id="filt"></ul></section>
-<section class="wrap" aria-label="All paintings"><div class="wall" id="wall"></div></section>
+<section class="pwall" id="all" data-where="All paintings" data-where-ar="كل اللوحات" data-meta="Watercolour on paper|Print at home|Up to A3" data-meta-ar="ألوان مائية على ورق|اطبعوها في البيت|حتى A3" aria-labelledby="pw-h">
+  <div class="wrap">
+    <div class="pw-bar"><h2 class="sr" id="pw-h" data-ar="كل اللوحات">All paintings</h2><ul class="filt" id="filt" aria-label="Filter" data-label-ar="تصفية"></ul><span class="pw-hint" data-ar="مرّروا المؤشر لترونها على الحائط">Hover to see it on a wall</span></div>
+    <div class="wall ac-grid" id="wall"></div>
+  </div>
+</section>
 </main>
 <dialog class="view" id="view" aria-labelledby="v-h">
   <button class="x paper" data-tear="3" type="button" id="vx" aria-label="Close" data-label-ar="إغلاق"><span class="fill"></span><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>

@@ -16,7 +16,11 @@ for n,(l,t,r,b) in B.items():
     pg=ph[t:b+1,l:r+1]; L=pg.mean(2)
     ill=ndimage.grey_closing(L,size=(31,31)); ill=ndimage.gaussian_filter(ill,18)
     shade=np.clip(ill/np.percentile(ill,99.5),0,1.02)[...,None]
-    out=art*shade
+    # realism: the camera's softness, the rings' shadow across the top of the page, and the photo's grain
+    art=ndimage.gaussian_filter(art,(0.55,0.55,0))
+    yy=np.arange(h)[:,None]/h; ring=1-0.13*np.exp(-yy/0.025)-0.05*np.exp(-yy/0.09)
+    out=art*shade*ring[...,None]
+    rng=np.random.default_rng(7); out=out+rng.normal(0,2.2,(h,w,1))
     # what the photo keeps on top: wire, punched holes, the hanger notch (within the top band)
     ref=np.median(pg[h//3:2*h//3, w//4:3*w//4].reshape(-1,3),0)
     diff=np.abs(pg-ref*shade/shade.mean()).max(2)

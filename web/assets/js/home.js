@@ -39,12 +39,14 @@
     }, 4500);
   }
 
-  /* ---------- 2a · the film of the calendar: plays while it is on screen, rests when it is not ---------- */
-  const film = $('#cwv');
-  if (film) {
-    if (MG.still) film.removeAttribute('loop');
-    vis(film, (v) => { if (v && !MG.still) { const p = film.play(); if (p && p.catch) p.catch(() => {}); } else film.pause(); });
-    MG.page(() => { if (film.dataset.enLabel == null) film.dataset.enLabel = film.getAttribute('aria-label'); film.setAttribute('aria-label', MG.ar ? film.dataset.arLabel : film.dataset.enLabel); });
+  /* ---------- 2a · the calendar in four real rooms: a slow cross-fade from one to the next, the small views below choose ---------- */
+  const cwm = $('#cwm');
+  if (cwm) {
+    const ims = $$(':scope > img', cwm), bts = $$('.cm-th button', cwm); let at = 0, seen = false, timer = 0;
+    const go = (i) => { ims[at].classList.toggle('on', false); bts[at].setAttribute('aria-pressed', 'false'); at = (i + ims.length) % ims.length; ims[at].classList.add('on'); bts[at].setAttribute('aria-pressed', 'true'); };
+    const run = () => { clearInterval(timer); if (!MG.still) timer = setInterval(() => { if (seen && !document.hidden) go(at + 1); }, 4500); };
+    bts.forEach((b, i) => b.addEventListener('click', () => { go(i); run(); }));
+    vis(cwm, (v) => { seen = v; }); run();
   }
 
   /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds

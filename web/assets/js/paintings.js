@@ -49,14 +49,15 @@
     if (why !== 'bag' && why !== 'user') {
       filt.innerHTML = FL.map((f) => `<li><button type="button" data-f="${f[0]}" aria-pressed="${mode === f[0]}">${t(f[1], f[2])}<sup>${P.filter(f[3]).length}</sup></button></li>`).join('');
       shown = P.filter(FL.find((f) => f[0] === mode)[3]);
-      wall.innerHTML = shown.map((p, i) => `<a class="pp" href="#${esc(p.id)}" data-i="${i}" style="animation-delay:${Math.min(i, 9) * 50}ms">${isNew(p) ? `<span class="new paper" data-tear="2"><span class="fill"></span>${t('New', 'جديدة')}</span>` : ''}<div class="bed paper" data-tear="6"><span class="fill"></span><div class="pc" data-tear="4"><img src="${esc(MG.thumb(p.id, p))}" alt="${esc(p.title_en)}, watercolour by Farah Al-Helou" loading="lazy" decoding="async" width="560" height="${Math.round(560 / asp(p.id))}"></div><div class="mk" aria-hidden="true"></div></div>
-        <div class="cap"><div><h2>${esc(MG.title(p))}</h2><span class="where">${esc(L(place(p)))}</span></div><span class="pr">${MG.fmt(MG.price('painting', p.id))}</span></div></a>`).join('');
+      wall.innerHTML = shown.map((p, i) => `<a class="pp ac-cell" href="#${esc(p.id)}" data-i="${i}">
+        <span class="ac-hd"><b class="no">${String(i + 1).padStart(2, '0')}</b>${isNew(p) ? `<span class="nw">${t('New', 'جديدة')}</span>` : ''}<span class="lb">${esc(L(place(p)))}</span></span>
+        <span class="ac-im"><span class="pc"><img src="${esc(MG.thumb(p.id, p))}" alt="${esc(p.title_en)}, watercolour by Farah Al-Helou" loading="lazy" decoding="async" width="560" height="${Math.round(560 / asp(p.id))}"></span><span class="mk" aria-hidden="true">${mock(p, i, 'small')}</span></span>
+        <span class="ac-ft"><h2 class="hand">${esc(MG.title(p))}</h2><span class="pr">${MG.fmt(MG.price('painting', p.id))}</span></span></a>`).join('');
     }
     if (view.open) open_(vi);
   }
   filt.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; mode = b.dataset.f; render('view'); MG.tear(); });
   /* the room behind a painting is only fetched when someone hovers it */
-  wall.addEventListener('pointerover', (e) => { const a = e.target.closest('.pp'); if (!a) return; const mk = a.querySelector('.mk'); if (mk && !mk.firstChild) { const p = shown[+a.dataset.i]; mk.innerHTML = mock(p, +a.dataset.i, 'small'); } });
   wall.addEventListener('click', (e) => { const a = e.target.closest('.pp'); if (!a) return; e.preventDefault(); open_(+a.dataset.i); });
   $('#vthumbs').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; vmode = b.dataset.v; open_(vi); });
 

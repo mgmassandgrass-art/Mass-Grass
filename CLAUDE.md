@@ -339,7 +339,13 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   only when `<html data-page="home">` (the build adds it for `"home":true` pages); `.flying` / `.landed` drive the rest, and
   a 4.5s safety in `boot.js` (plus a CSS fade) clears the splash if the script never runs. It plays once per visit
   (`sessionStorage.mgIntro`): coming back to the home page from another page shows no splash.
-- The calendar film (section 2 of home, `#cwv`, replaces the code-torn wall photo): `assets/cal-tear.{webm,mp4,webp}`, the
+- Mockups, round 2 (owner, Nov 2026): section 2 of home now shows the calendar in four real rooms (`#cwm`, `cm-{close,wide,desk,bed}.webp`
+  from `tools/calendar_mockup.py`, which now adds camera softness, the rings' shadow and grain), cross-fading every 4.5s with
+  small views to choose; the film below is no longer on the page. Paintings and postcards use the ArtCraft grid (`.ac-grid` /
+  `.ac-cell` in `site.css`): ruled cells with a number chip and the place, the piece on its paper, and under the pointer the
+  same piece in a real room / hand at once (the room photo is in the cell from the start; postcards are laid on the photo's
+  blank card with multiply). The ruler now runs on every page (`rail()` no longer needs three sections).
+- The calendar film (formerly section 2 of home, `#cwv`, replaces the code-torn wall photo): `assets/cal-tear.{webm,mp4,webp}`, the
   hanging calendar (lavender close-up mockup) whose cover is torn off the wire to show January. Made with HeyGen image-to-video
   (`heygen-video-1`, first frame = cover mockup, end frame = January mockup, 6s, 1080p). Route: mockup frames uploaded to Canva
   (`create-upload-url`, raw POST) and placed on holder pages 51-52 of `DAHWgLZfDEc`, exported as JPG for public links; the

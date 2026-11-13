@@ -68,8 +68,10 @@ $('again').onclick=()=>{msgIn.value='';toIn.value='';reset();flip(false);paint()
 /* 3 · all the cards */
 const grid=$('cards2'),view=$('view');let vi=0,vmode='card';
 function render(){pickers();paint();flip(S.back);
-  grid.innerHTML=P.map((p,i)=>`<a class="pk" href="#${p[0]}" data-i="${i}" aria-label="${AR?p[2]:p[1]}"><div class="face" style="${faceW(p[0])}"><img src="${p[6]}" alt="${p[1]}, postcard of a watercolour by Farah Al-Helou" loading="lazy" style="aspect-ratio:${pa(p[0])}"><div class="mk" aria-hidden="true">${sceneHTML(p[0],scenesFor(p[0])[i%scenesFor(p[0]).length])}</div></div>
-  <div class="cap"><div><h3>${AR?p[2]:p[1]}</h3><span class="where">${AR?p[4]:p[3]}</span></div><span class="pr">${SH.fmt(SH.price('postcard',p[0]))}</span></div></a>`).join('')}
+  grid.innerHTML=P.map((p,i)=>`<a class="pk ac-cell" href="#${p[0]}" data-i="${i}" aria-label="${AR?p[2]:p[1]}">
+    <span class="ac-hd"><b class="no">${String(i+1).padStart(2,'0')}</b><span class="lb">${AR?p[4]:p[3]}</span></span>
+    <span class="ac-im"><span class="face" style="${faceW(p[0])}"><img src="${p[6]}" alt="${p[1]}, postcard of a watercolour by Farah Al-Helou" loading="lazy" style="aspect-ratio:${pa(p[0])}"></span><span class="mk" aria-hidden="true">${sceneHTML(p[0],scenesFor(p[0])[i%scenesFor(p[0]).length])}</span></span>
+    <span class="ac-ft"><h3 class="hand">${AR?p[2]:p[1]}</h3><span class="pr">${SH.fmt(SH.price('postcard',p[0]))}</span></span></a>`).join('')}
 grid.addEventListener('click',e=>{const a=e.target.closest('.pk');if(!a)return;e.preventDefault();vmode='card';open_(+a.dataset.i)});
 $('vtabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;vmode=b.dataset.v;open_(vi)});
 function printBlock(kind,id){const pr=MG.printOf(kind,id);if(!pr)return '';const z=pr.size?MG.L(pr.size):'',sh=Object.values(MG.shipping);
