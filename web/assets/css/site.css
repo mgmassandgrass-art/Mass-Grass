@@ -18,7 +18,8 @@ a{color:inherit;text-decoration:none}
 .paper{position:relative;isolation:isolate}
 .paper>.fill{position:absolute;inset:0;z-index:-2;background:var(--c)}
 .tape{display:none}
-.wrap{max-width:1280px;margin:0 auto;padding-inline:clamp(16px,4vw,48px)}
+/* full screen, edge to edge (owner, Nov 2026): no centred column, only a hair of gutter so words never touch the glass */
+.wrap{max-width:none;margin:0;padding-inline:clamp(12px,1.4vw,24px)}
 h2.big{margin:0;font:800 var(--fs-h2)/1.02 var(--f);letter-spacing:-.035em;text-wrap:balance}
 .ar-on h2.big{font:700 var(--fs-title)/1.3 var(--fa);letter-spacing:0}
 /* a pencil note: the hand face, for names under paintings and small asides */

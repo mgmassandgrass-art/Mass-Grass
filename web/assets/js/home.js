@@ -28,7 +28,7 @@
   /* ---------- 1 · the calendar full screen.
      The cover first, then the months one after another (a slow cross-fade every 4.5s, paused when out of sight); the
      picture under the pointer comes slowly nearer. Each page is shown whole on its own paper colour. ---------- */
-  const inEl = $('#hsin'), SHOW = ['c27-00', 'c27-05', 'c27-08', 'c27-09', 'c27-12'].filter((k) => C.pages.some((p) => p.k === k));
+  const inEl = $('#hsin'), SHOW = ['c27-00', 'c27-01', 'c27-03', 'c27-05', 'c27-07', 'c27-10'].filter((k) => C.pages.some((p) => p.k === k));
   if (inEl && SHOW.length) {
     inEl.innerHTML = SHOW.map((k, i) => `<img class="hs-pg${i ? '' : ' on'}" src="assets/${k}-hd.webp" alt="" decoding="async" draggable="false"${i ? ' loading="lazy"' : ' fetchpriority="high"'}>`).join('');
     const pgs = $$('.hs-pg', inEl); let at = 0, seen = true;

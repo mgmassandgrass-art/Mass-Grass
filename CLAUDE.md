@@ -255,8 +255,10 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   "MASS & GRASS © FARAH AL HELOU" mark, `pmoon`, `ppoppies`, `ptree`, `s-dove`, `s-gaza`, `s-heart`) are not used. Farah's own
   sticker sheet from Drive gives ten die-cut stickers. "Blue Poppies" was the same painting as "White Dove" and "Little Tree"
   had no clean scan: both left the catalog; "Bike Ride", "Snow Globe" and "The Boatman" joined the paintings.
-- Still missing from the owner: 8 calendar months (Jan, Feb, Mar, Apr, Jun, Jul, Oct, Nov) and the sale files (hi-res PDF/PNG)
-  for every piece; the admin's overview lists the pieces without a file.
+- The full 2027 calendar (cover, 12 months, about) is the owner's artifact https://claude.ai/artifact/SvTzSB9aQZCttaB1ik9EZH
+  (one HTML page per month, 794x559). Its pages are rendered with Playwright at 3x into `web/assets/c27-MM{-hd,,-b}.webp` and
+  `t-c27-MM.webp` (the cover re-lettered "2027 Calendar" in its own Annie Use Your Telescope face, tag widened); the catalog
+  lists all 13 pages. Still missing from the owner: the sale files (hi-res PDF/PNG) for every piece; the admin's overview lists the pieces without a file.
 - Admin (`/admin/`, "دفتر المتجر"): overview with real figures and a before-launch list, orders, products and their files,
   customers, subscribers, messages (the help form is now saved in the database), pages (hide, sections, every text in both
   languages, versions), image library, settings (prices, links), security (two-step sign-in, devices, password, audit log).
@@ -324,6 +326,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   alpha from darkness), the front page torn up over the wire every 3s (`.tear`, also on click); beside it the words, price,
   buy, "browse the calendar", the shipping line. (The twelve-months leaflet was removed at the owner's request; its code in `home.js` waits on `#morow`.) (4) The shelves (`.coll`), Risotto's way in ArtCraft's look: a statement on the left,
   four square real photographs (`MG.mock.scene`) each with an ink label and "from €x". (5) Just in, (6) Farah's story, footer.
+- Full screen (owner, Nov 2026): `.wrap` has no max width and only a hair of gutter (`clamp(12px,1.4vw,24px)`).
 - The opening (Nov 2026, the owner's request): an empty page, MASS & GRASS large in the middle (`#splash`, the logo's ten
   letter paths arriving one by one), then it flies up and shrinks into the menu's logo cell (`home.js`, WAAPI, measured from
   `header .logo img`), the menu and the hero's words come in, and last the table of pages. `home-intro` is set by `boot.js`

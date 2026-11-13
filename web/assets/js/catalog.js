@@ -69,7 +69,7 @@ window.MG_DEFAULT = {
     ['sticker', 'pflower', 'Big Flower', 'الزهرة الكبيرة', 'round'],
     ['sticker', 'pmoonsleep', 'Moon Sleeper', 'نائمة على القمر', 'round']
   ].map(function (x) { return { kind: x[0], id: x[1], title_en: x[2], title_ar: x[3], extra: x[4] ? { shape: x[4] } : {} }; }),
-  /* the 2027 calendar, "Things kept in bottles": the pages Farah has finished (add a month once its PDF is in assets as c27-MM) */
+  /* the 2027 calendar, "Things kept in bottles": the cover and all twelve months (assets c27-MM*, rendered from the owner's calendar artifact) */
   calendar: {
     id: 'calendar-2027', title: ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027'],
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -77,12 +77,28 @@ window.MG_DEFAULT = {
     pages: [
       { k: 'c27-00', m: 0, n: ['The cover', 'الغلاف'], s: ['2027', '2027'], q: ['Things kept in bottles, watercolours by Farah Al-Helou.', 'أشياء نحفظها في قوارير، ألوان مائية لفرح الحلو.'],
         d: ['A heart kept in a bottle, flowers growing from it, and someone sitting on the cork to keep watch.', 'قلب محفوظ في قارورة تنبت منه الأزهار، وعلى الفلّينة من يجلس ليحرسه.'] },
+      { k: 'c27-01', m: 1, n: ['January', 'كانون الثاني'], s: ['Winter 2027', 'شتاء 2027'], q: ['Some lights are only found by those who reach.', 'بعض الأضواء لا يجدها إلا من يمدّ يده إليها.'],
+        d: ['A girl in a red coat reaches up to a single star inside a bottle full of night.', 'فتاة بمعطف أحمر تمدّ يدها إلى نجمة واحدة داخل قارورة من ليل.'] },
+      { k: 'c27-02', m: 2, n: ['February', 'شباط'], s: ['Winter 2027', 'شتاء 2027'], q: ['Everything that grows begins somewhere unseen.', 'كل ما ينمو يبدأ في مكانٍ لا يُرى.'],
+        d: ['A heart made of roots in a round bottle, and a small tree in blossom growing out of it.', 'قلب من جذور في قارورة مستديرة، تنبت منه شجرة صغيرة مزهرة.'] },
+      { k: 'c27-03', m: 3, n: ['March', 'آذار'], s: ['Spring 2027', 'ربيع 2027'], q: ['Slowness is also a way of arriving.', 'البطء أيضًا طريقة للوصول.'],
+        d: ['A snail with a spiral shell carries a single red flower up through a green bottle.', 'حلزون بصدفة لولبية يحمل زهرة حمراء واحدة في قارورة خضراء.'] },
+      { k: 'c27-04', m: 4, n: ['April', 'نيسان'], s: ['Spring 2027', 'ربيع 2027'], q: ['What we tend in silence learns to bloom.', 'ما نرعاه بصمت يتعلّم أن يزهر.'],
+        d: ['A small garden of spring flowers kept in a bottle, with a paper tag tied to its neck.', 'حديقة صغيرة من أزهار الربيع في قارورة، وعلى عنقها بطاقة ورقية.'] },
       { k: 'c27-05', m: 5, n: ['May', 'أيار'], s: ['Spring 2027', 'ربيع 2027'], q: ['We carry whole worlds no one else can see.', 'نحمل عوالم كاملة لا يراها أحد سوانا.'],
         d: ['A girl sits on a small green planet inside a bottle of night, with the stars only she can see.', 'فتاة تجلس على كوكب أخضر صغير داخل قارورة من ليل، ومعها نجوم لا يراها سواها.'] },
+      { k: 'c27-06', m: 6, n: ['June', 'حزيران'], s: ['Summer 2027', 'صيف 2027'], q: ['Keep a little light for the days that forget.', 'احتفظوا بقليل من الضوء للأيام التي تنسى.'],
+        d: ['A smiling sun kept in a yellow bottle, its light spilling over the paper.', 'شمس مبتسمة محفوظة في قارورة صفراء، ينسكب ضوؤها على الورق.'] },
+      { k: 'c27-07', m: 7, n: ['July', 'تموز'], s: ['Summer 2027', 'صيف 2027'], q: ['Home is not a place, it is what we carry.', 'البيت ليس مكانًا، بل ما نحمله معنا.'],
+        d: ['A whale swims inside the bottle with a small town of houses on its back.', 'حوت يسبح داخل القارورة وعلى ظهره بلدة صغيرة من البيوت.'] },
       { k: 'c27-08', m: 8, n: ['August', 'آب'], s: ['Summer 2027', 'صيف 2027'], q: ['To leave is also to believe in somewhere.', 'أن نرحل يعني أيضًا أن نؤمن بمكانٍ ما.'],
         d: ['A ship on a small sea inside the bottle, and a tree growing out of its neck toward a bird that has just left.', 'سفينة على بحر صغير داخل القارورة، وشجرة تنمو من عنقها نحو طائر غادر للتوّ.'] },
       { k: 'c27-09', m: 9, n: ['September', 'أيلول'], s: ['Autumn 2027', 'خريف 2027'], q: ['Even the sun bows; looking up is a choice.', 'حتى الشمس تنحني، والنظر إلى الأعلى اختيار.'],
         d: ['A sunflower hangs upside down from the cork; a boy with his school bag stands below and looks up at it.', 'زهرة شمس معلّقة بالمقلوب من الفلّينة، وتحتها ولد بحقيبته المدرسية ينظر إليها.'] },
+      { k: 'c27-10', m: 10, n: ['October', 'تشرين الأول'], s: ['Autumn 2027', 'خريف 2027'], q: ['Some words are kept, not sent.', 'بعض الكلمات تُحفظ ولا تُرسل.'],
+        d: ['A letter sealed in a bottle among autumn leaves, never posted.', 'رسالة مختومة في قارورة بين أوراق الخريف، لم تُرسل قط.'] },
+      { k: 'c27-11', m: 11, n: ['November', 'تشرين الثاني'], s: ['Autumn 2027', 'خريف 2027'], q: ['Rest is not stopping, it is gathering.', 'الراحة ليست توقفًا، بل جمعٌ للقوة.'],
+        d: ['A girl curled up inside a sea shell in a round green bottle, resting.', 'فتاة تستريح متكوّرة داخل صدفة بحرية في قارورة خضراء مستديرة.'] },
       { k: 'c27-12', m: 12, n: ['December', 'كانون الأول'], s: ['Winter 2027', 'شتاء 2027'], q: ['Every road we take is a way back to ourselves.', 'كل طريق نسلكه طريقُ عودةٍ إلى أنفسنا.'],
         d: ['A heart-shaped sun over a small house, and a yellow road that winds back to it through green hills.', 'شمس على شكل قلب فوق بيت صغير، وطريق أصفر يعود إليه بين التلال الخضراء.'] }
     ]
