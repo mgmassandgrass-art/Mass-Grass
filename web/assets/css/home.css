@@ -385,3 +385,7 @@ html[data-page=home] .ct .pr{background:#FBF7EE;color:var(--cal-rose,#9C4F52)}
 .ct .lb,.ct .pr{z-index:3}
 @media(prefers-reduced-motion:reduce){.ct .ctart,.ct .ctart img{transition:none}}
 @media(max-width:700px){html[data-page=home] .ct .lb{bottom:10px;min-height:32px;padding:0 10px}html[data-page=home] .ct .pr{top:8px;inset-inline-start:8px;padding:4px 6px}}
+
+/* Farah's photograph on the beach (owner, Nov 2026): a print with its white border, upright 3:4 */
+.story .face img{aspect-ratio:3/4;object-position:50% 40%;max-width:340px}
+@media(max-width:820px){.story .face img{max-width:260px}}
