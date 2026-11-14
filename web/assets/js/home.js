@@ -42,7 +42,7 @@
     let open = null, place = null;
     const btns = () => $$('.rg-b button', rgList);
     const fillTag = (i) => { const pg = C.pages.find((p) => p.m === i + 1); if (!pg) return;
-      tag.innerHTML = `<b>${esc(MG.ar ? C.monthsAr[i] : C.months[i])}</b><span>${esc(L(pg.q))}</span>`; };
+      tag.innerHTML = `<i class="bg"></i><b>${esc(MG.ar ? C.monthsAr[i] : C.months[i])}</b><span>${esc(L(pg.q))}</span>`; };
     const closeTag = () => { open = null; place = null; tag.classList.toggle('on', false); cord.classList.toggle('on', false); btns().forEach((x) => x.setAttribute('aria-expanded', 'false')); };
     rgList.addEventListener('click', (e) => { const btn = e.target.closest('button'); if (!btn) return; const i = +btn.dataset.m - 1;
       if (open === i) { closeTag(); return; } open = i; place = null; fillTag(i); tag.classList.toggle('on', false); void tag.offsetWidth; tag.classList.add('on');
@@ -95,7 +95,7 @@
             cord.classList.add('on');
           }
           const tx = x + place.dx, ty = y + place.dy, left = tag.classList.contains('pr');
-          tag.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0)`;
+          tag.style.translate = `${tx.toFixed(1)}px ${ty.toFixed(1)}px`; /* the translate property, so the tilt never swings the position */
           /* the string: tied round the bottle's neck (a band across the glass and a small knot on the tag's side), then hanging
              in a soft curve to the tag's eyelet; the eyelet sits 16.5px in from the tag's pointed end */
           const rm = o.el.style.transform.match(/rotate\(([-\d.]+)deg\) scale\(([-\d.]+)\)/), rot = rm ? +rm[1] * Math.PI / 180 : 0, scl = rm ? +rm[2] : 1;
@@ -106,7 +106,9 @@
           wrapP.setAttribute('d', `M${(nx - hw).toFixed(1)} ${(ny - 1).toFixed(1)} Q${nx.toFixed(1)} ${(ny + 5).toFixed(1)} ${(nx + hw).toFixed(1)} ${(ny - 1).toFixed(1)}`);
           knotP.setAttribute('d', `M${kx.toFixed(1)} ${(ky - 3).toFixed(1)} q${(side * 5).toFixed(1)} 1 ${(side * 3).toFixed(1)} 6 M${kx.toFixed(1)} ${ky.toFixed(1)} q${(side * 7).toFixed(1)} 3 ${(side * 9).toFixed(1)} 9`);
           const dx = ex - kx, sag = 14 + Math.abs(dx) * .1 + Math.max(0, ey - ky) * .15;
-          cordP.setAttribute('d', `M${kx.toFixed(1)} ${ky.toFixed(1)} C${(kx + dx * .3).toFixed(1)} ${(Math.max(ky, ey) + sag).toFixed(1)} ${(ex - dx * .25).toFixed(1)} ${(ey + sag * .6).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`);
+          /* the last stretch always comes in from the tag's pointed end, as a string through an eyelet does */
+          const px = left ? ex + 26 + 16.5 : ex - 26 - 16.5;
+          cordP.setAttribute('d', `M${kx.toFixed(1)} ${ky.toFixed(1)} C${(kx + dx * .3).toFixed(1)} ${(Math.max(ky, ey) + sag).toFixed(1)} ${px.toFixed(1)} ${(ey + 6).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`);
         }
       }
       rgList.classList.toggle('up', fl > .3);

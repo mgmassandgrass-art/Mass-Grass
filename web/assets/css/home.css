@@ -228,3 +228,11 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 @media(max-width:700px){.rg-tag{max-width:min(220px,62vw);padding:10px 14px 12px 28px}.rg-tag.pr{padding:10px 28px 12px 14px}.rg-tag b{font-size:22px}.rg-tag span{font-size:17px}}
 
 @media(max-width:700px){.rg-b img{height:50px}.rg-mid{width:min(250px,64vw);gap:10px}.rg-mid h1{font-size:34px}.ar-on .rg-mid h1{font-size:30px}.rg-sub{font-size:9px;letter-spacing:.14em}.ar-on .rg-sub{font-size:12px}.rg-btn{font-size:21px;padding:6px 16px 8px}.ar-on .rg-btn{font-size:18px}}
+
+/* the tag's outline all the way round, the point included: the tag itself is the ink (clipped to the tag shape) and a cream
+   layer 1px inside it, clipped to the same shape, is the paper; the eyelet sits on top */
+.rg-tag{background:rgba(43,47,44,.72);border:0}
+.rg-tag .bg{position:absolute;inset:1px;background:#FBF7EE;clip-path:polygon(15.5px 0,100% 0,100% 100%,15.5px 100%,0 50%)}
+.rg-tag.pr .bg{clip-path:polygon(0 0,calc(100% - 15.5px) 0,100% 50%,calc(100% - 15.5px) 100%,0 100%)}
+.rg-tag b,.rg-tag span{position:relative}
+.rg-tag::before{z-index:1}
