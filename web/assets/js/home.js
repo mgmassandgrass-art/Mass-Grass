@@ -125,14 +125,21 @@
     requestAnimationFrame(() => rgList.classList.add('in'));
   }
 
-  /* ---------- 2a · the calendar in four real rooms: a slow cross-fade from one to the next, the small views below choose ---------- */
+  /* ---------- 2a · the twelve months: each page of the calendar in turn (a slow cross-fade every 4s while in view), the twelve
+     below as small pages to choose; choosing one holds it a little longer ---------- */
   const cwm = $('#cwm');
   if (cwm) {
-    const ims = $$(':scope > img', cwm), bts = $$('.cm-th button', cwm); let at = 0, seen = false, timer = 0;
-    const go = (i) => { ims[at].classList.toggle('on', false); bts[at].setAttribute('aria-pressed', 'false'); at = (i + ims.length) % ims.length; ims[at].classList.add('on'); bts[at].setAttribute('aria-pressed', 'true'); };
-    const run = () => { clearInterval(timer); if (!MG.still) timer = setInterval(() => { if (seen && !document.hidden) go(at + 1); }, 4500); };
-    bts.forEach((b, i) => b.addEventListener('click', () => { go(i); run(); }));
-    vis(cwm, (v) => { seen = v; }); run();
+    const MS = C.pages.filter((p) => p.m > 0), stage = $('#cmstage'), th = $('#cmth');
+    const nm = (p) => (MG.ar ? C.monthsAr[p.m - 1] : C.months[p.m - 1]);
+    stage.innerHTML = MS.map((p, i) => `<img${i ? '' : ' class="on"'} src="assets/${p.k}${i ? '' : '-hd'}.webp" alt="" ${i ? 'loading="lazy" ' : ''}decoding="async" draggable="false">`).join('');
+    th.innerHTML = MS.map((p, i) => `<button type="button" aria-pressed="${!i}"><img src="assets/t-${p.k}.webp" alt="" loading="lazy"><span>${String(p.m).padStart(2, '0')}</span></button>`).join('');
+    const ims = $$('img', stage), bts = $$('button', th); let at = 0, seen = false, timer = 0;
+    const label = () => { ims.forEach((im, i) => { im.alt = nm(MS[i]) + t(', from the 2027 calendar', '، من تقويم 2027'); }); bts.forEach((b, i) => b.setAttribute('aria-label', nm(MS[i]))); };
+    const go = (i) => { ims[at].classList.toggle('on', false); bts[at].setAttribute('aria-pressed', 'false'); at = (i + ims.length) % ims.length; ims[at].classList.add('on'); bts[at].setAttribute('aria-pressed', 'true');
+      const n = ims[(at + 1) % ims.length]; n.loading = 'eager'; };
+    const run = (wait) => { clearInterval(timer); clearTimeout(timer); if (MG.still) return; timer = setTimeout(() => { timer = setInterval(() => { if (seen && !document.hidden) go(at + 1); }, 4000); }, wait || 0); };
+    bts.forEach((b, i) => b.addEventListener('click', () => { go(i); run(6000); }));
+    vis(cwm, (v) => { seen = v; }); label(); run(); MG.page((why) => { if (why === 'lang') label(); });
   }
 
   /* ---------- 2 · the calendar on the wall: its pages lie in the photograph's page, the wire on top; every few seconds

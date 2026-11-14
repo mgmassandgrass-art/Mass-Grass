@@ -330,3 +330,26 @@ html[data-page=home]:not(.ar-on) header :is(.mainnav>a,.ddb,.ddp a,#mmenu a,#mme
 html[data-page=home]:not(.ar-on) header .mainnav>a[aria-current]{background-size:calc(100% - 16px) 28px}
 html[data-page=home]:not(.ar-on) header .ddb.cur,html[data-page=home]:not(.ar-on) header .ddb[aria-expanded=true]{background-size:calc(100% - 16px) 28px}
 html[data-page=home]:not(.ar-on) header :is(.bn,.ini){font-family:var(--cal-t);font-weight:400;font-size:17px}
+
+/* section 2: the twelve months of the calendar, page after page, on the calendar's own paper colour; the twelve small pages
+   below choose. The buttons: browse, then buy with its price on the far side; the print line plain, no box. */
+.cw-months{cursor:default;background:#EDE6D6;display:grid;grid-template-rows:minmax(0,1fr) auto;align-items:stretch}
+.cm-stage{position:relative;min-height:clamp(300px,36vw,560px);margin:clamp(16px,2vw,28px) clamp(16px,2vw,28px) 0}
+.cm-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .9s ease;filter:drop-shadow(0 14px 22px rgba(80,60,40,.18))}
+.cm-stage img.on{opacity:1}
+.cw-months .cm-th{position:static;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;padding:16px clamp(16px,2vw,28px) 18px}
+.cw-months .cm-th button{position:relative;width:auto;height:auto;aspect-ratio:1820/1282;padding:0;border:0;background:#fff;opacity:.6;box-shadow:0 2px 6px -3px rgba(80,60,40,.4);cursor:pointer;transition:opacity .2s,transform .2s}
+.cw-months .cm-th button img{display:block;width:100%;height:100%;object-fit:cover}
+.cw-months .cm-th button span{position:absolute;inset:auto 0 -20px;font:400 15px/1 var(--cal-t,var(--hand));color:var(--cal-grey,#6B675E);text-align:center}
+.cw-months .cm-th button[aria-pressed=true]{opacity:1;outline:1.5px solid var(--cal-rose,#9C4F52);outline-offset:2px;transform:translateY(-2px)}
+.cw-months .cm-th button[aria-pressed=true] span{color:var(--cal-rose,#9C4F52)}
+.cw-months .cm-th button:hover{opacity:1}
+.cw-months .cm-th button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.cw-months .cm-th{padding-bottom:34px}
+@media(max-width:700px){.cw-months .cm-th{grid-template-columns:repeat(6,minmax(0,1fr));row-gap:28px}}
+.cw-buy{display:grid;gap:12px;align-items:stretch;justify-items:stretch;flex-wrap:nowrap}
+.cw-buy .ghost{width:100%;justify-content:center}
+.cw-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.cw-row .ink{flex:1;justify-content:center}
+.cw-row .fig{margin:0}
+.ship{border:0;padding:0}
