@@ -358,6 +358,10 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - Calendar V2 (the owner's final printed calendar, portrait PDF, 16 flat JPEG pages kept in `drafts/calendar-v2/pg-000..015.jpg`:
   1 cover, 2-7 Jan-Jun, 8 'a year of things worth keeping', 9-14 Jul-Dec, 15 year at a glance, 16 about). Its pages are on the
   site as `web/assets/v2-00..12.webp` (1100px) and `t-v2-MM.webp` (00 = cover). The older landscape set `c27-*` is still used elsewhere.
+- Accent colour (owner, Nov 2026): the blue is gone site-wide; `--blue` and `--indigo` are now the calendar's rose #9C4F52
+  (ruler, focus rings, hovers). The shelves (home section 3) share one light: painting on the bench, postcard in hands, sticker on
+  the kraft notebook (was the laptop), the V2 calendar cover held up (`held-3x4`); one CSS grade on all four (`.ct .mscene` sepia/
+  saturate + a cream multiply veil) and cream labels in rose.
 - Section 2 of home (owner, Nov 2026, latest): the twelve month pages of the V2 calendar (`#cwm.cw-months`, `v2-01..12`) one after
   another every 4s, with the twelve as small numbered pages to choose; the buttons stacked: Browse (ghost) above Buy (ink) with the
   price on the far side; the print/shipping line plain, no box. The four room mockups below (`cm-*.webp`) are no longer shown.

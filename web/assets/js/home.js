@@ -190,10 +190,12 @@
 
   /* ---------- 4 · the shelves: four real photographs, each piece in its place, the shelf's name on it ---------- */
   const SHELF = [['painting', 'dovegirl', 'mk-bench', 'paintings.html', ['Paintings', 'اللوحات']], ['postcard', 'hero', 'pc-hands', 'postcards.html', ['Postcards', 'البطاقات البريدية']],
-    ['sticker', 's-lemons', 'sk-laptop', 'stickers.html', ['Stickers', 'الملصقات']], ['calendar', '', 'cr2-hands', 'calendar.html', ['Calendar', 'التقويم']]];
+    ['sticker', 's-lemons', 'sk-notebook', 'stickers.html', ['Stickers', 'الملصقات']], ['calendar', '', 'cr2-hands', 'calendar.html', ['Calendar', 'التقويم']]];
   function shelves() {
     const g = $('#clgrid'); if (!g) return;
-    g.innerHTML = SHELF.map((s) => `<li class="ct"><a href="${s[3]}"><span class="ph">${MG.mock.scene(s[0], s[1], s[2])}</span><span class="lb">${esc(L(s[4]))}</span><span class="pr">${t('from', 'من')} ${MG.fmt(MG.price(s[0]))}</span></a></li>`).join('');
+    /* the calendar's shelf: the cover of the printed calendar (V2) held up in the same light room as the others */
+    const calScene = () => '<div class="mscene" style="--ar:' + (1080 / 1350) + '"><img class="room" src="assets/held-3x4.webp" alt=""><img class="art framed calv2" src="assets/v2-00.webp" alt="" style="left:35.2%;top:14.2%;width:30.5%;height:33.6%"></div>';
+    g.innerHTML = SHELF.map((s) => `<li class="ct"><a href="${s[3]}"><span class="ph">${s[0] === 'calendar' ? calScene() : MG.mock.scene(s[0], s[1], s[2])}</span><span class="lb">${esc(L(s[4]))}</span><span class="pr">${t('from', 'من')} ${MG.fmt(MG.price(s[0]))}</span></a></li>`).join('');
   }
 
   /* ---------- 5 · just in ---------- */

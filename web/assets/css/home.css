@@ -365,3 +365,11 @@ html[data-page=home]:not(.ar-on) header :is(.bn,.ini){font-family:var(--cal-t);f
 .cw-months .cm-th button{aspect-ratio:auto;background:none;box-shadow:none}
 .cw-months .cm-th button img{box-shadow:0 2px 6px -3px rgba(80,60,40,.4);background:#fff}
 @media(max-width:700px){.cw-months .cm-th{row-gap:12px}}
+
+/* the shelves in one light (owner, Nov 2026): the four photographs graded alike, warm and soft, towards the calendar's cream,
+   with the same thin veil; labels in the calendar's rose instead of ink blocks */
+.ct .mscene{filter:sepia(.14) saturate(.88) contrast(.95) brightness(1.03)}
+.ct .ph::after{content:"";position:absolute;inset:0;background:#F2ECDF;mix-blend-mode:multiply;opacity:.22;pointer-events:none}
+.ct .calv2{object-fit:cover}
+html[data-page=home] .ct .lb{background:#FBF7EE;color:var(--cal-rose,#9C4F52);border:1px solid rgba(156,79,82,.35)}
+html[data-page=home] .ct .pr{background:#FBF7EE;color:var(--cal-rose,#9C4F52)}
