@@ -188,14 +188,15 @@
   }
   if (track) { addEventListener('scroll', () => requestAnimationFrame(slide), { passive: true }); addEventListener('resize', size); }
 
-  /* ---------- 4 · the shelves: four real photographs, each piece in its place, the shelf's name on it ---------- */
-  const SHELF = [['painting', 'dovegirl', 'mk-bench', 'paintings.html', ['Paintings', 'اللوحات']], ['postcard', 'hero', 'pc-hands', 'postcards.html', ['Postcards', 'البطاقات البريدية']],
-    ['sticker', 's-lemons', 'sk-notebook', 'stickers.html', ['Stickers', 'الملصقات']], ['calendar', '', 'cr2-hands', 'calendar.html', ['Calendar', 'التقويم']]];
+  /* ---------- 4 · the shelves: four real photographs in one warm light (the painting on the bench, the postcards' front and back
+     on the desk, the sticker sheet with one already peeled off, the calendar standing on the desk); under the pointer the piece
+     itself comes up on its paper ---------- */
+  const SHELF = [['painting', 'dovegirl', 'mk-bench', 'paintings.html', ['Paintings', 'اللوحات'], 'dovegirl'], ['postcard', 'hero', 'sh-pc', 'postcards.html', ['Postcards', 'البطاقات البريدية'], 'hero'],
+    ['sticker', 's-lemons', 'sh-sk', 'stickers.html', ['Stickers', 'الملصقات'], 's-pomegranate'], ['calendar', '', 'sh-cal', 'calendar.html', ['Calendar', 'التقويم'], 'v2-00']];
   function shelves() {
     const g = $('#clgrid'); if (!g) return;
-    /* the calendar's shelf: the cover of the printed calendar (V2) held up in the same light room as the others */
-    const calScene = () => '<div class="mscene" style="--ar:' + (1080 / 1350) + '"><img class="room" src="assets/held-3x4.webp" alt=""><img class="art framed calv2" src="assets/v2-00.webp" alt="" style="left:35.2%;top:14.2%;width:30.5%;height:33.6%"></div>';
-    g.innerHTML = SHELF.map((s) => `<li class="ct"><a href="${s[3]}"><span class="ph">${s[0] === 'calendar' ? calScene() : MG.mock.scene(s[0], s[1], s[2])}</span><span class="lb">${esc(L(s[4]))}</span><span class="pr">${t('from', 'من')} ${MG.fmt(MG.price(s[0]))}</span></a></li>`).join('');
+    const photo = (s) => s[0] === 'painting' ? MG.mock.scene(s[0], s[1], s[2]) : `<div class="mscene" style="--ar:1"><img class="room" src="assets/${s[2]}.webp" alt="" loading="lazy" decoding="async"></div>`;
+    g.innerHTML = SHELF.map((s) => `<li class="ct ct-${s[0]}"><a href="${s[3]}"><span class="ph">${photo(s)}<span class="ctart" aria-hidden="true"><img src="assets/${s[5]}.webp" alt="" loading="lazy" decoding="async"></span></span><span class="lb">${esc(L(s[4]))}</span><span class="pr">${t('from', 'من')} ${MG.fmt(MG.price(s[0]))}</span></a></li>`).join('');
   }
 
   /* ---------- 5 · just in ---------- */

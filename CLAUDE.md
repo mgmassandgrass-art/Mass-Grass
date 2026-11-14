@@ -395,3 +395,10 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   under the header (`--sf`).
 - Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;
   the admin's link fields for facebook / tiktok. Not deployed yet.
+- Shelves, round 3 (owner, 14 Nov 2026): the postcard (finger in the hands photo), sticker and calendar photos were replaced by
+  three new ones in one light (warm oak desk, window light from the left), made from blank Canva photos (holder page 57 of
+  `DAHWgLZfDEc`, blanks kept in `drafts/mockups/shelves/`) with the real art laid in by `tools/shelf_mockups.py` (perspective warp, the
+  blank's own light, grain): `sh-pc` (two postcards, the back with Farah's note / stamp / postmark under, the painting on top),
+  `sh-sk` (a printed kiss-cut sheet of six stickers, one peeled off and lying beside it), `sh-cal` (the V2 desk calendar standing on
+  the desk, cover under the wire). The painting keeps `mk-bench`. Under the pointer each shelf shows the piece itself on the cream
+  paper (`.ctart`; never call it `.peek`, which is the quick-view dialog's class).
