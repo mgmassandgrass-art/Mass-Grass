@@ -35,7 +35,10 @@
     /* a click on a bottle hangs its paper tag beside it: the month and the line Farah wrote for it, as on the calendar */
     const tag = document.createElement('div'); tag.className = 'rg-tag'; tag.setAttribute('role', 'status'); tag.setAttribute('aria-live', 'polite'); rgList.parentNode.append(tag);
     const cord = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); cord.setAttribute('class', 'rg-cord'); cord.setAttribute('aria-hidden', 'true');
-    cord.innerHTML = '<path d="" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>'; rgList.parentNode.append(cord); const cordP = cord.firstChild;
+    cord.innerHTML = '<path d="" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>'; rgList.parentNode.append(cord);
+    const NECK = [[.52, .13, .14], [.49, .33, .14], [.5, .2, .15], [.53, .1, .14], [.5, .12, .13], [.62, .1, .11], [.53, .1, .12], [.52, .25, .1], [.45, .2, .13], [.52, .24, .2], [.47, .17, .13], [.5, .12, .14]];
+    cord.innerHTML = '<path class="wrap" d="" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path class="knot" d="" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' + cord.innerHTML;
+    const wrapP = cord.querySelector('.wrap'), knotP = cord.querySelector('.knot'), cordP = cord.querySelector('path:not(.wrap):not(.knot)');
     let open = null, place = null;
     const btns = () => $$('.rg-b button', rgList);
     const fillTag = (i) => { const pg = C.pages.find((p) => p.m === i + 1); if (!pg) return;
@@ -54,7 +57,7 @@
        section, not on a bottle, so a bottle moving away never makes it flicker. */
     let W = 0, H = 0, R = 0, turn = 0, aim = 0, spd = 1, last = 0, seen = true, fl = 0, flTo = 0, lastY = scrollY;
     const ring = rgList.closest('.ring'), dir = () => (MG.ar ? -1 : 1);
-    const size = () => { const r = rgList.getBoundingClientRect(); W = r.width; H = r.height; R = Math.min(W * (W < 700 ? .4 : .34), H * .37); };
+    const size = () => { const r = rgList.getBoundingClientRect(); W = r.width; H = r.height; R = Math.min(W * (W < 700 ? .43 : .34), H * .37); };
     const draw = (now) => {
       const dt = Math.min(64, now - (last || now)); last = now;
       spd += ((open !== null ? 0 : flTo ? .25 : 1) - spd) * .05; aim += dt * .00004 * spd * dir(); turn += (aim - turn) * .06; fl += (flTo - fl) * .035;
@@ -73,30 +76,37 @@
           if (!place) {
             const lr = rgList.getBoundingClientRect(), mr = $('.rg-mid').getBoundingClientRect();
             const mid = { l: mr.left - lr.left - 10, t: mr.top - lr.top - 10, r: mr.right - lr.left + 10, b: mr.bottom - lr.top + 10 };
-            const others = bs.filter((q) => q !== o).map((q) => { const n = q.el.style.transform.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/), w = q.el.querySelector('img').offsetWidth, h = q.el.querySelector('img').offsetHeight;
+            const others = bs.map((q) => { const n = q.el.style.transform.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/), w = q.el.querySelector('img').offsetWidth, h = q.el.querySelector('img').offsetHeight;
               return n ? { l: +n[1] - w / 2 - 8, t: +n[2] - h / 2 - 8, r: +n[1] + w / 2 + 8, b: +n[2] + h / 2 + 8 } : null; }).filter(Boolean);
             const ov = (a, c) => Math.max(0, Math.min(a.r, c.r) - Math.max(a.l, c.l)) * Math.max(0, Math.min(a.b, c.b) - Math.max(a.t, c.t));
             let best = null;
             for (let k = 0; k < 16; k++) { const ang = (k / 16) * Math.PI * 2;
-              for (const d of [bw * .5 + 56, bw * .5 + 100]) {
+              for (const d of [bw * .5 + 56, bw * .5 + 100, bw * .5 + 160, bw * .5 + 240]) {
                 const cx = x + Math.cos(ang) * (d + tw / 2), cy = y - bh * .25 + Math.sin(ang) * (d * .7 + th / 2);
                 const box = { l: cx - tw / 2, t: cy - th / 2, r: cx + tw / 2, b: cy + th / 2 };
                 const out = Math.max(0, 12 - box.l) + Math.max(0, box.r - (W - 12)) + Math.max(0, 12 - box.t) + Math.max(0, box.b - (H - 12));
-                const sc = others.reduce((t2, c) => t2 + ov(box, c), 0) + ov(box, mid) * 3 + out * 4000 + d * 2;
+                const sc = others.reduce((t2, c) => t2 + ov(box, c), 0) + ov(box, mid) * 12 + out * 4000 + d * 2;
                 if (!best || sc < best.sc) best = { sc, dx: box.l - x, dy: box.t - y };
               } }
             place = best;
             const left = place.dx + tw / 2 < 0;                    /* the tag hangs to the bottle's left: its point faces right */
             tag.classList.toggle('pl', !left); tag.classList.toggle('pr', left);
-            tag.style.setProperty('--tilt', (left ? 3 : -3) + 'deg'); tag.style.setProperty('--ox', left ? '100%' : '0%');
+            tag.style.setProperty('--tilt', (left ? 3 : -3) + 'deg'); tag.style.setProperty('--ox', left ? 'calc(100% - 16.5px)' : '16.5px');
             cord.classList.add('on');
           }
           const tx = x + place.dx, ty = y + place.dy, left = tag.classList.contains('pr');
           tag.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0)`;
-          /* the string: from the bottle's neck to the tag's eyelet, hanging in a soft curve */
-          const nx = x, ny = y - bh * .42, ex = left ? tx + tw - 13 : tx + 13, ey = ty + th / 2;
-          const sag = 18 + Math.abs(ex - nx) * .12, mx = (nx + ex) / 2, my = Math.max(ny, ey) + sag;
-          cordP.setAttribute('d', `M${nx.toFixed(1)} ${ny.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`);
+          /* the string: tied round the bottle's neck (a band across the glass and a small knot on the tag's side), then hanging
+             in a soft curve to the tag's eyelet; the eyelet sits 16.5px in from the tag's pointed end */
+          const rm = o.el.style.transform.match(/rotate\(([-\d.]+)deg\) scale\(([-\d.]+)\)/), rot = rm ? +rm[1] * Math.PI / 180 : 0, scl = rm ? +rm[2] : 1;
+          const nk = NECK[open], ox0 = (nk[0] - .5) * bw * scl, oy0 = (nk[1] - .5) * bh * scl;
+          const nx = x + ox0 * Math.cos(rot) - oy0 * Math.sin(rot), ny = y + ox0 * Math.sin(rot) + oy0 * Math.cos(rot), hw = nk[2] * bw * scl;
+          const side = left ? -1 : 1, kx = nx + side * hw, ky = ny + 1.5;
+          const ex = left ? tx + tw - 16.5 : tx + 16.5, ey = ty + th / 2;
+          wrapP.setAttribute('d', `M${(nx - hw).toFixed(1)} ${(ny - 1).toFixed(1)} Q${nx.toFixed(1)} ${(ny + 5).toFixed(1)} ${(nx + hw).toFixed(1)} ${(ny - 1).toFixed(1)}`);
+          knotP.setAttribute('d', `M${kx.toFixed(1)} ${(ky - 3).toFixed(1)} q${(side * 5).toFixed(1)} 1 ${(side * 3).toFixed(1)} 6 M${kx.toFixed(1)} ${ky.toFixed(1)} q${(side * 7).toFixed(1)} 3 ${(side * 9).toFixed(1)} 9`);
+          const dx = ex - kx, sag = 14 + Math.abs(dx) * .1 + Math.max(0, ey - ky) * .15;
+          cordP.setAttribute('d', `M${kx.toFixed(1)} ${ky.toFixed(1)} C${(kx + dx * .3).toFixed(1)} ${(Math.max(ky, ey) + sag).toFixed(1)} ${(ex - dx * .25).toFixed(1)} ${(ey + sag * .6).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`);
         }
       }
       rgList.classList.toggle('up', fl > .3);

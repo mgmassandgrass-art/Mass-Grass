@@ -316,7 +316,8 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   home.js: the twelve bottle cut-outs (`bt-01..12.webp`) on a true circle round the words, turning very slowly (and further
   with the scroll), staying upright; with the pointer over the section all the bottles float together (hover is on the section,
   not on one bottle, so nothing flickers) while the ring slows. A click on a bottle hangs a paper tag beside it (`.rg-tag`, like
-  the calendar's tag) with the month and its line (`C.pages[].q`), tied to the bottle's neck by a string (`.rg-cord` SVG); its place is chosen
+  the calendar's tag) with the month and its line (`C.pages[].q`), tied round the bottle's neck by a string (`.rg-cord` SVG: a band across the glass at `NECK[i]`, read off each
+  painting by eye, a small knot, then a soft curve to the tag's eyelet, which is the tag's turning point); its place is chosen
   when it opens from 32 spots round the bottle, the one covering no other bottle, not the words, on the page; the ring rests
   while a tag is out. A click elsewhere, the same bottle or Escape takes it down. Cream `#F2ECDF`, lettering in the calendar's
   own Annie Use Your Telescope (`web/fonts/annie-use-your-telescope.ttf`, OFL; Aref Ruqaa in Arabic), moon / stars / leaves cut

@@ -210,8 +210,8 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 .rg-b button:focus-visible{outline:2px solid var(--rg-ink);outline-offset:6px;border-radius:12px}
 .rg-tag{position:absolute;left:0;top:0;z-index:6;width:max-content;max-width:min(260px,70vw);padding:12px 18px 14px 30px;pointer-events:none;
   background:#FBF7EE;border:1px solid rgba(43,47,44,.7);clip-path:polygon(16px 0,100% 0,100% 100%,16px 100%,0 50%);color:#3E3A34;
-  filter:drop-shadow(0 10px 14px rgba(80,60,40,.18));opacity:0;scale:.6;rotate:var(--tilt,0deg);transform-origin:var(--ox,0%) 100%;transition:opacity .35s ease,scale .55s cubic-bezier(.3,1.5,.5,1)}
-.rg-tag::before{content:"";position:absolute;left:12px;top:50%;width:7px;height:7px;margin-top:-4px;border-radius:50%;border:1px solid rgba(43,47,44,.7);background:var(--rg-bg)}
+  filter:drop-shadow(0 10px 14px rgba(80,60,40,.18));opacity:0;scale:.6;rotate:var(--tilt,0deg);transform-origin:var(--ox,16.5px) 50%;transition:opacity .35s ease,scale .55s cubic-bezier(.3,1.5,.5,1)}
+.rg-tag::before{content:"";position:absolute;left:12px;top:50%;width:9px;height:9px;margin-top:-4.5px;box-sizing:border-box;border-radius:50%;border:1px solid rgba(43,47,44,.7);background:var(--rg-bg)}
 .rg-tag.on{opacity:1;scale:1}
 .rg-tag b{display:block;font:400 26px/1 'Annie Use Your Telescope',var(--hand);color:var(--rg-ink);margin-bottom:4px}
 .rg-tag span{display:block;font:400 19px/1.15 'Annie Use Your Telescope',var(--hand)}
@@ -222,5 +222,9 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 /* the tag's point and eyelet face its bottle (.pl: bottle on the left, .pr: on the right); a string runs from the neck */
 .rg-tag.pr{padding:12px 30px 14px 18px;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%)}
 .rg-tag.pr::before{left:auto;right:12px}
-.rg-cord{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;overflow:visible;color:rgba(70,57,40,.65);opacity:0;transition:opacity .35s ease}
+.rg-cord{position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none;overflow:visible;color:rgba(70,57,40,.65);opacity:0;transition:opacity .35s ease}
 .rg-cord.on{opacity:1}
+
+@media(max-width:700px){.rg-tag{max-width:min(220px,62vw);padding:10px 14px 12px 28px}.rg-tag.pr{padding:10px 28px 12px 14px}.rg-tag b{font-size:22px}.rg-tag span{font-size:17px}}
+
+@media(max-width:700px){.rg-b img{height:50px}.rg-mid{width:min(250px,64vw);gap:10px}.rg-mid h1{font-size:34px}.ar-on .rg-mid h1{font-size:30px}.rg-sub{font-size:9px;letter-spacing:.14em}.ar-on .rg-sub{font-size:12px}.rg-btn{font-size:21px;padding:6px 16px 8px}.ar-on .rg-btn{font-size:18px}}
