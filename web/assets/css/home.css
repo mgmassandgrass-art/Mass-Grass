@@ -179,8 +179,8 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 .rg-list{position:absolute;inset:0;margin:0;padding:0;list-style:none}
 .rg-b{position:absolute;left:0;top:0;width:0;height:0;will-change:transform;opacity:0;transition:opacity 1.2s ease}
 .rg-list.in .rg-b{opacity:1}
-.rg-b img{position:absolute;left:0;top:0;translate:-50% -50%;display:block;height:clamp(70px,11vh,118px);width:auto;max-width:none;filter:drop-shadow(0 6px 8px rgba(80,60,40,.14));transition:filter .8s ease;cursor:pointer;-webkit-user-drag:none;user-select:none}
-.rg-b.up img{filter:drop-shadow(0 26px 22px rgba(80,60,40,.22))}
+.rg-b img{position:absolute;left:0;top:0;translate:-50% -50%;display:block;height:clamp(70px,11vh,118px);width:auto;max-width:none;filter:drop-shadow(0 6px 8px rgba(80,60,40,.14));transition:filter 1.2s ease;-webkit-user-drag:none;user-select:none}
+.rg-list.up .rg-b img{filter:drop-shadow(0 24px 20px rgba(80,60,40,.2))}
 .rg-sky img{position:absolute;max-width:none;pointer-events:none}
 .rg-sky .moon{width:clamp(48px,4.4vw,72px);inset-inline-end:16%;top:9%;animation:rgFloat 9s ease-in-out infinite}
 .rg-sky .st{width:12px;opacity:.85;animation:rgTwinkle 4s ease-in-out infinite}

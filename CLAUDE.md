@@ -313,8 +313,9 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   few words at the other end (`data-meta="a|b|c"` / `data-meta-ar` on the section, separated by small squares). Pages need
   at least two `main > section` with a heading to get it.
 - Home section 1 now (owner, 14 Nov 2026, from the calendar V2 page "a year of things worth keeping"): `.ring` / `#rglist` in
-  home.js: the twelve bottle cut-outs (`bt-01..12.webp`) on an ellipse round the words, turning very slowly and staying upright;
-  under the pointer a bottle drifts out and floats while the ring slows to a stop. Cream `#F2ECDF`, lettering in the calendar's
+  home.js: the twelve bottle cut-outs (`bt-01..12.webp`) on a true circle round the words, turning very slowly (and further
+  with the scroll), staying upright; with the pointer over the section all the bottles float together (hover is on the section,
+  not on one bottle, so nothing flickers) while the ring slows. Cream `#F2ECDF`, lettering in the calendar's
   own Annie Use Your Telescope (`web/fonts/annie-use-your-telescope.ttf`, OFL; Aref Ruqaa in Arabic), moon / stars / leaves cut
   from the calendar's last page (`sky-*.webp`), a light pill button "Buy the calendar" (adds it to the bag). The calendar V2 is a
   portrait PDF (16 pages, flat JPEG pages, 1743x2448) the owner uploaded; its month pages are not on the site yet.

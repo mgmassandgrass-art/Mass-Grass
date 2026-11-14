@@ -33,25 +33,27 @@
     const N = 12;
     rgList.innerHTML = Array.from({ length: N }, (_, i) => `<li class="rg-b"><img src="assets/bt-${String(i + 1).padStart(2, '0')}.webp" alt="" decoding="async" draggable="false"></li>`).join('');
     const bs = $$('.rg-b', rgList).map((el, i) => ({ el, a0: -Math.PI / 2 + (i / N) * Math.PI * 2, out: 0, to: 0, ph: i * 1.7 }));
-    let W = 0, H = 0, RX = 0, RY = 0, turn = 0, spd = 1, last = 0, seen = true, hov = 0;
-    const size = () => { const r = rgList.getBoundingClientRect(); W = r.width; H = r.height; const ph = W < 700;
-      RX = ph ? W * .42 : Math.min(W * .3, H * .5); RY = ph ? H * .4 : H * .38; };
+    /* a true circle; the ring turns slowly on its own and further with the scroll (gliding, never jumping); with the pointer
+       anywhere over the section every bottle floats out a little and drifts on its own, as if in space. The hover is on the
+       section, not on a bottle, so a bottle moving away never makes it flicker. */
+    let W = 0, H = 0, R = 0, turn = 0, aim = 0, spd = 1, last = 0, seen = true, fl = 0, flTo = 0, lastY = scrollY;
+    const ring = rgList.closest('.ring'), dir = () => (MG.ar ? -1 : 1);
+    const size = () => { const r = rgList.getBoundingClientRect(); W = r.width; H = r.height; R = Math.min(W * (W < 700 ? .4 : .34), H * .37); };
     const draw = (now) => {
       const dt = Math.min(64, now - (last || now)); last = now;
-      spd += ((hov ? 0 : 1) - spd) * .04; turn += dt * .000045 * spd * (MG.ar ? -1 : 1);
+      spd += ((flTo ? .25 : 1) - spd) * .03; aim += dt * .00004 * spd * dir(); turn += (aim - turn) * .06; fl += (flTo - fl) * .035;
       bs.forEach((o) => {
-        o.out += (o.to - o.out) * .05;
-        const a = o.a0 + turn, k = 1 + .42 * o.out, t = now / 1000 + o.ph;
-        const x = W / 2 + Math.cos(a) * RX * k + Math.sin(t * .9) * 6 * o.out, y = H / 2 + Math.sin(a) * RY * k + Math.sin(t * 1.3) * 3 + Math.cos(t * .7) * 8 * o.out;
-        o.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) rotate(${(Math.sin(t * .6) * 3 + o.out * 9 * Math.sin(t * .5)).toFixed(2)}deg) scale(${(1 + .22 * o.out).toFixed(3)})`;
-        o.el.style.zIndex = o.out > .05 ? 3 : 1;
+        const a = o.a0 + turn, t = now / 1000 + o.ph, k = 1 + .08 * fl;
+        const x = W / 2 + Math.cos(a) * R * k + (Math.sin(t * .8) * 14 + Math.cos(t * .45) * 8) * fl;
+        const y = H / 2 + Math.sin(a) * R * k + Math.sin(t * 1.2) * 3 + (Math.cos(t * .7) * 16 + Math.sin(t * .35) * 8) * fl;
+        o.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) rotate(${(Math.sin(t * .6) * 3 + Math.sin(t * .5) * 10 * fl).toFixed(2)}deg) scale(${(1 + .1 * fl).toFixed(3)})`;
       });
+      rgList.classList.toggle('up', fl > .3);
       if (seen) requestAnimationFrame(draw); else last = 0;
     };
-    bs.forEach((o) => {
-      o.el.addEventListener('pointerenter', () => { o.to = 1; hov++; o.el.classList.add('up'); });
-      o.el.addEventListener('pointerleave', () => { o.to = 0; hov = Math.max(0, hov - 1); o.el.classList.remove('up'); });
-    });
+    ring.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') flTo = 1; });
+    ring.addEventListener('pointerleave', () => { flTo = 0; });
+    addEventListener('scroll', () => { const y = scrollY; aim += (y - lastY) * .0022 * dir(); lastY = y; }, { passive: true });
     size(); addEventListener('resize', size);
     if (MG.still) { draw(0); } else {
       new IntersectionObserver((en) => { const v = en[0].isIntersecting; if (v && !seen) { seen = true; requestAnimationFrame(draw); } seen = v; }).observe(rgList);
