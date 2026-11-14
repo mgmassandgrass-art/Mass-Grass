@@ -288,3 +288,40 @@ html[data-page=home]:not(.ar-on) main .all span{font-family:var(--cal-t);font-we
 html[data-page=home]:not(.ar-on) footer h2{font-family:var(--cal-t);font-weight:400;font-size:26px;letter-spacing:.01em;text-transform:none}
 html[data-page=home]:not(.ar-on) footer :is(a,small,button,label,input){font-family:var(--mono2);font-weight:500;font-size:12px;letter-spacing:.06em}
 html[data-page=home]:not(.ar-on) footer button{letter-spacing:.15em;text-transform:uppercase;font-size:11px}
+
+/* ---------- the whole home page in the calendar's hand (owner, Nov 2026). One face, so the order comes from size and colour,
+   the calendar's own palette: ink #2B2F2C for what is read, rose #9C4F52 for names, lines and prices, sage #56702A for small
+   labels, warm grey #6B675E for what is quiet. Handwriting tires at small sizes and in capitals, so nothing is set under 16px,
+   nothing in capitals, lines are kept short and loose. The menu keeps its mono. ---------- */
+html[data-page=home]{--cal-b:var(--cal-t);--cal-l:var(--cal-t);--cal-sage:#56702A}
+html[data-page=home]:not(.ar-on) :is(main,footer,.sx-side,.where) *{text-transform:none!important}
+/* reading text */
+html[data-page=home]:not(.ar-on) main :is(p,li,dd),html[data-page=home]:not(.ar-on) footer :is(p,li){font-family:var(--cal-t);font-weight:400;font-size:20px;line-height:1.4;letter-spacing:.01em;color:var(--cal-ink)}
+html[data-page=home]:not(.ar-on) main .lead{font-size:clamp(22px,1.7vw,26px);line-height:1.35;max-width:30ch;color:var(--cal-ink)}
+/* small labels: section heads, the glass strip, specs, kinds */
+html[data-page=home]:not(.ar-on) :is(.sx-hd,.where-in){font-family:var(--cal-t);font-size:18px;letter-spacing:.02em;color:var(--cal-grey)}
+html[data-page=home]:not(.ar-on) :is(.sx-hd,.where-in) b{color:var(--cal-rose);font-weight:400}
+html[data-page=home]:not(.ar-on) main :is(.specs li){font-size:20px;letter-spacing:.01em;color:var(--cal-sage)}
+html[data-page=home]:not(.ar-on) main :is(.kind,.lb){font-family:var(--cal-t);font-size:18px;letter-spacing:.02em;color:var(--cal-sage)}
+html[data-page=home]:not(.ar-on) .rg-sub{font-family:var(--cal-t);font-size:20px;letter-spacing:.02em;color:var(--cal-grey)}
+/* prices */
+html[data-page=home]:not(.ar-on) main :is(.pr,.fig){font-family:var(--cal-t);font-weight:400;color:var(--cal-rose)}
+html[data-page=home]:not(.ar-on) main .pr{font-size:22px}
+html[data-page=home]:not(.ar-on) main .fig{font-size:clamp(40px,3.4vw,54px);line-height:1}
+/* buttons and links: the hand, a size up, ink buttons keep their ink */
+html[data-page=home]:not(.ar-on) main :is(.ink,.ghost,.add,.go,button,a.shr){font-family:var(--cal-t);font-weight:400;font-size:21px;letter-spacing:.02em}
+html[data-page=home]:not(.ar-on) main .go{color:var(--cal-rose)}
+/* the side margin */
+html[data-page=home]:not(.ar-on) .sx-side button{font-family:var(--cal-t);font-size:18px;letter-spacing:.01em}
+/* the shipping note and the tile names */
+html[data-page=home]:not(.ar-on) main .ship span{font-family:var(--cal-t);font-size:20px;color:var(--cal-grey)}
+html[data-page=home]:not(.ar-on) main .cap h3{font-size:clamp(26px,2vw,32px);color:var(--cal-ink)}
+/* footer */
+html[data-page=home]:not(.ar-on) footer :is(a,small,button,label,input){font-family:var(--cal-t);font-weight:400;font-size:19px;letter-spacing:.01em}
+html[data-page=home]:not(.ar-on) footer h2{font-size:30px;color:var(--cal-rose)}
+html[data-page=home]:not(.ar-on) footer small{color:var(--cal-grey)}
+html[data-page=home]:not(.ar-on) body main section :is(p,li){font-size:20px;line-height:1.4;letter-spacing:.01em}
+html[data-page=home]:not(.ar-on) body main section :is(.cl-txt p,.stx p){font-size:clamp(21px,1.6vw,24px);line-height:1.38;max-width:32ch}
+html[data-page=home]:not(.ar-on) body main .ring .rg-sub{font-size:21px;letter-spacing:.02em}
+html[data-page=home]:not(.ar-on) body main :is(.kind,.lb){font-size:18px;letter-spacing:.02em}
+html[data-page=home]:not(.ar-on) body main .lb{font-size:20px}

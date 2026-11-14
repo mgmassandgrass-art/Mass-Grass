@@ -337,11 +337,11 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   alpha from darkness), the front page torn up over the wire every 3s (`.tear`, also on click); beside it the words, price,
   buy, "browse the calendar", the shipping line. (The twelve-months leaflet was removed at the owner's request; its code in `home.js` waits on `#morow`.) (4) The shelves (`.coll`), Risotto's way in ArtCraft's look: a statement on the left,
   four square real photographs (`MG.mock.scene`) each with an ink label and "from €x". (5) Just in, (6) Farah's story, footer.
-- Home page type = the calendar's type (owner, Nov 2026; end of `home.css`, scoped `html[data-page=home]:not(.ar-on)`): titles,
-  `.hand` and quotes in Annie Use Your Telescope (rose `#9C4F52` for the hand) and EVERYTHING else (reading text, labels,
-  figures, buttons, section heads, glass strip, footer) in the menu's Geist Mono: only those two faces (owner's rule). The
-  hero button is "Browse the calendar" in the hand, a link to calendar.html. (Jost/Fraunces files stay in web/fonts, unused.) Fonts self-hosted in `web/fonts`
-  (Jost + Fraunces from @fontsource, OFL; `all.css` declares them). Arabic keeps its Arabic faces; the menu is unchanged.
+- Home page type (owner, Nov 2026; end of `home.css`, scoped `html[data-page=home]:not(.ar-on)`): EVERYTHING in the calendar's
+  hand, Annie Use Your Telescope (menu excepted). Order comes from size and the calendar's colours: ink #2B2F2C for reading text
+  (20-26px, short loose lines), rose #9C4F52 for names, lines, prices and links, sage #56702A for small labels (specs, kinds,
+  shelf labels), warm grey #6B675E for quiet text (section heads, the strip, shipping). Nothing under 17px, no capitals. The hero
+  button is "Browse the calendar" in the hand. Arabic keeps its Arabic faces. (Jost/Fraunces files remain in web/fonts, unused.)
 - The column (owner, Nov 2026, after getartcraft.com; replaces "full screen"): every `main > section` except the full-bleed
   `.hshow` keeps its `.wrap` between wide side margins (`--side`, 12.5vw from 1000px) framed by two hair-lines down the page,
   a ruled top line with small crosses where the lines meet, and a head row inserted by `frame()` in `mock.js` (`.sx-hd`:
