@@ -236,3 +236,38 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 .rg-tag.pr .bg{clip-path:polygon(0 0,calc(100% - 15.5px) 0,100% 50%,calc(100% - 15.5px) 100%,0 100%)}
 .rg-tag b,.rg-tag span{position:relative}
 .rg-tag::before{z-index:1}
+
+/* ---------- the home page in the calendar's own type (owner, Nov 2026), as the calendar sets it:
+   titles and the names of things in Annie Use Your Telescope (its month names and its lines), reading text in Fraunces light
+   (its "about the bottles" page), and every small label, figure and button in Jost, the labels in spaced capitals ("WATERCOLOURS
+   BY FARAH ALHELOU", "SATURDAY SUNDAY ..."). The calendar's ink #2B2F2C, its rose #9C4F52 for the accents, its grey #6B675E.
+   English only: in Arabic the page keeps its Arabic faces (Readex for text, Aref Ruqaa for the hand). The menu stays as it is. */
+html[data-page=home]{--cal-t:'Annie Use Your Telescope',var(--hand);--cal-b:'Fraunces',Georgia,serif;--cal-l:'Jost',var(--f);--cal-ink:#2B2F2C;--cal-rose:#9C4F52;--cal-grey:#6B675E}
+/* titles */
+html[data-page=home]:not(.ar-on) main :is(h1,h2,h3):not(.sr),html[data-page=home]:not(.ar-on) main h2.big{font-family:var(--cal-t);font-weight:400;letter-spacing:.005em;color:var(--cal-ink)}
+html[data-page=home]:not(.ar-on) main h2.big{font-size:clamp(46px,5vw,76px);line-height:1}
+html[data-page=home]:not(.ar-on) main h3{font-size:clamp(24px,2vw,30px);line-height:1.05}
+html[data-page=home]:not(.ar-on) main .hand{font-family:var(--cal-t);color:var(--cal-rose)}
+/* reading text */
+html[data-page=home]:not(.ar-on) main :is(p,.lead,li,dd,blockquote),html[data-page=home]:not(.ar-on) footer :is(p,li){font-family:var(--cal-b);font-weight:300;letter-spacing:0;color:var(--cal-ink)}
+html[data-page=home]:not(.ar-on) main .lead{font-size:clamp(18px,1.4vw,21px);line-height:1.55;color:#3E3A34}
+html[data-page=home]:not(.ar-on) main em{font-style:italic}
+/* labels, figures and buttons */
+html[data-page=home]:not(.ar-on) :is(.sx-hd,.sx-side button,.where-in,.rg-sub),
+html[data-page=home]:not(.ar-on) main :is(.kind,.lb,.go,.ship,.specs li,.cm-th,.cw-sub~.specs li,.pr,.fig,button,.ink,.ghost,.add,.shr,a.ink,a.ghost){font-family:var(--cal-l)}
+html[data-page=home]:not(.ar-on) :is(.sx-hd,.where-in,.rg-sub),html[data-page=home]:not(.ar-on) main :is(.kind,.lb,.specs li,.ink,.ghost,.add){font-weight:500;letter-spacing:.16em;text-transform:uppercase}
+html[data-page=home]:not(.ar-on) :is(.sx-hd,.where-in){font-size:11px;color:var(--cal-grey)}
+html[data-page=home]:not(.ar-on) .sx-hd b,html[data-page=home]:not(.ar-on) .where-in b{color:var(--cal-ink)}
+html[data-page=home]:not(.ar-on) .sx-side .now{font-family:var(--cal-t);font-weight:400;text-transform:none;letter-spacing:0;font-size:clamp(24px,2vw,34px);line-height:1;color:var(--cal-rose)}
+html[data-page=home]:not(.ar-on) .sx-side button{font-weight:400;text-transform:none;letter-spacing:.02em;font-size:14px}
+html[data-page=home]:not(.ar-on) main .specs li{font-size:12px;color:var(--cal-ink)}
+html[data-page=home]:not(.ar-on) main :is(.ink,.ghost,.add){font-size:12px}
+html[data-page=home]:not(.ar-on) main :is(.pr,.fig){font-weight:500;letter-spacing:.02em}
+html[data-page=home]:not(.ar-on) main .fig{font-size:clamp(30px,2.6vw,40px)}
+html[data-page=home]:not(.ar-on) main .ship span{font-family:var(--cal-b);font-weight:300;font-style:italic}
+html[data-page=home]:not(.ar-on) .rg-sub{font-size:11px;letter-spacing:.24em}
+/* the hand stays the calendar's hand even on a paragraph or a quote (its lines are set in Annie, in rose) */
+html[data-page=home]:not(.ar-on) main :is(p,blockquote,span,h3).hand{font-family:var(--cal-t);font-weight:400;color:var(--cal-rose);letter-spacing:.01em}
+html[data-page=home]:not(.ar-on) main .cw-sub{font-size:clamp(26px,2.2vw,34px);line-height:1}
+html[data-page=home]:not(.ar-on) main blockquote.hand{font-size:clamp(34px,3.4vw,52px);line-height:1.1}
+html[data-page=home]:not(.ar-on) main .go{font-family:var(--cal-l);font-weight:500;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
