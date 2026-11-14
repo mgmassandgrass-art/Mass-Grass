@@ -25,18 +25,39 @@
 
   const vis = (el, fn) => { if (!el) return; new IntersectionObserver((en) => fn(en[0].isIntersecting)).observe(el); };
 
-  /* ---------- 1 · the calendar full screen.
-     The cover first, then the months one after another (a slow cross-fade every 4.5s, paused when out of sight); the
-     picture under the pointer comes slowly nearer. Each page is shown whole on its own paper colour. ---------- */
-  const inEl = $('#hsin'), SHOW = ['c27-00', 'c27-01', 'c27-03', 'c27-05', 'c27-07', 'c27-10'].filter((k) => C.pages.some((p) => p.k === k));
-  if (inEl && SHOW.length) {
-    inEl.innerHTML = SHOW.map((k, i) => `<img class="hs-pg${i ? '' : ' on'}" src="assets/${k}-hd.webp" alt="" decoding="async" draggable="false"${i ? ' loading="lazy"' : ' fetchpriority="high"'}>`).join('');
-    const pgs = $$('.hs-pg', inEl); let at = 0, seen = true;
-    vis(inEl, (v) => { seen = v; });
-    if (!MG.still && pgs.length > 1) setInterval(() => {
-      if (!seen || document.hidden || scrollY > innerHeight * .9) return;
-      pgs[at].classList.toggle('on', false); at = (at + 1) % pgs.length; pgs[at].classList.add('on');
-    }, 4500);
+  /* ---------- 1 · the ring (from the calendar's own page "a year of things worth keeping"): the twelve bottles stand round
+     the words and the ring turns very slowly, each bottle staying upright. Under the pointer a bottle drifts out of the ring
+     and floats, as if in space, while the ring slows to a stop; it settles back when the pointer leaves. ---------- */
+  const rgList = $('#rglist');
+  if (rgList) {
+    const N = 12;
+    rgList.innerHTML = Array.from({ length: N }, (_, i) => `<li class="rg-b"><img src="assets/bt-${String(i + 1).padStart(2, '0')}.webp" alt="" decoding="async" draggable="false"></li>`).join('');
+    const bs = $$('.rg-b', rgList).map((el, i) => ({ el, a0: -Math.PI / 2 + (i / N) * Math.PI * 2, out: 0, to: 0, ph: i * 1.7 }));
+    let W = 0, H = 0, RX = 0, RY = 0, turn = 0, spd = 1, last = 0, seen = true, hov = 0;
+    const size = () => { const r = rgList.getBoundingClientRect(); W = r.width; H = r.height; const ph = W < 700;
+      RX = ph ? W * .42 : Math.min(W * .3, H * .5); RY = ph ? H * .4 : H * .38; };
+    const draw = (now) => {
+      const dt = Math.min(64, now - (last || now)); last = now;
+      spd += ((hov ? 0 : 1) - spd) * .04; turn += dt * .000045 * spd * (MG.ar ? -1 : 1);
+      bs.forEach((o) => {
+        o.out += (o.to - o.out) * .05;
+        const a = o.a0 + turn, k = 1 + .42 * o.out, t = now / 1000 + o.ph;
+        const x = W / 2 + Math.cos(a) * RX * k + Math.sin(t * .9) * 6 * o.out, y = H / 2 + Math.sin(a) * RY * k + Math.sin(t * 1.3) * 3 + Math.cos(t * .7) * 8 * o.out;
+        o.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) rotate(${(Math.sin(t * .6) * 3 + o.out * 9 * Math.sin(t * .5)).toFixed(2)}deg) scale(${(1 + .22 * o.out).toFixed(3)})`;
+        o.el.style.zIndex = o.out > .05 ? 3 : 1;
+      });
+      if (seen) requestAnimationFrame(draw); else last = 0;
+    };
+    bs.forEach((o) => {
+      o.el.addEventListener('pointerenter', () => { o.to = 1; hov++; o.el.classList.add('up'); });
+      o.el.addEventListener('pointerleave', () => { o.to = 0; hov = Math.max(0, hov - 1); o.el.classList.remove('up'); });
+    });
+    size(); addEventListener('resize', size);
+    if (MG.still) { draw(0); } else {
+      new IntersectionObserver((en) => { const v = en[0].isIntersecting; if (v && !seen) { seen = true; requestAnimationFrame(draw); } seen = v; }).observe(rgList);
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(() => rgList.classList.add('in'));
   }
 
   /* ---------- 2a · the calendar in four real rooms: a slow cross-fade from one to the next, the small views below choose ---------- */
