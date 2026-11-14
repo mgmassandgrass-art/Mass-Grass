@@ -34,13 +34,15 @@
     rgList.innerHTML = Array.from({ length: N }, (_, i) => `<li class="rg-b"><button type="button" data-m="${i + 1}"><img src="assets/bt-${String(i + 1).padStart(2, '0')}.webp" alt="" decoding="async" draggable="false"></button></li>`).join('');
     /* a click on a bottle hangs its paper tag beside it: the month and the line Farah wrote for it, as on the calendar */
     const tag = document.createElement('div'); tag.className = 'rg-tag'; tag.setAttribute('role', 'status'); tag.setAttribute('aria-live', 'polite'); rgList.parentNode.append(tag);
-    let open = null;
+    const cord = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); cord.setAttribute('class', 'rg-cord'); cord.setAttribute('aria-hidden', 'true');
+    cord.innerHTML = '<path d="" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>'; rgList.parentNode.append(cord); const cordP = cord.firstChild;
+    let open = null, place = null;
     const btns = () => $$('.rg-b button', rgList);
     const fillTag = (i) => { const pg = C.pages.find((p) => p.m === i + 1); if (!pg) return;
       tag.innerHTML = `<b>${esc(MG.ar ? C.monthsAr[i] : C.months[i])}</b><span>${esc(L(pg.q))}</span>`; };
-    const closeTag = () => { open = null; tag.classList.toggle('on', false); btns().forEach((x) => x.setAttribute('aria-expanded', 'false')); };
+    const closeTag = () => { open = null; place = null; tag.classList.toggle('on', false); cord.classList.toggle('on', false); btns().forEach((x) => x.setAttribute('aria-expanded', 'false')); };
     rgList.addEventListener('click', (e) => { const btn = e.target.closest('button'); if (!btn) return; const i = +btn.dataset.m - 1;
-      if (open === i) { closeTag(); return; } open = i; fillTag(i); tag.classList.toggle('on', false); void tag.offsetWidth; tag.classList.add('on');
+      if (open === i) { closeTag(); return; } open = i; place = null; fillTag(i); tag.classList.toggle('on', false); void tag.offsetWidth; tag.classList.add('on');
       btns().forEach((x, k) => x.setAttribute('aria-expanded', String(k === i))); });
     document.addEventListener('pointerdown', (e) => { if (open !== null && !e.target.closest('.rg-b,.rg-tag')) closeTag(); });
     addEventListener('keydown', (e) => { if (e.key === 'Escape' && open !== null) closeTag(); });
@@ -55,17 +57,48 @@
     const size = () => { const r = rgList.getBoundingClientRect(); W = r.width; H = r.height; R = Math.min(W * (W < 700 ? .4 : .34), H * .37); };
     const draw = (now) => {
       const dt = Math.min(64, now - (last || now)); last = now;
-      spd += ((flTo ? .25 : 1) - spd) * .03; aim += dt * .00004 * spd * dir(); turn += (aim - turn) * .06; fl += (flTo - fl) * .035;
+      spd += ((open !== null ? 0 : flTo ? .25 : 1) - spd) * .05; aim += dt * .00004 * spd * dir(); turn += (aim - turn) * .06; fl += (flTo - fl) * .035;
       bs.forEach((o) => {
         const a = o.a0 + turn, t = now / 1000 + o.ph, k = 1 + .08 * fl;
         const x = W / 2 + Math.cos(a) * R * k + (Math.sin(t * .8) * 14 + Math.cos(t * .45) * 8) * fl;
         const y = H / 2 + Math.sin(a) * R * k + Math.sin(t * 1.2) * 3 + (Math.cos(t * .7) * 16 + Math.sin(t * .35) * 8) * fl;
         o.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) rotate(${(Math.sin(t * .6) * 3 + Math.sin(t * .5) * 10 * fl).toFixed(2)}deg) scale(${(1 + .1 * fl).toFixed(3)})`;
       });
-      if (open !== null) { const o = bs[open], m = o.el.style.transform.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/);
-        if (m) { const x = +m[1], y = +m[2], tw = tag.offsetWidth, th = tag.offsetHeight, side = x < W / 2 ? -1 : 1;
-          let tx = side > 0 ? x + 54 : x - 54 - tw, ty = y - th - 28; tx = Math.max(12, Math.min(W - tw - 12, tx)); ty = Math.max(12, Math.min(H - th - 12, ty));
-          tag.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0)`; tag.style.setProperty('--tilt', (side * 3) + 'deg'); tag.style.setProperty('--ox', side > 0 ? '0%' : '100%'); } }
+      if (open !== null) {
+        const o = bs[open], m = o.el.style.transform.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/);
+        if (m) {
+          const x = +m[1], y = +m[2], im = o.el.querySelector('img'), bw = im.offsetWidth, bh = im.offsetHeight, tw = tag.offsetWidth, th = tag.offsetHeight;
+          /* where it goes is chosen once, when it opens: of a ring of spots round the bottle, the one that covers no other
+             bottle, not the words in the middle, and stays on the page; it then follows its bottle's small drift */
+          if (!place) {
+            const lr = rgList.getBoundingClientRect(), mr = $('.rg-mid').getBoundingClientRect();
+            const mid = { l: mr.left - lr.left - 10, t: mr.top - lr.top - 10, r: mr.right - lr.left + 10, b: mr.bottom - lr.top + 10 };
+            const others = bs.filter((q) => q !== o).map((q) => { const n = q.el.style.transform.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/), w = q.el.querySelector('img').offsetWidth, h = q.el.querySelector('img').offsetHeight;
+              return n ? { l: +n[1] - w / 2 - 8, t: +n[2] - h / 2 - 8, r: +n[1] + w / 2 + 8, b: +n[2] + h / 2 + 8 } : null; }).filter(Boolean);
+            const ov = (a, c) => Math.max(0, Math.min(a.r, c.r) - Math.max(a.l, c.l)) * Math.max(0, Math.min(a.b, c.b) - Math.max(a.t, c.t));
+            let best = null;
+            for (let k = 0; k < 16; k++) { const ang = (k / 16) * Math.PI * 2;
+              for (const d of [bw * .5 + 56, bw * .5 + 100]) {
+                const cx = x + Math.cos(ang) * (d + tw / 2), cy = y - bh * .25 + Math.sin(ang) * (d * .7 + th / 2);
+                const box = { l: cx - tw / 2, t: cy - th / 2, r: cx + tw / 2, b: cy + th / 2 };
+                const out = Math.max(0, 12 - box.l) + Math.max(0, box.r - (W - 12)) + Math.max(0, 12 - box.t) + Math.max(0, box.b - (H - 12));
+                const sc = others.reduce((t2, c) => t2 + ov(box, c), 0) + ov(box, mid) * 3 + out * 4000 + d * 2;
+                if (!best || sc < best.sc) best = { sc, dx: box.l - x, dy: box.t - y };
+              } }
+            place = best;
+            const left = place.dx + tw / 2 < 0;                    /* the tag hangs to the bottle's left: its point faces right */
+            tag.classList.toggle('pl', !left); tag.classList.toggle('pr', left);
+            tag.style.setProperty('--tilt', (left ? 3 : -3) + 'deg'); tag.style.setProperty('--ox', left ? '100%' : '0%');
+            cord.classList.add('on');
+          }
+          const tx = x + place.dx, ty = y + place.dy, left = tag.classList.contains('pr');
+          tag.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0)`;
+          /* the string: from the bottle's neck to the tag's eyelet, hanging in a soft curve */
+          const nx = x, ny = y - bh * .42, ex = left ? tx + tw - 13 : tx + 13, ey = ty + th / 2;
+          const sag = 18 + Math.abs(ex - nx) * .12, mx = (nx + ex) / 2, my = Math.max(ny, ey) + sag;
+          cordP.setAttribute('d', `M${nx.toFixed(1)} ${ny.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`);
+        }
+      }
       rgList.classList.toggle('up', fl > .3);
       if (seen) requestAnimationFrame(draw); else last = 0;
     };

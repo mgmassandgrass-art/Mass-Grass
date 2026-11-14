@@ -215,8 +215,12 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 .rg-tag.on{opacity:1;scale:1}
 .rg-tag b{display:block;font:400 26px/1 'Annie Use Your Telescope',var(--hand);color:var(--rg-ink);margin-bottom:4px}
 .rg-tag span{display:block;font:400 19px/1.15 'Annie Use Your Telescope',var(--hand)}
-.ar-on .rg-tag{padding:12px 30px 14px 18px;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%)}
-.ar-on .rg-tag::before{left:auto;right:12px}
 .ar-on .rg-tag b{font:400 22px/1.4 'Aref Ruqaa',var(--fa)}
 .ar-on .rg-tag span{font:400 17px/1.6 'Aref Ruqaa',var(--fa)}
 @media(prefers-reduced-motion:reduce){.rg-tag{transition:opacity .2s}}
+
+/* the tag's point and eyelet face its bottle (.pl: bottle on the left, .pr: on the right); a string runs from the neck */
+.rg-tag.pr{padding:12px 30px 14px 18px;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%)}
+.rg-tag.pr::before{left:auto;right:12px}
+.rg-cord{position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;overflow:visible;color:rgba(70,57,40,.65);opacity:0;transition:opacity .35s ease}
+.rg-cord.on{opacity:1}
