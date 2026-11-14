@@ -338,7 +338,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   buy, "browse the calendar", the shipping line. (The twelve-months leaflet was removed at the owner's request; its code in `home.js` waits on `#morow`.) (4) The shelves (`.coll`), Risotto's way in ArtCraft's look: a statement on the left,
   four square real photographs (`MG.mock.scene`) each with an ink label and "from €x". (5) Just in, (6) Farah's story, footer.
 - Home page type (owner, Nov 2026; end of `home.css`, scoped `html[data-page=home]:not(.ar-on)`): EVERYTHING in the calendar's
-  hand, Annie Use Your Telescope (menu excepted). Order comes from size and the calendar's colours: ink #2B2F2C for reading text
+  hand, Annie Use Your Telescope, the menu included (desktop bar, shop list, phone sheet). Order comes from size and the calendar's colours: ink #2B2F2C for reading text
   (20-26px, short loose lines), rose #9C4F52 for names, lines, prices and links, sage #56702A for small labels (specs, kinds,
   shelf labels), warm grey #6B675E for quiet text (section heads, the strip, shipping). Nothing under 17px, no capitals. The hero
   button is "Browse the calendar" in the hand. Arabic keeps its Arabic faces. (Jost/Fraunces files remain in web/fonts, unused.)

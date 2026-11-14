@@ -325,3 +325,8 @@ html[data-page=home]:not(.ar-on) body main section :is(.cl-txt p,.stx p){font-si
 html[data-page=home]:not(.ar-on) body main .ring .rg-sub{font-size:21px;letter-spacing:.02em}
 html[data-page=home]:not(.ar-on) body main :is(.kind,.lb){font-size:18px;letter-spacing:.02em}
 html[data-page=home]:not(.ar-on) body main .lb{font-size:20px}
+/* the menu in the calendar's hand too (owner, Nov 2026), on the home page */
+html[data-page=home]:not(.ar-on) header :is(.mainnav>a,.ddb,.ddp a,#mmenu a,#mmenu .mlabel,#mmenu button){font-family:var(--cal-t);font-weight:400;font-size:21px;letter-spacing:.02em;text-transform:none}
+html[data-page=home]:not(.ar-on) header .mainnav>a[aria-current]{background-size:calc(100% - 16px) 28px}
+html[data-page=home]:not(.ar-on) header .ddb.cur,html[data-page=home]:not(.ar-on) header .ddb[aria-expanded=true]{background-size:calc(100% - 16px) 28px}
+html[data-page=home]:not(.ar-on) header :is(.bn,.ini){font-family:var(--cal-t);font-weight:400;font-size:17px}
