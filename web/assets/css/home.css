@@ -242,7 +242,7 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
    (its "about the bottles" page), and every small label, figure and button in Jost, the labels in spaced capitals ("WATERCOLOURS
    BY FARAH ALHELOU", "SATURDAY SUNDAY ..."). The calendar's ink #2B2F2C, its rose #9C4F52 for the accents, its grey #6B675E.
    English only: in Arabic the page keeps its Arabic faces (Readex for text, Aref Ruqaa for the hand). The menu stays as it is. */
-html[data-page=home]{--cal-t:'Annie Use Your Telescope',var(--hand);--cal-b:'Fraunces',Georgia,serif;--cal-l:'Jost',var(--f);--cal-ink:#2B2F2C;--cal-rose:#9C4F52;--cal-grey:#6B675E}
+html[data-page=home]{--cal-t:'Annie Use Your Telescope',var(--hand);--cal-b:var(--mono2);--cal-l:var(--mono2);--cal-ink:#2B2F2C;--cal-rose:#9C4F52;--cal-grey:#6B675E}
 /* titles */
 html[data-page=home]:not(.ar-on) main :is(h1,h2,h3):not(.sr),html[data-page=home]:not(.ar-on) main h2.big{font-family:var(--cal-t);font-weight:400;letter-spacing:.005em;color:var(--cal-ink)}
 html[data-page=home]:not(.ar-on) main h2.big{font-size:clamp(46px,5vw,76px);line-height:1}
@@ -271,3 +271,20 @@ html[data-page=home]:not(.ar-on) main :is(p,blockquote,span,h3).hand{font-family
 html[data-page=home]:not(.ar-on) main .cw-sub{font-size:clamp(26px,2.2vw,34px);line-height:1}
 html[data-page=home]:not(.ar-on) main blockquote.hand{font-size:clamp(34px,3.4vw,52px);line-height:1.1}
 html[data-page=home]:not(.ar-on) main .go{font-family:var(--cal-l);font-weight:500;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+
+/* only two faces on the home page (owner, Nov 2026): the calendar's hand for titles, names and lines, and the menu's mono
+   (Geist Mono) for everything else, reading text included, set smaller and looser as mono reads best */
+html[data-page=home]:not(.ar-on) main :is(p,.lead,li,dd),html[data-page=home]:not(.ar-on) footer :is(p,li){font-weight:500;font-size:14px;line-height:1.75;letter-spacing:.01em}
+html[data-page=home]:not(.ar-on) main .lead{font-size:15px;line-height:1.75}
+html[data-page=home]:not(.ar-on) main .ship span{font-style:normal}
+html[data-page=home]:not(.ar-on) main :is(.pr,.fig){font-weight:500;letter-spacing:0}
+html[data-page=home]:not(.ar-on) main .fig{font-size:clamp(26px,2.2vw,34px)}
+html[data-page=home]:not(.ar-on) .sx-side button{font-size:12px;letter-spacing:.06em}
+html[data-page=home]:not(.ar-on) main :is(.ink,.ghost,.add,.go,.kind,.lb,.specs li){font-size:11px;letter-spacing:.15em}
+.rg-btn{text-decoration:none;display:inline-block}
+/* the hand stays large where it is a subtitle; the "see everything" cell and the footer join the two faces too */
+html[data-page=home]:not(.ar-on) main p.hand.cw-sub{font-family:var(--cal-t);font-weight:400;font-size:clamp(26px,2.2vw,34px);line-height:1;letter-spacing:.01em}
+html[data-page=home]:not(.ar-on) main .all span{font-family:var(--cal-t);font-weight:400;font-size:clamp(26px,2.2vw,34px);line-height:1.05}
+html[data-page=home]:not(.ar-on) footer h2{font-family:var(--cal-t);font-weight:400;font-size:26px;letter-spacing:.01em;text-transform:none}
+html[data-page=home]:not(.ar-on) footer :is(a,small,button,label,input){font-family:var(--mono2);font-weight:500;font-size:12px;letter-spacing:.06em}
+html[data-page=home]:not(.ar-on) footer button{letter-spacing:.15em;text-transform:uppercase;font-size:11px}

@@ -96,7 +96,7 @@
       cur = -1; spot();
     };
     const spot = () => { let ci = 0; secs.forEach((x, k) => { if (x.s.getBoundingClientRect().top <= innerHeight * .4) ci = k; });
-      side.classList.toggle('on', scrollY > innerHeight * .5);
+      const ft = doc.querySelector('footer'); side.classList.toggle('on', scrollY > innerHeight * .5 && !(ft && ft.getBoundingClientRect().top < innerHeight - 40));
       if (ci === cur) return; cur = ci; now.textContent = name(secs[ci]);
       [...ol.querySelectorAll('button')].forEach((b, k) => b.setAttribute('aria-current', k === ci)); };
     ol.addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) secs[+b.dataset.i].s.scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'start' }); });

@@ -338,8 +338,9 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   buy, "browse the calendar", the shipping line. (The twelve-months leaflet was removed at the owner's request; its code in `home.js` waits on `#morow`.) (4) The shelves (`.coll`), Risotto's way in ArtCraft's look: a statement on the left,
   four square real photographs (`MG.mock.scene`) each with an ink label and "from €x". (5) Just in, (6) Farah's story, footer.
 - Home page type = the calendar's type (owner, Nov 2026; end of `home.css`, scoped `html[data-page=home]:not(.ar-on)`): titles,
-  `.hand` and quotes in Annie Use Your Telescope (rose `#9C4F52` for the hand), reading text in Fraunces 300, every label,
-  figure, button, section head and the glass strip in Jost (labels in capitals spaced .16em). Fonts self-hosted in `web/fonts`
+  `.hand` and quotes in Annie Use Your Telescope (rose `#9C4F52` for the hand) and EVERYTHING else (reading text, labels,
+  figures, buttons, section heads, glass strip, footer) in the menu's Geist Mono: only those two faces (owner's rule). The
+  hero button is "Browse the calendar" in the hand, a link to calendar.html. (Jost/Fraunces files stay in web/fonts, unused.) Fonts self-hosted in `web/fonts`
   (Jost + Fraunces from @fontsource, OFL; `all.css` declares them). Arabic keeps its Arabic faces; the menu is unchanged.
 - The column (owner, Nov 2026, after getartcraft.com; replaces "full screen"): every `main > section` except the full-bleed
   `.hshow` keeps its `.wrap` between wide side margins (`--side`, 12.5vw from 1000px) framed by two hair-lines down the page,
