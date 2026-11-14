@@ -31,7 +31,21 @@
   const rgList = $('#rglist');
   if (rgList) {
     const N = 12;
-    rgList.innerHTML = Array.from({ length: N }, (_, i) => `<li class="rg-b"><img src="assets/bt-${String(i + 1).padStart(2, '0')}.webp" alt="" decoding="async" draggable="false"></li>`).join('');
+    rgList.innerHTML = Array.from({ length: N }, (_, i) => `<li class="rg-b"><button type="button" data-m="${i + 1}"><img src="assets/bt-${String(i + 1).padStart(2, '0')}.webp" alt="" decoding="async" draggable="false"></button></li>`).join('');
+    /* a click on a bottle hangs its paper tag beside it: the month and the line Farah wrote for it, as on the calendar */
+    const tag = document.createElement('div'); tag.className = 'rg-tag'; tag.setAttribute('role', 'status'); tag.setAttribute('aria-live', 'polite'); rgList.parentNode.append(tag);
+    let open = null;
+    const btns = () => $$('.rg-b button', rgList);
+    const fillTag = (i) => { const pg = C.pages.find((p) => p.m === i + 1); if (!pg) return;
+      tag.innerHTML = `<b>${esc(MG.ar ? C.monthsAr[i] : C.months[i])}</b><span>${esc(L(pg.q))}</span>`; };
+    const closeTag = () => { open = null; tag.classList.toggle('on', false); btns().forEach((x) => x.setAttribute('aria-expanded', 'false')); };
+    rgList.addEventListener('click', (e) => { const btn = e.target.closest('button'); if (!btn) return; const i = +btn.dataset.m - 1;
+      if (open === i) { closeTag(); return; } open = i; fillTag(i); tag.classList.toggle('on', false); void tag.offsetWidth; tag.classList.add('on');
+      btns().forEach((x, k) => x.setAttribute('aria-expanded', String(k === i))); });
+    document.addEventListener('pointerdown', (e) => { if (open !== null && !e.target.closest('.rg-b,.rg-tag')) closeTag(); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && open !== null) closeTag(); });
+    const labels = () => btns().forEach((b, k) => b.setAttribute('aria-label', MG.ar ? C.monthsAr[k] : C.months[k]));
+    labels(); MG.page((why) => { if (why === 'lang') { labels(); if (open !== null) fillTag(open); } });
     const bs = $$('.rg-b', rgList).map((el, i) => ({ el, a0: -Math.PI / 2 + (i / N) * Math.PI * 2, out: 0, to: 0, ph: i * 1.7 }));
     /* a true circle; the ring turns slowly on its own and further with the scroll (gliding, never jumping); with the pointer
        anywhere over the section every bottle floats out a little and drifts on its own, as if in space. The hover is on the
@@ -48,6 +62,10 @@
         const y = H / 2 + Math.sin(a) * R * k + Math.sin(t * 1.2) * 3 + (Math.cos(t * .7) * 16 + Math.sin(t * .35) * 8) * fl;
         o.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) rotate(${(Math.sin(t * .6) * 3 + Math.sin(t * .5) * 10 * fl).toFixed(2)}deg) scale(${(1 + .1 * fl).toFixed(3)})`;
       });
+      if (open !== null) { const o = bs[open], m = o.el.style.transform.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/);
+        if (m) { const x = +m[1], y = +m[2], tw = tag.offsetWidth, th = tag.offsetHeight, side = x < W / 2 ? -1 : 1;
+          let tx = side > 0 ? x + 54 : x - 54 - tw, ty = y - th - 28; tx = Math.max(12, Math.min(W - tw - 12, tx)); ty = Math.max(12, Math.min(H - th - 12, ty));
+          tag.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0)`; tag.style.setProperty('--tilt', (side * 3) + 'deg'); tag.style.setProperty('--ox', side > 0 ? '0%' : '100%'); } }
       rgList.classList.toggle('up', fl > .3);
       if (seen) requestAnimationFrame(draw); else last = 0;
     };

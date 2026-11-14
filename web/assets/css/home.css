@@ -203,3 +203,20 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rg-sky img{animation:none}}
 .home-intro .rg-list,.home-intro .rg-mid>*{opacity:0;transition:opacity 1.2s ease .6s}
 .home-intro.flying .rg-list,.home-intro.flying .rg-mid>*{opacity:1}
+
+/* the bottle's tag: a small paper label like the calendar's own, hung beside the bottle that was clicked */
+.rg-b button{position:absolute;left:0;top:0;translate:-50% -50%;padding:0;border:0;background:none;cursor:pointer;line-height:0}
+.rg-b button img{position:static;translate:none}
+.rg-b button:focus-visible{outline:2px solid var(--rg-ink);outline-offset:6px;border-radius:12px}
+.rg-tag{position:absolute;left:0;top:0;z-index:6;width:max-content;max-width:min(260px,70vw);padding:12px 18px 14px 30px;pointer-events:none;
+  background:#FBF7EE;border:1px solid rgba(43,47,44,.7);clip-path:polygon(16px 0,100% 0,100% 100%,16px 100%,0 50%);color:#3E3A34;
+  filter:drop-shadow(0 10px 14px rgba(80,60,40,.18));opacity:0;scale:.6;rotate:var(--tilt,0deg);transform-origin:var(--ox,0%) 100%;transition:opacity .35s ease,scale .55s cubic-bezier(.3,1.5,.5,1)}
+.rg-tag::before{content:"";position:absolute;left:12px;top:50%;width:7px;height:7px;margin-top:-4px;border-radius:50%;border:1px solid rgba(43,47,44,.7);background:var(--rg-bg)}
+.rg-tag.on{opacity:1;scale:1}
+.rg-tag b{display:block;font:400 26px/1 'Annie Use Your Telescope',var(--hand);color:var(--rg-ink);margin-bottom:4px}
+.rg-tag span{display:block;font:400 19px/1.15 'Annie Use Your Telescope',var(--hand)}
+.ar-on .rg-tag{padding:12px 30px 14px 18px;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%)}
+.ar-on .rg-tag::before{left:auto;right:12px}
+.ar-on .rg-tag b{font:400 22px/1.4 'Aref Ruqaa',var(--fa)}
+.ar-on .rg-tag span{font:400 17px/1.6 'Aref Ruqaa',var(--fa)}
+@media(prefers-reduced-motion:reduce){.rg-tag{transition:opacity .2s}}
