@@ -131,8 +131,9 @@
   if (cwm) {
     const MS = C.pages.filter((p) => p.m > 0), stage = $('#cmstage'), th = $('#cmth');
     const nm = (p) => (MG.ar ? C.monthsAr[p.m - 1] : C.months[p.m - 1]);
-    stage.innerHTML = MS.map((p, i) => `<img${i ? '' : ' class="on"'} src="assets/${p.k}${i ? '' : '-hd'}.webp" alt="" ${i ? 'loading="lazy" ' : ''}decoding="async" draggable="false">`).join('');
-    th.innerHTML = MS.map((p, i) => `<button type="button" aria-pressed="${!i}"><img src="assets/t-${p.k}.webp" alt="" loading="lazy"><span>${String(p.m).padStart(2, '0')}</span></button>`).join('');
+    /* the pages of the printed calendar (V2, portrait): assets/v2-MM.webp, thumbnails t-v2-MM.webp */
+    stage.innerHTML = MS.map((p, i) => `<img${i ? '' : ' class="on"'} src="assets/v2-${String(p.m).padStart(2, '0')}.webp" alt="" ${i ? 'loading="lazy" ' : ''}decoding="async" draggable="false">`).join('');
+    th.innerHTML = MS.map((p, i) => `<button type="button" aria-pressed="${!i}"><img src="assets/t-v2-${String(p.m).padStart(2, '0')}.webp" alt="" loading="lazy"><span>${String(p.m).padStart(2, '0')}</span></button>`).join('');
     const ims = $$('img', stage), bts = $$('button', th); let at = 0, seen = false, timer = 0;
     const label = () => { ims.forEach((im, i) => { im.alt = nm(MS[i]) + t(', from the 2027 calendar', '، من تقويم 2027'); }); bts.forEach((b, i) => b.setAttribute('aria-label', nm(MS[i]))); };
     const go = (i) => { ims[at].classList.toggle('on', false); bts[at].setAttribute('aria-pressed', 'false'); at = (i + ims.length) % ims.length; ims[at].classList.add('on'); bts[at].setAttribute('aria-pressed', 'true');

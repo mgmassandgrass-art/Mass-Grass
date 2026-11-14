@@ -353,3 +353,15 @@ html[data-page=home]:not(.ar-on) header :is(.bn,.ini){font-family:var(--cal-t);f
 .cw-row .ink{flex:1;justify-content:center}
 .cw-row .fig{margin:0}
 .ship{border:0;padding:0}
+
+/* the V2 calendar is portrait: taller stage, upright thumbnails */
+.cm-stage{min-height:clamp(420px,52vw,760px)}
+.cw-months .cm-th button{aspect-ratio:1743/2448}
+.cw-months .cm-th{gap:8px}
+.cw-months .cm-th button span{position:static;display:block;margin-top:6px}
+.cw-months .cm-th button{overflow:visible}
+.cw-months .cm-th{padding-bottom:18px;align-items:start}
+.cw-months .cm-th button img{aspect-ratio:1743/2448;height:auto}
+.cw-months .cm-th button{aspect-ratio:auto;background:none;box-shadow:none}
+.cw-months .cm-th button img{box-shadow:0 2px 6px -3px rgba(80,60,40,.4);background:#fff}
+@media(max-width:700px){.cw-months .cm-th{row-gap:12px}}
