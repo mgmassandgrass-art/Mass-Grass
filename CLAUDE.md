@@ -402,3 +402,6 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   `sh-sk` (a printed kiss-cut sheet of six stickers, one peeled off and lying beside it), `sh-cal` (the V2 desk calendar standing on
   the desk, cover under the wire). The painting keeps `mk-bench`. Under the pointer each shelf shows the piece itself on the cream
   paper (`.ctart`; never call it `.peek`, which is the quick-view dialog's class).
+- Just in (home): under the pointer each piece shows itself in its first real photograph (`.jmk`, `jmock()` in home.js; the
+  hands photos `pc-hands`/`pcp-table` skipped, stickers on `sk-notebook`). The calendar's Browse and Buy buttons are alike (same
+  width and height, Browse in ink line, Buy filled, the price beside both).
