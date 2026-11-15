@@ -439,3 +439,20 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - The sale PDF of the Palestine calendar set for 2027 (14 pages: cover, intro, 12 months, 4299x6100 pt like the original) was made
   with img2pdf from `drafts/calendar-2026/2027/m-*.jpg` + `pg-002.jpg` and given to the owner; it is not in the repo. Upload it in the
   admin's Calendar tab (Palestine box).
+- Round 3 (owner, 15 Nov 2026): the calendar page opens on two wide photographs that show the whole calendar, a wall (`cww-MM`) and a
+  table flat lay (`cwf-MM`), the cover in both then the months by turns (blanks from Canva, holder page 59, in
+  `drafts/mockups/calendar-wide/`; `tools/calendar_wide_mockups.py`); the bottles section has its own Buy; "Calendars from earlier
+  years" is a grid of cards (`OLD` in calendar.js), each calendar with its own page. The shop lists both calendars (`MG.calendars`,
+  each with `cover` and `page`).
+- All pages now carry `"hand":true` and sit in the column: shop, account, profile, checkout, help, terms and 404 were rebuilt as
+  `main > section.pgx > .wrap.<old class>`; the stickers list is its own section; old torn notes (`.note.paper`) are plain ruled boxes;
+  the story's map and cards keep inside `--side`. Postcard photos with a hand in front or a card floating by the sea (`pc-hands`,
+  `pc-sea`) were replaced by `pc-desk2` (a card laid on a desk over a written one, rotated 9.3°); stickers on things are drawn at about
+  a fifth of the object.
+- Accounts: the profile shows the account in numbers, every order with its files and, for prints, the parcel's state, tracking and
+  address, the monthly e-mail switch (`/api/me/news`), the devices signed in (end one or all others), a full data export
+  (`/api/me/export`: account, orders, newsletter, sessions). Reset links live 30 minutes.
+- Security review (27 points, report https://claude.ai/artifact/RYG8Hg5rkeYNe1bBhdKYp2): uploads are checked by their real bytes
+  (`sniff()` in util.js), the CSRF localhost exception only applies on localhost, http goes to https in the Worker, wrangler updated
+  (0 audit issues), `worker/test/hardening.test.mjs` (41 checks) is part of `npm test`. Owner to do: deploy, Cloudflare "Always Use
+  HTTPS", 2FA on the admin account.
