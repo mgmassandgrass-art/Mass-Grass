@@ -405,3 +405,26 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - Just in (home): under the pointer each piece shows itself in its first real photograph (`.jmk`, `jmock()` in home.js; the
   hands photos `pc-hands`/`pcp-table` skipped, stickers on `sk-notebook`). The calendar's Browse and Buy buttons are alike (same
   width and height, Browse in ink line, Buy filled, the price beside both).
+
+## The calendar page, round 1 (owner, 15 Nov 2026): page by page, the calendar first
+
+- Type: the calendar's hand rules moved from `home.css` to a shared `web/assets/css/hand.css`, scoped `html[data-hand]`; the build
+  adds `data-hand` (and loads hand.css) for pages whose meta says `"hand":true` or `"home":true`. Home keeps `data-page="home"` too.
+- `calendar.html` (V2 calendar, "Things kept in bottles"): (1) the stage: a film of a hand turning the desk calendar's cover to
+  January (`assets/cal-flip.{webm,mp4,webp}`: HeyGen image-to-video, first frame cover / last frame January on the shelf desk photo;
+  HeyGen's host is blocked here, so it came back through Canva, holder page 58 of `DAHWgLZfDEc`), then the desk photographs of the
+  calendar open on each month (`cd-00..12.webp`, the blank desk calendar of the shelves + the V2 pages, `tools/shelf_mockups.py`'s
+  method), chosen from a row of 14; (2) the twelve bottles (`bt-01..12`) side by side on one line, floating together (on phones one
+  scrolling line); a click shows that month in the calendar (desk photo, or "The page" `v2-MM`) with its line; (3) "Calendars from
+  earlier years": a card to `palestine.html`. Morphic and Magnific are connected but on free plans (20 / 0 credits).
+- The Palestine calendar: Farah's 2026 calendar "Palestine, a journey through time & space" (14 flat pages in
+  `drafts/calendar-2026/pg-000..026` even numbers: cover, intro, Jan..Dec) re-dated for 2027 by `tools/redate_2026.py`: every number
+  is cut from the pages' own digits (exact type), the grid rebuilt Monday-first with grey days of the next/previous month, the holiday
+  circles moved in their own colours (Isra and Mi'raj 5 Jan, Ramadan 8 Feb, Eid al-Fitr 9 Mar, Eid al-Adha 16 May by Umm al-Qura via
+  `hijridate`; World Architecture Day 4 Oct; the fixed days stay), the year under each month and on the cover set to 2027. Output in
+  `drafts/calendar-2026/2027/m-00..12.jpg`; on the site `ps-MM.webp` (pages), `t-ps-MM.webp`, `pd-MM.webp` (on the desk).
+- Two calendars in the shop: `MG_DEFAULT.palestine` (catalog.js) beside `.calendar`; `MG.calOf(id)`; a calendar bag line's `k` is the
+  calendar id (`calendar-2027`, `palestine-2027`); buttons carry `data-cal`. Worker: `CALS` / `calFile()` in `worker/src/util.js` (names,
+  file key: the 2027 calendar keeps `current`, Palestine uses `palestine-2027`); unknown calendar ids are refused. Both use
+  `prices.calendar` and `prices.calendarPrint`. The admin's Calendar tab has a second files box for the Palestine PDF.
+  Not deployed yet.

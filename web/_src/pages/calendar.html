@@ -1,46 +1,62 @@
-<!--{"title":"Calendar 2027","desc":"Things kept in bottles: the 2027 calendar by Farah Al-Helou, twelve watercolour bottles as an A5 PDF you print at home.","nav":"calendar.html","css":["show","calendar"],"js":["show","calendar"]}-->
+<!--{"title":"Calendar 2027","desc":"Things kept in bottles: the 2027 calendar by Farah Al-Helou, a watercolour bottle for every month, as a PDF to print at home or printed and shipped.","nav":"calendar.html","hand":true,"css":["calendar"],"js":["calendar"]}-->
 <main id="main">
-<section class="show fit" id="cal" aria-labelledby="ch-h" aria-roledescription="carousel">
-  <div data-slides></div>
-  <div class="card-h paper" data-tear="5"><span class="fill"></span>
-    <h1 id="ch-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1>
-    <p data-ar="تقويم 2027: اثنتا عشرة قارورة رسمتها فرح بالألوان المائية.">The 2027 calendar: twelve watercolour bottles by Farah.</p>
-    <div class="buy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div>
-  </div>
-  <div class="cap">
-    <button class="navb paper" data-tear="3" type="button" data-prev aria-label="Previous photo" data-label-ar="الصورة السابقة"><span class="fill"></span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
-    <div class="lbl paper" data-tear="4" aria-live="polite"><span class="fill"></span><b data-name></b><span data-place></span></div>
-    <button class="navb paper" data-tear="3" type="button" data-next aria-label="Next photo" data-label-ar="الصورة التالية"><span class="fill"></span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-  </div>
-  <div class="dots" data-dots></div>
-  <div class="tornb paper" data-tear-top="9"><span class="fill"></span></div>
-</section>
-
-<section class="kb-shelf" aria-labelledby="sh-h">
+<section class="cv" id="top" aria-labelledby="cv-h" data-meta="The 2027 calendar|Watercolours by Farah" data-meta-ar="تقويم 2027|ألوان مائية لفرح">
   <div class="wrap">
-    <div class="kb-shd"><h2 class="big" id="sh-h" data-ar="ما في القوارير">What the bottles keep</h2><p data-ar="لكل شهر قارورة وجملة.">A bottle and a line for every month.</p></div>
-    <ul class="bottles" id="bottles"></ul>
-    <div class="ledge paper" data-tear="4" aria-hidden="true"><span class="fill"></span></div>
-
-    <div class="close" id="close" aria-live="polite">
-      <div class="cpage" id="cpage"><img id="cimg" src="assets/c27-05-hd.webp" alt="" width="2382" height="1677"><span class="loupe" id="loupe" aria-hidden="true"></span></div>
-      <div class="cside">
-        <p class="cseason" id="cseason"></p>
-        <h3 class="cname" id="cname"></h3>
-        <p class="cquote" id="cquote"></p>
-        <p class="cdesc" id="cdesc"></p>
-        <ul class="cfacts">
-          <li data-ar="الأسبوع يبدأ يوم السبت، والجمعة بلون الشهر">Weeks start on Saturday; Fridays take the month’s colour</li>
-          <li data-ar="مساحة واسعة حول كل يوم للكتابة">Room around every day to write in</li>
-          <li data-ar="12 شهرًا وغلاف، ملف PDF بمقاس A5 عرضي تطبعونه في البيت">12 months and a cover, an A5 landscape PDF you print at home</li>
+    <div class="cv-grid">
+      <div class="cv-stage" id="cvstage">
+        <video id="cvvid" class="on" autoplay muted loop playsinline preload="auto" poster="assets/cal-flip.webp" aria-label="A hand turns the calendar's cover over to January" data-label-ar="يد تقلب غلاف التقويم إلى كانون الثاني"><source src="assets/cal-flip.webm" type="video/webm"><source src="assets/cal-flip.mp4" type="video/mp4"></video>
+        <img id="cvmk" src="assets/cd-00.webp" alt="" width="1440" height="1080">
+      </div>
+      <div class="cv-txt">
+        <h1 id="cv-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1>
+        <p class="hand cw-sub" data-ar="تقويم 2027">The 2027 calendar</p>
+        <p class="lead" data-ar="قارورة رسمتها فرح لكل شهر، وفي كل واحدة شيء يستحق أن نحفظه: قلب، بحر صغير، زهرة شمس، طريق العودة إلى البيت.">A bottle Farah painted for every month, and in each one something worth keeping: a heart, a small sea, a sunflower, a road back home.</p>
+        <ul class="specs">
+          <li data-ar="12 شهرًا وغلاف">12 months and a cover</li>
+          <li data-ar="ملف PDF طولي بمقاس A5">A PDF, portrait, A5</li>
+          <li data-ar="الأسبوع يبدأ يوم السبت">Weeks start on Saturday</li>
         </ul>
-        <div class="cbuy"><b data-price="calendar">€8</b><button class="ink" type="button" data-add="calendar" data-ar="أضيفوه إلى السلة">Add to bag</button></div><div class="vprint" id="cprint"></div>
-        <div class="cnav">
-          <button class="tbtn paper" data-tear="3" type="button" id="cprev"><span class="fill"></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-ar="الشهر السابق">Previous month</span></button>
-          <button class="tbtn paper" data-tear="3" type="button" id="cnext"><span class="fill"></span><span data-ar="الشهر التالي">Next month</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="cw-buy">
+          <a class="ghost" href="#months" data-ar="شاهدوا الأشهر">See the months</a>
+          <div class="cw-row"><button class="ink" type="button" data-add="calendar" data-ar="اشتروا التقويم">Buy the calendar</button><b class="fig" data-price="calendar">€8</b></div>
         </div>
+        <div class="cv-print" id="cprint"></div>
       </div>
     </div>
+    <div class="cv-th" id="cvth" role="group" aria-label="Photographs of the calendar" data-label-ar="صور التقويم"></div>
+  </div>
+</section>
+
+<section class="btl" id="months" aria-labelledby="bt-h" data-meta="A bottle for every month" data-meta-ar="قارورة لكل شهر">
+  <div class="wrap">
+    <div class="btl-hd"><h2 class="big" id="bt-h" data-ar="ما في القوارير">What the bottles keep</h2><p data-ar="اختاروا قارورة لتروها في التقويم.">Choose a bottle to see it in the calendar.</p></div>
+    <ul class="btrow" id="btrow"></ul>
+    <div class="btshow" id="btshow" aria-live="polite">
+      <div class="bts-im" id="btsim"><img id="btsA" src="assets/cd-01.webp" alt="" width="1440" height="1080"><img id="btsB" alt="" width="1440" height="1080"></div>
+      <div class="bts-tx">
+        <p class="bts-s" id="btss"></p>
+        <h3 class="bts-n" id="btsn"></h3>
+        <p class="hand bts-q" id="btsq"></p>
+        <p class="bts-d" id="btsd"></p>
+        <div class="bts-v" role="group" aria-label="View" data-label-ar="العرض"><button type="button" id="btvDesk" aria-pressed="true" data-ar="على المكتب">On the desk</button><button type="button" id="btvPage" aria-pressed="false" data-ar="الصفحة">The page</button></div>
+        <div class="bts-nav"><button type="button" class="ghost" id="btprev" data-ar="الشهر السابق">Previous month</button><button type="button" class="ghost" id="btnext" data-ar="الشهر التالي">Next month</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="older" id="earlier" aria-labelledby="ol-h" data-meta="Set for 2027" data-meta-ar="بتواريخ 2027">
+  <div class="wrap">
+    <div class="btl-hd"><h2 class="big" id="ol-h" data-ar="تقاويم من سنوات سابقة">Calendars from earlier years</h2><p data-ar="رسمتها فرح لسنوات مضت، وجدّدنا تواريخها وأعيادها لعام 2027.">Painted by Farah for earlier years, their dates and holidays now set for 2027.</p></div>
+    <a class="ol-card" href="palestine.html">
+      <span class="ol-im"><img src="assets/pd-00.webp" alt="" width="1440" height="1080" loading="lazy"><img src="assets/pd-03.webp" alt="" width="1440" height="1080" loading="lazy"></span>
+      <span class="ol-tx">
+        <span class="ol-y" data-ar="من 2026، بتواريخ 2027">From 2026, set for 2027</span>
+        <span class="ol-n" data-ar="فلسطين، رحلة عبر الزمان والمكان">Palestine, a journey through time and space</span>
+        <span class="ol-d" data-ar="بيوت فلسطين القديمة، أبوابها ونوافذها وأدراجها وبلاطها، شهرًا بعد شهر.">The old houses of Palestine, their doors, windows, stairs and tiles, month by month.</span>
+        <span class="ol-p"><b data-price="calendar">€8</b><span class="go" data-ar="افتحوا التقويم">Open the calendar</span></span>
+      </span>
+    </a>
   </div>
 </section>
 </main>

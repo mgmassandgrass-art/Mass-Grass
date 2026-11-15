@@ -1,5 +1,5 @@
 // Catalog, orders, PayPal and the admin API.
-import { json, fail, readJson, clean } from './util.js';
+import { json, fail, readJson, clean, CALS, calFile } from './util.js';
 import { orderFiles } from './files.js';
 import { orderPaidEmails, shippedEmail } from './mail.js';
 
@@ -40,7 +40,7 @@ function openCountries(sh) {
 // price is prices.calendarPrint. No sale on prints. Returns cents, or null when that piece is not printed.
 function printPrice(cat, it) {
   if (it.pack) return null;
-  if (it.kind === 'calendar') { const e = cat.prices.calendarPrint; return e > 0 ? Math.round(e * 100) : null; }
+  if (it.kind === 'calendar') { if (!CALS[it.k]) return null; const e = cat.prices.calendarPrint; return e > 0 ? Math.round(e * 100) : null; }
   const p = cat.products.find((x) => x.id === it.k && x.kind === it.kind);
   const pr = p && p.extra && p.extra.print;
   return pr && pr.on && Number(pr.price) > 0 ? Math.round(Number(pr.price) * 100) : null;
@@ -54,6 +54,7 @@ function linePrice(cat, it) {
   const base = cat.prices[kind];
   // A pack holds up to 6 visible stickers: hidden or deleted ones (and their files) are not for sale.
   if (kind === 'pack' && !(Array.isArray(it.pack) && it.pack.length && it.pack.length <= 6 && it.pack.every((k) => cat.products.some((x) => x.kind === 'sticker' && x.id === k)))) return null;
+  if (kind === 'calendar' && !CALS[it.k]) return null;
   if (kind === 'pack' || kind === 'calendar') return base > 0 ? Math.round(base * 100) : null;
   const p = cat.products.find((x) => x.id === it.k && x.kind === kind);
   if (!p) return null;
@@ -102,7 +103,7 @@ export async function createOrder(env, req, user) {
     // Names come from the catalog, not from the browser (a pack and the calendar keep the shop's own wording).
     const pr = it.pack ? null : cat.products.find((x) => x.id === it.k && x.kind === it.kind);
     const cal = it.kind === 'calendar' && !it.pack;
-    items.push({ k: clean(it.k, 40), kind: it.pack ? 'pack' : clean(it.kind, 20), t: pr ? pr.title_en : cal ? 'Things kept in bottles, 2027' : clean(it.t, 80), ta: pr ? pr.title_ar : cal ? 'أشياء نحفظها في قوارير، 2027' : clean(it.ta, 80), pack: Array.isArray(it.pack) ? it.pack.slice(0, 6).map((x) => clean(x, 40)) : undefined,
+    items.push({ k: clean(it.k, 40), kind: it.pack ? 'pack' : clean(it.kind, 20), t: pr ? pr.title_en : cal ? CALS[it.k][0] : clean(it.t, 80), ta: pr ? pr.title_ar : cal ? CALS[it.k][1] : clean(it.ta, 80), pack: Array.isArray(it.pack) ? it.pack.slice(0, 6).map((x) => clean(x, 40)) : undefined,
       gift: it.gift ? { to: clean(it.gift.to, 60), em: clean(it.gift.em, 120), m: clean(it.gift.m, 500) } : undefined, cents: c, fmt, q: fmt ? q : undefined });
   }
   // Printed pieces: an address in a country shipped to, and its fee once per order.
@@ -117,7 +118,7 @@ export async function createOrder(env, req, user) {
   // Free downloads (every line priced 0): no payment. Each free piece must have its file, and the same address or
   // e-mail can only take so many, so the files cannot be pulled in bulk.
   if (total === 0) {
-    const keys = items.flatMap((x) => (x.kind === 'pack' ? (x.pack || []).map((k) => ['sticker', k]) : x.kind === 'calendar' ? [['calendar', 'current']] : [[x.kind, x.k]]));
+    const keys = items.flatMap((x) => (x.kind === 'pack' ? (x.pack || []).map((k) => ['sticker', k]) : x.kind === 'calendar' ? [['calendar', calFile(x.k)]] : [[x.kind, x.k]]));
     for (const [kd, pid] of keys) if (!(await env.DB.prepare('SELECT 1 FROM product_files WHERE kind=? AND product_id=?').bind(kd, pid).first())) return fail('not_ready', 409, { k: pid });
     if (!(await limitKey(env, 'free:' + ipOf(req), 15, 3600)) || !(await limitKey(env, 'freem:' + email, 10, 86400))) return fail('rate_limited', 429);
   }
@@ -251,14 +252,14 @@ export async function admin(env, req, url, p) {
     const recent = await all('SELECT * FROM orders ORDER BY created_at DESC LIMIT 6');
     // Pieces on sale that have no file to deliver yet: the first thing to fix before payments open.
     const noFile = await all("SELECT p.kind, p.id, p.title_en, p.title_ar FROM products p WHERE p.deleted=0 AND p.hidden=0 AND NOT EXISTS (SELECT 1 FROM product_files f WHERE f.kind=p.kind AND f.product_id=p.id) ORDER BY p.kind, p.sort LIMIT 200");
-    const calFile = await one("SELECT count(*) n FROM product_files WHERE kind='calendar'");
+    const calF = await one("SELECT count(*) n FROM product_files WHERE kind='calendar' AND product_id='current'");
     const alerts = await one("SELECT count(*) n FROM audit_log WHERE level='alert' AND at>=?", now - 7 * DAY);
     const toShip = await one("SELECT count(*) n FROM orders WHERE status='paid' AND ship_status='to_print'");
     const free = await one("SELECT count(*) n FROM orders WHERE status='paid' AND total_cents=0 AND paid_at>=?", from);
     return json({ days, totals: { orders: tot.n, revenue: tot.c / 100 }, period: { orders: per.n, revenue: per.c / 100 }, previous: { orders: prev.n, revenue: prev.c / 100 },
       pending: pend.n, users: users.n, newUsers: newUsers.n, subscribers: subs.n, messages: msgs.n, unread: msgs.unread, products: prods.n, hidden: hidden.n,
       files: files.n, fileBytes: files.bytes, freeDownloads: free.n, toShip: toShip.n, byDay, top: top.map((t) => ({ kind: t.pkind, id: t.pid, title: t.title, title_ar: t.title_ar, n: t.n, revenue: (t.c || 0) / 100 })), kinds: kinds.map((k) => ({ kind: k.pkind, n: k.n, revenue: (k.c || 0) / 100 })),
-      recent: recent.map(orderOut), noFile, calendarFile: calFile.n > 0, alerts: alerts.n,
+      recent: recent.map(orderOut), noFile, calendarFile: calF.n > 0, alerts: alerts.n,
       payments: env.PAYPAL_CLIENT_ID ? (env.PAYPAL_ENV === 'live' ? 'live' : 'sandbox') : 'off', mail: !!env.RESEND_API_KEY, google: !!env.GOOGLE_CLIENT_ID, soon: env.SOON === '1' });
   }
   if (p === '/api/admin/messages' && m === 'GET') {

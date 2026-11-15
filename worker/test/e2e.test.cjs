@@ -42,7 +42,7 @@ let bad = 0; const ok = (n, c, extra) => { if (!c) { bad++; console.log('FAIL', 
     await p.goto(B + '/stickers', { waitUntil: 'load' }); for (let i = 0; i < 6; i++) await p.click(`#grid .sc >> nth=${i}`);
     await p.click('#pbAdd'); await p.waitForTimeout(300);
     ok('six stickers go in as one pack', (await p.textContent('[data-bagn]')) === '3');
-    await p.goto(B + '/calendar', { waitUntil: 'load' }); await p.click('.card-h [data-add=calendar]'); await p.waitForTimeout(200);
+    await p.goto(B + '/calendar', { waitUntil: 'load' }); await p.click('.cw-row [data-add=calendar]'); await p.waitForTimeout(200);
     await p.click('#bagb'); await p.waitForSelector('dialog.bagd[open]');
     ok('bag sheet totals 12+12+3+8', /€35/.test(await p.textContent('.bagd .tt')));
     await p.click('.bagd a.ink'); await p.waitForURL('**/checkout**'); await p.waitForSelector('#f');

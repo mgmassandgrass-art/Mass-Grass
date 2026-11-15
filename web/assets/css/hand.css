@@ -1,0 +1,95 @@
+/* The calendar's own type, shared by the pages that wear it (home, the calendar pages): <html data-hand> is set by the build
+   for pages whose meta says "hand":true or "home":true. Earlier steps stay in order; the last block wins. */
+/* ---------- the home page in the calendar's own type (owner, Nov 2026), as the calendar sets it:
+   titles and the names of things in Annie Use Your Telescope (its month names and its lines), reading text in Fraunces light
+   (its "about the bottles" page), and every small label, figure and button in Jost, the labels in spaced capitals ("WATERCOLOURS
+   BY FARAH ALHELOU", "SATURDAY SUNDAY ..."). The calendar's ink #2B2F2C, its rose #9C4F52 for the accents, its grey #6B675E.
+   English only: in Arabic the page keeps its Arabic faces (Readex for text, Aref Ruqaa for the hand). The menu stays as it is. */
+html[data-hand]{--cal-t:'Annie Use Your Telescope',var(--hand);--cal-b:var(--mono2);--cal-l:var(--mono2);--cal-ink:#2B2F2C;--cal-rose:#9C4F52;--cal-grey:#6B675E}
+/* titles */
+html[data-hand]:not(.ar-on) main :is(h1,h2,h3):not(.sr),html[data-hand]:not(.ar-on) main h2.big{font-family:var(--cal-t);font-weight:400;letter-spacing:.005em;color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) main h2.big{font-size:clamp(46px,5vw,76px);line-height:1}
+html[data-hand]:not(.ar-on) main h3{font-size:clamp(24px,2vw,30px);line-height:1.05}
+html[data-hand]:not(.ar-on) main .hand{font-family:var(--cal-t);color:var(--cal-rose)}
+/* reading text */
+html[data-hand]:not(.ar-on) main :is(p,.lead,li,dd,blockquote),html[data-hand]:not(.ar-on) footer :is(p,li){font-family:var(--cal-b);font-weight:300;letter-spacing:0;color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) main .lead{font-size:clamp(18px,1.4vw,21px);line-height:1.55;color:#3E3A34}
+html[data-hand]:not(.ar-on) main em{font-style:italic}
+/* labels, figures and buttons */
+html[data-hand]:not(.ar-on) :is(.sx-hd,.sx-side button,.where-in,.rg-sub),
+html[data-hand]:not(.ar-on) main :is(.kind,.lb,.go,.ship,.specs li,.cm-th,.cw-sub~.specs li,.pr,.fig,button,.ink,.ghost,.add,.shr,a.ink,a.ghost){font-family:var(--cal-l)}
+html[data-hand]:not(.ar-on) :is(.sx-hd,.where-in,.rg-sub),html[data-hand]:not(.ar-on) main :is(.kind,.lb,.specs li,.ink,.ghost,.add){font-weight:500;letter-spacing:.16em;text-transform:uppercase}
+html[data-hand]:not(.ar-on) :is(.sx-hd,.where-in){font-size:11px;color:var(--cal-grey)}
+html[data-hand]:not(.ar-on) .sx-hd b,html[data-hand]:not(.ar-on) .where-in b{color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) .sx-side .now{font-family:var(--cal-t);font-weight:400;text-transform:none;letter-spacing:0;font-size:clamp(24px,2vw,34px);line-height:1;color:var(--cal-rose)}
+html[data-hand]:not(.ar-on) .sx-side button{font-weight:400;text-transform:none;letter-spacing:.02em;font-size:14px}
+html[data-hand]:not(.ar-on) main .specs li{font-size:12px;color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) main :is(.ink,.ghost,.add){font-size:12px}
+html[data-hand]:not(.ar-on) main :is(.pr,.fig){font-weight:500;letter-spacing:.02em}
+html[data-hand]:not(.ar-on) main .fig{font-size:clamp(30px,2.6vw,40px)}
+html[data-hand]:not(.ar-on) main .ship span{font-family:var(--cal-b);font-weight:300;font-style:italic}
+html[data-hand]:not(.ar-on) .rg-sub{font-size:11px;letter-spacing:.24em}
+/* the hand stays the calendar's hand even on a paragraph or a quote (its lines are set in Annie, in rose) */
+html[data-hand]:not(.ar-on) main :is(p,blockquote,span,h3).hand{font-family:var(--cal-t);font-weight:400;color:var(--cal-rose);letter-spacing:.01em}
+html[data-hand]:not(.ar-on) main .cw-sub{font-size:clamp(26px,2.2vw,34px);line-height:1}
+html[data-hand]:not(.ar-on) main blockquote.hand{font-size:clamp(34px,3.4vw,52px);line-height:1.1}
+html[data-hand]:not(.ar-on) main .go{font-family:var(--cal-l);font-weight:500;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+
+/* only two faces on the home page (owner, Nov 2026): the calendar's hand for titles, names and lines, and the menu's mono
+   (Geist Mono) for everything else, reading text included, set smaller and looser as mono reads best */
+html[data-hand]:not(.ar-on) main :is(p,.lead,li,dd),html[data-hand]:not(.ar-on) footer :is(p,li){font-weight:500;font-size:14px;line-height:1.75;letter-spacing:.01em}
+html[data-hand]:not(.ar-on) main .lead{font-size:15px;line-height:1.75}
+html[data-hand]:not(.ar-on) main .ship span{font-style:normal}
+html[data-hand]:not(.ar-on) main :is(.pr,.fig){font-weight:500;letter-spacing:0}
+html[data-hand]:not(.ar-on) main .fig{font-size:clamp(26px,2.2vw,34px)}
+html[data-hand]:not(.ar-on) .sx-side button{font-size:12px;letter-spacing:.06em}
+html[data-hand]:not(.ar-on) main :is(.ink,.ghost,.add,.go,.kind,.lb,.specs li){font-size:11px;letter-spacing:.15em}
+.rg-btn{text-decoration:none;display:inline-block}
+/* the hand stays large where it is a subtitle; the "see everything" cell and the footer join the two faces too */
+html[data-hand]:not(.ar-on) main p.hand.cw-sub{font-family:var(--cal-t);font-weight:400;font-size:clamp(26px,2.2vw,34px);line-height:1;letter-spacing:.01em}
+html[data-hand]:not(.ar-on) main .all span{font-family:var(--cal-t);font-weight:400;font-size:clamp(26px,2.2vw,34px);line-height:1.05}
+html[data-hand]:not(.ar-on) footer h2{font-family:var(--cal-t);font-weight:400;font-size:26px;letter-spacing:.01em;text-transform:none}
+html[data-hand]:not(.ar-on) footer :is(a,small,button,label,input){font-family:var(--mono2);font-weight:500;font-size:12px;letter-spacing:.06em}
+html[data-hand]:not(.ar-on) footer button{letter-spacing:.15em;text-transform:uppercase;font-size:11px}
+
+/* ---------- the whole home page in the calendar's hand (owner, Nov 2026). One face, so the order comes from size and colour,
+   the calendar's own palette: ink #2B2F2C for what is read, rose #9C4F52 for names, lines and prices, sage #56702A for small
+   labels, warm grey #6B675E for what is quiet. Handwriting tires at small sizes and in capitals, so nothing is set under 16px,
+   nothing in capitals, lines are kept short and loose. The menu keeps its mono. ---------- */
+html[data-hand]{--cal-b:var(--cal-t);--cal-l:var(--cal-t);--cal-sage:#56702A}
+html[data-hand]:not(.ar-on) :is(main,footer,.sx-side,.where) *{text-transform:none!important}
+/* reading text */
+html[data-hand]:not(.ar-on) main :is(p,li,dd),html[data-hand]:not(.ar-on) footer :is(p,li){font-family:var(--cal-t);font-weight:400;font-size:20px;line-height:1.4;letter-spacing:.01em;color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) main .lead{font-size:clamp(22px,1.7vw,26px);line-height:1.35;max-width:30ch;color:var(--cal-ink)}
+/* small labels: section heads, the glass strip, specs, kinds */
+html[data-hand]:not(.ar-on) :is(.sx-hd,.where-in){font-family:var(--cal-t);font-size:18px;letter-spacing:.02em;color:var(--cal-grey)}
+html[data-hand]:not(.ar-on) :is(.sx-hd,.where-in) b{color:var(--cal-rose);font-weight:400}
+html[data-hand]:not(.ar-on) main :is(.specs li){font-size:20px;letter-spacing:.01em;color:var(--cal-sage)}
+html[data-hand]:not(.ar-on) main :is(.kind,.lb){font-family:var(--cal-t);font-size:18px;letter-spacing:.02em;color:var(--cal-sage)}
+html[data-hand]:not(.ar-on) .rg-sub{font-family:var(--cal-t);font-size:20px;letter-spacing:.02em;color:var(--cal-grey)}
+/* prices */
+html[data-hand]:not(.ar-on) main :is(.pr,.fig){font-family:var(--cal-t);font-weight:400;color:var(--cal-rose)}
+html[data-hand]:not(.ar-on) main .pr{font-size:22px}
+html[data-hand]:not(.ar-on) main .fig{font-size:clamp(40px,3.4vw,54px);line-height:1}
+/* buttons and links: the hand, a size up, ink buttons keep their ink */
+html[data-hand]:not(.ar-on) main :is(.ink,.ghost,.add,.go,button,a.shr){font-family:var(--cal-t);font-weight:400;font-size:21px;letter-spacing:.02em}
+html[data-hand]:not(.ar-on) main .go{color:var(--cal-rose)}
+/* the side margin */
+html[data-hand]:not(.ar-on) .sx-side button{font-family:var(--cal-t);font-size:18px;letter-spacing:.01em}
+/* the shipping note and the tile names */
+html[data-hand]:not(.ar-on) main .ship span{font-family:var(--cal-t);font-size:20px;color:var(--cal-grey)}
+html[data-hand]:not(.ar-on) main .cap h3{font-size:clamp(26px,2vw,32px);color:var(--cal-ink)}
+/* footer */
+html[data-hand]:not(.ar-on) footer :is(a,small,button,label,input){font-family:var(--cal-t);font-weight:400;font-size:19px;letter-spacing:.01em}
+html[data-hand]:not(.ar-on) footer h2{font-size:30px;color:var(--cal-rose)}
+html[data-hand]:not(.ar-on) footer small{color:var(--cal-grey)}
+html[data-hand]:not(.ar-on) body main section :is(p,li){font-size:20px;line-height:1.4;letter-spacing:.01em}
+html[data-hand]:not(.ar-on) body main section :is(.cl-txt p,.stx p){font-size:clamp(21px,1.6vw,24px);line-height:1.38;max-width:32ch}
+html[data-hand]:not(.ar-on) body main .ring .rg-sub{font-size:21px;letter-spacing:.02em}
+html[data-hand]:not(.ar-on) body main :is(.kind,.lb){font-size:18px;letter-spacing:.02em}
+html[data-hand]:not(.ar-on) body main .lb{font-size:20px}
+/* the menu in the calendar's hand too (owner, Nov 2026), on the home page */
+html[data-hand]:not(.ar-on) header :is(.mainnav>a,.ddb,.ddp a,#mmenu a,#mmenu .mlabel,#mmenu button){font-family:var(--cal-t);font-weight:400;font-size:21px;letter-spacing:.02em;text-transform:none}
+html[data-hand]:not(.ar-on) header .mainnav>a[aria-current]{background-size:calc(100% - 16px) 28px}
+html[data-hand]:not(.ar-on) header .ddb.cur,html[data-hand]:not(.ar-on) header .ddb[aria-expanded=true]{background-size:calc(100% - 16px) 28px}
+html[data-hand]:not(.ar-on) header :is(.bn,.ini){font-family:var(--cal-t);font-weight:400;font-size:17px}

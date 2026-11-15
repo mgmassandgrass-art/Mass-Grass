@@ -102,5 +102,26 @@ window.MG_DEFAULT = {
       { k: 'c27-12', m: 12, n: ['December', 'كانون الأول'], s: ['Winter 2027', 'شتاء 2027'], q: ['Every road we take is a way back to ourselves.', 'كل طريق نسلكه طريقُ عودةٍ إلى أنفسنا.'],
         d: ['A heart-shaped sun over a small house, and a yellow road that winds back to it through green hills.', 'شمس على شكل قلب فوق بيت صغير، وطريق أصفر يعود إليه بين التلال الخضراء.'] }
     ]
+  },
+  /* an earlier calendar set for 2027: Farah's 2026 calendar "Palestine, a journey through time and space" (old houses and
+     their details in watercolour), its dates, holidays and year redrawn for 2027 by tools/redate_2026.py (assets ps-MM, pd-MM) */
+  palestine: {
+    id: 'palestine-2027', title: ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027'],
+    short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026,
+    pages: [
+      { k: 'ps-00', m: 0, n: ['The cover', 'الغلاف'], q: ['Palestine, a journey through time and space.', 'فلسطين، رحلة عبر الزمان والمكان.'], d: ['A clay jug on a tiled plate, and the calendar\'s name.', 'جرّة فخار على صحن من البلاط، واسم التقويم.'] },
+      { k: 'ps-01', m: 1, n: ["Taboon", "الطابون"], q: ["Taboon", "الطابون"], d: ["Hand-sculpted from golden clay and ancient grit, the taboon is a thermal masterpiece: a living monument where the earth's warmth meets the scent of belonging.", "الطابون مصنوع باليد من الطين الذهبي والحصى القديم، تحفة تحفظ الحرارة: نصب حيّ يلتقي فيه دفء الأرض برائحة الانتماء."] },
+      { k: 'ps-02', m: 2, n: ["The Sabat's passage", "ممرّ الساباط"], q: ["The Sabat's passage", "ممرّ الساباط"], d: ["The sabat is the architecture of intimacy: a stone embrace that weaves private lives into the fabric of the public street.", "الساباط عمارة الألفة: عناق من حجر ينسج الحياة الخاصة في نسيج الشارع."] },
+      { k: 'ps-03', m: 3, n: ["The balcony's embrace (al-Shurfa)", "الشرفة"], q: ["The balcony's embrace (al-Shurfa)", "الشرفة"], d: ["A suspended sanctuary where stories unfold under the open sky, breathing in the view, embracing the moment.", "ملاذ معلّق تتفتح فيه الحكايات تحت السماء المفتوحة، تتنفس المنظر وتحتضن اللحظة."] },
+      { k: 'ps-04', m: 4, n: ["The gate", "البوابة"], q: ["The gate", "البوابة"], d: ["A timeless threshold to countless stories, standing sentinel, where every knock echoes through the past.", "عتبة خالدة لحكايات لا تُحصى، حارسة واقفة، يتردد فيها كل طرق عبر الماضي."] },
+      { k: 'ps-05', m: 5, n: ["The mosaic underfoot", "البلاط تحت الأقدام"], q: ["The mosaic underfoot", "البلاط تحت الأقدام"], d: ["Each tile is a burst of colour and pattern, telling a silent story of geometry and the art of Jerusalem's traditional floor tiles.", "كل بلاطة انفجار من لون ونقش، تحكي بصمت قصة الهندسة وفنّ البلاط المقدسي التقليدي."] },
+      { k: 'ps-06', m: 6, n: ["The shaded aperture", "النافذة الظليلة"], q: ["The shaded aperture", "النافذة الظليلة"], d: ["A semi-open space that dances with light beneath the vine trellis, where shade and joy are born together.", "مساحة نصف مفتوحة ترقص مع الضوء تحت عريشة العنب، حيث يولد الظل والفرح معًا."] },
+      { k: 'ps-07', m: 7, n: ["The art of al-Ablaq", "فنّ الأبلق"], q: ["The art of al-Ablaq", "فنّ الأبلق"], d: ["A masterpiece of masonry where contrasting colours interlock in elegant stripes, adding dramatic beauty and historical depth.", "تحفة من البناء تتشابك فيها الألوان المتباينة في خطوط أنيقة، تمنح المكان جمالًا وعمقًا تاريخيًا."] },
+      { k: 'ps-08', m: 8, n: ["The stone lattice window (al-Qamariya)", "القمرية"], q: ["The stone lattice window (al-Qamariya)", "القمرية"], d: ["A lattice window gently breaks the light, separating inside from outside without severing their connection, letting shadows tell their story.", "نافذة مشبّكة تكسر الضوء برفق، تفصل الداخل عن الخارج دون أن تقطع الصلة بينهما، وتترك الظلال تحكي حكايتها."] },
+      { k: 'ps-09', m: 9, n: ["The crowned roof", "السطح المقبّب"], q: ["The crowned roof", "السطح المقبّب"], d: ["Flat roofs and domes made to keep the heat out: a stone fabric that balances mass and void in one geometry.", "أسطح وقباب صُنعت لتصدّ الحرّ: نسيج من حجر يوازن بين الكتلة والفراغ في هندسة واحدة."] },
+      { k: 'ps-10', m: 10, n: ["The courtyard's sun", "شمس الحوش"], q: ["The courtyard's sun", "شمس الحوش"], d: ["A ray of sunlight slips into the courtyard, a quiet bond between light and stone, a space that gently holds family gatherings.", "شعاع شمس يتسلل إلى الحوش، صلة هادئة بين الضوء والحجر، ومكان يحتضن لمّة العائلة برفق."] },
+      { k: 'ps-11', m: 11, n: ["The stone staircase", "الدرج الحجري"], q: ["The stone staircase", "الدرج الحجري"], d: ["An organic ascent connecting the levels of the earth through walls of light and shadow, celebrating the passage of time.", "صعود يصل طبقات الأرض بين جدران من ضوء وظل، احتفاءً بمرور الزمن."] },
+      { k: 'ps-12', m: 12, n: ["The hanging lantern", "القنديل المعلّق"], q: ["The hanging lantern", "القنديل المعلّق"], d: ["A geometric glow breaking the stone's silence, where warm light meets ancient mass to turn the void into a living scene.", "وهج هندسي يكسر صمت الحجر، يلتقي فيه الضوء الدافئ بالكتلة القديمة فيحوّل الفراغ إلى مشهد حيّ."] }
+    ]
   }
 };

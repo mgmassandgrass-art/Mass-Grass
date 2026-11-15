@@ -1,41 +1,122 @@
-/* Things kept in bottles: the bottles on their shelf and one page up close. (The photographs on top are show.css.) */
-:root{--hand:'Caveat',cursive;--handar:'Aref Ruqaa',serif}
-/* the bottles, torn out of their pages and stood on a strip of kraft */
-.kb-shelf{padding:var(--sec) 0}
-.kb-shd{display:flex;justify-content:space-between;align-items:end;gap:16px 40px;flex-wrap:wrap;margin-bottom:var(--gh)}
-.kb-shd p{margin:0;max-width:34ch;color:var(--soft)}
-.bottles{list-style:none;margin:0;padding:0 2%;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:clamp(12px,2vw,32px);align-items:end;position:relative;z-index:1}
-.bottle{display:flex;flex-direction:column;align-items:center;width:100%;border:0;padding:0;background:none;cursor:pointer;color:var(--ink);transition:transform .45s cubic-bezier(.22,1,.36,1)}
-.bottle .piece{--c:var(--paper-white);display:block;width:100%;padding:8% 6% 4%}
-.bottle .piece img{display:block;width:100%;height:auto;mix-blend-mode:multiply}
-.bottle .tag{position:relative;margin-top:-12px;padding:8px 16px 8px;--c:var(--paper-white);font:500 var(--fs-lead)/1.1 var(--hand,'Caveat',cursive);rotate:-3deg;filter:drop-shadow(0 4px 5px rgba(var(--ink-rgb),.2))}
-.ar-on .bottle .tag{font-family:var(--handar,'Aref Ruqaa',serif);font-size:var(--fs-body)}
-.bottle:nth-child(even) .tag{rotate:3deg}
-.bottle:nth-child(1) .piece{rotate:-1.5deg}.bottle:nth-child(2) .piece{rotate:1deg}.bottle:nth-child(3) .piece{rotate:-.6deg}.bottle:nth-child(4) .piece{rotate:1.4deg}.bottle:nth-child(5) .piece{rotate:-1deg}
-@media(hover:hover){.bottle:hover{transform:translateY(-10px)}}
-.bottle[aria-pressed=true]{transform:translateY(-14px)}
-.bottle[aria-pressed=true] .tag{--c:var(--olive);color:var(--paper-white)}
-.bottle:focus-visible{outline:3px solid var(--indigo);outline-offset:6px}
-.ledge{height:28px;margin-top:-8px;--c:var(--kraft);filter:drop-shadow(0 10px 10px rgba(var(--ink-rgb),.25))}
-/* one page up close, with a loupe for the lettering and the days */
-.close{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:var(--col-gap);align-items:center;margin-top:clamp(48px,6vw,88px)}
-.cpage{position:relative;overflow:hidden;background:var(--paper-white);padding:clamp(8px,1vw,12px);rotate:-.6deg;box-shadow:0 2px 3px rgba(var(--ink-rgb),.12),0 30px 44px -26px rgba(var(--ink-rgb),.5)}
-.cpage img{display:block;width:100%;height:auto;aspect-ratio:2382/1677}
-.loupe{position:absolute;left:0;top:0;width:clamp(160px,16vw,240px);aspect-ratio:1;border-radius:50%;pointer-events:none;background-repeat:no-repeat;background-color:var(--paper);box-shadow:0 0 0 3px var(--paper-white),0 14px 30px -8px rgba(var(--ink-rgb),.55);opacity:0;transition:opacity .2s}
-.cpage.lens{cursor:none}.cpage.lens .loupe{opacity:1}
-.cseason{margin:0 0 4px;color:var(--soft);font-size:var(--fs-sm)}
-.cname{margin:0 0 16px;font:500 var(--fs-display)/.9 var(--hand,'Caveat',cursive);color:var(--c-2d4f7c)}
-.ar-on .cname{font:400 var(--fs-h2)/1.3 var(--handar,'Aref Ruqaa',serif)}
-.cquote{margin:0 0 24px;font:500 var(--fs-h4)/1.3 var(--hand,'Caveat',cursive);color:var(--c-3b3731);max-width:22ch}
-.ar-on .cquote{font:400 var(--fs-lead)/1.8 var(--handar,'Aref Ruqaa',serif)}
-.cfacts{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:8px;font-size:var(--fs-sm);color:var(--soft)}
-.cfacts li{padding-inline-start:20px;position:relative}
-.cfacts li::before{content:"";position:absolute;inset-inline-start:0;top:.6em;width:8px;height:8px;border-radius:2px;background:var(--olive);rotate:8deg}
-.cnav{display:flex;gap:8px;flex-wrap:wrap}
-@media(max-width:900px){.close{grid-template-columns:minmax(0,1fr)}
-  .bottles{grid-auto-columns:minmax(120px,1fr);overflow-x:auto;padding-bottom:16px;scroll-snap-type:x mandatory}.bottles li{scroll-snap-align:center}}
-@media(max-width:560px){.cnav .tbtn span[data-ar]{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}}
-@media(prefers-reduced-motion:reduce){.bottle,.loupe{transition:none}}
-.cbuy{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 24px}.cbuy b{font:800 var(--fs-figure)/1 var(--f)}
-.cdesc{margin:0 0 24px;color:var(--soft);max-width:40ch}
-.kb-shelf{padding-bottom:var(--sec)}
+/* The calendar page: the desk stage (film and photographs), the bottles floating in a row, earlier calendars.
+   Type comes from hand.css (the calendar's own hand, as on the home page). */
+:root{--cv-paper:#EFE9DD;--cv-rose:#9C4F52;--cv-ink:#2B2F2C;--cv-sage:#56702A;--cv-grey:#6B675E}
+
+/* ---------- 1 · the stage ---------- */
+.cv{padding:clamp(24px,3vw,40px) 0 clamp(40px,5vw,72px)}
+.cv-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center}
+.cv-stage{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--cv-paper)}
+.cv-stage>video,.cv-stage>img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;opacity:0;transition:opacity .7s ease}
+.cv-stage>.on{opacity:1}
+.cv-txt h1{margin:0;font-size:clamp(44px,4.6vw,72px);line-height:1}
+.cv-txt .cw-sub{margin:8px 0 20px}
+.cv-txt .lead{margin:0 0 20px}
+.specs{list-style:none;margin:0 0 24px;padding:0;display:grid;border-top:1px solid var(--line)}
+.specs li{padding:10px 0;border-bottom:1px solid var(--line)}
+.cw-buy{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 16px;align-items:center}
+.cw-buy .ghost{grid-column:1}
+.cw-row{display:contents}
+.cw-row .ink{grid-column:1;grid-row:2}
+.cw-row .fig{grid-column:2;grid-row:1/3;align-self:center;margin:0}
+.cw-buy .ghost,.cw-buy .ink{width:100%;min-height:56px;justify-content:center;border:1.5px solid var(--cv-ink);box-sizing:border-box;text-decoration:none;display:inline-flex;align-items:center}
+.cw-buy .ghost{background:transparent;color:var(--cv-ink)}
+.cv-print{margin-top:16px}
+.cv-print .ghost{width:100%;min-height:48px;justify-content:center}
+.pnote{margin:8px 0 0;color:var(--cv-grey)}
+/* the photographs to choose: the film first, then the cover and the twelve months on the desk */
+.cv-th{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:6px;margin-top:12px}
+.cv-th button{position:relative;padding:0;border:0;background:var(--cv-paper);aspect-ratio:4/3;overflow:hidden;cursor:pointer;opacity:.62;transition:opacity .2s,transform .2s}
+.cv-th button img{display:block;width:100%;height:100%;object-fit:cover;max-width:none}
+.cv-th button[aria-pressed=true]{opacity:1;outline:1.5px solid var(--cv-rose);outline-offset:2px}
+.cv-th button:hover{opacity:1}
+.cv-th button:focus-visible{outline:2px solid var(--cv-rose);outline-offset:2px}
+.cv-th .pl{position:absolute;inset:0;margin:auto;width:0;height:0;border-style:solid;border-width:7px 0 7px 12px;border-color:transparent transparent transparent #fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+
+/* ---------- 2 · the bottles, side by side on one line, floating together ---------- */
+.btl{padding:clamp(48px,6vw,88px) 0}
+.btl-hd{display:flex;justify-content:space-between;align-items:end;gap:16px 40px;flex-wrap:wrap;margin-bottom:clamp(24px,3vw,40px)}
+.btl-hd h2{margin:0}
+.btl-hd p{margin:0;max-width:34ch;color:var(--cv-grey)}
+.btrow{list-style:none;margin:0;padding:24px 0 0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(4px,1vw,16px);align-items:end;border-bottom:1px solid var(--line)}
+.btb{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:end;width:100%;height:clamp(110px,11vw,180px);padding:0 0 30px;border:0;background:none;cursor:pointer;color:var(--cv-ink)}
+.btb img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;filter:drop-shadow(0 10px 10px rgba(60,45,30,.18));animation:btfloat 5.2s ease-in-out infinite;animation-delay:var(--d,0s);transition:scale .4s cubic-bezier(.22,1,.36,1)}
+@keyframes btfloat{0%,100%{translate:0 0;rotate:-1.2deg}50%{translate:0 -10px;rotate:1.2deg}}
+.btb .btn-n{position:absolute;bottom:4px;left:50%;translate:-50% 0;white-space:nowrap;font-size:16px;color:var(--cv-grey);opacity:0;transition:opacity .25s}
+.btb:hover .btn-n,.btb[aria-pressed=true] .btn-n{opacity:1}
+.btb[aria-pressed=true] .btn-n{color:var(--cv-rose)}
+.btb[aria-pressed=true] img{scale:1.14}
+@media(hover:hover){.btb:hover img{scale:1.08}}
+.btb:focus-visible{outline:2px solid var(--cv-rose);outline-offset:4px}
+/* the chosen month in the calendar */
+.btshow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center;margin-top:clamp(32px,4vw,56px)}
+.bts-im{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--cv-paper)}
+.bts-im img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;opacity:0;transition:opacity .6s ease}
+.bts-im.page img{object-fit:contain;padding:clamp(12px,2vw,28px);filter:drop-shadow(0 12px 20px rgba(80,60,40,.18))}
+.bts-im img.on{opacity:1}
+.bts-s{margin:0 0 4px;color:var(--cv-grey)}
+.bts-n{margin:0 0 12px;font-size:clamp(40px,4vw,64px)!important;line-height:1;color:var(--cv-rose)!important}
+.bts-q{margin:0 0 16px;font-size:clamp(26px,2.2vw,34px)!important;line-height:1.15}
+.bts-d{margin:0 0 24px;max-width:36ch}
+.bts-v{display:flex;gap:20px;margin:0 0 20px}
+.bts-v button{padding:0 0 4px;border:0;border-bottom:1.5px solid transparent;background:none;cursor:pointer;color:var(--cv-grey)}
+.bts-v button[aria-pressed=true]{color:var(--cv-ink);border-bottom-color:var(--cv-rose)}
+.bts-nav{display:flex;gap:8px;flex-wrap:wrap}
+.bts-nav .ghost{min-height:44px;padding:0 16px;border:1.5px solid var(--cv-ink);background:none;cursor:pointer}
+
+/* ---------- 3 · earlier calendars ---------- */
+.older{padding:clamp(48px,6vw,88px) 0}
+.ol-card{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center;color:inherit;text-decoration:none;border:1px solid var(--line)}
+.ol-im{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:var(--cv-paper)}
+.ol-im img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;transition:opacity .6s ease,scale .9s cubic-bezier(.22,1,.36,1)}
+.ol-im img+img{opacity:0}
+@media(hover:hover){.ol-card:hover .ol-im img+img{opacity:1}.ol-card:hover .ol-im img{scale:1.03}}
+.ol-tx{display:grid;gap:12px;padding:clamp(20px,3vw,40px) clamp(20px,3vw,40px) clamp(20px,3vw,40px) 0}
+.ar-on .ol-tx{padding:clamp(20px,3vw,40px) 0 clamp(20px,3vw,40px) clamp(20px,3vw,40px)}
+.ol-y{color:var(--cv-sage)}
+.ol-n{font-size:clamp(32px,3vw,48px);line-height:1.05;color:var(--cv-ink)}
+.ol-d{color:var(--cv-ink);max-width:34ch}
+.ol-p{display:flex;align-items:baseline;gap:20px}
+.ol-p b{font-weight:400;font-size:clamp(28px,2.4vw,38px);color:var(--cv-rose)}
+.ol-p .go{color:var(--cv-rose);text-decoration:underline;text-underline-offset:4px}
+html[data-hand]:not(.ar-on) .ol-tx :is(.ol-y,.ol-n,.ol-d,.ol-p b,.go){font-family:var(--cal-t)}
+html[data-hand]:not(.ar-on) .ol-y{font-size:20px}
+html[data-hand]:not(.ar-on) .ol-d{font-size:22px;line-height:1.35}
+html[data-hand]:not(.ar-on) .ol-p .go{font-size:22px}
+html[data-hand]:not(.ar-on) .btb .btn-n,html[data-hand]:not(.ar-on) .bts-v button{font-family:var(--cal-t);font-size:19px}
+html[data-hand]:not(.ar-on) .bts-nav .ghost{font-family:var(--cal-t);font-size:20px}
+.ar-on .bts-n,.ar-on .ol-n{font-family:var(--handar,'Aref Ruqaa',serif)}
+
+@media(max-width:900px){
+  .cv-grid,.btshow,.ol-card{grid-template-columns:minmax(0,1fr)}
+  .ol-tx,.ar-on .ol-tx{padding:0 20px 24px}
+  .cv-th{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .btrow{grid-template-columns:repeat(12,76px);overflow-x:auto;scroll-snap-type:x proximity;padding-top:20px;scrollbar-width:none}
+  .btrow li{scroll-snap-align:center}
+  .btb{height:120px}
+}
+@media(prefers-reduced-motion:reduce){.btb img{animation:none}.cv-stage>*,.bts-im img{transition:none}}
+/* reading sizes in the hand (nothing under 18px) */
+html[data-hand]:not(.ar-on) main :is(.btl-hd p,.bts-d,.ol-d,.ps-d){font-size:21px;line-height:1.38}
+html[data-hand]:not(.ar-on) main :is(.pnote,.bts-s){font-size:19px;line-height:1.4}
+
+/* ---------- the Palestine calendar's own page ---------- */
+.ps-th{grid-template-columns:repeat(13,minmax(0,1fr))}
+.ps-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:1px solid var(--line);border-inline-start:1px solid var(--line)}
+.ps-grid li{border-bottom:1px solid var(--line);border-inline-end:1px solid var(--line)}
+.ps-grid button{display:grid;gap:4px;width:100%;padding:16px 14px 18px;border:0;background:none;cursor:pointer;text-align:start;color:var(--cv-ink)}
+.ps-grid .pi{display:block;aspect-ratio:4299/6100;background:#fff;box-shadow:0 1px 2px rgba(60,45,30,.12),0 14px 22px -14px rgba(60,45,30,.35);overflow:hidden;margin-bottom:10px;transition:translate .35s cubic-bezier(.22,1,.36,1)}
+.ps-grid .pi img{display:block;width:100%;height:100%;object-fit:cover}
+@media(hover:hover){.ps-grid button:hover .pi{translate:0 -6px}}
+.ps-grid .pm{color:var(--cv-rose);font-size:20px}
+.ps-grid .pn{color:var(--cv-ink);font-size:17px;line-height:1.2}
+.ps-grid button:focus-visible{outline:2px solid var(--cv-rose);outline-offset:-4px}
+.ps-dlg{width:min(1000px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;border:1px solid var(--cv-ink);background:var(--cream,#F3F2EE);overflow:auto}
+.ps-dlg::backdrop{background:rgba(30,25,20,.55)}
+.psd-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding:24px;align-items:center}
+.psd-in img{width:100%;height:auto;max-height:calc(100dvh - 72px);object-fit:contain;background:#fff;box-shadow:0 14px 26px -14px rgba(60,45,30,.4)}
+.psd-in h3{margin:0 0 12px;font-size:clamp(28px,2.6vw,40px)!important;color:var(--cv-rose)!important;line-height:1.05}
+.ps-back{text-align:center;margin:clamp(32px,4vw,56px) 0 0}
+.ps-back .go{color:var(--cv-rose);text-decoration:underline;text-underline-offset:4px}
+html[data-hand]:not(.ar-on) :is(.ps-grid .pm,.ps-grid .pn,.ps-back .go){font-family:var(--cal-t)}
+html[data-hand]:not(.ar-on) .ps-back .go{font-size:22px}
+@media(max-width:900px){.ps-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.psd-in{grid-template-columns:minmax(0,1fr)}.ps-th{grid-template-columns:repeat(7,minmax(0,1fr))}}

@@ -1,5 +1,6 @@
 // E-mails through Resend: order confirmation with download links, gifts, the owner's notice, contact messages.
 import { orderFiles } from './files.js';
+import { calFile } from './util.js';
 
 export async function sendMail(env, to, subject, html, replyTo) {
   if (!env.RESEND_API_KEY) { console.log('[mail not configured]', to, subject); return false; }
@@ -22,7 +23,7 @@ export const layout = (body) => `<!doctype html><html><body style="margin:0;back
 
 const KIND = { painting: 'Painting', postcard: 'Postcard', sticker: 'Sticker', pack: 'Sticker pack', calendar: 'Calendar' };
 const filesOf = (it, files) => it.kind === 'pack' ? files.filter((f) => f.kind === 'sticker' && (it.pack || []).includes(f.product_id))
-  : it.kind === 'calendar' ? files.filter((f) => f.kind === 'calendar') : files.filter((f) => f.kind === it.kind && f.product_id === it.k);
+  : it.kind === 'calendar' ? files.filter((f) => f.kind === 'calendar' && f.product_id === calFile(it.k)) : files.filter((f) => f.kind === it.kind && f.product_id === it.k);
 const links = (env, fs) => fs.length ? fs.map((f) => btn(env.SITE_ORIGIN + f.url, `${f.name} ↓`)).join('')
   : '<span style="color:#6f604d;font-size:13px">Your file is being prepared; it will appear in your profile and we will email you. · ملفكم قيد التجهيز، وسنرسله إليكم.</span>';
 

@@ -1,5 +1,5 @@
 // Files sold with each product: uploaded from the admin, kept in D1 in chunks, downloaded by buyers through order-bound links.
-import { json, fail, clean } from './util.js';
+import { json, fail, clean, calFile } from './util.js';
 
 const MAX = 45 * 1024 * 1024; // stays inside the free plan's 50 database queries per request
 const CHUNK = 1.5 * 1024 * 1024; // D1 keeps up to 2 MB per value
@@ -13,7 +13,7 @@ function wanted(items) {
   for (const it of items) {
     if (it.fmt === 'print') continue; // a printed piece is shipped, not downloaded
     if (it.kind === 'pack') for (const k of it.pack || []) keys.push(['sticker', k]);
-    else if (it.kind === 'calendar') keys.push(['calendar', 'current']);
+    else if (it.kind === 'calendar') keys.push(['calendar', calFile(it.k)]);
     else if (KINDS.includes(it.kind)) keys.push([it.kind, it.k]);
   }
   return keys;
