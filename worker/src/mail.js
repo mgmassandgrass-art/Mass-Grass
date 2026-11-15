@@ -40,14 +40,14 @@ a{color:${C.rose}}@media(max-width:620px){.pad{padding:24px 20px!important}}</st
 // a ruled list of label / value rows (the receipt)
 const rows = (list) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid ${C.ink};margin:0 0 32px">${list.map(([k, v]) =>
   `<tr><td style="padding:12px 0;border-bottom:1px solid ${C.line};${cap}">${k}</td><td align="right" style="padding:12px 0;border-bottom:1px solid ${C.line};font:500 13px/1.4 ${MONO};color:${C.ink}">${v}</td></tr>`).join('')}</table>`;
-const thumbOf = (it) => `${ORIGIN}/assets/${it.kind === 'calendar' ? (it.k === 'palestine-2027' ? 't-ps-00' : 't-v2-00') : 't-' + (it.kind === 'pack' ? (it.pack || [])[0] : it.k)}.webp`;
-const KIND = { painting: 'Painting', postcard: 'Postcard', sticker: 'Sticker', pack: 'Sticker pack', calendar: 'Calendar' };
+const thumbOf = (it) => `${ORIGIN}/assets/${it.kind === 'calendar' ? (it.k === 'palestine-2027' ? 't-ps-00' : 't-v2-00') : it.kind === 'book' ? 'book/pg-01' : it.kind === 'design' ? it.k : 't-' + (it.kind === 'pack' ? (it.pack || [])[0] : it.k)}.webp`;
+const KIND = { painting: 'Painting', postcard: 'Postcard', sticker: 'Sticker', pack: 'Sticker pack', calendar: 'Calendar', design: 'Design', book: 'Book' };
 const filesOf = (it, files) => it.kind === 'pack' ? files.filter((f) => f.kind === 'sticker' && (it.pack || []).includes(f.product_id))
   : it.kind === 'calendar' ? files.filter((f) => f.kind === 'calendar' && f.product_id === calFile(it.k)) : files.filter((f) => f.kind === it.kind && f.product_id === it.k);
 const fileRows = (env, fs) => fs.length ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 0">${fs.map((f) =>
   `<tr><td style="padding:8px 0;border-top:1px solid ${C.line};font:500 12px/1.4 ${MONO};color:${C.ink};word-break:break-all">${e(f.name)}</td><td align="right" style="padding:8px 0 8px 12px;border-top:1px solid ${C.line};white-space:nowrap">${btn(env.SITE_ORIGIN + f.url, 'Download')}</td></tr>`).join('')}</table>`
   : `<p style="margin:8px 0 0;font:400 12px/1.6 ${MONO};color:${C.grey}">Farah is preparing this file; it reaches you within a day. · يُجهَّز الملف ويصلكم خلال يوم.</p>`;
-const KIND_AR = { painting: 'لوحة', postcard: 'بطاقة بريدية', sticker: 'ملصق', pack: 'مجموعة ملصقات', calendar: 'تقويم' };
+const KIND_AR = { painting: 'لوحة', postcard: 'بطاقة بريدية', sticker: 'ملصق', pack: 'مجموعة ملصقات', calendar: 'تقويم', design: 'تصميم', book: 'كتاب' };
 // one piece: its picture on the cream, its name (and the Arabic one), what it is, then its files
 const piece = (env, it, files) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px"><tr>
   <td width="88" valign="top" style="padding:0 16px 0 0"><div style="width:88px;height:88px;background:${C.paper};border:1px solid ${C.line};text-align:center;line-height:88px"><img src="${e(thumbOf(it))}" alt="" width="64" style="vertical-align:middle;max-width:64px;max-height:64px;background:#fff;padding:3px;border:0"></div></td>
@@ -107,4 +107,18 @@ export async function contactEmail(env, b) {
     ${p(`<b>${e(b.name || '')}</b> &lt;${e(b.email)}&gt;`)}${b.topic ? p(`<b>${e(b.topic)}</b>`) : ''}
     <div style="white-space:pre-wrap;background:${C.paper};border:1px solid ${C.line};padding:16px 20px;font:400 14px/1.75 ${MONO};color:${C.ink}">${e(b.message)}</div>
     ${small('Reply to this e-mail to answer them.')}`), b.email);
+}
+
+// A request for a design of one's own ("Request a design"): to the owner, who answers by replying.
+const WHAT = { painting: ['A painting', 'لوحة'], portrait: ['A portrait', 'بورتريه'], design: ['A design', 'تصميم'], other: ['Something else', 'شيء آخر'] };
+const BUDGET = { 'under-50': 'Under €50', '50-150': '€50 to €150', '150-400': '€150 to €400', 'over-400': 'Over €400', unsure: 'Not sure yet' };
+export async function commissionEmail(env, c) {
+  const w = WHAT[c.what] || [c.what, c.what];
+  return sendMail(env, env.ADMIN_EMAIL || 'info@massandgrass.com', `Request · ${w[0]} · ${c.name} · طلب تصميم`, layout(`
+    ${p(`<b>${e(c.name)}</b> &lt;${e(c.email)}&gt; asks for ${e(w[0].toLowerCase())}.`)}
+    ${pAr(`طلب جديد: ${e(w[1])} من ${e(c.name)}.`)}
+    ${rows([['What · ماذا', e(w[0])], ['Size or use · المقاس', e(c.size || '—')], ['Budget · الميزانية', e(BUDGET[c.budget] || '—')], ['By · الموعد', e(c.deadline || '—')], ['Phone · الهاتف', e(c.phone || '—')], ['Picture · صورة', c.ref ? 'Yes, in the admin' : 'None']])}
+    <div style="white-space:pre-wrap;background:${C.paper};border:1px solid ${C.line};padding:16px 20px;font:400 14px/1.75 ${MONO};color:${C.ink}" dir="auto">${e(c.body)}</div>
+    <p style="margin:24px 0 0">${btn(env.SITE_ORIGIN + '/admin/#requests', 'Open requests')}</p>
+    ${small('Reply to this e-mail to answer them.')}`), c.email);
 }

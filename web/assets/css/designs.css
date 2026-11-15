@@ -1,0 +1,10 @@
+/* More designs: the book, the design files, the way to ask for one's own. */
+.dsx .pghd{padding-bottom:var(--gh)}
+.dgs h2,.dcm h2{margin:0 0 var(--gh)}
+.dg-empty{padding:clamp(24px,4vw,48px) 0;border-top:1px solid var(--line)}
+.dg-empty p{margin:0 0 8px}
+.dg-empty .hand{color:var(--blue)}
+.dcm-in{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px clamp(24px,4vw,64px);align-items:end}
+.dcm-in h2{margin-bottom:16px}
+.dcm-in .lead{margin:0}
+@media(max-width:760px){.dcm-in{grid-template-columns:minmax(0,1fr)}.dcm-in .ink{width:100%}}

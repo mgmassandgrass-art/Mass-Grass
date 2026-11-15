@@ -1,0 +1,48 @@
+<!--{"title":"Request a design","desc":"Ask Farah Al-Helou for a painting, a portrait or a design of your own.","nav":"designs.html","css":["commission"],"js":["commission"],"hand":true}-->
+<main id="main">
+<section class="pgx cmx" aria-labelledby="cm-h" data-meta="Paintings|Portraits|Designs" data-meta-ar="لوحات|بورتريه|تصاميم">
+<div class="wrap">
+  <div class="pghd"><h1 id="cm-h" data-ar="اطلبوا تصميمًا أو رسمة خاصة">Request a design</h1><p data-ar="لوحة أو بورتريه أو تصميم، تُرسم لكم وحدكم.">A painting, a portrait or a design, made for you alone.</p></div>
+  <div class="cm-grid">
+    <form class="sheet cm-f" id="cmf" novalidate>
+      <fieldset class="cm-what"><legend data-ar="ماذا تريدون؟">What would you like?</legend>
+        <label><input type="radio" name="what" value="painting" checked><span data-ar="لوحة">A painting</span></label>
+        <label><input type="radio" name="what" value="portrait"><span data-ar="بورتريه">A portrait</span></label>
+        <label><input type="radio" name="what" value="design"><span data-ar="تصميم">A design</span></label>
+        <label><input type="radio" name="what" value="other"><span data-ar="شيء آخر">Something else</span></label>
+      </fieldset>
+      <label class="fld"><span data-ar="المقاس أو الاستعمال">Size or use</span><input id="cm-size" name="size" maxlength="120" placeholder="A3 for a wall, a book cover…" data-ph-ar="A3 لجدار، غلاف كتاب…"></label>
+      <label class="fld"><span data-ar="صفوا ما في بالكم">Tell us about it</span><textarea id="cm-body" name="body" maxlength="3000" required></textarea></label>
+      <div class="two">
+        <label class="fld"><span data-ar="الميزانية">Budget</span><select id="cm-budget" name="budget">
+          <option value="unsure" data-ar="لم نقرر بعد">Not sure yet</option>
+          <option value="under-50" data-ar="أقل من 50 يورو">Under €50</option>
+          <option value="50-150" data-ar="من 50 إلى 150 يورو">€50 to €150</option>
+          <option value="150-400" data-ar="من 150 إلى 400 يورو">€150 to €400</option>
+          <option value="over-400" data-ar="أكثر من 400 يورو">Over €400</option>
+        </select></label>
+        <label class="fld"><span data-ar="تحتاجونه قبل">Needed by</span><input id="cm-date" name="deadline" type="date"></label>
+      </div>
+      <div class="fld cm-ref"><span class="lbl" id="cm-ref-l" data-ar="صورة مرجعية (اختيارية، حتى 2 MB)">A reference picture (optional, up to 2 MB)</span>
+        <div class="cm-pick"><input id="cm-ref" name="ref" type="file" accept="image/png,image/jpeg,image/webp" aria-labelledby="cm-ref-l"><img id="cm-thumb" alt="" hidden><button type="button" class="cm-x" id="cm-x" hidden data-ar="إزالة">Remove</button></div></div>
+      <div class="two">
+        <label class="fld"><span data-ar="الاسم">Name</span><input id="cm-name" name="name" autocomplete="name" maxlength="60" required></label>
+        <label class="fld"><span data-ar="البريد الإلكتروني">Email</span><input id="cm-email" name="email" type="email" autocomplete="email" maxlength="120" required></label>
+      </div>
+      <label class="fld"><span data-ar="الهاتف (اختياري)">Phone (optional)</span><input id="cm-phone" name="phone" type="tel" autocomplete="tel" maxlength="30" dir="ltr"></label>
+      <p class="fmsg" id="cm-msg" role="status" aria-live="polite"></p>
+      <button class="ink" type="submit" data-ar="أرسلوا الطلب">Send the request</button>
+    </form>
+    <aside class="cm-side" aria-labelledby="cm-n">
+      <h2 id="cm-n" data-ar="بعد الإرسال">After you send it</h2>
+      <ol>
+        <li data-ar="تقرأ فرح كل طلب بنفسها.">Farah reads every request herself.</li>
+        <li data-ar="نرد خلال ثلاثة أيام بفكرة وسعر.">We reply within three days with an idea and a price.</li>
+        <li data-ar="لا تدفعون شيئًا قبل أن تتفقوا معها.">You pay nothing until you agree.</li>
+      </ol>
+      <p data-ar="لسؤال آخر، زوروا &lt;a href=&quot;help.html&quot;&gt;صفحة المساعدة&lt;/a&gt;.">Another question? See <a href="help.html">help</a>.</p>
+    </aside>
+  </div>
+</div>
+</section>
+</main>

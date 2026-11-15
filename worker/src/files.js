@@ -1,10 +1,10 @@
 // Files sold with each product: uploaded from the admin, kept in D1 in chunks, downloaded by buyers through order-bound links.
-import { json, fail, clean, calFile, sniff } from './util.js';
+import { json, fail, clean, sniff, FILE_KINDS, fileKeys } from './util.js';
 
 const MAX = 45 * 1024 * 1024; // stays inside the free plan's 50 database queries per request
 const CHUNK = 1.5 * 1024 * 1024; // D1 keeps up to 2 MB per value
 const OK_TYPE = /^(application\/pdf|image\/(png|jpeg|webp)|application\/zip|application\/x-zip-compressed|application\/octet-stream)$/;
-const KINDS = ['painting', 'postcard', 'sticker', 'calendar'];
+const KINDS = FILE_KINDS; // painting, postcard, sticker, design, calendar, book
 const safeName = (s) => clean(s, 120).replace(/[^\w.\- ()؀-ۿ]/g, '_') || 'file';
 
 // Which product files belong to each line of an order.
@@ -12,9 +12,7 @@ function wanted(items) {
   const keys = [];
   for (const it of items) {
     if (it.fmt === 'print') continue; // a printed piece is shipped, not downloaded
-    if (it.kind === 'pack') for (const k of it.pack || []) keys.push(['sticker', k]);
-    else if (it.kind === 'calendar') keys.push(['calendar', calFile(it.k)]);
-    else if (KINDS.includes(it.kind)) keys.push([it.kind, it.k]);
+    if (it.kind === 'pack' || KINDS.includes(it.kind)) keys.push(...fileKeys(it));
   }
   return keys;
 }

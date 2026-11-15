@@ -42,8 +42,8 @@
   /* ---------- small pieces ---------- */
   const STATUS = { paid: ['مدفوع', 'Paid'], pending: ['بانتظار الدفع', 'Awaiting payment'], cancelled: ['ملغى', 'Cancelled'], refunded: ['مُستردّ', 'Refunded'] };
   const stamp = (s) => `<span class="stamp ${s}">${t(...(STATUS[s] || [s, s]))}</span>`;
-  const KIND = { painting: ['لوحة', 'Painting'], postcard: ['بطاقة بريدية', 'Postcard'], sticker: ['ملصق', 'Sticker'], pack: ['مجموعة ملصقات', 'Sticker pack'], calendar: ['التقويم', 'Calendar'] };
-  const KINDS = { painting: ['اللوحات', 'Paintings'], postcard: ['البطاقات البريدية', 'Postcards'], sticker: ['الملصقات', 'Stickers'] };
+  const KIND = { painting: ['لوحة', 'Painting'], postcard: ['بطاقة بريدية', 'Postcard'], sticker: ['ملصق', 'Sticker'], pack: ['مجموعة ملصقات', 'Sticker pack'], calendar: ['التقويم', 'Calendar'], design: ['تصميم', 'Design'], book: ['الكتاب', 'The book'] };
+  const KINDS = { painting: ['اللوحات', 'Paintings'], postcard: ['البطاقات البريدية', 'Postcards'], sticker: ['الملصقات', 'Stickers'], design: ['تصاميم متنوعة', 'More designs'] };
   const kind = (k) => t(...(KIND[k] || [k, k]));
   const pimg = (p) => (p.extra && p.extra.img) || `../assets/${/^(s-|u-)|^(girl-bike|truck)$/.test(p.id) ? '' : 't-'}${p.id}.webp`;
   const itemsLine = (o) => o.items.map((i) => esc(AR ? i.ta || i.t || i.k : i.t || i.k)).join(t('، ', ', '));
@@ -71,7 +71,7 @@
       `<div class="seg" id="ovd">${[7, 30, 90, 365].map((d) => `<button type="button" data-d="${d}" aria-pressed="${d === ovDays}">${d === 365 ? t('سنة', 'Year') : d + ' ' + t('يومًا', 'days')}</button>`).join('')}</div>`);
     loading();
     const [r, me] = await Promise.all([api('GET', '/api/admin/overview?days=' + ovDays), api('GET', '/api/me')]); if (!r.ok) return (view.innerHTML = `<div class="empty">${why(r)}</div>`);
-    const o = r.data; o.twofa = !!(me.data.user && me.data.user.twofa); badge('messages', o.unread); badge('security', o.alerts); badge('orders', o.toShip || 0);
+    const o = r.data; o.twofa = !!(me.data.user && me.data.user.twofa); badge('messages', o.unread); badge('requests', o.newRequests || 0); badge('security', o.alerts); badge('orders', o.toShip || 0);
     const delta = (now, prev, money) => { if (!prev && !now) return `<span class="d">${t('لا مبيعات بعد', 'No sales yet')}</span>`; if (!prev) return `<span class="d up">${t('أول مبيعات في هذه الفترة', 'First sales in this period')}</span>`; const p = Math.round(((now - prev) / prev) * 100); return `<span class="d ${p >= 0 ? 'up' : 'down'}">${p >= 0 ? '+' : ''}${p}% ${t('عن الفترة السابقة', 'on the period before')} (${money ? eur(prev) : num(prev)})</span>`; };
     const max = Math.max(1, ...o.byDay.map((d) => d.revenue)), W = 100 / o.byDay.length;
     const bars = o.byDay.map((d, i) => { const h = d.revenue ? Math.max(2, (d.revenue / max) * 150) : 1.5; return `<rect class="${d.revenue ? 'b' : 'b0'}" x="${(i * W + W * 0.15).toFixed(2)}%" y="${(160 - h).toFixed(1)}" width="${(W * 0.7).toFixed(2)}%" height="${h.toFixed(1)}" rx="1"><title>${d.date}: ${eur(d.revenue)}, ${d.orders} ${t('طلب', 'orders')}</title></rect>`; }).join('');
@@ -79,6 +79,8 @@
       [o.payments === 'live', t('الدفع', 'Payments'), o.payments === 'live' ? t('PayPal يعمل بأموال حقيقية.', 'PayPal is live.') : o.payments === 'sandbox' ? t('PayPal في وضع التجربة (Sandbox). ضعوا مفاتيح Live عند الإطلاق.', 'PayPal is in sandbox. Put the live keys in before launch.') : t('لم تُضف مفاتيح PayPal بعد، فالطلبات تُسجَّل دون دفع.', 'No PayPal keys yet: orders are recorded but cannot be paid.')],
       ...(o.toShip ? [[false, t('طرود للشحن', 'Parcels to send'), `${num(o.toShip)} ${t('طلب مدفوع ينتظر الطباعة والشحن.', 'paid orders wait to be printed and shipped.')}`, '#orders']] : []),
       [!o.noFile.length && o.calendarFile, t('ملفات البيع', 'Files to deliver'), !o.noFile.length && o.calendarFile ? t('كل قطعة معروضة لها ملف.', 'Every piece on sale has a file.') : `${o.noFile.length + (o.calendarFile ? 0 : 1)} ${t('قطعة معروضة بلا ملف يُسلَّم للمشتري.', 'pieces on sale have no file for the buyer.')}`, '#products'],
+      [!!o.bookFile, t('الكتاب', 'The book'), o.bookFile ? t('ملف الكتاب مرفوع.', 'The book’s PDF is uploaded.') : t('ارفعوا ملف الكتاب من المنتجات ثم «الكتاب».', 'Upload the book’s PDF in Products, then Book.'), '#products'],
+      ...(o.newRequests ? [[false, t('طلبات تصميم', 'Design requests'), `${num(o.newRequests)} ${t('طلب جديد ينتظر الرد.', 'new requests wait for an answer.')}`, '#requests']] : []),
       [o.mail, t('البريد', 'E-mail'), o.mail ? t('رسائل الطلبات واستعادة كلمة السر تُرسَل.', 'Order and password e-mails are sent.') : t('مفتاح البريد (Resend) غير موجود: لا تُرسل رسائل التأكيد.', 'No mail key (Resend): confirmation e-mails are not sent.')],
       [o.twofa, t('التحقق بخطوتين', 'Two-step sign-in'), o.twofa ? t('حساب الإدارة محمي برمز إضافي.', 'The admin account asks for a second code.') : t('فعّلوه لحماية حساب الإدارة.', 'Turn it on to protect the admin account.'), '#security'],
       [!o.soon, t('الموقع', 'The site'), o.soon ? t('صفحة «قريبًا» ظاهرة للزوار. أنتم فقط ترون الموقع.', 'Visitors see the coming-soon page. Only you see the site.') : t('الموقع مفتوح للزوار.', 'The site is open to visitors.')],
@@ -168,15 +170,16 @@
      ===================================================================== */
   let prodK = 'painting', PRODS = [], FILES = {};
   async function products() {
-    head(t('المنتجات', 'Products'), '', `<button type="button" class="btn go" id="pAdd">${t('أضيفوا قطعة', 'Add a piece')}</button>`); loading();
+    head(t('المنتجات', 'Products'), '', `<button type="button" class="btn" id="pBulk">${t('رفع ملفات كثيرة', 'Upload many files')}</button><button type="button" class="btn go" id="pAdd">${t('أضيفوا قطعة', 'Add a piece')}</button>`); loading();
     const [a, f, s] = await Promise.all([api('GET', '/api/admin/products'), api('GET', '/api/admin/files'), api('GET', '/api/admin/settings')]); if (!a.ok) return;
     PRODS = a.data.products; FILES = {}; (f.data.files || []).forEach((x) => (FILES[x.kind + ':' + x.product_id] = x)); const prices = (s.data && s.data.prices) || {};
     $('#sub').textContent = `${num(PRODS.length)} ${t('قطعة', 'pieces')}, ${num(PRODS.filter((p) => !FILES[p.kind + ':' + p.id]).length)} ${t('بلا ملف', 'without a file')}`;
     const calF = FILES['calendar:current'];
-    view.innerHTML = `<div class="bar"><div class="seg" id="pSeg">${Object.keys(KINDS).map((k) => `<button type="button" data-k="${k}" aria-pressed="${k === prodK}">${t(...KINDS[k])} <span class="num">${PRODS.filter((p) => p.kind === k).length}</span></button>`).join('')}<button type="button" data-k="calendar" aria-pressed="${prodK === 'calendar'}">${t('التقويم', 'Calendar')}</button></div>
+    view.innerHTML = `<div class="bar"><div class="seg" id="pSeg">${Object.keys(KINDS).map((k) => `<button type="button" data-k="${k}" aria-pressed="${k === prodK}">${t(...KINDS[k])} <span class="num">${PRODS.filter((p) => p.kind === k).length}</span></button>`).join('')}<button type="button" data-k="calendar" aria-pressed="${prodK === 'calendar'}">${t('التقويم', 'Calendar')}</button><button type="button" data-k="book" aria-pressed="${prodK === 'book'}">${t('الكتاب', 'Book')}</button></div>
       <label class="chk"><input type="checkbox" id="pNoFile"> ${t('بلا ملف فقط', 'Only without a file')}</label></div><div id="pL"></div>`;
     const paint = () => {
       if (prodK === 'calendar') return ($('#pL').innerHTML = `<section class="leaf"><div class="hd"><h2>${t('تقويم 2027: أشياء نحفظها في قوارير', 'Calendar 2027: Things kept in bottles')}</h2><span class="num">${eur(prices.calendar || 0)}</span></div><div class="in form"><p class="hint">${t('التقويم قطعة واحدة: ملف PDF واحد يستلمه كل من يشتريه. السعر من الإعدادات.', 'The calendar is one piece: one PDF every buyer receives. Its price is in Settings.')}</p><div id="calFiles"></div></div></section><section class="leaf"><div class="hd"><h2>${t('تقويم فلسطين: رحلة عبر الزمان والمكان (نسخة 2027)', 'Palestine: a journey through time and space (2027 edition)')}</h2><span class="num">${eur(prices.calendar || 0)}</span></div><div class="in form"><p class="hint">${t('تقويم 2026 بتواريخ 2027. ملف PDF واحد، وسعره سعر التقويم في الإعدادات.', 'The 2026 calendar set for 2027. One PDF; it costs the calendar price in Settings.')}</p><div id="psFiles"></div></div></section>`, filesBox($('#calFiles'), 'calendar', 'current'), filesBox($('#psFiles'), 'calendar', 'palestine-2027'));
+      if (prodK === 'book') return bookPanel($('#pL'), prices);
       const only = $('#pNoFile').checked, L = PRODS.filter((p) => p.kind === prodK && (!only || !FILES[p.kind + ':' + p.id]));
       $('#pL').innerHTML = L.length ? `<div class="shelf">${L.map((p) => { const fl = FILES[p.kind + ':' + p.id]; return `<button type="button" class="pc${p.hidden ? ' hid' : ''}" data-id="${esc(p.id)}"><span class="im"><img src="${esc(pimg(p))}" alt="" loading="lazy"></span><span class="tx"><b>${esc(AR ? p.title_ar || p.title_en : p.title_en)}</b><span class="mt"><span class="num">${p.price === 0 ? `<span class="tag on">${t('مجاني', 'Free')}</span>` : eur(p.price != null ? p.price : prices[p.kind] || 0)}</span>${p.sale ? `<span class="tag on">-${p.sale}%</span>` : ''}${p.is_new ? `<span class="tag">${t('جديدة', 'New')}</span>` : ''}${p.hidden ? `<span class="tag">${t('مخفية', 'Hidden')}</span>` : ''}<span class="tag ${fl ? 'on' : 'off'}">${fl ? fl.n + ' ' + t('ملف', 'files') : t('بلا ملف', 'No file')}</span></span><span class="mt">${t('بيع', 'Sold')} <span class="num">${num(p.sold)}</span></span></span></button>`; }).join('')}</div>` : `<div class="leaf empty">${t('لا قطع هنا.', 'Nothing here.')}</div>`;
     };
@@ -185,6 +188,106 @@
     $('#pNoFile').addEventListener('change', paint);
     $('#pL').addEventListener('click', (e) => { const b = e.target.closest('.pc'); if (b) productSheet(PRODS.find((p) => p.id === b.dataset.id && p.kind === prodK)); });
     $('#pAdd').addEventListener('click', () => productSheet(null));
+    $('#pBulk').addEventListener('click', bulkSheet);
+  }
+
+  /* ---------- many files at once: each named <kind>__<id>.<ext> (painting__hero.pdf, book__zero-waste.pdf, calendar__palestine-2027.pdf) ---------- */
+  const FKINDS = ['painting', 'postcard', 'sticker', 'design', 'calendar', 'book'];
+  async function bulkSheet() {
+    const bk = await api('GET', '/api/admin/book'), bookId = (bk.data && bk.data.id) || 'zero-waste';
+    const CAL = { 'calendar-2027': 'current', current: 'current', 'palestine-2027': 'palestine-2027' };
+    let rows = [];
+    const match = (f) => {
+      const m = f.name.match(/^([a-z]+)__([a-z0-9-]{2,40})\.(pdf|png|jpe?g|webp|zip)$/i);
+      if (!m) return { f, err: t('الاسم لا يتبع النمط kind__id.ext', 'The name is not kind__id.ext') };
+      const kind = m[1].toLowerCase(), id = m[2].toLowerCase(), ext = m[3].toLowerCase();
+      if (!FKINDS.includes(kind)) return { f, err: t('قسم غير معروف: ', 'Unknown kind: ') + kind };
+      if (f.size > 45 * 1048576) return { f, err: t('أكبر من 45 MB', 'Over 45 MB') };
+      if (kind === 'calendar') return CAL[id] ? { f, kind, pid: CAL[id], name: (id === 'palestine-2027' ? 'Palestine 2027' : 'Calendar 2027') + '.' + ext } : { f, err: t('لا تقويم بهذا المعرّف', 'No calendar with that id') };
+      if (kind === 'book') return id === bookId ? { f, kind, pid: id, name: 'Zero Waste.' + ext } : { f, err: t('معرّف الكتاب هو ', 'The book’s id is ') + bookId };
+      const pr = PRODS.find((x) => x.kind === kind && x.id === id);
+      return pr ? { f, kind, pid: id, name: (pr.title_en || id).replace(/[^\w.\- ()]/g, '_') + '.' + ext } : { f, err: t('لا قطعة بهذا المعرّف', 'No piece with that id') };
+    };
+    const list = () => rows.length ? rows.map((r, i) => `<li data-i="${i}"><span><b dir="ltr">${esc(r.f.name)}</b> <span class="hint num">${size(r.f.size)}</span>${r.kind ? `<br><span class="hint">${kind(r.kind)} · <span dir="ltr">${esc(r.pid)}</span></span>` : ''}</span><span class="msgl${r.ok ? ' ok' : ''}">${esc(r.err || r.st || t('جاهز', 'Ready'))}</span></li>`).join('') : `<li><span class="hint">${t('لم تُختر ملفات بعد.', 'No files chosen yet.')}</span></li>`;
+    sheet(t('رفع ملفات كثيرة', 'Upload many files'), `<form class="form" id="buF"><p class="hint">${t('سمّوا كل ملف باسم قسمه ومعرّفه: painting__hero.pdf أو sticker__s-lemons.png أو calendar__palestine-2027.pdf أو book__', 'Name each file by its kind and id: painting__hero.pdf, sticker__s-lemons.png, calendar__palestine-2027.pdf or book__')}${esc(bookId)}.pdf</p>
+      <label class="f">${t('الملفات', 'Files')}<input type="file" id="buIn" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.zip"></label><ul class="files" id="buL">${list()}</ul><p class="msgl" id="buMsg" role="status" aria-live="polite"></p></form>`,
+      `<span></span><button type="submit" form="buF" class="btn go">${t('ارفعوها', 'Upload them')}</button>`);
+    $('#buIn').addEventListener('change', (e) => { rows = [...e.target.files].map(match); $('#buL').innerHTML = list(); $('#buMsg').textContent = `${rows.filter((r) => !r.err).length} ${t('من', 'of')} ${rows.length} ${t('جاهزة للرفع', 'ready to upload')}`; });
+    $('#buF').addEventListener('submit', async (e) => {
+      e.preventDefault(); const go = rows.filter((r) => !r.err && !r.ok); if (!go.length) return; const btn = dlg.querySelector('[type=submit]'); btn.disabled = true; let n = 0;
+      for (const r of go) {
+        r.st = t('جارٍ الرفع…', 'Uploading…'); $('#buL').innerHTML = list();
+        const res = await api('POST', `/api/admin/files?kind=${r.kind}&pid=${encodeURIComponent(r.pid)}&name=${encodeURIComponent(r.name)}`, null, { body: r.f, type: r.f.type || 'application/octet-stream' });
+        if (res.ok) { r.ok = true; r.st = t('رُفع', 'Uploaded'); n++; } else { r.err = why(res); }
+        $('#buL').innerHTML = list(); $('#buMsg').textContent = `${n} / ${go.length}`;
+      }
+      btn.disabled = false; toast(`${n} ${t('ملف رُفع', 'files uploaded')}`, n < go.length);
+    });
+    dlg.addEventListener('close', () => { if (rows.some((r) => r.ok) && location.hash.startsWith('#products')) products(); }, { once: true });
+  }
+
+  /* ---------- the book: the owner's PDF becomes the preview pages on the site and the file buyers receive ---------- */
+  let pdfLib = null;
+  function loadPdf() {
+    if (pdfLib) return pdfLib;
+    pdfLib = new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'vendor/pdf.min.js'; s.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js'; ok(window.pdfjsLib); }; s.onerror = () => { pdfLib = null; no(new Error('pdfjs')); }; document.head.append(s); });
+    return pdfLib;
+  }
+  async function pageWebp(pdf, i, tall) {
+    const page = await pdf.getPage(i), vp0 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: tall / vp0.height });
+    const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+    await page.render({ canvasContext: g, viewport: vp }).promise;
+    for (const q of [0.84, 0.74, 0.62, 0.5]) { const b = await new Promise((r) => c.toBlob(r, 'image/webp', q)); if (b && b.type === 'image/webp' && b.size < 1.7e6) return { blob: b, ratio: vp0.width / vp0.height }; }
+    throw new Error('too_big');
+  }
+  async function bookPanel(box, prices) {
+    const r = await api('GET', '/api/admin/book'), B = (r.data && r.data.book) || {}, id = (r.data && r.data.id) || 'zero-waste';
+    const v = (k, d) => esc(B[k] != null ? B[k] : d);
+    box.innerHTML = `<div class="cols even"><section class="leaf"><div class="hd"><h2>${t('الكتاب', 'The book')}</h2><span class="num">${eur(prices.book || 0)}</span></div>
+      <form class="in form" id="bkF">
+        <div class="two"><label class="f">${t('العنوان بالعربية', 'Title in Arabic')}<input name="title_ar" dir="rtl" maxlength="120" value="${v('title_ar', 'صفر نفايات وأجدادنا الفلسطينيون')}"></label><label class="f">${t('العنوان بالإنجليزية', 'Title in English')}<input name="title_en" dir="ltr" maxlength="120" value="${v('title_en', 'Zero Waste & Our Palestinian Ancestors')}"></label></div>
+        <div class="two"><label class="f">${t('المؤلفون بالعربية', 'Credit in Arabic')}<input name="credit_ar" dir="rtl" maxlength="160" value="${v('credit_ar', 'النص: نجلاء عبد اللطيف، الرسوم: فرح الحلو')}"></label><label class="f">${t('المؤلفون بالإنجليزية', 'Credit in English')}<input name="credit_en" dir="ltr" maxlength="160" value="${v('credit_en', 'Text: Najla Abdellatif, drawings: Farah Al-Helou')}"></label></div>
+        <div class="two"><label class="f">${t('صفحات المعاينة (مع الغلاف)', 'Preview pages (with the cover)')}<input name="preview" type="number" min="2" max="24" value="${B.imgs ? B.imgs.length : 8}" dir="ltr"></label><label class="f">${t('اتجاه الكتاب', 'The book reads')}<select name="dir"><option value="ltr"${B.dir !== 'rtl' ? ' selected' : ''}>${t('من اليسار إلى اليمين', 'Left to right')}</option><option value="rtl"${B.dir === 'rtl' ? ' selected' : ''}>${t('من اليمين إلى اليسار', 'Right to left')}</option></select></label></div>
+        <label class="f">${t('ملف الكتاب PDF (حتى 45 MB)', 'The book as a PDF (up to 45 MB)')}<input type="file" name="pdf" accept="application/pdf,.pdf"></label>
+        <p class="hint">${t('يقرأ المتصفح الملف هنا: يرسم الغلاف وصفحات المعاينة صورًا تظهر في الموقع، ثم يرفع الملف كاملًا ليستلمه من يشتري الكتاب. السعر من الإعدادات.', 'Your browser reads the PDF here: it draws the cover and the preview pages as pictures for the site, then uploads the whole PDF for buyers. The price is in Settings.')}</p>
+        <ul class="files" id="bkP" hidden></ul><p class="msgl" id="bkM" role="status" aria-live="polite"></p>
+        <div><button class="btn go">${t('انشروا الكتاب', 'Publish the book')}</button></div></form></section>
+      <section class="leaf"><div class="hd"><h2>${t('في الموقع الآن', 'On the site now')}</h2><span class="num">${B.imgs ? `${B.imgs.length} / ${B.pages}` : t('صفحات مؤقتة', 'Placeholder pages')}</span></div>
+        <div class="in">${B.imgs ? `<div class="bk-thumbs">${B.imgs.map((s) => `<img src="../${esc(s)}" alt="" loading="lazy">`).join('')}</div>` : `<p class="hint">${t('يعرض الموقع ثماني صفحات مؤقتة حتى تنشروا الكتاب.', 'The site shows eight placeholder pages until you publish the book.')}</p>`}
+        <div id="bkFiles" style="margin-top:16px"></div></div></section></div>`;
+    filesBox($('#bkFiles'), 'book', id);
+    $('#bkF').addEventListener('submit', async (e) => {
+      e.preventDefault(); const f = e.target, msg = $('#bkM'), P = $('#bkP'), file = f.pdf.files[0], btn = f.querySelector('button');
+      const step = (txt, ok) => { P.hidden = false; P.insertAdjacentHTML('beforeend', `<li><span>${esc(txt)}</span><span class="msgl${ok === false ? '' : ' ok'}">${ok === false ? '✕' : ok ? '✓' : '…'}</span></li>`); return P.lastElementChild; };
+      const set = (li, ok) => { li.lastElementChild.textContent = ok ? '✓' : '✕'; li.lastElementChild.className = 'msgl' + (ok ? ' ok' : ''); };
+      const body = { title_en: f.title_en.value.trim(), title_ar: f.title_ar.value.trim(), credit_en: f.credit_en.value.trim(), credit_ar: f.credit_ar.value.trim(), dir: f.dir.value, imgs: B.imgs, pages: B.pages, ratio: B.ratio };
+      if (!file && !B.imgs) { msg.textContent = t('اختاروا ملف الكتاب أولًا.', 'Choose the book’s PDF first.'); return; }
+      if (file && (file.size > 45 * 1048576 || !/pdf$/i.test(file.type || file.name))) { msg.textContent = t('ملف PDF حتى 45 MB فقط.', 'A PDF of up to 45 MB only.'); return; }
+      btn.disabled = true; P.innerHTML = ''; msg.textContent = '';
+      try {
+        if (file) {
+          let li = step(t('قراءة الملف', 'Reading the PDF')); const lib = await loadPdf(); const pdf = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()), isEvalSupported: false }).promise; set(li, true);
+          const n = Math.max(2, Math.min(24, parseInt(f.preview.value) || 8, pdf.numPages)), stamp = Date.now(), imgs = []; let ratio = 0.75;
+          for (let i = 1; i <= n; i++) {
+            li = step(`${i === 1 ? t('الغلاف', 'The cover') : t('الصفحة', 'Page') + ' ' + i} / ${n}`);
+            const pg = await pageWebp(pdf, i, 1100); if (i === 1) ratio = pg.ratio;
+            const key = 'u-book-pg-' + String(i).padStart(2, '0'), up = await api('POST', `/api/admin/image?key=${key}&name=${encodeURIComponent('Book page ' + i)}`, null, { body: pg.blob, type: 'image/webp' });
+            if (!up.ok) { set(li, false); throw new Error(why(up)); } set(li, true); imgs.push(`assets/${key}.webp?v=${stamp}`);
+          }
+          Object.assign(body, { imgs, pages: pdf.numPages, ratio });
+        }
+        let li = step(t('حفظ بيانات الكتاب', 'Saving the book’s details')); const sv = await api('PUT', '/api/admin/book', body); if (!sv.ok) { set(li, false); throw new Error(why(sv)); } set(li, true);
+        if (file) {
+          li = step(t('رفع الملف كاملًا للمشترين', 'Uploading the whole PDF for buyers'));
+          const old = ((await api('GET', `/api/admin/files?kind=book&pid=${id}`)).data.files || []);
+          const up = await api('POST', `/api/admin/files?kind=book&pid=${id}&name=${encodeURIComponent(file.name)}`, null, { body: file, type: 'application/pdf' });
+          if (!up.ok) { set(li, false); throw new Error(why(up)); } set(li, true);
+          for (const o of old) await api('DELETE', '/api/admin/files?id=' + o.id); // the new PDF replaces the old one
+        }
+        toast(t('نُشر الكتاب.', 'The book is published.')); bookPanel(box, prices);
+      } catch (er) { msg.textContent = er.message === 'pdfjs' ? t('تعذّر تحميل قارئ PDF.', 'The PDF reader did not load.') : er.message || t('لم يتم.', 'That did not work.'); btn.disabled = false; }
+    });
   }
   async function filesBox(box, k, pid) {
     const r = await api('GET', `/api/admin/files?kind=${k}&pid=${encodeURIComponent(pid)}`), L = (r.data && r.data.files) || [];
@@ -199,7 +302,7 @@
     };
   }
   function productSheet(p) {
-    const isNew = !p, x = p || { kind: prodK === 'calendar' ? 'painting' : prodK, id: '', title_en: '', title_ar: '', place_en: '', place_ar: '', story_en: '', story_ar: '', price: null, sale: 0, is_new: true, hidden: false, sort: 0, extra: {} };
+    const isNew = !p, x = p || { kind: KINDS[prodK] ? prodK : 'painting', id: '', title_en: '', title_ar: '', place_en: '', place_ar: '', story_en: '', story_ar: '', price: null, sale: 0, is_new: true, hidden: false, sort: 0, extra: {} };
     const v = (n) => esc(x[n] ?? ''), PRT = (x.extra && x.extra.print) || {};
     sheet(isNew ? t('قطعة جديدة', 'A new piece') : (AR ? x.title_ar || x.title_en : x.title_en), `<form class="form" id="pf">
       ${isNew ? `<div class="two"><label class="f">${t('القسم', 'Shelf')}<select name="kind">${Object.keys(KINDS).map((k) => `<option value="${k}"${k === x.kind ? ' selected' : ''}>${t(...KINDS[k])}</option>`).join('')}</select></label>
@@ -265,7 +368,7 @@
   /* =====================================================================
      7 · Pages (visibility, sections, texts)
      ===================================================================== */
-  const PNAME = { 'index.html': ['الرئيسية', 'Home'], 'shop.html': ['المتجر', 'Shop'], 'paintings.html': ['اللوحات', 'Paintings'], 'postcards.html': ['البطاقات البريدية', 'Postcards'], 'stickers.html': ['الملصقات', 'Stickers'], 'calendar.html': ['التقويم', 'Calendar'], 'story.html': ['الحكاية', 'Story'], 'account.html': ['الدخول', 'Sign in'], 'profile.html': ['الحساب', 'Account'], 'checkout.html': ['إتمام الشراء', 'Checkout'], 'help.html': ['المساعدة', 'Help'], 'terms.html': ['الشروط والخصوصية', 'Terms'], '404.html': ['صفحة غير موجودة', 'Not found'], 'soon.html': ['قريبًا', 'Coming soon'] };
+  const PNAME = { 'index.html': ['الرئيسية', 'Home'], 'shop.html': ['المتجر', 'Shop'], 'paintings.html': ['اللوحات', 'Paintings'], 'postcards.html': ['البطاقات البريدية', 'Postcards'], 'stickers.html': ['الملصقات', 'Stickers'], 'calendar.html': ['التقويم', 'Calendar'], 'designs.html': ['تصاميم متنوعة', 'More designs'], 'book.html': ['الكتاب', 'The book'], 'commission.html': ['اطلبوا تصميمًا', 'Request a design'], 'story.html': ['الحكاية', 'Story'], 'account.html': ['الدخول', 'Sign in'], 'profile.html': ['الحساب', 'Account'], 'checkout.html': ['إتمام الشراء', 'Checkout'], 'help.html': ['المساعدة', 'Help'], 'terms.html': ['الشروط والخصوصية', 'Terms'], '404.html': ['صفحة غير موجودة', 'Not found'], 'soon.html': ['قريبًا', 'Coming soon'] };
   const pname = (p) => t(...(PNAME[p] || [p, p]));
   async function pages() {
     head(t('الصفحات', 'Pages'), t('أخفوا صفحة أو قسمًا، وعدّلوا أي نص بالعربية والإنجليزية', 'Hide a page or a section, and edit any text in Arabic and English')); loading();
@@ -326,13 +429,35 @@
     });
   }
 
+  /* ---------- design requests ("Request a design") ---------- */
+  let reqF = 'new';
+  const WHAT = { painting: ['لوحة', 'A painting'], portrait: ['بورتريه', 'A portrait'], design: ['تصميم', 'A design'], other: ['شيء آخر', 'Something else'] };
+  const BUDGET = { 'under-50': ['أقل من 50 يورو', 'Under €50'], '50-150': ['50 إلى 150 يورو', '€50 to €150'], '150-400': ['150 إلى 400 يورو', '€150 to €400'], 'over-400': ['أكثر من 400 يورو', 'Over €400'], unsure: ['لم يقرروا', 'Not sure yet'] };
+  async function requests() {
+    head(t('طلبات التصميم', 'Design requests'), t('ما يطلبه الزوار من صفحة «اطلبوا تصميمًا»', 'What visitors ask for on the Request a design page')); loading();
+    const r = await api('GET', '/api/admin/commissions'); if (!r.ok) return; const all = r.data.requests; badge('requests', all.filter((x) => x.status === 'new').length);
+    const L = all.filter((x) => reqF === 'all' || x.status === reqF);
+    $('#actions').innerHTML = `<div class="seg" id="rqS">${[['new', 'جديدة', 'New'], ['answered', 'تمّ الرد', 'Answered'], ['all', 'الكل', 'All']].map((f) => `<button type="button" data-f="${f[0]}" aria-pressed="${f[0] === reqF}">${t(f[1], f[2])} <span class="num">${f[0] === 'all' ? all.length : all.filter((x) => x.status === f[0]).length}</span></button>`).join('')}</div>`;
+    const row = (k, v) => (v ? `<span><span class="hint">${k}</span> ${esc(v)}</span>` : '');
+    view.innerHTML = `<section class="leaf">${L.length ? L.map((q) => `<article class="msg${q.status === 'new' ? ' new' : ''}"><div class="hdr"><span><b>${esc(q.name)}</b> <span class="hint" dir="ltr">${esc(q.email)}</span> <span class="tag on">${t(...(WHAT[q.what] || [q.what, q.what]))}</span>${q.status === 'answered' ? ` <span class="tag">${t('تمّ الرد', 'Answered')}</span>` : ''}</span><span class="hint">${when(q.date)}${q.mailed ? '' : ' · ' + t('لم يُرسل بالبريد', 'not e-mailed')}</span></div>
+      <div class="rq-meta">${row(t('المقاس أو الاستعمال:', 'Size or use:'), q.size)}${row(t('الميزانية:', 'Budget:'), t(...(BUDGET[q.budget] || [q.budget, q.budget])))}${row(t('قبل:', 'By:'), q.deadline)}${q.phone ? `<span><span class="hint">${t('الهاتف:', 'Phone:')}</span> <span dir="ltr">${esc(q.phone)}</span></span>` : ''}${row(t('لغة الطلب:', 'Written in:'), q.lang === 'ar' ? t('العربية', 'Arabic') : t('الإنجليزية', 'English'))}</div>
+      <p dir="auto">${esc(q.body)}</p>${q.ref ? `<a class="rq-ref" href="${esc(q.ref)}" target="_blank" rel="noopener"><img src="${esc(q.ref)}" alt="${t('الصورة المرجعية', 'The reference picture')}" loading="lazy"></a>` : ''}
+      <div class="acts"><a class="btn sm go" href="mailto:${esc(q.email)}?subject=${encodeURIComponent('Mass & Grass · ' + (WHAT[q.what] || ['', q.what])[1])}">${t('ردّوا بالبريد', 'Reply by e-mail')}</a><button type="button" class="btn sm" data-st="${q.id}" data-v="${q.status === 'new' ? 'answered' : 'new'}">${q.status === 'new' ? t('تمّ الرد', 'Mark answered') : t('أعيدوها جديدة', 'Mark new')}</button><button type="button" class="btn sm warn" data-del="${q.id}">${t('حذف', 'Delete')}</button></div></article>`).join('') : `<div class="empty">${reqF === 'new' ? t('لا طلبات جديدة.', 'No new requests.') : t('لا طلبات بعد.', 'No requests yet.')}</div>`}</section>`;
+    $('#rqS').onclick = (e) => { const b = e.target.closest('button'); if (b) { reqF = b.dataset.f; requests(); } };
+    view.onclick = async (e) => {
+      const a = e.target.closest('[data-st]'), d = e.target.closest('[data-del]');
+      if (a) { done(await api('PUT', '/api/admin/commissions', { id: +a.dataset.st, status: a.dataset.v })); requests(); }
+      if (d && sure(t('حذف هذا الطلب؟', 'Delete this request?'))) { done(await api('DELETE', '/api/admin/commissions?id=' + d.dataset.del), t('حُذف الطلب.', 'Request deleted.')); requests(); }
+    };
+  }
+
   /* =====================================================================
      9 · Settings
      ===================================================================== */
   async function settings() {
     head(t('الإعدادات', 'Settings'), t('الأسعار والروابط والشحن', 'Prices, links and shipping')); loading();
     const r = await api('GET', '/api/admin/settings'); if (!r.ok) return; const P = r.data.prices || {}, K = r.data.links || {};
-    const PR = [['painting', 'اللوحة', 'A painting'], ['postcard', 'البطاقة البريدية', 'A postcard'], ['sticker', 'الملصق الواحد', 'One sticker'], ['pack', 'مجموعة 6 ملصقات', 'A pack of 6 stickers'], ['calendar', 'التقويم', 'The calendar'], ['calendarPrint', 'التقويم مطبوعًا (فارغ = غير متاح)', 'The printed calendar (empty = not offered)']];
+    const PR = [['painting', 'اللوحة', 'A painting'], ['postcard', 'البطاقة البريدية', 'A postcard'], ['sticker', 'الملصق الواحد', 'One sticker'], ['pack', 'مجموعة 6 ملصقات', 'A pack of 6 stickers'], ['calendar', 'التقويم', 'The calendar'], ['design', 'التصميم الواحد', 'One design'], ['book', 'الكتاب', 'The book'], ['calendarPrint', 'التقويم مطبوعًا (فارغ = غير متاح)', 'The printed calendar (empty = not offered)']];
     const LK = [['instagram', 'Instagram'], ['whatsapp', 'WhatsApp'], ['email', t('بريد التواصل', 'Contact e-mail')], ['donate', t('رابط التبرع', 'Donation link')], ['kofi', 'Ko-fi']];
     view.innerHTML = `<div class="cols even"><section class="leaf"><h2>${t('الأسعار باليورو', 'Prices in euro')}</h2><form class="in form" id="prF">${PR.map((p) => `<label class="f">${t(p[1], p[2])}<input type="number" name="${p[0]}" value="${P[p[0]] ?? ''}" min="0" step="0.5" dir="ltr"${p[0] === 'calendarPrint' ? '' : ' required'}></label>`).join('')}
       <p class="hint">${t('السعر هنا هو ما يُحسب عند الشراء. لكل قطعة سعر خاص اختياري من صفحة المنتجات.', 'These are the prices charged at checkout. A piece can have its own price in Products.')}</p><div><button class="btn go">${t('حفظ الأسعار', 'Save prices')}</button></div></form></section>
@@ -399,7 +524,7 @@
   }
 
   /* ---------- the index and the router ---------- */
-  const NAV = [['overview', 'نظرة عامة', 'Overview', overview], ['orders', 'الطلبات', 'Orders', orders], ['products', 'المنتجات', 'Products', products], ['customers', 'العملاء', 'Customers', customers], ['subscribers', 'مشتركو البريد', 'Subscribers', subscribers], ['messages', 'الرسائل', 'Messages', messages], null,
+  const NAV = [['overview', 'نظرة عامة', 'Overview', overview], ['orders', 'الطلبات', 'Orders', orders], ['products', 'المنتجات', 'Products', products], ['customers', 'العملاء', 'Customers', customers], ['subscribers', 'مشتركو البريد', 'Subscribers', subscribers], ['messages', 'الرسائل', 'Messages', messages], ['requests', 'طلبات التصميم', 'Design requests', requests], null,
     ['pages', 'الصفحات', 'Pages', pages], ['images', 'مكتبة الصور', 'Image library', images], ['settings', 'الإعدادات', 'Settings', settings], ['security', 'الحماية', 'Security', security]];
   const counts = {};
   function badge(k, n) { counts[k] = n; const a = $(`#nav a[href="#${k}"] .n`); if (a) { a.textContent = n; a.hidden = !n; } }
@@ -411,7 +536,7 @@
   }
   function route() {
     const h = location.hash.slice(1).split('/')[0] || 'overview', n = NAV.find((x) => x && x[0] === h) || NAV[0];
-    view.onclick = null; view.onchange = null; nav(); $('#index').classList.remove('open'); $('#menuB').setAttribute('aria-expanded', 'false'); n[3](); view.focus({ preventScroll: true }); scrollTo(0, 0);
+    if (dlg.open) dlg.close(); view.onclick = null; view.onchange = null; nav(); $('#index').classList.remove('open'); $('#menuB').setAttribute('aria-expanded', 'false'); n[3](); view.focus({ preventScroll: true }); scrollTo(0, 0);
   }
   addEventListener('hashchange', route);
   $('#langB').addEventListener('click', () => { AR = !AR; try { localStorage.mgAdminLang = AR ? 'ar' : 'en'; } catch (e) {} route(); });

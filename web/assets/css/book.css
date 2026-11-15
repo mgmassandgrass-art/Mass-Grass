@@ -1,0 +1,59 @@
+/* The book reader (book.js): leaves that turn on a spine, in CSS 3D. Two pages side by side when there is room, one on phones. */
+.bk{--bk-paper:var(--c-fbf8f1);--bk-line:var(--line-2);outline:none}
+.bk:focus-visible{outline:2px solid var(--blue);outline-offset:6px}
+.bk-stage{position:relative;display:flex;justify-content:center;padding:clamp(12px,2vw,28px) 0;perspective:2600px;overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.bk.dragging .bk-stage{cursor:grabbing}
+.bk-book{--pw:300px;--ph:400px;--shift:0;position:relative;width:var(--pw);height:var(--ph);transform-style:preserve-3d;transform:translateX(calc(var(--shift) * var(--pw)));transition:transform .7s cubic-bezier(.3,.1,.2,1)}
+.bk-book.two{width:calc(var(--pw) * 2)}
+.bk-leaf{position:absolute;top:0;left:0;width:var(--pw);height:100%;transform-style:preserve-3d;transform-origin:left center;transition:transform .9s cubic-bezier(.3,.1,.2,1)}
+.bk-book.two .bk-leaf{left:var(--pw)}
+.bk.rtl .bk-leaf{transform-origin:right center}
+.bk.rtl .bk-book.two .bk-leaf{left:0}
+.bk.still .bk-leaf,.bk.still .bk-book{transition:none}
+.bk-f,.bk-b{position:absolute;inset:0;overflow:hidden;background:var(--bk-paper);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.bk-b{transform:rotateY(180deg)}
+.bk-f img,.bk-b img{display:block;width:100%;height:100%;max-width:none;object-fit:cover;pointer-events:none}
+/* the paper's edge and the fold near the spine */
+.bk-f{box-shadow:0 1px 2px rgba(var(--ink-rgb),.12),0 12px 30px -12px rgba(var(--ink-rgb),.28)}
+.bk-f::after,.bk-b::after{content:"";position:absolute;inset:0;pointer-events:none}
+.bk-book.two .bk-f::after{background:linear-gradient(90deg,rgba(var(--ink-rgb),.14),rgba(var(--ink-rgb),0) 7%)}
+.bk-book.two .bk-b::after{background:linear-gradient(270deg,rgba(var(--ink-rgb),.14),rgba(var(--ink-rgb),0) 7%)}
+.bk.rtl .bk-book.two .bk-f::after{background:linear-gradient(270deg,rgba(var(--ink-rgb),.14),rgba(var(--ink-rgb),0) 7%)}
+.bk.rtl .bk-book.two .bk-b::after{background:linear-gradient(90deg,rgba(var(--ink-rgb),.14),rgba(var(--ink-rgb),0) 7%)}
+.bk-blank{position:absolute;inset:0;background:var(--bk-paper)}
+/* the last page: the preview ends, the book is for sale */
+.bk-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:12%;text-align:center;background:var(--bk-paper);cursor:default}
+.bk-end h3{margin:0;text-wrap:balance}
+.bk-end p{margin:0;max-width:30ch}
+.bk-end .hand{color:var(--blue)}
+.bk-end .fig{margin:8px 0 4px}
+.bk-end .ink{min-width:min(100%,220px)}
+.bk-bar{display:flex;align-items:center;justify-content:center;gap:16px;padding-top:12px}
+.bk-btn{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid var(--line-2);background:transparent;color:var(--ink);cursor:pointer;transition:border-color .2s,background .2s}
+.bk-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6}
+/* the arrows follow the book's own direction, not the page's */
+.bk-bar{direction:ltr}
+.bk.rtl .bk-bar{direction:rtl}
+.bk.rtl .bk-btn svg{transform:scaleX(-1)}
+@media(hover:hover){.bk-btn:not(:disabled):hover{border-color:var(--ink);background:rgba(var(--ink-rgb),.04)}}
+.bk-btn:disabled{background:rgba(var(--ink-rgb),.04);color:var(--line-2);border-color:var(--line);cursor:not-allowed}
+.bk-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.bk-n{min-width:12ch;text-align:center;font:500 12px/1 var(--mono2);letter-spacing:0;font-variant-numeric:tabular-nums;color:var(--soft)}
+.ar-on .bk-n{font:500 14px/1.3 var(--fa);letter-spacing:0}
+@media(prefers-reduced-motion:reduce){.bk-leaf,.bk-book{transition:none}}
+
+/* the book beside its words (designs page and the book's own page) */
+.bkx{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center}
+.bk-txt h2,.bk-txt h1{margin:0}
+.bk-txt .by{margin:8px 0 20px;color:var(--blue)}
+.bk-txt .lead{margin:0 0 20px}
+.bk-buy{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 16px;align-items:center;margin-top:8px}
+.bk-buy .ink{width:100%;min-height:56px}
+.bk-buy .fig{margin:0}
+.bk-buy .go{grid-column:1/-1;justify-self:start;padding:8px 0}
+@media(max-width:960px){.bkx{grid-template-columns:minmax(0,1fr)}}
+.bkx-ab{align-items:start}
+.bkpg .pghd{padding-bottom:16px}
+.bk-wide{margin-bottom:8px}
+.bk-txt .specs{list-style:none;margin:0 0 24px;padding:0;display:grid;border-top:1px solid var(--line)}
+.bk-txt .specs li{padding:8px 0;border-bottom:1px solid var(--line)}
