@@ -483,3 +483,30 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   replaced images; nothing live was affected).
 - Local tests: `DEV_CODES = "1"` in `wrangler.local.toml` (never in wrangler.toml) returns the e-mailed code on localhost only.
   `node test/profile.test.mjs` (29 checks, own address `10.9.9.9`) is in `npm test`.
+
+## More designs, the book and design requests (Nov 2026)
+
+- Pages: `designs.html` (تصاميم متنوعة: the book first, then products of the new kind `design`, then a link to requests),
+  `book.html` (the book on its own page) and `commission.html` (اطلبوا تصميمًا أو رسمة خاصة). Linked from the Shop dropdown, the
+  phone menu, the footer (and its contact column), the shop's categories (the book counts under "More designs") and the help page.
+- The book: "Zero Waste & Our Palestinian Ancestors" (2026), text Najla Abdellatif, drawings Farah, about 112 pages; kind `book`,
+  id `zero-waste` (`BOOKS`/`BOOK_ID` in `worker/src/util.js`, `MG_DEFAULT.book` in catalog.js, `MG.book`), sold as one PDF at
+  `prices.book` (migration 0011 sets `design` 6 and `book` 10). Reader: `assets/js/book.js` + `book.css` on every `[data-book]`
+  (CSS 3D leaves on a spine, two pages from 640px of stage, one on phones, drag / click a half / arrows / Home / End, reduced
+  motion snaps); after the preview a last page sells the book (`[data-buy-book]`).
+- Its pages: the admin's Products → Book panel. The owner picks the PDF; the browser renders it with pdf.js 3.11.174
+  (self-hosted in `web/admin/vendor/`, classic scripts, CSP 'self') to WebP 1100px tall, uploads the cover + N preview pages
+  to the image store as `u-book-pg-NN`, saves the manifest (titles, credit, pages, ratio, direction) in settings `book`
+  (`/api/admin/book` GET/PUT/DELETE; DELETE goes back to the placeholders), then uploads the whole PDF as the book's file
+  (replacing the old one). The catalog injected into pages carries `book`; without it the reader reads
+  `web/assets/book/book.json`, whose 8 pages are TEMPORARY placeholders from `tools/book_placeholders.py` (marked on the page).
+  The real 31 MB PDF is in the owner's Drive; it has to be uploaded through that panel.
+- Kind `design`: added to the Worker everywhere (`KINDS` in shop.js, `FILE_KINDS`/`fileKeys` in util.js used by files.js),
+  the admin's products (shelf "More designs", may be emptied: `lastVisible` skips it), prices in Settings, e-mails.
+- Requests: `POST /api/commission` (multipart; 5 an hour per address, 5 a day per e-mail; optional reference picture checked
+  by `sniff()`, under 1.95 MB, the page shrinks bigger ones), table `commissions` (migration 0011, in `migrate.js` STEPS),
+  e-mailed to the admin (`commissionEmail` in mail.js), admin tab "طلبات التصميم" (`/api/admin/commissions`, status new /
+  answered, picture at `/api/admin/commissions/ref?id=`), counted in the overview, included in the customer's data export.
+- Admin Products → "Upload many files": files named `<kind>__<id>.<ext>` (painting__hero.pdf, calendar__palestine-2027.pdf,
+  book__zero-waste.pdf) are matched and sent one by one to `/api/admin/files` with a progress list.
+- Tests: `worker/test/commission.test.mjs` (in `npm test`, before security), e2e covers the three pages and the reader.

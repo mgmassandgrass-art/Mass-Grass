@@ -5,6 +5,7 @@ import { sendMail, layout, contactEmail, p as mp, pAr, small, btn as mbtn, MONO,
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin, sweepPending } from './shop.js';
 import { migrate } from './migrate.js';
+import { commissionPost, commissionsAdmin } from './commission.js';
 import { audit, limitKey, clearKey, ipOf, newSecret, totpStep, otpauth, newRecovery, useRecovery } from './security.js';
 
 const enc = new TextEncoder();
@@ -248,7 +249,8 @@ async function exportMe(env, req, u) {
   const { results: sessions } = await env.DB.prepare('SELECT created_at, seen_at, ip, ua FROM sessions WHERE user_id=? AND expires_at>?').bind(u.id, Date.now()).all();
   await audit(env, req, u.email, 'data_exported');
   const { results: devices } = await env.DB.prepare('SELECT created_at, expires_at, ua FROM trusted_devices WHERE user_id=? AND expires_at>?').bind(u.id, Date.now()).all();
-  return json({ user: publicUser(u), remembered_devices: devices, orders: orders.map((o) => ({ ...o, items: JSON.parse(o.items), ship: o.ship ? JSON.parse(o.ship) : null })), newsletter: sub || null, sessions, exported_at: new Date().toISOString() },
+  const { results: requests } = await env.DB.prepare('SELECT what, size, body, budget, deadline, name, phone, status, created_at FROM commissions WHERE email=? ORDER BY created_at DESC').bind(u.email).all();
+  return json({ user: publicUser(u), remembered_devices: devices, orders: orders.map((o) => ({ ...o, items: JSON.parse(o.items), ship: o.ship ? JSON.parse(o.ship) : null })), newsletter: sub || null, sessions, design_requests: requests, exported_at: new Date().toISOString() },
     200, { 'content-disposition': 'attachment; filename="mass-and-grass-my-data.json"' });
 }
 
@@ -453,7 +455,7 @@ async function withCatalog(env, res, path) {
   if (!(res.headers.get('content-type') || '').includes('text/html')) return res;
   const cat = await catalog(env);
   // The catalog travels as data (a JSON block the page's own script reads), so pages need no inline script at all.
-  const data = JSON.stringify({ products: cat.products, prices: cat.prices, links: cat.links, shipping: cat.shipping }).replace(/</g, '\\u003c');
+  const data = JSON.stringify({ products: cat.products, prices: cat.prices, links: cat.links, shipping: cat.shipping, book: cat.book }).replace(/</g, '\\u003c');
   const js = data;
   const css = hideCss(cat.pages || {}, path || '');
   const out = new HTMLRewriter().on('head', { element(e) { e.append(`<script type="application/json" id="mg-cat">${js}</script>${css}`, { html: true }); } }).transform(res);
@@ -488,6 +490,7 @@ async function api(req, env, url, p) {
     if (mailed) await env.DB.prepare('UPDATE messages SET mailed=1 WHERE id=?').bind(ins.meta.last_row_id).run();
     return json({ ok: true }); // the message is in the admin's inbox whether or not the e-mail went out
   }
+  if (p === '/api/commission' && req.method === 'POST') return commissionPost(env, req);
   if (p === '/api/subscribe' && req.method === 'POST') {
     if (!(await limit(env, req, 'sub', 10, 3600))) return fail('rate_limited', 429);
     const b = await readJson(req), email = clean(b?.email, 120).toLowerCase();
@@ -514,7 +517,7 @@ async function api(req, env, url, p) {
     if (req.method !== 'GET' && (req.headers.get('content-type') || '').includes('application/json')) {
       try { const j = await req.clone().json(); detail = [j.id, j.kind, j.path, j.status, j.section, j.email].filter((x) => typeof x === 'string' || typeof x === 'number').join(' ') || detail; } catch {}
     }
-    const res = (await siteAdmin(env, req, url, p)) || (await filesAdmin(env, req, url, p)) || (await admin(env, req, url, p));
+    const res = (await siteAdmin(env, req, url, p)) || (await filesAdmin(env, req, url, p)) || (await commissionsAdmin(env, req, url, p)) || (await admin(env, req, url, p));
     if (req.method !== 'GET' && res.status < 400) await audit(env, req, u.email, `${req.method} ${p.replace('/api/admin/', '')}`, detail);
     return res;
   }
@@ -553,13 +556,14 @@ function secure(res) {
 
 // A shared link, /s/<kind>/<id>: a small page whose title and picture are the piece's own (what WhatsApp, Facebook and X show),
 // which then takes the visitor to the piece on its page. Names come from the catalog; anything unknown goes to the shop.
-const SHARE_PAGE = { painting: 'paintings', postcard: 'postcards', sticker: 'stickers', calendar: 'calendar' };
+const SHARE_PAGE = { painting: 'paintings', postcard: 'postcards', sticker: 'stickers', calendar: 'calendar', design: 'designs', book: 'book' };
 async function sharePage(env, url, p) {
   const [, , kind, id = ''] = p.split('/'), page = SHARE_PAGE[kind], o = url.origin;
   if (!page) return Response.redirect(`${o}/shop`, 302);
   const h = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   let title = 'Things kept in bottles, the calendar', image = 'assets/c27-00.webp', to = `${o}/calendar`;
-  if (kind !== 'calendar') {
+  if (kind === 'book') { const cat = await catalog(env); title = (cat.book && cat.book.title[0]) || 'Zero Waste & Our Palestinian Ancestors'; image = (cat.book && cat.book.imgs[0]) || 'assets/book/pg-01.webp'; to = `${o}/book`; }
+  else if (kind !== 'calendar') {
     const cat = await catalog(env), pr = cat.products.find((x) => x.kind === kind && x.id === id);
     if (!pr) return Response.redirect(`${o}/${page}`, 302);
     title = pr.title_en; image = (pr.extra && pr.extra.img) || `assets/${pr.id}.webp`; to = `${o}/${page}#${encodeURIComponent(pr.id)}`;

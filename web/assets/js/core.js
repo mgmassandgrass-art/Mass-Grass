@@ -40,6 +40,8 @@
     links: (server && server.links) || {},
     live: !!server,
   };
+  /* the book: the shop's own details, with the admin's manifest (titles, credit, preview pictures) over them when served */
+  const BOOK = Object.assign({}, DEF.book, server && server.book ? { title: server.book.title, credit: server.book.credit[0] ? server.book.credit : (DEF.book || {}).credit, pages: server.book.pages, cover: server.book.imgs[0], live: server.book } : {});
   const products = (kind) => cat.products.filter((p) => p.kind === kind);
   const product = (kind, id) => cat.products.find((p) => p.kind === kind && p.id === id) || null;
   const title = (p) => (p ? (AR ? p.title_ar || p.title_en : p.title_en) : '');
@@ -65,6 +67,7 @@
   const KIND = {
     painting: ['Painting, PDF and PNG', 'لوحة، PDF وPNG'], postcard: ['Postcard, PDF and PNG', 'بطاقة بريدية، PDF وPNG'],
     sticker: ['Sticker, PNG', 'ملصق، PNG'], pack: ['Sticker pack, PNG', 'مجموعة ملصقات، PNG'], calendar: ['Calendar, PDF in A5', 'تقويم، PDF بمقاس A5'],
+    design: ['Design, PDF and PNG', 'تصميم، PDF وPNG'], book: ['Book, PDF', 'كتاب، PDF'],
   };
   const kindLabel = (k) => L(KIND[k] || ['Digital file', 'ملف رقمي']);
 
@@ -82,6 +85,7 @@
       if (kind !== 'pack' && a.some((x) => x.kind === kind && x.k === id && (x.fmt || '') === fmt)) return false;
       const p = product(kind, id), c = calOf(id);
       const line = kind === 'calendar' ? { k: c.id, kind, t: c.title[0], ta: c.title[1], p: price('calendar'), img: c.img || 'assets/t-v2-00.webp' }
+        : kind === 'book' ? { k: BOOK.id, kind, t: BOOK.title[0], ta: BOOK.title[1], p: price('book'), img: BOOK.cover }
         : { k: id, kind, t: p ? p.title_en : id, ta: p ? p.title_ar || p.title_en : id, p: price(kind, id), img: thumb(id, p) };
       if (fmt === 'print') { const pr = printOf(kind, id); if (!pr) return false; line.p = pr.price; line.fmt = 'print'; line.q = 1; }
       a.push(Object.assign(line, extra || {})); this.set(a); bump(); return true;
@@ -206,7 +210,7 @@
     const sb = $('#shopb'), sd = $('#shopdd');
     if (sb && sd) {
       const here = (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '');
-      if (['shop', 'paintings', 'postcards', 'stickers', 'calendar'].includes(here)) { sb.classList.add('cur'); const a = sd.querySelector(`a[href="${here}.html"]`); if (a) a.setAttribute('aria-current', 'page'); }
+      if (['shop', 'paintings', 'postcards', 'stickers', 'calendar', 'designs', 'book'].includes(here)) { sb.classList.add('cur'); const a = sd.querySelector(`a[href="${here}.html"]`); if (a) a.setAttribute('aria-current', 'page'); }
       const open = (on) => { sd.hidden = !on; sb.setAttribute('aria-expanded', on); };
       sb.addEventListener('click', (e) => { e.stopPropagation(); open(sd.hidden); });
       /* with a mouse the list opens on hover, as on the reference, and closes a moment after the pointer leaves */
@@ -250,7 +254,7 @@
   }
 
   /* ---------- share: the phone's own share sheet when there is one, else a small menu ---------- */
-  const PAGE = { painting: 'paintings.html', postcard: 'postcards.html', sticker: 'stickers.html', calendar: 'calendar.html' };
+  const PAGE = { painting: 'paintings.html', postcard: 'postcards.html', sticker: 'stickers.html', calendar: 'calendar.html', design: 'designs.html', book: 'book.html' };
   const IC = {
     share: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M8 7.5L12 3.5l4 4M5 12.5v6.2c0 .7.6 1.3 1.3 1.3h11.4c.7 0 1.3-.6 1.3-1.3v-6.2"/></svg>',
     whatsapp: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.2 21.8l4.9-1.3A9.8 9.8 0 1 0 12 2.2zm0 1.8a8 8 0 1 1-4.2 14.8l-.3-.2-2.8.8.8-2.7-.2-.3A8 8 0 0 1 12 4zm-3.300 3.900c-.2 0-.5.1-.7.4-.3.300-1 1-1 2.300s1 2.700 1.200 2.900c.1.2 2 3.200 5 4.300 2.400.9 2.900.7 3.400.7.500-.1 1.700-.7 1.900-1.400.2-.7.2-1.200.2-1.400-.1-.1-.3-.2-.600-.4l-2-.9c-.300-.1-.5-.2-.7.1l-.9 1.200c-.2.2-.3.2-.6.1-.300-.2-1.200-.5-2.300-1.400-.9-.800-1.400-1.700-1.600-2-.2-.3 0-.5.1-.600l.5-.5c.1-.2.2-.300.3-.5.1-.2 0-.4 0-.5l-.9-2.200c-.2-.5-.4-.5-.6-.5z"/></svg>',
@@ -264,8 +268,8 @@
     email: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.500 5.500h17a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-17a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1zm1.300 1.800v.4l7.200 5 7.200-5v-.4zm14.400 2.600L12 14.900 4.800 9.900v6.800h14.400z"/></svg>',
   };
   /* the address people share: on the live site a small page of its own (so the link shows the piece's picture), else the piece's place on its page */
-  const shareUrl = (kind, id) => { const base = 'https://www.massandgrass.com/'; return cat.live ? `${base}s/${kind}/${encodeURIComponent(id || 'calendar')}` : base + PAGE[kind].replace('.html', '') + (kind === 'calendar' ? '' : '#' + id); };
-  const shareName = (kind, id) => { const p = product(kind, id); return kind === 'calendar' ? t('Things kept in bottles, the calendar', 'أشياء نحفظها في قوارير، التقويم') : title(p) || id; };
+  const shareUrl = (kind, id) => { const base = 'https://www.massandgrass.com/'; return cat.live ? `${base}s/${kind}/${encodeURIComponent(id || 'calendar')}` : base + PAGE[kind].replace('.html', '') + (kind === 'calendar' || kind === 'book' ? '' : '#' + id); };
+  const shareName = (kind, id) => { const p = product(kind, id); return kind === 'calendar' ? t('Things kept in bottles, the calendar', 'أشياء نحفظها في قوارير، التقويم') : kind === 'book' ? L(BOOK.title) : title(p) || id; };
   const shareBtn = (kind, id) => `<button type="button" class="shr" data-share="${kind}" data-id="${esc(id || '')}" aria-label="${esc(t('Share', 'شاركوها') + ': ' + shareName(kind, id))}">${IC.share}</button>`;
   let shrm = null;
   function closeShare() { if (shrm) { shrm.remove(); shrm = null; } }
@@ -274,7 +278,7 @@
     const text = t(`${name}, a watercolour by Farah Al-Helou from Gaza`, `${name}، لوحة مائية لفرح الحلو من غزة`);
     if (navigator.share && matchMedia('(pointer:coarse)').matches) { try { await navigator.share({ title: 'Mass & Grass', text, url }); } catch (e) {} return; }
     if (shrm && shrm._for === btn) return closeShare(); closeShare();
-    const u = encodeURIComponent(url), tx = encodeURIComponent(text), image = encodeURIComponent('https://www.massandgrass.com/' + (kind === 'calendar' ? 'assets/c27-00.webp' : img(id, product(kind, id))));
+    const u = encodeURIComponent(url), tx = encodeURIComponent(text), image = encodeURIComponent('https://www.massandgrass.com/' + (kind === 'calendar' ? 'assets/c27-00.webp' : kind === 'book' ? BOOK.cover : img(id, product(kind, id))));
     const rows = [['whatsapp', 'WhatsApp', `https://wa.me/?text=${tx}%20${u}`], ['facebook', 'Facebook', `https://www.facebook.com/sharer/sharer.php?u=${u}`], ['x', 'X', `https://twitter.com/intent/tweet?text=${tx}&url=${u}`],
       ['pinterest', 'Pinterest', `https://pinterest.com/pin/create/button/?url=${u}&media=${image}&description=${tx}`], ['telegram', 'Telegram', `https://t.me/share/url?url=${u}&text=${tx}`]];
     shrm = doc.createElement('div'); shrm.className = 'shrm'; shrm._for = btn; shrm.setAttribute('role', 'menu'); shrm.dir = AR ? 'rtl' : 'ltr';
@@ -297,7 +301,7 @@
     const fc = $('#ftc'); if (!fc) return; const ext = ' target="_blank" rel="noopener noreferrer"', sup = k.donate || k.kofi;
     fc.innerHTML = `<li><a href="help.html">${t('Help and questions', 'المساعدة والأسئلة')}</a></li><li><a href="mailto:${esc(mail)}" dir="ltr">${esc(mail)}</a></li>` +
       rows.filter((r) => r[0] === 'whatsapp' || r[0] === 'instagram').map((r) => `<li><a href="${esc(r[2])}"${ext}>${r[1]}</a></li>`).join('') +
-      `<li><a href="${sup ? esc(url(sup, 'https://')) + '"' + ext : 'story.html#support"'}>${t('Support Farah', 'ادعموا فرح')}</a></li>`;
+      `<li><a href="commission.html">${t('Request a design', 'اطلبوا تصميمًا')}</a></li><li><a href="${sup ? esc(url(sup, 'https://')) + '"' + ext : 'story.html#support"'}>${t('Support Farah', 'ادعموا فرح')}</a></li>`;
   }
 
   /* an add-to-bag button for one piece (kept in step by rerender) */
@@ -307,6 +311,9 @@
     return `<button type="button" class="${cls || 'add'} pbtn" data-add="${kind}" data-id="${esc(id)}"${kind === 'calendar' ? ` data-cal="${esc(id)}"` : ''} data-fmt="print" aria-pressed="${on}">${on ? t('Printed copy in your bag', 'النسخة المطبوعة في السلة') : t(`Printed and shipped, ${fmt(pr.price)}`, `مطبوعة وتُشحن، ${fmt(pr.price)}`)}</button>`; };
   /* one product as a tile (tiles.css): the piece on a coloured sheet, linked to its own page */
   function tile(p) {
+    if (p.kind === 'book') { const on = bag.has('book', BOOK.id);
+      return `<li class="pr-it"><a class="lk" href="${BOOK.page || PAGE.book}"><div class="bed paper cal"><span class="fill"></span><img src="${esc(BOOK.cover)}" alt="${esc(BOOK.title[0])}, the book's cover" loading="lazy"></div></a>
+      <div class="meta"><h3>${esc(L(BOOK.title))}</h3><span class="pr">${fmt(price('book'))}</span></div><span class="kd">${esc(kindLabel('book'))}</span><div class="acts"><button type="button" class="add" data-add="book" data-id="${esc(BOOK.id)}" aria-pressed="${on}">${on ? t('In your bag', 'في السلة') : t('Add to bag', 'أضيفوه إلى السلة')}</button>${shareBtn('book', BOOK.id)}</div></li>`; }
     const cal = p.kind === 'calendar', cls = cal ? 'cal' : p.kind === 'sticker' ? 'stk ' + ((p.extra && p.extra.shape) || 'die') : p.kind === 'postcard' ? 'card' : 'print';
     /* a calendar tile: its own cover and its own page (the 2027 calendar, or one from an earlier year) */
     const c = cal ? calOf(p.id) : null;
@@ -315,7 +322,7 @@
     return `<li class="pr-it"><a class="lk" href="${href}"${cal ? '' : ` data-peek="${p.kind}:${esc(p.id)}"`}><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
       <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? c.id : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${cal ? '' : shareBtn(p.kind, p.id)}</div></li>`;
   }
-  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, calOf, calendars: CALS };
+  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, calOf, calendars: CALS, book: BOOK };
 
   function boot() { applyLang(); shell(); ready = true; rerender('init'); user.sync(); }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', boot) : boot();

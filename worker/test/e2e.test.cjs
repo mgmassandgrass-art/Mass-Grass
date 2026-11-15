@@ -3,7 +3,7 @@
 // no sideways scroll. Then the shop's flows: bag, sticker pack, checkout, account, language, phone menu.
 const { chromium } = require('playwright');
 const B = process.env.SITE || 'http://localhost:8787';
-const PAGES = ['', 'shop', 'paintings', 'postcards', 'stickers', 'calendar', 'story', 'account', 'checkout', 'help', 'terms', 'nothing-here'];
+const PAGES = ['', 'shop', 'paintings', 'postcards', 'stickers', 'calendar', 'designs', 'book', 'commission', 'story', 'account', 'checkout', 'help', 'terms', 'nothing-here'];
 let bad = 0; const ok = (n, c, extra) => { if (!c) { bad++; console.log('FAIL', n, extra || ''); } else if (process.env.VERBOSE) console.log('ok  ', n); };
 (async () => {
   const b = await chromium.launch();
@@ -62,6 +62,31 @@ let bad = 0; const ok = (n, c, extra) => { if (!c) { bad++; console.log('FAIL', 
     ok('phone menu fills the screen', r >= 389); ok('account link in the menu is the profile', /profile/.test(await p.getAttribute('#mmenu .acct', 'href')));
     ok('account flow had no errors', !errs.length, errs.join(' | '));
     await c.close(); }
+  // 3b · the book turns, sells, and the request form reaches the server
+  { const { c, p, errs } = await ctx(1440, 900, false);
+    await p.goto(B + '/book', { waitUntil: 'load' }); await p.waitForSelector('.bk-leaf');
+    ok('the book shows two pages side by side', await p.evaluate(() => document.querySelector('.bk-book').classList.contains('two')));
+    ok('it opens on the cover', /^01 \//.test(await p.textContent('.bk-n')));
+    await p.click('.bk [data-go="1"]'); await p.waitForTimeout(150); ok('the next button turns a leaf', /^02–03/.test(await p.textContent('.bk-n')), await p.textContent('.bk-n'));
+    await p.focus('.bk'); await p.keyboard.press('ArrowRight'); await p.waitForTimeout(150); ok('the arrow key turns a leaf', /^04–05/.test(await p.textContent('.bk-n')));
+    await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(150); ok('and back', /^02–03/.test(await p.textContent('.bk-n')));
+    await p.keyboard.press('End'); await p.waitForTimeout(150); ok('the last page says the rest is in the book', /rest is in the book/.test(await p.textContent('.bk-n')));
+    const box = await p.locator('.bk-stage').boundingBox(); await p.keyboard.press('Home'); await p.waitForTimeout(150);
+    await p.mouse.move(box.x + box.width * 0.62, box.y + box.height / 2); await p.mouse.down(); await p.mouse.move(box.x + box.width * 0.3, box.y + box.height / 2, { steps: 8 }); await p.mouse.up(); await p.waitForTimeout(150);
+    ok('a drag turns a leaf', /^02–03/.test(await p.textContent('.bk-n')), await p.textContent('.bk-n'));
+    await p.click('.bk-txt [data-buy-book]'); await p.waitForTimeout(200); ok('buy puts the book in the bag', (await p.textContent('[data-bagn]')) === '1');
+    await p.goto(B + '/designs', { waitUntil: 'load' }); await p.waitForSelector('.bk-leaf');
+    ok('the designs page holds the book and its credit', /Najla Abdellatif/.test(await p.textContent('.bk-txt')));
+    await p.goto(B + '/commission', { waitUntil: 'load' });
+    await p.click('text=A design'); await p.fill('#cm-body', 'A small logo for our bakery, in watercolour.'); await p.fill('#cm-name', 'E2E'); await p.fill('#cm-email', 'e2e-req@example.com');
+    await p.click('#cmf [type=submit]'); await p.waitForTimeout(800); ok('the request is sent and thanked', /Thank you/.test(await p.textContent('#cmf')));
+    ok('book and request had no errors', !errs.length, errs.join(' | '));
+    await c.close(); }
+  { const { c, p, errs } = await ctx(390, 844, true);
+    await p.goto(B + '/book', { waitUntil: 'load' }); await p.waitForSelector('.bk-leaf');
+    ok('on a phone the book shows one page', !(await p.evaluate(() => document.querySelector('.bk-book').classList.contains('two'))));
+    await p.click('.bk [data-go="1"]'); await p.waitForTimeout(150); ok('and turns one page', /^02 \//.test(await p.textContent('.bk-n')));
+    ok('phone book had no errors', !errs.length, errs.join(' | ')); await c.close(); }
   // 4 · the admin page is closed to a visitor's browser too
   { const { c, p } = await ctx(1440, 900, false); await p.goto(B + '/admin/', { waitUntil: 'load' }); ok('admin redirects to sign-in', /account/.test(p.url())); await c.close(); }
   await b.close(); console.log(bad ? `${bad} failed` : 'all passed'); process.exit(bad ? 1 : 0);

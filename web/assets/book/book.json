@@ -1,0 +1,16 @@
+{
+  "id": "zero-waste",
+  "title_en": "Zero Waste & Our Palestinian Ancestors",
+  "title_ar": "صفر نفايات وأجدادنا الفلسطينيون",
+  "credit_en": "Text: Najla Abdellatif, drawings: Farah Al-Helou",
+  "credit_ar": "النص: نجلاء عبد اللطيف، الرسوم: فرح الحلو",
+  "year": 2026,
+  "pages": 112,
+  "preview": 8,
+  "price": 10,
+  "ratio": 0.75,
+  "dir": "ltr",
+  "placeholder": true,
+  "note": "TEMPORARY: these 8 pages are placeholders made from existing paintings by tools/book_placeholders.py. The real pages come from the owner's PDF through the admin's Book panel (stored on the server, read from the catalog); to swap the static ones by hand, drop pg-01.webp ... pg-NN.webp here and list them below.",
+  "imgs": ["assets/book/pg-01.webp", "assets/book/pg-02.webp", "assets/book/pg-03.webp", "assets/book/pg-04.webp", "assets/book/pg-05.webp", "assets/book/pg-06.webp", "assets/book/pg-07.webp", "assets/book/pg-08.webp"]
+}

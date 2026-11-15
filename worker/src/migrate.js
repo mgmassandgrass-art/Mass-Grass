@@ -4,11 +4,13 @@
 import M0008 from '../migrations/0008_security_catalog.sql';
 import M0009 from '../migrations/0009_shipping.sql';
 import M0010 from '../migrations/0010_profile.sql';
+import M0011 from '../migrations/0011_designs.sql';
 
 const STEPS = [
   { name: '0008_security_catalog.sql', sql: M0008, done: "SELECT 1 FROM sqlite_master WHERE type='table' AND name='audit_log'" },
   { name: '0009_shipping.sql', sql: M0009, done: "SELECT 1 FROM pragma_table_info('orders') WHERE name='ship'" },
   { name: '0010_profile.sql', sql: M0010, done: "SELECT 1 FROM sqlite_master WHERE type='table' AND name='trusted_devices'" },
+  { name: '0011_designs.sql', sql: M0011, done: "SELECT 1 FROM sqlite_master WHERE type='table' AND name='commissions'" },
 ];
 const statements = (sql) => sql.split('\n').filter((l) => !/^\s*--/.test(l)).join('\n').split(/;\s*\n/).map((x) => x.trim().replace(/;$/, '')).filter(Boolean);
 let ready = null;

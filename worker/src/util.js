@@ -16,6 +16,15 @@ export const CALS = {
   'palestine-2027': ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027', 'palestine-2027'],
 };
 export const calFile = (k) => (CALS[k] || CALS['calendar-2027'])[2];
+// The book: one piece, one PDF, priced by prices.book; its id is also its file key. The admin's Book panel stores its
+// manifest (titles, credit, pages, preview pictures) in settings 'book'; web/assets/book/book.json is the static fallback.
+export const BOOK_ID = 'zero-waste';
+export const BOOKS = {
+  [BOOK_ID]: ['Zero Waste & Our Palestinian Ancestors', 'صفر نفايات وأجدادنا الفلسطينيون'],
+};
+// Every kind a product file can belong to, and the file key of one bag line ([kind, product id] pairs).
+export const FILE_KINDS = ['painting', 'postcard', 'sticker', 'design', 'calendar', 'book'];
+export const fileKeys = (it) => (it.kind === 'pack' ? (it.pack || []).map((k) => ['sticker', k]) : it.kind === 'calendar' ? [['calendar', calFile(it.k)]] : [[it.kind, it.k]]);
 
 // What a file really is, read from its first bytes (the browser's content-type is only a claim): pdf, png, jpeg, webp or zip.
 export function sniff(buf) {

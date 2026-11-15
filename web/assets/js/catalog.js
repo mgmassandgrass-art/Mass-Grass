@@ -3,7 +3,7 @@
    The server's catalog (the admin's products, prices and hidden pieces) replaces this list when the page
    is served by the Worker; opened as plain files (previews) the site sells from this list. */
 window.MG_DEFAULT = {
-  prices: { painting: 12, postcard: 2, sticker: 1, pack: 3, calendar: 8 },
+  prices: { painting: 12, postcard: 2, sticker: 1, pack: 3, calendar: 8, design: 6, book: 10 },
   products: [
     /* paintings */
     ['painting', 'hero', 'Gaza Coast', 'ساحل غزة'],
@@ -69,6 +69,13 @@ window.MG_DEFAULT = {
     ['sticker', 'pflower', 'Big Flower', 'الزهرة الكبيرة', 'round'],
     ['sticker', 'pmoonsleep', 'Moon Sleeper', 'نائمة على القمر', 'round']
   ].map(function (x) { return { kind: x[0], id: x[1], title_en: x[2], title_ar: x[3], extra: x[4] ? { shape: x[4] } : {} }; }),
+  /* the book (kind 'book', one PDF at prices.book). Its pages come from the admin's Book panel (the server's catalog carries them);
+     without the server the reader reads assets/book/book.json, whose eight pages are TEMPORARY placeholders */
+  book: {
+    id: 'zero-waste', title: ['Zero Waste & Our Palestinian Ancestors', 'صفر نفايات وأجدادنا الفلسطينيون'],
+    credit: ['Text: Najla Abdellatif, drawings: Farah Al-Helou', 'النص: نجلاء عبد اللطيف، الرسوم: فرح الحلو'],
+    cover: 'assets/book/pg-01.webp', page: 'book.html', manifest: 'assets/book/book.json', pages: 112, year: 2026
+  },
   /* the 2027 calendar, "Things kept in bottles": the cover and all twelve months (assets c27-MM*, rendered from the owner's calendar artifact) */
   calendar: {
     id: 'calendar-2027', title: ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027'], cover: 'assets/t-v2-00.webp', page: 'calendar.html',
