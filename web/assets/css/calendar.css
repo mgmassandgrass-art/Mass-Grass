@@ -78,12 +78,9 @@
 .ol-p{display:flex;align-items:baseline;gap:20px}
 .ol-p b{font-weight:400;font-size:clamp(28px,2.4vw,38px);color:var(--cv-rose)}
 .ol-p .go{color:var(--cv-rose);text-decoration:underline;text-underline-offset:4px}
-html[data-hand]:not(.ar-on) .ol-tx :is(.ol-y,.ol-n,.ol-d,.ol-p b,.go){font-family:var(--cal-t)}
-html[data-hand]:not(.ar-on) .ol-y{font-size:20px}
+html[data-hand]:not(.ar-on) .ol-tx :is(.ol-n,.ol-d){font-family:var(--cal-t)}
 html[data-hand]:not(.ar-on) .ol-d{font-size:22px;line-height:1.35}
-html[data-hand]:not(.ar-on) .ol-p .go{font-size:22px}
-html[data-hand]:not(.ar-on) .btb .btn-n,html[data-hand]:not(.ar-on) .bts-v button{font-family:var(--cal-t);font-size:19px}
-html[data-hand]:not(.ar-on) .bts-nav .ghost{font-family:var(--cal-t);font-size:20px}
+html[data-hand]:not(.ar-on) .btb .btn-n{font-family:var(--cal-t);font-size:19px}
 .ar-on .bts-n,.ar-on .ol-n{font-family:var(--handar,'Aref Ruqaa',serif)}
 
 @media(max-width:900px){
@@ -96,8 +93,8 @@ html[data-hand]:not(.ar-on) .bts-nav .ghost{font-family:var(--cal-t);font-size:2
 }
 @media(prefers-reduced-motion:reduce){.btb img{animation:none}.cv-stage>*,.bts-im img{transition:none}}
 /* reading sizes in the hand (nothing under 18px) */
-html[data-hand]:not(.ar-on) main :is(.btl-hd p,.bts-d,.ol-d,.ps-d){font-size:21px;line-height:1.38}
-html[data-hand]:not(.ar-on) main :is(.pnote,.bts-s){font-size:19px;line-height:1.4}
+html[data-hand]:not(.ar-on) main :is(.btl-hd p,.bts-d,.ol-d,.ps-d){font-family:var(--cal-t);font-size:21px;line-height:1.38;max-width:34ch}
+html[data-hand]:not(.ar-on) body main :is(.pnote,.bts-s){font-size:12px;line-height:1.6;letter-spacing:.04em;color:var(--cal-grey)}
 
 /* ---------- the Palestine calendar's own page ---------- */
 .ps-th{grid-template-columns:repeat(13,minmax(0,1fr))}
@@ -117,8 +114,7 @@ html[data-hand]:not(.ar-on) main :is(.pnote,.bts-s){font-size:19px;line-height:1
 .psd-in h3{margin:0 0 12px;font-size:clamp(28px,2.6vw,40px)!important;color:var(--cv-rose)!important;line-height:1.05}
 .ps-back{text-align:center;margin:clamp(32px,4vw,56px) 0 0}
 .ps-back .go{color:var(--cv-rose);text-decoration:underline;text-underline-offset:4px}
-html[data-hand]:not(.ar-on) :is(.ps-grid .pm,.ps-grid .pn,.ps-back .go){font-family:var(--cal-t)}
-html[data-hand]:not(.ar-on) .ps-back .go{font-size:22px}
+html[data-hand]:not(.ar-on) .ps-grid .pm{font-family:var(--cal-t)}
 @media(max-width:900px){.ps-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.psd-in{grid-template-columns:minmax(0,1fr)}.ps-th{grid-template-columns:repeat(7,minmax(0,1fr))}}
 
 /* ---------- the full-page opening: the calendar on its desk, page after page, buy / browse on it ---------- */
@@ -138,8 +134,6 @@ html[data-hand]:not(.ar-on) .ps-back .go{font-size:22px}
 .cf-dots button{width:22px;height:4px;padding:0;border:0;background:rgba(43,47,44,.22);cursor:pointer;transition:background .3s,width .3s}
 .cf-dots button[aria-pressed=true]{width:40px;background:var(--cv-rose)}
 .cf-dots button:focus-visible{outline:2px solid var(--cv-rose);outline-offset:3px}
-html[data-hand]:not(.ar-on) .cf-b :is(.ink,.ghost){font-family:var(--cal-t);font-size:21px}
-html[data-hand]:not(.ar-on) .cf-b .fig{font-family:var(--cal-t)}
 /* the calendar's cover page beside its words */
 .cv-page{display:grid;place-items:center;padding:clamp(20px,3vw,48px);background:var(--cv-paper)}
 .cv-page img{width:auto;max-width:100%;max-height:min(70vh,640px);height:auto;filter:drop-shadow(0 16px 26px rgba(80,60,40,.22))}
@@ -168,8 +162,6 @@ html[data-hand]:not(.ar-on) .cf-b .fig{font-family:var(--cal-t)}
 .bts-buy{display:flex;align-items:center;gap:16px;margin-top:16px}
 .bts-buy .ink{min-height:52px;padding:0 28px;display:inline-flex;align-items:center;border:1.5px solid var(--cv-ink)}
 .bts-buy .fig{font-weight:400;font-size:clamp(30px,2.6vw,40px);color:var(--cv-rose)}
-html[data-hand]:not(.ar-on) .bts-buy :is(.ink,.fig){font-family:var(--cal-t)}
-html[data-hand]:not(.ar-on) .bts-buy .ink{font-size:21px}
 /* earlier calendars: a grid of cards */
 .ol-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,28px)}
 .ol-c{display:grid;gap:8px;color:inherit;text-decoration:none;padding-bottom:12px}

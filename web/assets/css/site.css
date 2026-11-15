@@ -451,3 +451,5 @@ main>section>.wrap>.sx-hd{grid-column:1/-1;flex:0 0 100%;width:100%}
 /* the old torn-paper notes, set as plain ruled boxes in the light system */
 main .note.paper{rotate:0deg!important;filter:none!important;border:1px solid var(--line);background:#FBF8F1;clip-path:none}
 main .note.paper>.fill{display:none}
+
+.sx-hd i{font-style:normal}.sx-hd i::before{content:" / "}

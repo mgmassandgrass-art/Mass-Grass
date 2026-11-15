@@ -456,3 +456,12 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   (`sniff()` in util.js), the CSRF localhost exception only applies on localhost, http goes to https in the Worker, wrangler updated
   (0 audit issues), `worker/test/hardening.test.mjs` (41 checks) is part of `npm test`. Deployed 15 Nov 2026 (http now 301s to https). Owner to do: Cloudflare "Always Use
   HTTPS", 2FA on the admin account.
+
+## Two voices in the type (owner, 15 Nov 2026)
+
+- `web/assets/css/hand.css` (rewritten) pairs the calendar's hand with the menu's Geist Mono on every page: the hand is Farah's
+  voice (titles, piece names, leads, `.hand` lines, quotes, help questions, the story chapters, map tags, the section name in each
+  head row and in the glass strip); Geist Mono is the shop's voice (reading text 14px/1.75, labels/kinds/specs/form labels in 11px
+  spaced capitals, prices and numbers tabular, buttons in 11px capitals, fields, the menu and the footer). Head rows read
+  "02 —— The calendar": mono number in rose, a short rose rule, the name in the hand (`<b>` + `<i>` from `frame()` in mock.js).
+  Geist Mono ships 500 and 700 only. Arabic keeps its own faces.

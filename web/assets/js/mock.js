@@ -92,7 +92,7 @@
     const now = side.querySelector('.now'), ol = side.querySelector('ol');
     let cur = -1;
     const paint = () => {
-      heads.forEach(({ hd, i }) => { hd.innerHTML = `<span><b>${pad(i + 1)}</b> / ${esc(name(secs[i]))}</span><span class="m">${words(secs[i]).map((w) => `<span>${esc(w)}</span>`).join('')}</span>`; });
+      heads.forEach(({ hd, i }) => { hd.innerHTML = `<span><b>${pad(i + 1)}</b><i>${esc(name(secs[i]))}</i></span><span class="m">${words(secs[i]).map((w) => `<span>${esc(w)}</span>`).join('')}</span>`; });
       ol.innerHTML = secs.map((x, i) => `<li><button type="button" data-i="${i}">${esc(name(x))}</button></li>`).join('');
       cur = -1; spot();
     };
