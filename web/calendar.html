@@ -19,10 +19,10 @@
 <link rel="preload" href="fonts/geist-mono-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts/all.css">
 <link rel="stylesheet" href="fonts/figtree.css">
-<link rel="stylesheet" href="assets/css/site.css?v=44a85e24">
-<link rel="stylesheet" href="assets/css/hand.css?v=44a85e24">
-<link rel="stylesheet" href="assets/css/calendar.css?v=44a85e24">
-<script src="assets/js/boot.js?v=44a85e24"></script>
+<link rel="stylesheet" href="assets/css/site.css?v=87893919">
+<link rel="stylesheet" href="assets/css/hand.css?v=87893919">
+<link rel="stylesheet" href="assets/css/calendar.css?v=87893919">
+<script src="assets/js/boot.js?v=87893919"></script>
 </head>
 <body>
 <a class="skip" href="#main" data-ar="انتقلوا إلى المحتوى">Skip to content</a>
@@ -59,16 +59,26 @@
 </header>
 
 <main id="main">
-<section class="cv" id="top" aria-labelledby="cv-h" data-meta="The 2027 calendar|Watercolours by Farah" data-meta-ar="تقويم 2027|ألوان مائية لفرح">
+<section class="hshow cfull" id="top" aria-labelledby="cf-h" aria-roledescription="carousel">
+  <div class="cf-stage" id="cfstage"></div>
+  <div class="cf-bar">
+    <div class="cf-t"><h1 id="cf-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1><p class="hand" data-ar="تقويم 2027، ألوان مائية لفرح">The 2027 calendar, watercolours by Farah</p></div>
+    <div class="cf-b">
+      <button class="ink" type="button" data-add="calendar" data-ar="اشتروا التقويم">Buy the calendar</button>
+      <a class="ghost" href="#months" data-ar="تصفّحوا الأشهر">Browse the months</a>
+      <b class="fig" data-price="calendar">€8</b>
+    </div>
+    <div class="cf-dots" id="cfdots" role="group" aria-label="Photographs" data-label-ar="الصور"></div>
+  </div>
+</section>
+
+<section class="cv" id="about" aria-labelledby="cv-h" data-meta="The 2027 calendar|Watercolours by Farah" data-meta-ar="تقويم 2027|ألوان مائية لفرح">
   <div class="wrap">
     <div class="cv-grid">
-      <div class="cv-stage" id="cvstage">
-        <video id="cvvid" class="on" autoplay muted loop playsinline preload="auto" poster="assets/cal-flip.webp" aria-label="A hand turns the calendar's cover over to January" data-label-ar="يد تقلب غلاف التقويم إلى كانون الثاني"><source src="assets/cal-flip.webm" type="video/webm"><source src="assets/cal-flip.mp4" type="video/mp4"></video>
-        <img id="cvmk" src="assets/cd-00.webp" alt="" width="1440" height="1080">
-      </div>
+      <div class="cv-page"><img src="assets/v2-00.webp" alt="The cover of the 2027 calendar: a heart kept in a bottle" data-alt-ar="غلاف تقويم 2027: قلب محفوظ في قارورة" width="1100" height="1545" loading="lazy"></div>
       <div class="cv-txt">
-        <h1 id="cv-h" data-ar="أشياء نحفظها في قوارير">Things kept in bottles</h1>
-        <p class="hand cw-sub" data-ar="تقويم 2027">The 2027 calendar</p>
+        <h2 class="big" id="cv-h" data-ar="التقويم">The calendar</h2>
+        <p class="hand cw-sub" data-ar="قارورة لكل شهر">A bottle for every month</p>
         <p class="lead" data-ar="قارورة رسمتها فرح لكل شهر، وفي كل واحدة شيء يستحق أن نحفظه: قلب، بحر صغير، زهرة شمس، طريق العودة إلى البيت.">A bottle Farah painted for every month, and in each one something worth keeping: a heart, a small sea, a sunflower, a road back home.</p>
         <ul class="specs">
           <li data-ar="12 شهرًا وغلاف">12 months and a cover</li>
@@ -76,13 +86,12 @@
           <li data-ar="الأسبوع يبدأ يوم السبت">Weeks start on Saturday</li>
         </ul>
         <div class="cw-buy">
-          <a class="ghost" href="#months" data-ar="شاهدوا الأشهر">See the months</a>
+          <a class="ghost" href="#months" data-ar="تصفّحوا الأشهر">Browse the months</a>
           <div class="cw-row"><button class="ink" type="button" data-add="calendar" data-ar="اشتروا التقويم">Buy the calendar</button><b class="fig" data-price="calendar">€8</b></div>
         </div>
         <div class="cv-print" id="cprint"></div>
       </div>
     </div>
-    <div class="cv-th" id="cvth" role="group" aria-label="Photographs of the calendar" data-label-ar="صور التقويم"></div>
   </div>
 </section>
 
@@ -108,7 +117,7 @@
   <div class="wrap">
     <div class="btl-hd"><h2 class="big" id="ol-h" data-ar="تقاويم من سنوات سابقة">Calendars from earlier years</h2><p data-ar="رسمتها فرح لسنوات مضت، وجدّدنا تواريخها وأعيادها لعام 2027.">Painted by Farah for earlier years, their dates and holidays now set for 2027.</p></div>
     <a class="ol-card" href="palestine.html">
-      <span class="ol-im"><img src="assets/pd-00.webp" alt="" width="1440" height="1080" loading="lazy"><img src="assets/pd-03.webp" alt="" width="1440" height="1080" loading="lazy"></span>
+      <span class="ol-im"><img src="assets/pm-3.webp" alt="" width="1800" height="1200" loading="lazy"><img src="assets/pm-4.webp" alt="" width="1800" height="1200" loading="lazy"></span>
       <span class="ol-tx">
         <span class="ol-y" data-ar="من 2026، بتواريخ 2027">From 2026, set for 2027</span>
         <span class="ol-n" data-ar="فلسطين، رحلة عبر الزمان والمكان">Palestine, a journey through time and space</span>
@@ -137,10 +146,10 @@
   <div class="ft-z"><small data-ar="© 2026 ماس آند غراس، غزة، فلسطين">© 2026 Mass &amp; Grass, Gaza, Palestine</small><div class="soc" id="soc"></div></div>
 </footer>
 
-<script src="assets/js/catalog.js?v=44a85e24" defer></script>
-<script src="assets/js/art.js?v=44a85e24" defer></script>
-<script src="assets/js/core.js?v=44a85e24" defer></script>
-<script src="assets/js/mock.js?v=44a85e24" defer></script>
-<script src="assets/js/calendar.js?v=44a85e24" defer></script>
+<script src="assets/js/catalog.js?v=87893919" defer></script>
+<script src="assets/js/art.js?v=87893919" defer></script>
+<script src="assets/js/core.js?v=87893919" defer></script>
+<script src="assets/js/mock.js?v=87893919" defer></script>
+<script src="assets/js/calendar.js?v=87893919" defer></script>
 </body>
 </html>

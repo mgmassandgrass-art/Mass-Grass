@@ -1,36 +1,31 @@
 /* The calendar page (2027, "Things kept in bottles"):
-   1 · the calendar on a desk: the film of a hand turning the cover to January, then a photograph of the desk calendar open on
-       each month (cd-MM), chosen from the row below the stage;
-   2 · the twelve bottles side by side, floating on one line; a click shows that month in the calendar (on the desk, or the
-       page itself) with its line;
-   3 · calendars from earlier years, set for 2027 (palestine.html). */
+   1 · full page: the desk calendar photographed open on the cover and each month (cd-MM), one after another, with buy / browse;
+   2 · the calendar: its cover page, a few words, what it is, buy and the printed copy;
+   3 · the twelve bottles side by side, floating on one line; a click shows that month in the calendar (on the desk, or the page);
+   4 · calendars from earlier years, set for 2027 (palestine.html).
+   (The film of the cover being turned, assets/cal-flip.*, waits for later.) */
 (function () {
   'use strict';
   const { $, $$, esc, t, L } = MG, C = MG.calendar, P = C.pages;
   const name = (p) => (p.m ? (MG.ar ? C.monthsAr[p.m - 1] : C.months[p.m - 1]) : t('The cover', 'الغلاف'));
   const pad = (n) => String(n).padStart(2, '0');
 
-  /* ---------- 1 · the stage: film first, then the desk photographs ---------- */
-  const vid = $('#cvvid'), mk = $('#cvmk'), th = $('#cvth');
-  let cur = -1;
-  th.innerHTML = `<button type="button" aria-pressed="true" data-i="-1"><img src="assets/cal-flip.webp" alt="" loading="lazy"><span class="pl" aria-hidden="true"></span></button>` +
-    P.map((p, i) => `<button type="button" aria-pressed="false" data-i="${i}"><img src="assets/cd-${pad(i)}.webp" alt="" loading="lazy"></button>`).join('');
-  const label = () => {
-    $$('button', th).forEach((b) => { const i = +b.dataset.i; b.setAttribute('aria-label', i < 0 ? t('The film: the cover turned to January', 'الفيلم: الغلاف يُقلب إلى كانون الثاني') : name(P[i]) + t(', on the desk', '، على المكتب')); });
-    if (cur >= 0) mk.alt = name(P[cur]) + t(': the 2027 calendar on a desk', ': تقويم 2027 على مكتب');
-  };
-  function stage(i) {
-    cur = i; $$('button', th).forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.i === i)));
-    if (i < 0) { mk.classList.remove('on'); vid.classList.add('on'); vid.currentTime = 0; if (!MG.still) vid.play().catch(() => {}); }
-    else { mk.src = `assets/cd-${pad(i)}.webp`; mk.classList.add('on'); vid.classList.remove('on'); vid.pause(); }
-    label();
+  /* ---------- 1 · full page: the cover first, then the months, a slow cross-fade every 4.5s ---------- */
+  const stage = $('#cfstage'), dots = $('#cfdots');
+  stage.innerHTML = P.map((p, i) => `<img${i ? '' : ' class="on"'} src="assets/cd-${pad(i)}.webp" alt="" ${i > 1 ? 'loading="lazy" ' : ''}decoding="async" draggable="false">`).join('');
+  dots.innerHTML = P.map((p, i) => `<button type="button" aria-pressed="${!i}" data-i="${i}"></button>`).join('');
+  const ims = $$('img', stage), dbs = $$('button', dots); let at = 0, timer = 0, seen = true;
+  function go(i) {
+    ims[at].classList.remove('on'); dbs[at].setAttribute('aria-pressed', 'false');
+    at = (i + ims.length) % ims.length; ims[at].classList.add('on'); dbs[at].setAttribute('aria-pressed', 'true');
+    const nx = ims[(at + 1) % ims.length]; nx.loading = 'eager';
   }
-  th.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) stage(+b.dataset.i); });
-  if (MG.still) { vid.removeAttribute('autoplay'); vid.pause(); }
-  /* the film plays only while it is on screen */
-  new IntersectionObserver((es) => es.forEach((en) => { if (cur >= 0 || MG.still) return; if (en.isIntersecting) vid.play().catch(() => {}); else vid.pause(); }), { threshold: .2 }).observe(vid);
+  const run = (wait) => { clearTimeout(timer); clearInterval(timer); if (MG.still) return; timer = setTimeout(() => { timer = setInterval(() => { if (seen && !document.hidden) go(at + 1); }, 4500); }, wait || 0); };
+  dots.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { go(+b.dataset.i); run(7000); } });
+  new IntersectionObserver((es) => es.forEach((en) => { seen = en.isIntersecting; }), { threshold: .2 }).observe(stage);
+  run();
 
-  /* ---------- 2 · the bottles in a row, floating; one chosen shows its month ---------- */
+  /* ---------- 3 · the bottles in a row, floating; one chosen shows its month ---------- */
   const MS = P.filter((p) => p.m > 0), row = $('#btrow');
   row.innerHTML = MS.map((p, i) => `<li><button type="button" class="btb" data-i="${i}" aria-pressed="${!i}" style="--d:${(-i * .37).toFixed(2)}s"><img src="assets/bt-${pad(i + 1)}.webp" alt="" draggable="false"><span class="btn-n"></span></button></li>`).join('');
   const bts = $$('.btb', row), A = $('#btsA'), B = $('#btsB'); let sel = 0, view = 'desk', front = A;
@@ -38,10 +33,13 @@
     sel = (i + MS.length) % MS.length; const p = MS[sel];
     bts.forEach((b, k) => b.setAttribute('aria-pressed', String(k === sel)));
     const src = view === 'desk' ? `assets/cd-${pad(p.m)}.webp` : `assets/v2-${pad(p.m)}.webp`;
-    const back = front === A ? B : A; back.src = src; back.alt = name(p) + (view === 'desk' ? t(', the calendar on a desk', '، التقويم على مكتب') : t(', the page', '، الصفحة'));
+    const alt = name(p) + (view === 'desk' ? t(', the calendar on a desk', '، التقويم على مكتب') : t(', the page', '، الصفحة'));
     $('#btsim').classList.toggle('page', view === 'page');
-    const swap = () => { back.classList.add('on'); front.classList.remove('on'); front = back; };
-    if (back.complete && back.naturalWidth) swap(); else back.onload = swap;
+    if (front.getAttribute('src') !== src) {
+      const back = front === A ? B : A; back.src = src; back.alt = alt;
+      const swap = () => { back.classList.add('on'); front.classList.remove('on'); front = back; };
+      if (back.complete && back.naturalWidth) swap(); else back.onload = swap;
+    } else front.alt = alt;
     $('#btss').textContent = L(p.s); $('#btsn').textContent = name(p); $('#btsq').textContent = L(p.q); $('#btsd').textContent = L(p.d);
     if (scroll) { const r = $('#btshow').getBoundingClientRect(); if (r.top > innerHeight * .7 || r.bottom < 0) $('#btshow').scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'center' }); }
   }
@@ -60,7 +58,10 @@
   MG.page(function (why) {
     $('#cprint').innerHTML = printBlock();
     if (why === 'bag' || why === 'user') return;
+    ims.forEach((im, i) => { im.alt = name(P[i]) + t(': the 2027 calendar on a desk', ': تقويم 2027 على مكتب'); });
+    dbs.forEach((b, i) => b.setAttribute('aria-label', name(P[i])));
     bts.forEach((b, i) => { b.setAttribute('aria-label', name(MS[i])); b.querySelector('.btn-n').textContent = name(MS[i]); });
-    label(); show(sel);
+    $$('[data-alt-ar]').forEach((e) => { if (e.dataset.altEn == null) e.dataset.altEn = e.alt; e.alt = MG.ar ? e.dataset.altAr : e.dataset.altEn; });
+    show(sel);
   });
 })();

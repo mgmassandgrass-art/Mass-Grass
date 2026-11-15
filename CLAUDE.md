@@ -428,3 +428,14 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   file key: the 2027 calendar keeps `current`, Palestine uses `palestine-2027`); unknown calendar ids are refused. Both use
   `prices.calendar` and `prices.calendarPrint`. The admin's Calendar tab has a second files box for the Palestine PDF.
   Not deployed yet.
+- Round 2 (owner, 15 Nov 2026): the film is off the page for now (files kept for later); `calendar.html` opens full page (`.hshow.cfull`):
+  the desk photographs `cd-00..12` cross-fading every 4.5s with the title, Buy / Browse the months and the price on a light band, dots
+  to choose; then "The calendar" (the V2 cover page, words, specs, buy, the printed line), the bottles, earlier calendars.
+- The Palestine calendar now shows the owner's own photographs (acrylic stands on white) set to 2027 by `tools/redate_mockups.py`
+  (SIFT homography per band + DIS optical flow per pixel; only the marks that changed are redrawn in the photo's own light, each only
+  if the old mark is really visible): `web/assets/pm-1` (the cover, cropped from the three-calendar photo, whose March page behind
+  two acrylic layers could not be fixed), `pm-2` June, `pm-3` February and May, `pm-4` October and December. Originals and outputs in
+  `drafts/calendar-2026/mockups/`. The desk mockups `pd-*` were removed. Its page opens full page with pm-2..4 (white, `.psfull`).
+- The sale PDF of the Palestine calendar set for 2027 (14 pages: cover, intro, 12 months, 4299x6100 pt like the original) was made
+  with img2pdf from `drafts/calendar-2026/2027/m-*.jpg` + `pg-002.jpg` and given to the owner; it is not in the repo. Upload it in the
+  admin's Calendar tab (Palestine box).

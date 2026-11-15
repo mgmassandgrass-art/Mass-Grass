@@ -19,10 +19,10 @@
 <link rel="preload" href="fonts/geist-mono-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts/all.css">
 <link rel="stylesheet" href="fonts/figtree.css">
-<link rel="stylesheet" href="assets/css/site.css?v=44a85e24">
-<link rel="stylesheet" href="assets/css/hand.css?v=44a85e24">
-<link rel="stylesheet" href="assets/css/calendar.css?v=44a85e24">
-<script src="assets/js/boot.js?v=44a85e24"></script>
+<link rel="stylesheet" href="assets/css/site.css?v=87893919">
+<link rel="stylesheet" href="assets/css/hand.css?v=87893919">
+<link rel="stylesheet" href="assets/css/calendar.css?v=87893919">
+<script src="assets/js/boot.js?v=87893919"></script>
 </head>
 <body>
 <a class="skip" href="#main" data-ar="انتقلوا إلى المحتوى">Skip to content</a>
@@ -59,13 +59,26 @@
 </header>
 
 <main id="main">
-<section class="cv" id="top" aria-labelledby="ps-h" data-meta="From 2026, set for 2027" data-meta-ar="من 2026، بتواريخ 2027">
+<section class="hshow cfull psfull" id="top" aria-labelledby="ps-h" aria-roledescription="carousel">
+  <div class="cf-stage" id="psstage"><img class="on" src="assets/pm-3.webp" alt="" draggable="false"><img src="assets/pm-2.webp" alt="" draggable="false" loading="lazy"><img src="assets/pm-4.webp" alt="" draggable="false" loading="lazy"></div>
+  <div class="cf-bar">
+    <div class="cf-t"><h1 id="ps-h" data-ar="فلسطين، رحلة عبر الزمان والمكان">Palestine, a journey through time and space</h1><p class="hand" data-ar="تقويم 2026، بتواريخ 2027">The 2026 calendar, set for 2027</p></div>
+    <div class="cf-b">
+      <button class="ink" type="button" data-add="calendar" data-cal="palestine-2027" data-ar="اشتروا التقويم">Buy the calendar</button>
+      <a class="ghost" href="#ps-months" data-ar="تصفّحوا الأشهر">Browse the months</a>
+      <b class="fig" data-price="calendar">€8</b>
+    </div>
+    <div class="cf-dots" id="psdots" role="group" aria-label="Photographs" data-label-ar="الصور"></div>
+  </div>
+</section>
+
+<section class="cv" id="about" aria-labelledby="psa-h" data-meta="From 2026, set for 2027" data-meta-ar="من 2026، بتواريخ 2027">
   <div class="wrap">
     <div class="cv-grid">
-      <div class="cv-stage" id="psstage"><img id="psA" class="on" src="assets/pd-00.webp" alt="" width="1440" height="1080"><img id="psB" alt="" width="1440" height="1080"></div>
+      <div class="cv-page ps-cover"><img src="assets/pm-1.webp" alt="The calendar's cover on its acrylic stand: a clay jug on a tiled plate, Calendar 2027" data-alt-ar="غلاف التقويم على حامله: جرّة فخار على صحن من البلاط، تقويم 2027" width="900" height="1692" loading="lazy"></div>
       <div class="cv-txt">
-        <h1 id="ps-h" data-ar="فلسطين، رحلة عبر الزمان والمكان">Palestine, a journey through time and space</h1>
-        <p class="hand cw-sub" data-ar="تقويم 2026، بتواريخ 2027">The 2026 calendar, set for 2027</p>
+        <h2 class="big" id="psa-h" data-ar="التقويم">The calendar</h2>
+        <p class="hand cw-sub" data-ar="بيت لكل شهر">A house for every month</p>
         <p class="lead" data-ar="بيوت فلسطين القديمة، أبوابها ونوافذها وأدراجها وبلاطها، رسمتها فرح بالألوان المائية: واحد لكل شهر. صُنع لعام 2026، وصارت تواريخه وأعياده لعام 2027.">The old houses of Palestine, their doors, windows, stairs and tiles, painted by Farah in watercolour: one for every month. Made for 2026; its dates and holidays are now set for 2027.</p>
         <ul class="specs">
           <li data-ar="12 شهرًا وغلاف">12 months and a cover</li>
@@ -73,13 +86,12 @@
           <li data-ar="الأسبوع يبدأ يوم الاثنين، والأعياد عليه">Weeks start on Monday, the holidays marked</li>
         </ul>
         <div class="cw-buy">
-          <a class="ghost" href="#ps-months" data-ar="شاهدوا الأشهر">See the months</a>
+          <a class="ghost" href="#ps-months" data-ar="تصفّحوا الأشهر">Browse the months</a>
           <div class="cw-row"><button class="ink" type="button" data-add="calendar" data-cal="palestine-2027" data-ar="اشتروا التقويم">Buy the calendar</button><b class="fig" data-price="calendar">€8</b></div>
         </div>
         <div class="cv-print" id="psprint"></div>
       </div>
     </div>
-    <div class="cv-th ps-th" id="psth" role="group" aria-label="The calendar on a desk, month by month" data-label-ar="التقويم على مكتب، شهرًا بعد شهر"></div>
   </div>
 </section>
 
@@ -113,10 +125,10 @@
   <div class="ft-z"><small data-ar="© 2026 ماس آند غراس، غزة، فلسطين">© 2026 Mass &amp; Grass, Gaza, Palestine</small><div class="soc" id="soc"></div></div>
 </footer>
 
-<script src="assets/js/catalog.js?v=44a85e24" defer></script>
-<script src="assets/js/art.js?v=44a85e24" defer></script>
-<script src="assets/js/core.js?v=44a85e24" defer></script>
-<script src="assets/js/mock.js?v=44a85e24" defer></script>
-<script src="assets/js/palestine.js?v=44a85e24" defer></script>
+<script src="assets/js/catalog.js?v=87893919" defer></script>
+<script src="assets/js/art.js?v=87893919" defer></script>
+<script src="assets/js/core.js?v=87893919" defer></script>
+<script src="assets/js/mock.js?v=87893919" defer></script>
+<script src="assets/js/palestine.js?v=87893919" defer></script>
 </body>
 </html>
