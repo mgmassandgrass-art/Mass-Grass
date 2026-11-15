@@ -126,6 +126,7 @@ h2.big.allh{margin:var(--sec) 0 calc(var(--gh) + 8px)}
 .mk .room,.mk .top{inset:0;width:100%;height:100%}
 .mk .art,.vbig .mkv .art{object-fit:cover;mix-blend-mode:multiply}
 .bk{position:absolute;mix-blend-mode:multiply;container-type:inline-size}
+.bk .cap2{inset-inline:0;text-align:center}
 .bk .fc.back.still{position:absolute;inset:0;transform:none;backface-visibility:visible;box-shadow:none;background:var(--paper)}
 @media(max-width:980px){.cards2{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.cards2{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 16px}.pk:nth-child(3n+2){translate:none}.pk h3{font-size:var(--fs-sm)}.pk .where{font-size:var(--fs-caption)}.pk .pr{font-size:var(--fs-sm)}}

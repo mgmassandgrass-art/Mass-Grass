@@ -1,7 +1,12 @@
 import cv2, numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from scipy import ndimage
-S='/tmp/claude-0/-home-user-Mass-Grass/3c3a7cf0-a5d3-55d4-bdc2-a4e0bc8d42f0/scratchpad/mk/'; A='/home/user/Mass-Grass/web/assets/'
+import os, sys
+R=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/'   # the repository
+A=R+'web/assets/'; BL=R+'drafts/mockups/shelves/'                    # the site's images; the blank photographs (2048 px)
+S=os.environ.get('MK_SCRATCH','/tmp/mk/'); os.makedirs(S,exist_ok=True)  # full-size outputs and other working files
+# which photographs to make: python3 tools/shelf_mockups.py sk [cal] [pc]  (pc needs S+'pcback.png', the rendered card back)
+PARTS=set(sys.argv[1:]) or {'cal','pc','sk'}
 
 def put(ph, blank, art, quad, keep_dark_top=0, soft=.6, grain=2.0):
     """warp art (RGB float) onto quad (TL,TR,BR,BL) of photo, lit by the blank photo's own light"""
@@ -30,33 +35,37 @@ def save(arr,name):
     im.resize((1200,1200),Image.LANCZOS).save(A+name+'.webp',quality=86); print('ok',name)
 
 # 1 · the calendar on the desk: the V2 cover on the standing page, under the wire
-cal=load(S+'cal.png'); Q=[(560,358),(1494,362),(1452,1642),(516,1576)]
-cover=load('/home/user/Mass-Grass/drafts/calendar-v2/pg-000.jpg')
-save(put(cal.copy(),cal,cover,Q,keep_dark_top=110),'sh-cal')
+if 'cal' in PARTS:
+  cal=load(BL+'blank-cal.webp'); Q=[(560,358),(1494,362),(1452,1642),(516,1576)]
+  cover=load(R+'drafts/calendar-v2/pg-000.jpg')
+  save(put(cal.copy(),cal,cover,Q,keep_dark_top=110),'sh-cal')
 
 # 2 · two postcards: the back (Farah's note, stamp, postmark) under, the painting on top
-pc=load(S+'pc.png')
-back=load(S+'pcback.png'); front=load(A+'hero.webp')
-BQ=[(252,547),(1224,369),(1334,1047),(362,1225)]
-FQ=[(825,730),(1807,891),(1704,1581),(722,1420)]
-out=put(pc.copy(),pc,back,BQ)
-# the top card casts a soft shadow on the card below
-H,W=pc.shape[:2]; sh=np.zeros((H,W),np.uint8); cv2.fillPoly(sh,[np.int32(np.array(FQ)+[-6,10])],255)
-sh=ndimage.gaussian_filter(sh.astype(float)/255,10)
-fm=np.zeros((H,W),np.uint8); cv2.fillPoly(fm,[np.int32(FQ)],255)
-bm=np.zeros((H,W),np.uint8); cv2.fillPoly(bm,[np.int32(BQ)],255)
-out=out*(1-.22*(sh*(fm==0)*(bm>0)))[...,None]
-out=put(out,pc,front,FQ)
-save(out,'sh-pc')
+if 'pc' in PARTS:
+  pc=load(BL+'blank-pc.webp')
+  back=load(S+'pcback.png'); front=load(A+'hero.webp')
+  BQ=[(252,547),(1224,369),(1334,1047),(362,1225)]
+  FQ=[(825,730),(1807,891),(1704,1581),(722,1420)]
+  out=put(pc.copy(),pc,back,BQ)
+  # the top card casts a soft shadow on the card below
+  H,W=pc.shape[:2]; sh=np.zeros((H,W),np.uint8); cv2.fillPoly(sh,[np.int32(np.array(FQ)+[-6,10])],255)
+  sh=ndimage.gaussian_filter(sh.astype(float)/255,10)
+  fm=np.zeros((H,W),np.uint8); cv2.fillPoly(fm,[np.int32(FQ)],255)
+  bm=np.zeros((H,W),np.uint8); cv2.fillPoly(bm,[np.int32(BQ)],255)
+  out=out*(1-.22*(sh*(fm==0)*(bm>0)))[...,None]
+  out=put(out,pc,front,FQ)
+  save(out,'sh-pc')
 
-# 3 · the sticker sheet: Farah's stickers printed on one sheet, kiss-cut round each; one already peeled off and lying beside it
-sk=load(S+'sk.png'); SQ=[(511,309),(1530,305),(1533,1716),(506,1718)]
-SW,SH=2040,2820; sheet=Image.new('RGB',(SW,SH),(250,248,243))
-names=['s-lemons','s-pomegranate','s-kaak','s-olives','s-jaffa','s-whale']
-cells=[(0,0),(1,0),(0,1),(1,1),(0,2),(1,2)]; cw,ch=SW//2,(SH-260)//3
-peel=5   # the whale is off the sheet
-outline=Image.new('L',(SW,SH),0); dr=ImageDraw.Draw(sheet)
-for n,(cx,cy) in zip(names,cells):
+# 3 · the sticker sheet: Farah's stickers printed on one sheet, kiss-cut round each; one already peeled off and lying beside it,
+#     the same size as the hole it left (the art on its white backing, cut along the same line)
+if 'sk' in PARTS:
+  sk=load(BL+'blank-sk.webp'); SQ=[(511,309),(1530,305),(1533,1716),(506,1718)]
+  SW,SH=2040,2820; sheet=Image.new('RGB',(SW,SH),(250,248,243))
+  names=['s-lemons','s-pomegranate','s-kaak','s-olives','s-jaffa','s-whale']
+  cells=[(0,0),(1,0),(0,1),(1,1),(0,2),(1,2)]; cw,ch=SW//2,(SH-260)//3
+  peel=5   # the bike ride is off the sheet
+  outline=Image.new('L',(SW,SH),0); dr=ImageDraw.Draw(sheet)
+  for n,(cx,cy) in zip(names,cells):
     st=Image.open(A+n+'.webp').convert('RGBA'); s=min((cw-80)/st.width,(ch-60)/st.height); st=st.resize((int(st.width*s),int(st.height*s)),Image.LANCZOS)
     x=cx*cw+(cw-st.width)//2; y=110+cy*ch+(ch-st.height)//2
     al=np.asarray(st.split()[-1])>20
@@ -65,17 +74,22 @@ for n,(cx,cy) in zip(names,cells):
     o=Image.fromarray((cut*255).astype('uint8')); outline.paste(o,(x,y),o)
     if n!=names[peel]: sheet.paste(st,(x,y),st)
     else:
-        hole=Image.fromarray((ring*255).astype('uint8')); sheet.paste((243,241,235),(x,y),hole)
-sheet.paste((205,200,190),(0,0),outline)
-try: f=ImageFont.truetype('/home/user/Mass-Grass/web/fonts/annie-use-your-telescope.ttf',78)
-except Exception: f=None
-dr.text((SW//2,SH-120),'Mass & Grass  stickers by Farah Al-Helou',fill=(150,90,92),font=f,anchor='mm')
-out=put(sk.copy(),sk,np.asarray(sheet).astype(float),SQ,soft=.5)
-# the peeled whale on the desk, beside the sheet, with its own shadow
-st=Image.open(A+names[peel]+'.webp').convert('RGBA'); st=st.resize((int(st.width*.3),int(st.height*.3)),Image.LANCZOS).rotate(-14,expand=True,resample=Image.BICUBIC)
-al=np.asarray(st.split()[-1]).astype(float)/255; px,py=1610,900
-Hs,Ws=al.shape; shadow=ndimage.gaussian_filter(np.pad(al,40),9)[40-10:40-10+Hs,40-14:40-14+Ws] if False else ndimage.gaussian_filter(al,8)
-reg=out[py+12:py+12+Hs,px+8:px+8+Ws]; reg*=(1-.35*shadow)[...,None]
-rgb=np.asarray(st.convert('RGB')).astype(float)*np.clip(sk[py:py+Hs,px:px+Ws].mean(2,keepdims=True)/np.percentile(sk[py:py+Hs,px:px+Ws].mean(2),99)*1.15,0,1.02)
-reg=out[py:py+Hs,px:px+Ws]; out[py:py+Hs,px:px+Ws]=reg*(1-al[...,None])+rgb*al[...,None]
-save(out,'sh-sk')
+      hole=Image.fromarray((ring*255).astype('uint8')); sheet.paste((243,241,235),(x,y),hole)
+      # the piece that came off: the backing inside the cut line, with the art on it
+      piece=Image.new('RGBA',st.size,(250,248,243,0)); piece.paste((250,248,243,255),(0,0),hole); piece.alpha_composite(st)
+  sheet.paste((205,200,190),(0,0),outline)
+  try: f=ImageFont.truetype(R+'web/fonts/annie-use-your-telescope.ttf',78)
+  except Exception: f=None
+  dr.text((SW//2,SH-120),'Mass & Grass  stickers by Farah Al-Helou',fill=(150,90,92),font=f,anchor='mm')
+  out=put(sk.copy(),sk,np.asarray(sheet).astype(float),SQ,soft=.5)
+  # the peeled sticker on the desk beside the sheet, at the sheet's own scale, with its own shadow
+  k=(SQ[1][0]-SQ[0][0])/SW
+  st=piece.resize((int(piece.width*k),int(piece.height*k)),Image.LANCZOS).rotate(-14,expand=True,resample=Image.BICUBIC)
+  al=np.asarray(st.split()[-1]).astype(float)/255; Hs,Ws=al.shape; px,py=2048-Ws-14,740
+  shadow=ndimage.gaussian_filter(al,8)
+  reg=out[py+12:py+12+Hs,px+8:px+8+Ws]; reg*=(1-.35*shadow[:reg.shape[0],:reg.shape[1]])[...,None]
+  # the window light across the desk, without the wood's grain: the sticker is lit as the sheet beside it is
+  lit=ndimage.gaussian_filter(sk.mean(2),40)[py:py+Hs,px:px+Ws]; lit=lit/ndimage.gaussian_filter(sk.mean(2),40)[SQ[0][1]:SQ[2][1],SQ[0][0]:SQ[1][0]].max()
+  rgb=np.asarray(st.convert('RGB')).astype(float)*np.clip(.82+.3*lit,0,1.02)[...,None]
+  reg=out[py:py+Hs,px:px+Ws]; out[py:py+Hs,px:px+Ws]=reg*(1-al[...,None])+rgb*al[...,None]
+  save(out,'sh-sk')

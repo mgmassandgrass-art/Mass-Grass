@@ -14,11 +14,17 @@
   const CARD = { 'pc-desk2': { w: 1600, h: 1600, x: .3745, y: .3939, ww: .4859, wh: .3406, rot: 9.31, top: false, n: ['On the desk', 'على المكتب'] },
     'pcp-window': { w: 1536, h: 1920, x: .2168, y: .1391, ww: .5462, wh: .663, clip: '0.00% 0.47%,99.05% 0.00%,100.00% 99.92%,0.83% 100.00%', o: 'p', n: ['By the window', 'عند النافذة'] }, 'pcp-table': { w: 1536, h: 1152, x: .321, y: .1597, ww: .3561, wh: .6571, o: 'p', n: ['In both hands', 'بين اليدين'] } };
   const THING = { 'sk-laptop': { r: [.13, .15, .75, .70], s: .2, n: ['On a laptop', 'على الحاسوب'] }, 'sk-notebook': { r: [.275, .05, .395, .905], s: .24, n: ['On a notebook', 'على الدفتر'] }, 'sk-phone': { r: [.35, .25, .31, .665], s: .2, n: ['On a phone', 'على الهاتف'] } };
-  const CAL = { 'cr2-wall': ['On the wall', 'على الحائط'], 'cr2-hands': ['In the hands', 'بين اليدين'], 'cr2-desk': ['On the desk', 'على المكتب'], 'cr2-flat': ['The pages', 'الصفحات'] };
+  /* the calendar on sale (V2, portrait) in its own photographs: the cr2-* set shows the earlier landscape calendar */
+  const CAL = { 'cww-00': ['On the wall', 'على الحائط'], 'cd-00': ['On the desk', 'على المكتب'], 'cwf-00': ['On the table', 'على الطاولة'], 'cww-01': ['Open on January', 'مفتوحًا على يناير'] };
+  const CALAR = { 'cd-00': 1440 / 1080 };
   const fit = (id, set) => Object.keys(set).map((k) => [k, Math.abs(Math.log((set[k].ww * set[k].w) / (set[k].wh * set[k].h) / asp(id)))]).sort((a, b) => a[1] - b[1]);
   /* the painting whole inside the frame's mat: the same margin all round, a little more at the bottom, as framers cut it */
   function artBox(id, m) { const a = asp(id), mw = m.ww * m.w, mh = m.wh * m.h, g = .13 * Math.min(mw, mh), bw = mw - 2 * g, bh = mh - 2 * g; let w, h; if (a > bw / bh) { w = bw; h = w / a; } else { h = bh; w = h * a; }
     const top = (mh - h) / 2 - .012 * mh; return `left:${((m.x + (mw - w) / 2 / m.w) * 100).toFixed(3)}%;top:${((m.y + top / m.h) * 100).toFixed(3)}%;width:${((w / m.w) * 100).toFixed(3)}%;height:${((h / m.h) * 100).toFixed(3)}%`; }
+  /* a card is printed with its painting whole: when the painting's shape is not the card's, it sits inside a paper border
+     (the photograph's own blank card shows round it) instead of being cut */
+  function cardFit(id, m) { const ca = (m.ww * m.w) / (m.wh * m.h); if (Math.abs(Math.log(ca / asp(id))) <= .04) return ';object-fit:cover';
+    const b = .045 * Math.min(m.ww * m.w, m.wh * m.h) / m.w * 100; return `;object-fit:contain;box-sizing:border-box;padding:${b.toFixed(3)}%`; }
   /* the photographs that suit one piece, best first: [key, name] */
   function scenes(kind, id) {
     if (kind === 'painting') { const d = fit(id, ROOM); return d.filter((x) => x[1] <= d[0][1] + .3).slice(0, 4).map((x) => [x[0], ROOM[x[0]].n]); }
@@ -31,12 +37,19 @@
     const src = esc(kind === 'calendar' ? '' : MG.img(id, p || MG.product(kind, id)));
     if (kind === 'painting') { const m = ROOM[key]; return `<div class="mscene" style="--ar:${m.w / m.h}"><img class="room" src="assets/${key}.webp" alt=""><img class="art framed" src="${src}" alt="" style="${artBox(id, m)}"></div>`; }
     if (kind === 'postcard') { const m = CARD[key], pos = `left:${m.x * 100}%;top:${m.y * 100}%;width:${m.ww * 100}%;height:${m.wh * 100}%`;
-      return `<div class="mscene" style="--ar:${m.w / m.h}"><img class="room" src="assets/${key}.webp" alt=""><img class="art card" src="${src}" alt="" style="${pos}${m.clip ? `;clip-path:polygon(${m.clip})` : ''}${m.rot ? `;rotate:${m.rot}deg;box-shadow:0 1px 2px rgba(60,45,30,.25),0 10px 18px -8px rgba(60,45,30,.35)` : ''}">${m.top === false ? '' : `<img class="top" src="assets/${key}-top.webp" alt="">`}</div>`; }
-    /* a sticker the size a sticker is: about a fifth of a laptop lid, smaller still when it is tall */
-    if (kind === 'sticker') { const m = THING[key], r = m.r, a = asp(id) || .8, w = m.s * .82 * Math.min(1, Math.sqrt(a)); return `<div class="mscene" style="--ar:${1536 / 1152}"><img class="room" src="assets/${key}.webp" alt=""><img class="art stuck" src="${src}" alt="" style="left:${(r[0] + r[2] / 2 - w / 2) * 100}%;top:${(r[1] + r[3] * .5) * 100}%;width:${w * 100}%"></div>`; }
-    return `<div class="mscene" style="--ar:${3072 / 1728}"><img class="room" src="assets/${key}.webp" alt=""></div>`;
+      return `<div class="mscene" style="--ar:${m.w / m.h}"><img class="room" src="assets/${key}.webp" alt=""><img class="art card" src="${src}" alt="" style="${pos}${cardFit(id, m)}${m.clip ? `;clip-path:polygon(${m.clip})` : ''}${m.rot ? `;rotate:${m.rot}deg;box-shadow:0 1px 2px rgba(60,45,30,.25),0 10px 18px -8px rgba(60,45,30,.35)` : ''}">${m.top === false ? '' : `<img class="top" src="assets/${key}-top.webp" alt="">`}</div>`; }
+    /* a sticker the size a sticker is: its long side a fifth of the long side of the thing it is on; die-cut stickers keep
+       their own outline, round and square ones are cut from the painting with a white edge, as they are printed */
+    if (kind === 'sticker') { const m = THING[key], r = m.r, pr = p || MG.product(kind, id), sh = (pr && pr.extra && pr.extra.shape) || 'die',
+        a = sh === 'round' ? 1 : asp(id) || .8, L = .2 * Math.max(r[2] * 1536, r[3] * 1152), w = (a >= 1 ? L : L * a) / 1536,
+        at = `left:${(r[0] + r[2] / 2 - w / 2) * 100}%;top:${(r[1] + r[3] * .5) * 100}%;width:${w * 100}%`;
+      const ix = a >= 1 ? 6 / a : 6, iy = a >= 1 ? 6 : 6 * a;
+      const st = sh === 'die' ? `<img class="art stuck" src="${src}" alt="" style="${at}">`
+        : `<span class="art stuck cut ${sh === 'round' ? 'rd' : 'sq'}" style="${at};aspect-ratio:${a}"><img src="${src}" alt="" style="left:${ix}%;top:${iy}%;width:${100 - 2 * ix}%;height:${100 - 2 * iy}%"></span>`;
+      return `<div class="mscene" style="--ar:${1536 / 1152}"><img class="room" src="assets/${key}.webp" alt="">${st}</div>`; }
+    return `<div class="mscene" style="--ar:${CALAR[key] || 1920 / 1080}"><img class="room" src="assets/${key}.webp" alt=""></div>`;
   }
-  MG.mock = { scenes, scene, asp, ROOM, artBox };
+  MG.mock = { scenes, scene, asp, ROOM, artBox, cardFit };
 
   /* ---------- the quick view: click a piece anywhere and see it in a photograph ---------- */
   let dlg = null, cur = null;
@@ -46,7 +59,7 @@
     if (!dlg) { dlg = doc.createElement('dialog'); dlg.className = 'peek'; dlg.setAttribute('aria-labelledby', 'peek-h'); doc.body.append(dlg);
       dlg.addEventListener('click', (e) => { if (e.target === dlg || e.target.closest('[data-close]')) return dlg.close();
         const b = e.target.closest('[data-sc]'); if (b) { cur.i = +b.dataset.sc; paint(); } });
-      dlg.addEventListener('close', () => { cur = null; }); }
+      dlg.addEventListener('close', () => { if (!dlg.open) cur = null; }); }
     cur = { kind, id, p, sc, i: 0 }; paint(); if (!dlg.open) dlg.showModal(); return true;
   }
   function paint() {
@@ -54,7 +67,7 @@
     const name = cal ? L(MG.calendar.title).replace(/[,،]\s*2027/, '') : MG.title(p), page = MG.PAGE[kind] + (cal ? '' : '#' + id);
     dlg.dir = MG.ar ? 'rtl' : 'ltr';
     dlg.innerHTML = `<div class="peek-in"><button class="x" type="button" data-close aria-label="${t('Close', 'إغلاق')}"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-      <div class="peek-v">${plain ? `<div class="mplain ${kind}"><img src="${esc(MG.img(id, p))}" alt=""></div>` : scene(kind, id, sc[i][0], p)}</div>
+      <div class="peek-v">${plain ? `<div class="mplain ${kind} ${kind === 'sticker' && p && p.extra && p.extra.shape ? esc(p.extra.shape) : ''}"><img src="${esc(MG.img(id, p))}" alt=""></div>` : scene(kind, id, sc[i][0], p)}</div>
       <div class="peek-s" role="group" aria-label="${t('Where to see it', 'أين ترونها')}">${sc.map((s, k) => `<button type="button" data-sc="${k}" aria-pressed="${k === i}">${esc(L(s[1]))}</button>`).join('')}${cal ? '' : `<button type="button" data-sc="${sc.length}" aria-pressed="${plain}">${t('The piece itself', 'القطعة نفسها')}</button>`}</div>
       <div class="peek-t"><h2 class="hand" id="peek-h">${esc(name)}</h2><span class="kd">${esc(MG.kindLabel(kind))}</span><b class="fig">${MG.fmt(MG.price(kind, cal ? '' : id))}</b>
         <div class="acts">${cal ? `<button type="button" class="ink" data-add="calendar">${MG.bag.has('calendar', MG.calendar.id) ? t('In your bag', 'في السلة') : t('Add to bag', 'أضيفوه إلى السلة')}</button>` : MG.addBtn(kind, id, 'ink')}${MG.shareBtn(kind, cal ? '' : id)}</div>

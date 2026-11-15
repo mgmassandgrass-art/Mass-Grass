@@ -285,7 +285,7 @@ html[data-page=home] .ct .pr{background:#FBF7EE;color:var(--cal-rose,#9C4F52)}
 .ct .ph .room{width:100%;height:100%;object-fit:cover;display:block}
 .ct .ctart{position:absolute;inset:0;z-index:2;display:block;background:#F2ECDF;opacity:0;transition:opacity .45s var(--ease)}
 .ct .ctart img{position:absolute;left:14%;top:12%;width:72%;height:64%;max-width:none;object-fit:contain;filter:drop-shadow(0 14px 22px rgba(80,60,40,.2));translate:0 10px;transition:translate .6s var(--ease)}
-.ct-sticker .ctart img{filter:drop-shadow(0 6px 10px rgba(80,60,40,.22))}
+.ct-sticker .ctart img{left:22%;top:20%;width:56%;height:56%;filter:drop-shadow(0 6px 10px rgba(80,60,40,.22))}
 
 @media(hover:hover){.ct a:hover .ctart{opacity:1}.ct a:hover .ctart img{translate:0 0}}
 .ct a:focus-visible .ctart{opacity:1}
@@ -316,4 +316,4 @@ html[data-page=home] .ct .pr{background:#FBF7EE;color:var(--cal-rose,#9C4F52)}
 .cw-buy .ghost{background:transparent;color:var(--cal-ink,#2B2F2C)}
 .it .jmk .mscene :is(.room,.top){width:100%;height:100%}
 .it .im:hover .jmk img{transform:none}
-.it .jmk .stuck{scale:.62}
+.it .jmk .stuck{scale:.9}
