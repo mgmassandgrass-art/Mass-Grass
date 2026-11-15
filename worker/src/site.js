@@ -1,6 +1,6 @@
 // Page and image control for the admin panel: page texts, hidden pages/sections, image library and replacements.
 import MANIFEST from './manifest.json';
-import { json, fail, readJson, clean, sniff } from './util.js';
+import { json, fail, readJson, clean, sniff, bytes } from './util.js';
 import { getSetting, dropCache } from './shop.js';
 
 export const PAGES = MANIFEST.files.filter((f) => f.path.endsWith('.html')).map((f) => f.path);
@@ -98,7 +98,7 @@ export async function imageOverrides(env) {
 }
 export async function serveImageFile(env, file) {
   const r = await env.DB.prepare('SELECT type, data FROM images WHERE key=?').bind(file).first();
-  return r ? new Response(r.data, { headers: { 'content-type': r.type, 'cache-control': 'public, max-age=300' } }) : null;
+  return r ? new Response(bytes(r.data), { headers: { 'content-type': r.type, 'cache-control': 'public, max-age=300' } }) : null;
 }
 
 const KIND_AR = { painting: 'لوحة', postcard: 'بوست كارد', sticker: 'ستكر' };

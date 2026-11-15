@@ -12,6 +12,7 @@ run_worker_first = ["/*", "!/fonts/*"]
 ADMIN_EMAIL = "info@massandgrass.com"
 SITE_ORIGIN = "http://localhost:8787"
 SOON = "0"
+DEV_CODES = "1" # local only: e-mail codes come back in the answer, for the tests (never set in wrangler.toml)
 MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
 # migrations are bundled as text (src/migrate.js runs them)
 [[rules]]

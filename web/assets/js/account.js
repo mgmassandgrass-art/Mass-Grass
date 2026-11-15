@@ -9,7 +9,8 @@ const next=safeNext(Q.get('next')||'profile.html');
 let mode=resetTok?'reset':Q.get('mode')==='up'?'up':'in',msg=Q.get('error')?{google_not_configured:['Google sign-in is not ready yet. Please use your email.','الدخول عبر Google غير متاح بعد. استخدموا البريد الإلكتروني.'],use_password:['This account signs in with its password and a code.','هذا الحساب يدخل بكلمة المرور والرمز.']}[Q.get('error')]||['Google sign-in did not work. Please try again.','لم ينجح الدخول عبر Google. حاولوا مرة أخرى.']:null,ok=false;
 const ERR={bad_credentials:['That email and password do not match.','البريد الإلكتروني وكلمة المرور غير متطابقين.'],email_taken:['There is already an account with this email. Sign in instead.','يوجد حساب بهذا البريد. سجّلوا الدخول بدلًا من ذلك.'],
   email_invalid:['Please enter a valid email, like name@mail.com.','اكتبوا بريدًا إلكترونيًا صحيحًا، مثل name@mail.com.'],name_required:['Please write your name.','اكتبوا اسمكم.'],password_short:['The password needs at least 10 characters.','تحتاج كلمة المرور إلى 10 أحرف على الأقل.'],
-  totp_required:['This account asks for a second code.','هذا الحساب يطلب رمزًا إضافيًا.'],totp_invalid:['That code is not right. Try the newest one from the app.','الرمز غير صحيح. جرّبوا أحدث رمز في التطبيق.'],
+  totp_required:['This account asks for a second code.','هذا الحساب يطلب رمزًا إضافيًا.'],email_code_sent:['We sent a code to your e-mail. It is valid for 10 minutes.','أرسلنا رمزًا إلى بريدكم، صالحًا لمدة 10 دقائق.'],
+  code_invalid:['That code is wrong or has expired. Ask for a new one.','الرمز غير صحيح أو انتهت صلاحيته. اطلبوا رمزًا جديدًا.'],mail_failed:['The e-mail did not go out. Please try again in a minute.','لم يُرسل البريد. حاولوا بعد دقيقة.'],totp_invalid:['That code is not right. Try the newest one from the app.','الرمز غير صحيح. جرّبوا أحدث رمز في التطبيق.'],
   rate_limited:['Too many tries. Please wait a little and try again.','محاولات كثيرة. انتظروا قليلًا ثم حاولوا مرة أخرى.'],token_invalid:['This link has expired. Ask for a new one.','انتهت صلاحية هذا الرابط. اطلبوا رابطًا جديدًا.'],
   offline:['Accounts open with the shop. This preview cannot reach the server.','تُفتح الحسابات مع افتتاح المتجر. هذه المعاينة لا تصل إلى الخادم.']};
 const err=r=>T(...(ERR[r.offline?'offline':r.data&&r.data.error]||['Something went wrong. Please try again.','حدث خطأ. حاولوا مرة أخرى.']));
@@ -24,11 +25,13 @@ function render(){const box=$('acc'),m=msg?`<p class="fmsg${ok?' ok':''}" role="
   else{const up=mode==='up';box.innerHTML=`<div class="tabs" role="tablist"><button type="button" role="tab" data-mode="in" aria-selected="${!up}">${T('Sign in','الدخول')}</button><button type="button" role="tab" data-mode="up" aria-selected="${up}">${T('Create an account','حساب جديد')}</button></div>
     <form id="f" novalidate>${up?`<label class="fld">${T('Your name','الاسم')}<input id="nm" autocomplete="name" maxlength="60" required></label>`:''}
     <label class="fld">${T('Email','البريد الإلكتروني')}<input id="em" type="email" autocomplete="email" required></label>
-    <label class="fld">${T('Password','كلمة المرور')}<input id="pw" type="password" autocomplete="${up?'new-password':'current-password'}" minlength="${up?10:1}" required>${up?`<small>${T('At least 10 characters.','10 أحرف على الأقل.')}</small>`:''}</label>${m}
+    <label class="fld">${T('Password','كلمة المرور')}<input id="pw" type="password" autocomplete="${up?'new-password':'current-password'}" minlength="${up?10:1}" required>${up?`<small>${T('At least 10 characters.','10 أحرف على الأقل.')}</small>`:''}</label>
+    <label class="tgl rem"><input type="checkbox" id="rem" checked><span>${T('Remember this device','تذكّروا هذا الجهاز')}<small>${T('Stay signed in for 30 days, and skip the extra code here. Untick it on a shared computer.','تبقون مسجّلين 30 يومًا ولا يُطلب الرمز الإضافي هنا. أزيلوا العلامة على جهاز مشترك.')}</small></span></label>${m}
     <button class="ink full" type="submit">${up?T('Create the account','أنشئوا الحساب'):T('Sign in','الدخول')}</button></form>
     ${up?'':`<div class="row"><button class="linkb" type="button" data-mode="forgot">${T('Forgot your password?','نسيتم كلمة المرور؟')}</button></div>`}
     <p class="or">${T('or','أو')}</p><a class="ghost" href="/api/auth/google?next=${encodeURIComponent(next)}">${G}<span>${T('Continue with Google','المتابعة عبر Google')}</span></a>`}
   $('f').onsubmit=submit;box.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;msg=null;ok=false;render();const i=box.querySelector('input');i&&i.focus()})}
+let resend=false;
 async function submit(e){e.preventDefault();const f=e.target,btn=f.querySelector('[type=submit]'),v=id=>($(id)||{}).value||'',say=(t,good)=>{msg=t;ok=!!good;const el=f.querySelector('.fmsg');el.textContent=Array.isArray(t)?T(...t):t;el.classList.toggle('ok',!!good)};
   const em=v('em').trim();
   if(mode!=='reset'&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){say(ERR.email_invalid);$('em').focus();return}
@@ -39,11 +42,16 @@ async function submit(e){e.preventDefault();const f=e.target,btn=f.querySelector
     if(r.ok)say([`If there is an account for ${em}, a link is on its way.`,`إذا كان هناك حساب بالبريد ${em}، فالرابط في طريقه إليكم.`],true);else say(err(r));return}
   if(mode==='reset'){r=await U.api('POST','/api/reset',{token:resetTok,password:v('pw')});btn.disabled=false;
     if(r.ok){history.replaceState(null,'','account.html');mode='in';msg=['Your password is saved. Sign in with it now.','حُفظت كلمة المرور. سجّلوا الدخول بها الآن.'];ok=true;render()}else say(err(r));return}
-  r=mode==='up'?await U.api('POST','/api/signup',{name:v('nm').trim(),email:em,password:v('pw')}):await U.api('POST','/api/login',{email:em,password:v('pw'),code:v('tc').trim()||undefined});
+  r=mode==='up'?await U.api('POST','/api/signup',{name:v('nm').trim(),email:em,password:v('pw')}):await U.api('POST','/api/login',{email:em,password:v('pw'),code:resend?undefined:(v('tc').trim()||undefined),remember:($('rem')||{checked:true}).checked});
+  const again=resend;resend=false;
   btn.disabled=false;
   /* an account with two-step sign-in: ask for the code from the authenticator app, then send the form again */
   if(!r.ok&&r.data&&r.data.error==='totp_required'&&!$('tc')){const l=document.createElement('label');l.className='fld';l.innerHTML=`${T('Code from your authenticator app','الرمز من تطبيق المصادقة')}<input id="tc" inputmode="numeric" autocomplete="one-time-code" maxlength="12" dir="ltr" required><small>${T('Six digits, or one of your recovery codes.','ستة أرقام، أو أحد رموز الاسترجاع.')}</small>`;
     $('pw').closest('label').after(l);say(ERR.totp_required,true);$('tc').focus();return}
+  /* or a code sent by e-mail: the same field, with a way to ask for a new code */
+  if(!r.ok&&r.data&&r.data.error==='email_code_sent'){if(!$('tc')){const l=document.createElement('label');l.className='fld';l.innerHTML=`${T('Code from your e-mail','الرمز من بريدكم')}<input id="tc" inputmode="numeric" autocomplete="one-time-code" maxlength="6" dir="ltr" required><small><button class="linkb" type="button" id="tcNew">${T('Send a new code','أرسلوا رمزًا جديدًا')}</button></small>`;
+    $('pw').closest('label').after(l);$('tcNew').onclick=()=>{resend=true;f.requestSubmit()}}else $('tc').value='';
+    say(again?['A new code is on its way.','رمز جديد في طريقه إليكم.']:ERR.email_code_sent,true);$('tc').focus();return}
   if(!r.ok){say(err(r));return}
   U.set(r.data.user);location.href=next}
 /* already signed in: straight to the profile */

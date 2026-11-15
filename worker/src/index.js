@@ -1,5 +1,5 @@
 // Mass & Grass API: accounts and sign-in (step 1). Orders, PayPal and files come next.
-import { json, fail, readJson, clean } from './util.js';
+import { json, fail, readJson, clean, sniff, bytes } from './util.js';
 import { filesAdmin, download } from './files.js';
 import { sendMail, layout, contactEmail } from './mail.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
@@ -10,7 +10,7 @@ import { audit, limitKey, clearKey, ipOf, newSecret, totpStep, otpauth, newRecov
 const enc = new TextEncoder();
 const PBKDF2_ITER = 100000; // Workers' maximum for PBKDF2
 const SESSION_DAYS = 30, ADMIN_SESSION_DAYS = 7; // the admin signs in again every week
-const COOKIE = '__Host-mg';
+const COOKIE = '__Host-mg', TRUST = '__Host-mgd', TRUST_DAYS = 30;
 
 const b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
 const unb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
@@ -38,10 +38,16 @@ function cookies(req) {
   }
   return out;
 }
-const setCookie = (value, maxAge) => `${COOKIE}=${value}; Path=/; Max-Age=${maxAge}; HttpOnly; Secure; SameSite=Lax`;
+const setCookie = (value, maxAge, name = COOKIE) => `${name}=${value}; Path=/;${maxAge == null ? '' : ` Max-Age=${maxAge};`} HttpOnly; Secure; SameSite=Lax`;
+// an answer that sets more than one cookie (the session, and the remembered device)
+const withCookies = (res, list) => { const h = new Headers(res.headers); for (const c of list.filter(Boolean)) h.append('set-cookie', c); return new Response(res.body, { status: res.status, headers: h }); };
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const publicUser = (u) => ({ id: u.id, name: u.name, email: u.email, photo: u.photo || null, via: u.google_sub ? 'google' : 'email', role: u.role, twofa: !!u.totp_on, joined: new Date(u.created_at).toISOString() });
+const parse = (s) => { try { return s ? JSON.parse(s) : null; } catch { return null; } };
+const publicUser = (u) => ({ id: u.id, name: u.name, email: u.email, photo: u.avatar_at ? `/api/me/avatar?v=${u.avatar_at}` : null,
+  phone: u.phone || '', addr: parse(u.addr) || {}, via: u.google_sub ? 'google' : 'email', role: u.role,
+  twofa: !!(u.totp_on || u.email2fa), twofa_method: u.totp_on ? 'app' : u.email2fa ? 'email' : null, password: !!u.pw_hash,
+  joined: new Date(u.created_at).toISOString() });
 
 async function limit(env, req, action, max, windowSec) {
   const ip = req.headers.get('cf-connecting-ip') || 'local';
@@ -57,15 +63,15 @@ async function limit(env, req, action, max, windowSec) {
   return true;
 }
 
-async function startSession(env, req, user) {
-  const t = token(), now = Date.now(), days = user.role === 'admin' ? ADMIN_SESSION_DAYS : SESSION_DAYS;
+async function startSession(env, req, user, short = false) {
+  const t = token(), now = Date.now(), days = short ? 1 : user.role === 'admin' ? ADMIN_SESSION_DAYS : SESSION_DAYS;
   await env.DB.batch([
     env.DB.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at,ip,ua,seen_at) VALUES(?,?,?,?,?,?,?)')
       .bind(await sha256(t), user.id, now, now + days * 864e5, ipOf(req), clean(req.headers.get('user-agent'), 200), now),
     env.DB.prepare('UPDATE users SET last_login=? WHERE id=?').bind(now, user.id),
     env.DB.prepare('DELETE FROM sessions WHERE expires_at<?').bind(now), // old sessions go as new ones come
   ]);
-  return setCookie(t, days * 86400);
+  return setCookie(t, short ? null : days * 86400);
 }
 async function currentUser(env, req) {
   const t = cookies(req)[COOKIE];
@@ -78,6 +84,43 @@ async function currentUser(env, req) {
   return u;
 }
 
+
+// ---------- the second step by e-mail, and remembered devices ----------
+async function sendCode(env, req, u, purpose) {
+  if (!(await limitKey(env, `mc:${u.id}`, 5, 900))) return fail('rate_limited', 429);
+  const code = String(crypto.getRandomValues(new Uint32Array(1))[0] % 1e6).padStart(6, '0');
+  await env.DB.prepare('INSERT OR REPLACE INTO email_codes(user_id,purpose,code_hash,expires_at,tries) VALUES(?,?,?,?,0)')
+    .bind(u.id, purpose, await sha256(`${u.id}:${code}`), Date.now() + 10 * 60e3).run();
+  const sent = await sendMail(env, u.email, `${code} is your Mass & Grass code · رمز الدخول`, layout(
+    `<p>Your code to ${purpose === 'login' ? 'sign in' : 'turn on two-step sign-in'} (valid for 10 minutes):</p><p style="font:700 30px monospace;letter-spacing:.3em">${code}</p><p dir="rtl" style="text-align:right">رمزكم ${purpose === 'login' ? 'للدخول' : 'لتفعيل التحقق بخطوتين'}، صالح لمدة 10 دقائق.</p><p style="color:#6f604d;font-size:13px">If this wasn't you, change your password.</p>`));
+  // local tests only (DEV_CODES is set in wrangler.local.toml, never in production, and only answers on localhost)
+  const dev = env.DEV_CODES === '1' && new URL(req.url).hostname === 'localhost' ? { dev_code: code } : {};
+  if (!sent && !dev.dev_code) return fail('mail_failed', 503);
+  return purpose === 'login' ? fail('email_code_sent', 401, dev) : json({ ok: true, ...dev });
+}
+async function checkCode(env, u, purpose, code) {
+  const row = await env.DB.prepare('SELECT * FROM email_codes WHERE user_id=? AND purpose=?').bind(u.id, purpose).first();
+  if (!row || row.expires_at < Date.now() || row.tries >= 5) return false;
+  if (!same(await sha256(`${u.id}:${String(code).trim()}`), row.code_hash)) {
+    await env.DB.prepare('UPDATE email_codes SET tries=tries+1 WHERE user_id=? AND purpose=?').bind(u.id, purpose).run();
+    return false;
+  }
+  await env.DB.prepare('DELETE FROM email_codes WHERE user_id=? AND purpose=?').bind(u.id, purpose).run();
+  return true;
+}
+async function isTrusted(env, req, u) {
+  const t = cookies(req)[TRUST];
+  return !!t && !!(await env.DB.prepare('SELECT 1 FROM trusted_devices WHERE token_hash=? AND user_id=? AND expires_at>?').bind(await sha256(t), u.id, Date.now()).first());
+}
+async function trustDevice(env, req, u) {
+  const t = token(), now = Date.now();
+  await env.DB.batch([
+    env.DB.prepare('INSERT INTO trusted_devices(token_hash,user_id,created_at,expires_at,ua) VALUES(?,?,?,?,?)').bind(await sha256(t), u.id, now, now + TRUST_DAYS * 864e5, clean(req.headers.get('user-agent'), 200)),
+    env.DB.prepare('DELETE FROM trusted_devices WHERE expires_at<?').bind(now),
+  ]);
+  return setCookie(t, TRUST_DAYS * 86400, TRUST);
+}
+const forgetDevices = (env, uid) => env.DB.prepare('DELETE FROM trusted_devices WHERE user_id=?').bind(uid).run();
 
 const safeNext = (n) => (typeof n === 'string' && /^([a-z0-9_-]+\.html(\?[\w=&.%-]*)?|admin\/)$/i.test(n) ? n : 'profile.html');
 
@@ -113,7 +156,10 @@ async function login(env, req) {
   const salt = u?.pw_salt ? unb64(u.pw_salt) : rand(16);
   const got = await hashPw(pw.slice(0, 200), salt, u?.pw_iter || PBKDF2_ITER);
   if (!u || !u.pw_hash || !same(got, u.pw_hash)) { await audit(env, req, email, 'login_failed', '', u && u.role === 'admin' ? 'alert' : 'warn'); return fail('bad_credentials', 401); }
-  if (u.totp_on) {
+  // The second step: the authenticator app or a code by e-mail, unless this device was remembered.
+  const remember = b.remember !== false;
+  const second = (u.totp_on || u.email2fa) && !(await isTrusted(env, req, u));
+  if (second && u.totp_on) {
     const code = String(b.code ?? '').trim();
     if (!code) return fail('totp_required', 401);
     const step = await totpStep(u.totp_secret, code, u.totp_last);
@@ -124,10 +170,15 @@ async function login(env, req) {
       await env.DB.prepare('UPDATE users SET recovery=? WHERE id=?').bind(JSON.stringify(left), u.id).run();
       await audit(env, req, email, 'recovery_code_used', `${left.length} left`, 'warn');
     }
+  } else if (second) {
+    const code = String(b.code ?? '').trim();
+    if (!code) return sendCode(env, req, u, 'login');
+    if (!(await checkCode(env, u, 'login', code))) { await audit(env, req, email, 'login_2fa_failed', 'email', 'alert'); return fail('code_invalid', 401); }
   }
+  const trusted = second && remember; // the second step was just passed here: this browser may skip it for 30 days
   await clearKey(env, lock);
-  await audit(env, req, email, 'login');
-  return json({ user: publicUser(u) }, 200, { 'set-cookie': await startSession(env, req, u) });
+  await audit(env, req, email, 'login', remember ? '' : 'this visit only');
+  return withCookies(json({ user: publicUser(u) }), [await startSession(env, req, u, !remember), trusted ? await trustDevice(env, req, u) : null]);
 }
 
 async function logout(env, req) {
@@ -146,8 +197,41 @@ async function updateMe(env, req, u) {
   if (!b) return fail('bad_request');
   const name = b.name === undefined ? u.name : clean(b.name, 60);
   if (!name) return fail('name_required');
-  await env.DB.prepare('UPDATE users SET name=? WHERE id=?').bind(name, u.id).run();
-  return json({ user: publicUser({ ...u, name }) });
+  const phone = b.phone === undefined ? u.phone || '' : clean(b.phone, 30);
+  if (phone && !/^[+\d][\d\s()-]{5,}$/.test(phone)) return fail('phone_invalid');
+  // the address kept for printed pieces (checkout fills it in); every field is plain text
+  let addr = u.addr;
+  if (b.addr !== undefined) {
+    const a = b.addr && typeof b.addr === 'object' ? b.addr : {};
+    const country = /^[A-Z]{2}$/.test(String(a.country || '')) ? a.country : '';
+    addr = JSON.stringify({ country, city: clean(a.city, 60), line1: clean(a.line1, 120), line2: clean(a.line2, 120), postal: clean(a.postal, 12) });
+  }
+  await env.DB.prepare('UPDATE users SET name=?, phone=?, addr=? WHERE id=?').bind(name, phone, addr, u.id).run();
+  return json({ user: publicUser({ ...u, name, phone, addr }) });
+}
+
+// The account's photo: a small picture the page has already cut square and shrunk; stored as sent, by its real bytes.
+async function myAvatar(env, req, u) {
+  if (req.method === 'GET') {
+    const r = await env.DB.prepare('SELECT type, data FROM avatars WHERE user_id=?').bind(u.id).first();
+    return r ? new Response(bytes(r.data), { headers: { 'content-type': r.type, 'cache-control': 'private, max-age=86400' } }) : fail('not_found', 404);
+  }
+  if (req.method === 'DELETE') {
+    await env.DB.batch([env.DB.prepare('DELETE FROM avatars WHERE user_id=?').bind(u.id), env.DB.prepare('UPDATE users SET avatar_at=NULL WHERE id=?').bind(u.id)]);
+    return json({ user: publicUser({ ...u, avatar_at: null }) });
+  }
+  if (!(await limit(env, req, 'avatar', 20, 3600))) return fail('rate_limited', 429);
+  const data = await req.arrayBuffer();
+  if (!data.byteLength) return fail('empty');
+  if (data.byteLength > 600e3) return fail('too_big', 413);
+  const type = sniff(data);
+  if (!/^image\/(webp|jpeg|png)$/.test(type || '')) return fail('bad_type');
+  const now = Date.now();
+  await env.DB.batch([
+    env.DB.prepare('INSERT OR REPLACE INTO avatars(user_id,type,data) VALUES(?,?,?)').bind(u.id, type, data),
+    env.DB.prepare('UPDATE users SET avatar_at=? WHERE id=?').bind(now, u.id),
+  ]);
+  return json({ user: publicUser({ ...u, avatar_at: now }) });
 }
 
 async function deleteMe(env, req, u) {
@@ -161,7 +245,8 @@ async function exportMe(env, req, u) {
   const sub = await env.DB.prepare('SELECT source, created_at FROM subscribers WHERE email=?').bind(u.email).first();
   const { results: sessions } = await env.DB.prepare('SELECT created_at, seen_at, ip, ua FROM sessions WHERE user_id=? AND expires_at>?').bind(u.id, Date.now()).all();
   await audit(env, req, u.email, 'data_exported');
-  return json({ user: publicUser(u), orders: orders.map((o) => ({ ...o, items: JSON.parse(o.items), ship: o.ship ? JSON.parse(o.ship) : null })), newsletter: sub || null, sessions, exported_at: new Date().toISOString() },
+  const { results: devices } = await env.DB.prepare('SELECT created_at, expires_at, ua FROM trusted_devices WHERE user_id=? AND expires_at>?').bind(u.id, Date.now()).all();
+  return json({ user: publicUser(u), remembered_devices: devices, orders: orders.map((o) => ({ ...o, items: JSON.parse(o.items), ship: o.ship ? JSON.parse(o.ship) : null })), newsletter: sub || null, sessions, exported_at: new Date().toISOString() },
     200, { 'content-disposition': 'attachment; filename="mass-and-grass-my-data.json"' });
 }
 
@@ -205,6 +290,7 @@ async function reset(env, req) {
     env.DB.prepare('UPDATE users SET pw_hash=?, pw_salt=?, pw_iter=? WHERE id=?').bind(await hashPw(pw, salt), b64(salt), PBKDF2_ITER, row.user_id),
     env.DB.prepare('DELETE FROM reset_tokens WHERE user_id=?').bind(row.user_id),
     env.DB.prepare('DELETE FROM sessions WHERE user_id=?').bind(row.user_id), // sign out everywhere
+    env.DB.prepare('DELETE FROM trusted_devices WHERE user_id=?').bind(row.user_id), // and no device skips the second step any more
   ]);
   await audit(env, req, row.user_id, 'password_reset', '', 'warn');
   return json({ ok: true });
@@ -220,6 +306,7 @@ async function changePassword(env, req, u) {
   await env.DB.batch([
     env.DB.prepare('UPDATE users SET pw_hash=?, pw_salt=?, pw_iter=? WHERE id=?').bind(await hashPw(pw, salt), b64(salt), PBKDF2_ITER, u.id),
     env.DB.prepare('DELETE FROM sessions WHERE user_id=? AND token_hash<>?').bind(u.id, await sha256(t || '')),
+    env.DB.prepare('DELETE FROM trusted_devices WHERE user_id=? AND token_hash<>?').bind(u.id, await sha256(cookies(req)[TRUST] || '')),
   ]);
   await audit(env, req, u.email, 'password_changed', '', u.role === 'admin' ? 'alert' : 'info');
   return json({ ok: true });
@@ -234,7 +321,10 @@ async function mySessions(env, req, u) {
 async function endSessions(env, req, u, url) {
   const cur = await sha256(cookies(req)[COOKIE] || ''), id = clean(url.searchParams.get('id'), 12);
   if (id) await env.DB.prepare("DELETE FROM sessions WHERE user_id=? AND token_hash<>? AND substr(token_hash,1,12)=?").bind(u.id, cur, id).run();
-  else await env.DB.prepare('DELETE FROM sessions WHERE user_id=? AND token_hash<>?').bind(u.id, cur).run();
+  else await env.DB.batch([
+    env.DB.prepare('DELETE FROM sessions WHERE user_id=? AND token_hash<>?').bind(u.id, cur),
+    env.DB.prepare('DELETE FROM trusted_devices WHERE user_id=? AND token_hash<>?').bind(u.id, await sha256(cookies(req)[TRUST] || '')),
+  ]);
   await audit(env, req, u.email, 'sessions_ended', id || 'all others');
   return json({ ok: true });
 }
@@ -243,7 +333,7 @@ async function twofa(env, req, u, step) {
   if (!(await limit(env, req, '2fa', 20, 900))) return fail('rate_limited', 429);
   const b = (await readJson(req)) || {};
   if (step === 'setup') {
-    if (u.totp_on) return fail('already_on', 409);
+    if (u.totp_on || u.email2fa) return fail('already_on', 409);
     if (!u.pw_hash) return fail('password_needed'); // Google-only accounts sign in through Google
     const secret = newSecret();
     await env.DB.prepare('UPDATE users SET totp_secret=?, totp_last=0 WHERE id=?').bind(secret, u.id).run();
@@ -264,7 +354,34 @@ async function twofa(env, req, u, step) {
     const st = await totpStep(u.totp_secret, b.code, u.totp_last);
     if (!pwOk || !(st || (await useRecovery(u.recovery, b.code)))) { await audit(env, req, u.email, '2fa_disable_failed', '', 'alert'); return fail('bad_credentials', 401); }
     await env.DB.prepare('UPDATE users SET totp_on=0, totp_secret=NULL, recovery=NULL, totp_last=0 WHERE id=?').bind(u.id).run();
+    await forgetDevices(env, u.id);
     await audit(env, req, u.email, '2fa_disabled', '', 'alert');
+    return json({ ok: true });
+  }
+  return fail('not_found', 404);
+}
+// Two-step by e-mail: a code sent to the account's address turns it on (it also proves the address); the password turns it off.
+async function twofaEmail(env, req, u, step) {
+  if (!(await limit(env, req, '2fa', 20, 900))) return fail('rate_limited', 429);
+  const b = (await readJson(req)) || {};
+  if (step === 'start') {
+    if (u.totp_on || u.email2fa) return fail('already_on', 409);
+    if (!u.pw_hash) return fail('password_needed');
+    return sendCode(env, req, u, 'setup');
+  }
+  if (step === 'enable') {
+    if (u.totp_on || u.email2fa) return fail('already_on', 409);
+    if (!(await checkCode(env, u, 'setup', b.code))) return fail('code_invalid', 400);
+    await env.DB.prepare('UPDATE users SET email2fa=1 WHERE id=?').bind(u.id).run();
+    await audit(env, req, u.email, '2fa_enabled', 'email', 'alert');
+    return json({ ok: true });
+  }
+  if (step === 'disable') {
+    if (!u.email2fa) return fail('bad_request');
+    if (!u.pw_hash || !same(await hashPw(String(b.password ?? '').slice(0, 200), unb64(u.pw_salt), u.pw_iter), u.pw_hash)) { await audit(env, req, u.email, '2fa_disable_failed', 'email', 'alert'); return fail('bad_credentials', 401); }
+    await env.DB.prepare('UPDATE users SET email2fa=0 WHERE id=?').bind(u.id).run();
+    await forgetDevices(env, u.id);
+    await audit(env, req, u.email, '2fa_disabled', 'email', 'alert');
     return json({ ok: true });
   }
   return fail('not_found', 404);
@@ -316,7 +433,7 @@ async function googleCallback(env, req, url) {
       env.DB.prepare('DELETE FROM sessions WHERE user_id=?').bind(u.id),
     ]);
   }
-  if (u.totp_on) return back('use_password');
+  if (u.totp_on || u.email2fa) return back('use_password');
   const cookie = await startSession(env, req, await env.DB.prepare('SELECT * FROM users WHERE id=?').bind(u.id).first());
   await audit(env, req, email, 'login_google');
   const h = new Headers({ location: `${env.SITE_ORIGIN}/${safeNext(decodeURIComponent(next || ''))}` });
@@ -407,6 +524,9 @@ async function api(req, env, url, p) {
   const tf = p.match(/^\/api\/me\/2fa\/(setup|enable|disable)$/);
   if (tf && req.method === 'POST') return twofa(env, req, u, tf[1]);
   if (p === '/api/me/news' && (req.method === 'GET' || req.method === 'POST')) return myNews(env, req, u);
+  const te = p.match(/^\/api\/me\/2fa\/email\/(start|enable|disable)$/);
+  if (te && req.method === 'POST') return twofaEmail(env, req, u, te[1]);
+  if (p === '/api/me/avatar' && ['GET', 'POST', 'DELETE'].includes(req.method)) return myAvatar(env, req, u);
   if (p === '/api/me' && req.method === 'PATCH') return updateMe(env, req, u);
   if (p === '/api/me' && req.method === 'DELETE') return u.role === 'admin' ? fail('cannot_delete_admin') : deleteMe(env, req, u);
   return fail('not_found', 404);

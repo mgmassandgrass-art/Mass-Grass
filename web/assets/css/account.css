@@ -10,3 +10,7 @@
 .acc .row{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px}
 .ghost svg{width:18px;height:18px;flex:none}
 @media(max-width:860px){.acc{grid-template-columns:minmax(0,1fr)}.acc-art{display:none}.acc .sheet{justify-self:center}}
+.tgl{display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin:4px 0 16px}
+.tgl input{flex:none;width:18px;height:18px;margin-top:2px;accent-color:var(--blue)}
+.tgl span{display:grid;gap:4px}
+.tgl small{color:var(--soft)}

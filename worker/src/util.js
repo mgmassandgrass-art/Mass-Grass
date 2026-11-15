@@ -28,3 +28,6 @@ export function sniff(buf) {
   if (b[0] === 0x50 && b[1] === 0x4b && b[2] === 0x03 && b[3] === 0x04) return 'application/zip';
   return null;
 }
+
+// D1 gives a BLOB back as a plain array of numbers; a Response needs bytes, or it sends the numbers as text.
+export const bytes = (d) => (d instanceof ArrayBuffer || ArrayBuffer.isView(d) ? d : new Uint8Array(d));

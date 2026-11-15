@@ -41,7 +41,8 @@ function render(){const box=$('co'),h=$('co-h');
   box.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const i=+b.dataset.q;B.qty(i,(B.get()[i].q||1)+(+b.dataset.d));render()});
   const sc=$('sc');if(sc)sc.onchange=()=>{ship.country=sc.value;const z=zone();$('shipFee').textContent=z?S.fmt(z.fee):T('Choose the country','اختاروا البلد');const tt=S.fmt(B.total()+(z?z.fee:0));$('coTotal').textContent=tt;const pt=box.querySelector('[data-paytotal]');if(pt)pt.textContent=tt;const pc=$('spc');if(pc)pc.closest('label').hidden=sc.value!=='DK'}}
 /* the address for printed pieces: only the countries shipped to now; kept while the page is open */
-const ship={country:''};
+/* a signed-in buyer's own details fill the address (they can still change it here) */
+const ship=(()=>{const u=MG.user.get(),a=(u&&u.addr)||{};return u?{country:MG.shipping[a.country]?a.country:'',name:u.name||'',phone:u.phone||'',line1:a.line1||'',line2:a.line2||'',city:a.city||'',postal:a.postal||''}:{country:''}})();
 function zone(){return MG.shipping[ship.country]||null}
 function shipFields(){const C=Object.entries(MG.shipping);if(C.length===1&&!ship.country)ship.country=C[0][0];
   if(!C.length)return `<p class="fmsg" role="status">${T('Printed pieces cannot be shipped right now. Remove them to buy the files.','لا يمكن شحن القطع المطبوعة الآن. أزيلوها لشراء الملفات.')}</p>`;

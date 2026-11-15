@@ -148,7 +148,11 @@
     $$('.acct').forEach((a) => {
       a.href = u ? 'profile.html' : 'account.html';
       /* the header's icon stays; signed in, it carries the first letter of the name */
-      if (a.classList.contains('ico')) { a.classList.toggle('in', !!u); a.setAttribute('aria-label', u ? t('Your account', 'حسابكم') : t('Sign in', 'الدخول')); a.querySelector('.ini').textContent = u ? (u.name || u.email || '?').trim()[0].toUpperCase() : ''; return; }
+      if (a.classList.contains('ico')) { a.classList.toggle('in', !!u); a.setAttribute('aria-label', u ? t('Your account', 'حسابكم') : t('Sign in', 'الدخول')); a.querySelector('.ini').textContent = u ? (u.name || u.email || '?').trim()[0].toUpperCase() : '';
+        /* with a photo, the photo takes the icon's place */
+        let av = a.querySelector('img.av'); a.classList.toggle('ph', !!(u && u.photo));
+        if (u && u.photo) { if (!av) { av = doc.createElement('img'); av.className = 'av'; av.alt = ''; a.append(av); } if (av.getAttribute('src') !== u.photo) av.src = u.photo; } else if (av) av.remove();
+        return; }
       a.innerHTML = u ? `<b aria-hidden="true">${esc((u.name || u.email || '?').trim()[0].toUpperCase())}</b><span class="sr">${t('Your account', 'حسابكم')}</span>` : `<span>${t('Sign in', 'الدخول')}</span>`;
     });
   }

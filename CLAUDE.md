@@ -465,3 +465,21 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   spaced capitals, prices and numbers tabular, buttons in 11px capitals, fields, the menu and the footer). Head rows read
   "02 —— The calendar": mono number in rose, a short rose rule, the name in the hand (`<b>` + `<i>` from `frame()` in mock.js).
   Geist Mono ships 500 and 700 only. Arabic keeps its own faces.
+
+## Accounts, round 2 (owner, 15 Nov 2026)
+
+- Migration 0010 (`worker/migrations/0010_profile.sql`, in `migrate.js` STEPS): `users.phone`, `users.addr` (JSON country/city/line1/
+  line2/postal), `users.avatar_at`, `users.email2fa`; tables `avatars`, `email_codes`, `trusted_devices`.
+- Two-step by e-mail (admin and customers): `/api/me/2fa/email/{start,enable,disable}`; a sign-in without a code answers
+  `email_code_sent` (6 digits, hashed, 10 minutes, 5 tries, one use, 5 sends per account per 15 minutes); the app (TOTP) and the
+  e-mail code are exclusive. Google sign-in refuses accounts with either (`use_password`).
+- "Remember this device" on the sign-in form (on by default): a 30-day session plus the `__Host-mgd` cookie that skips the second
+  step for 30 days; unticked = a session cookie that ends with the browser (1 day on the server). Changing or resetting the
+  password, turning two-step off and "sign out everywhere else" forget remembered devices.
+- Profile: photo (cut square to 320px in the browser, `/api/me/avatar` POST/GET/DELETE, checked by its bytes, private), name, phone,
+  address with every country (names from `Intl.DisplayNames`), two-step by e-mail; the header shows the photo; checkout fills the
+  address from the profile. The admin's Security tab offers the app or the e-mail code.
+- D1 returns BLOBs as arrays of numbers: wrap them in `bytes()` (util.js) before `new Response` (fixed for avatars, uploaded and
+  replaced images; nothing live was affected).
+- Local tests: `DEV_CODES = "1"` in `wrangler.local.toml` (never in wrangler.toml) returns the e-mailed code on localhost only.
+  `node test/profile.test.mjs` (29 checks, own address `10.9.9.9`) is in `npm test`.

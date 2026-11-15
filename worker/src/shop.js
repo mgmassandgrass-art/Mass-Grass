@@ -1,5 +1,5 @@
 // Catalog, orders, PayPal and the admin API.
-import { json, fail, readJson, clean, CALS, calFile, sniff } from './util.js';
+import { json, fail, readJson, clean, CALS, calFile, sniff, bytes } from './util.js';
 import { orderFiles } from './files.js';
 import { orderPaidEmails, shippedEmail } from './mail.js';
 
@@ -209,7 +209,7 @@ export async function myOrders(env, u) {
 export async function serveImage(env, key) {
   const r = await env.DB.prepare('SELECT type, data FROM images WHERE key=?').bind(key).first();
   if (!r) return null;
-  return new Response(r.data, { headers: { 'content-type': r.type, 'cache-control': 'public, max-age=31536000, immutable' } });
+  return new Response(bytes(r.data), { headers: { 'content-type': r.type, 'cache-control': 'public, max-age=31536000, immutable' } });
 }
 
 // A kind must keep at least one visible product, so no page is left with an empty list.
