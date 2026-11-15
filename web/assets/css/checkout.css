@@ -39,3 +39,52 @@
 .shipf legend{padding:0 0 8px;font:700 var(--fs-body)/1.3 var(--f)}
 .ar-on .shipf legend{font-family:var(--fa)}
 .shipf [hidden]{display:none}
+
+/* ---------- the light system (owner, 15 Nov 2026): hair-line cells, flat prints on cream, no tilts or dashes ---------- */
+.co-ls li{border-bottom:1px solid var(--line-2)}
+.co-ls .th,.co-ls li:nth-child(even) .th{rotate:0deg;background:#FBF8F1;box-shadow:inset 0 0 0 1px var(--line-2)}
+.co-ls .th img{box-shadow:0 1px 2px rgba(var(--ink-rgb),.18)}
+.co .sheet{background:#FBF8F1;border:1px solid var(--line-2);clip-path:none;filter:none;rotate:0deg;padding:clamp(24px,3vw,40px)}
+.co .sheet>.fill{display:none}
+.qty button{border-radius:0;border:1px solid var(--line-2);background:#FBF8F1}
+.co-tt{border-top:1px solid var(--ink);margin-top:0}
+.shipf{border-top:1px solid var(--line-2)}
+
+/* the thank-you page: what was bought on the left, the receipt and the files on the right */
+.cd{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);border:1px solid var(--line-2);background:#FBF8F1}
+.cd-l{padding:clamp(24px,4vw,56px);border-inline-end:1px solid var(--line-2)}
+.cd-r{padding:clamp(24px,4vw,56px);background:var(--cream)}
+.cd-say{margin:0 0 32px}
+.cd-its{list-style:none;margin:0 0 32px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:24px}
+.cd-its li{display:grid;gap:6px}
+.cd-pr{display:grid;place-items:center;aspect-ratio:1;contain:size;background:var(--cream);box-shadow:inset 0 0 0 1px var(--line-2)}
+.cd-pr img{max-width:76%;max-height:76%;object-fit:contain;background:#fff;padding:4px;box-shadow:0 1px 2px rgba(var(--ink-rgb),.16),0 8px 18px -10px rgba(var(--ink-rgb),.35)}
+.cd-nm{display:block;line-height:1.1}
+.cd-tx{margin:0 0 16px;max-width:46ch}
+.cd-sig{display:block;width:150px;height:auto;margin:0 0 32px;mix-blend-mode:multiply;opacity:.85}
+.cd-acts{display:flex;flex-wrap:wrap;align-items:center;gap:24px}
+.cd-rc{margin:0 0 40px;border-top:1px solid var(--ink)}
+.cd-rc>div{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.cd-rc dt,.cd-rc dd{margin:0}
+.cd-rc dd{text-align:end;overflow-wrap:anywhere}
+.cd-h{margin:0 0 16px}
+.cd-files{list-style:none;margin:0 0 40px;padding:0;border-top:1px solid var(--line-2)}
+.cd-files a{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:16px;min-height:56px;padding:12px 0;border-bottom:1px solid var(--line-2);color:var(--ink);text-decoration:none;transition:padding .2s,background .2s}
+.cd-files .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cd-files b{display:inline-flex;align-items:center;height:32px;padding:0 12px;background:var(--ink);color:var(--cream)}
+@media(hover:hover){.cd-files a:hover{background:#FBF8F1;padding-inline:12px}.cd-files a:hover b{background:var(--blue)}}
+.cd-note{margin:0 0 32px}
+@media(max-width:860px){.cd{grid-template-columns:minmax(0,1fr)}.cd-l{border-inline-end:0;border-bottom:1px solid var(--line-2)}.cd-its{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* the two voices on this page */
+html[data-hand]:not(.ar-on) .cd-say{font-size:clamp(34px,3.4vw,52px)!important;line-height:1.05}
+html[data-hand]:not(.ar-on) .cd-nm{font-family:var(--cal-t);font-size:22px;color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) .cd-its small,html[data-hand]:not(.ar-on) .cd-rc dt{font-family:var(--cal-m);font-weight:500;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--cal-grey)}
+html[data-hand]:not(.ar-on) .cd-rc dd{font-family:var(--cal-m);font-size:13px;color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) .cd-files .n{font-family:var(--cal-m);font-size:13px}
+html[data-hand]:not(.ar-on) .cd-files small{font-family:var(--cal-m);font-size:12px;color:var(--cal-grey)}
+html[data-hand]:not(.ar-on) .cd-files b{font-family:var(--cal-m);font-weight:500;font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+html[data-hand]:not(.ar-on) .cd-h{font-size:clamp(30px,2.6vw,40px)}
+.ar-on .cd-nm{font-family:var(--fa);font-weight:600}
+.ar-on .cd-its small,.ar-on .cd-rc dt,.ar-on .cd-files small{color:var(--soft);font-size:var(--fs-caption)}
+.ar-on .cd-say{font-size:clamp(30px,2.8vw,42px);line-height:1.4;color:var(--blue)}

@@ -1,7 +1,7 @@
 // Mass & Grass API: accounts and sign-in (step 1). Orders, PayPal and files come next.
 import { json, fail, readJson, clean, sniff, bytes } from './util.js';
 import { filesAdmin, download } from './files.js';
-import { sendMail, layout, contactEmail } from './mail.js';
+import { sendMail, layout, contactEmail, p as mp, pAr, small, btn as mbtn, MONO, C } from './mail.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin, sweepPending } from './shop.js';
 import { migrate } from './migrate.js';
@@ -92,7 +92,9 @@ async function sendCode(env, req, u, purpose) {
   await env.DB.prepare('INSERT OR REPLACE INTO email_codes(user_id,purpose,code_hash,expires_at,tries) VALUES(?,?,?,?,0)')
     .bind(u.id, purpose, await sha256(`${u.id}:${code}`), Date.now() + 10 * 60e3).run();
   const sent = await sendMail(env, u.email, `${code} is your Mass & Grass code · رمز الدخول`, layout(
-    `<p>Your code to ${purpose === 'login' ? 'sign in' : 'turn on two-step sign-in'} (valid for 10 minutes):</p><p style="font:700 30px monospace;letter-spacing:.3em">${code}</p><p dir="rtl" style="text-align:right">رمزكم ${purpose === 'login' ? 'للدخول' : 'لتفعيل التحقق بخطوتين'}، صالح لمدة 10 دقائق.</p><p style="color:#6f604d;font-size:13px">If this wasn't you, change your password.</p>`));
+    `${mp(`Your code to ${purpose === 'login' ? 'sign in' : 'turn on two-step sign-in'}, valid for 10 minutes:`)}
+    <div style="margin:8px 0 24px;padding:20px 0;border-top:1px solid ${C.ink};border-bottom:1px solid ${C.line};text-align:center;font:500 34px/1 ${MONO};letter-spacing:.35em;color:${C.ink}">${code}</div>
+    ${pAr(`رمزكم ${purpose === 'login' ? 'للدخول' : 'لتفعيل التحقق بخطوتين'}، صالح لمدة 10 دقائق.`)}${small("If this wasn't you, change your password. · إذا لم تطلبوه، غيّروا كلمة المرور.")}`));
   // local tests only (DEV_CODES is set in wrangler.local.toml, never in production, and only answers on localhost)
   const dev = env.DEV_CODES === '1' && new URL(req.url).hostname === 'localhost' ? { dev_code: code } : {};
   if (!sent && !dev.dev_code) return fail('mail_failed', 503);
@@ -272,7 +274,8 @@ async function forgot(env, req) {
     await env.DB.prepare('INSERT INTO reset_tokens(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await sha256(t), u.id, Date.now() + 30 * 60e3).run();
     const link = `${env.SITE_ORIGIN}/account.html?reset=${t}`;
     await sendMail(env, email, 'Reset your Mass & Grass password · تغيير كلمة السر', layout(
-      `<p>Open this link to choose a new password (valid for 30 minutes):</p><p><a href="${link}" style="display:inline-block;background:#2E241B;color:#FAF5E9;padding:10px 16px;text-decoration:none;font:600 13px monospace">Choose a new password</a></p><p dir="rtl" style="text-align:right">افتح الرابط لتختار كلمة سر جديدة (صالح لمدة 30 دقيقة).</p><p style="color:#6f604d;font-size:13px">If you didn't ask for this, ignore this email.</p>`));
+      `${mp('Open this link to choose a new password. It is valid for 30 minutes.')}<p style="margin:8px 0 24px">${mbtn(link, 'Choose a new password')}</p>
+      ${pAr('افتحوا الرابط لتختاروا كلمة مرور جديدة، وهو صالح لمدة 30 دقيقة.')}${small("If you didn't ask for this, ignore this e-mail. · إذا لم تطلبوه، تجاهلوا الرسالة.")}`));
   }
   return json({ ok: true }); // same answer whether or not the account exists
 }

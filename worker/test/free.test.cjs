@@ -24,8 +24,8 @@ const api = async (m, p, body, raw, noCookie) => { const r = await fetch(B + p, 
   ok('its button says free download', /Free download/.test(await tile.locator('.add').textContent()));
   await Promise.all([p.waitForURL('**/checkout.html'), tile.locator('.add').click()]); await p.waitForSelector('#f');
   ok('checkout offers the files, not a payment', /Get the files/.test(await p.textContent('#f [type=submit]')));
-  await p.fill('#em', 'visitor@example.com'); await p.click('#f [type=submit]'); await p.waitForSelector('.co-done', { timeout: 8000 }).catch(() => {});
-  ok('the files are on the page', (await p.locator('.co-done .files a').count()) === 1);
+  await p.fill('#em', 'visitor@example.com'); await p.click('#f [type=submit]'); await p.waitForSelector('.cd', { timeout: 8000 }).catch(() => {});
+  ok('the files are on the page', (await p.locator('.cd .cd-files a').count()) === 1);
   ok('the bag is empty after', (await p.textContent('[data-bagn]')) === '0');
   await p.goto(B + '/paintings#hill', { waitUntil: 'load' }); await p.waitForSelector('dialog#view[open]');
   ok('the painting sheet says free download', /Free download/.test(await p.textContent('#vadd')));

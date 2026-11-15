@@ -17,9 +17,9 @@ const api = async (m, p, body, raw) => { const r = await fetch(B + p, { method: 
   await p.goto(B + '/paintings#hero', { waitUntil: 'load' }); await p.waitForSelector('dialog#view[open]'); await p.click('#vadd'); await p.keyboard.press('Escape');
   await p.goto(B + '/checkout', { waitUntil: 'load' }); await p.waitForSelector('#f'); await p.fill('#em', 'buyer@example.com');
   await Promise.all([p.waitForURL('**/checkout.html*'), p.click('#f [type=submit]')]);
-  await p.waitForSelector('.co-done', { timeout: 10000 }).catch(() => {});
-  ok('back from PayPal, the order is paid', (await p.locator('.co-done').count()) === 1, await p.textContent('#co'));
-  const href = await p.getAttribute('.co-done .files a', 'href').catch(() => null);
+  await p.waitForSelector('.cd', { timeout: 10000 }).catch(() => {});
+  ok('back from PayPal, the order is paid', (await p.locator('.cd').count()) === 1, await p.textContent('#co'));
+  const href = await p.getAttribute('.cd .cd-files a', 'href').catch(() => null);
   ok('the file link is on the page', !!href);
   if (href) { const d = await fetch(B + href); ok('the file downloads', d.status === 200 && (await d.text()).includes('local test file')); }
   ok('the bag is empty after paying', (await p.textContent('[data-bagn]')) === '0');
