@@ -71,7 +71,7 @@ window.MG_DEFAULT = {
   ].map(function (x) { return { kind: x[0], id: x[1], title_en: x[2], title_ar: x[3], extra: x[4] ? { shape: x[4] } : {} }; }),
   /* the 2027 calendar, "Things kept in bottles": the cover and all twelve months (assets c27-MM*, rendered from the owner's calendar artifact) */
   calendar: {
-    id: 'calendar-2027', title: ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027'],
+    id: 'calendar-2027', title: ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027'], cover: 'assets/t-v2-00.webp', page: 'calendar.html',
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     monthsAr: ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'],
     pages: [
@@ -107,7 +107,7 @@ window.MG_DEFAULT = {
      their details in watercolour), its dates, holidays and year redrawn for 2027 by tools/redate_2026.py (assets ps-MM, pd-MM) */
   palestine: {
     id: 'palestine-2027', title: ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027'],
-    short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026,
+    short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', cover: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026,
     pages: [
       { k: 'ps-00', m: 0, n: ['The cover', 'الغلاف'], q: ['Palestine, a journey through time and space.', 'فلسطين، رحلة عبر الزمان والمكان.'], d: ['A clay jug on a tiled plate, and the calendar\'s name.', 'جرّة فخار على صحن من البلاط، واسم التقويم.'] },
       { k: 'ps-01', m: 1, n: ["Taboon", "الطابون"], q: ["Taboon", "الطابون"], d: ["Hand-sculpted from golden clay and ancient grit, the taboon is a thermal masterpiece: a living monument where the earth's warmth meets the scent of belonging.", "الطابون مصنوع باليد من الطين الذهبي والحصى القديم، تحفة تحفظ الحرارة: نصب حيّ يلتقي فيه دفء الأرض برائحة الانتماء."] },

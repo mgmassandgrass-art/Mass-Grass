@@ -304,12 +304,14 @@
   /* one product as a tile (tiles.css): the piece on a coloured sheet, linked to its own page */
   function tile(p) {
     const cal = p.kind === 'calendar', cls = cal ? 'cal' : p.kind === 'sticker' ? 'stk ' + ((p.extra && p.extra.shape) || 'die') : p.kind === 'postcard' ? 'card' : 'print';
-    const src = cal ? 'assets/c27-00.webp' : thumb(p.id, p), href = PAGE[p.kind] + (cal ? '' : '#' + p.id);
-    const btn = cal ? `<button type="button" class="add" data-add="calendar" aria-pressed="${bag.has('calendar', DEF.calendar.id)}">${bag.has('calendar', DEF.calendar.id) ? t('In your bag', 'في السلة') : t('Add to bag', 'أضيفوه إلى السلة')}</button>` : addBtn(p.kind, p.id);
-    return `<li class="pr-it"><a class="lk" href="${href}" data-peek="${p.kind}:${cal ? '' : esc(p.id)}"><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
-      <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? '' : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${shareBtn(p.kind, cal ? '' : p.id)}</div></li>`;
+    /* a calendar tile: its own cover and its own page (the 2027 calendar, or one from an earlier year) */
+    const c = cal ? calOf(p.id) : null;
+    const src = cal ? (c.cover || 'assets/t-v2-00.webp') : thumb(p.id, p), href = cal ? (c.page || PAGE.calendar) : PAGE[p.kind] + '#' + p.id;
+    const btn = cal ? `<button type="button" class="add" data-add="calendar" data-cal="${esc(c.id)}" aria-pressed="${bag.has('calendar', c.id)}">${bag.has('calendar', c.id) ? t('In your bag', 'في السلة') : t('Add to bag', 'أضيفوه إلى السلة')}</button>` : addBtn(p.kind, p.id);
+    return `<li class="pr-it"><a class="lk" href="${href}"${cal ? '' : ` data-peek="${p.kind}:${esc(p.id)}"`}><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
+      <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? c.id : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${cal ? '' : shareBtn(p.kind, p.id)}</div></li>`;
   }
-  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, calOf };
+  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, calOf, calendars: CALS };
 
   function boot() { applyLang(); shell(); ready = true; rerender('init'); user.sync(); }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', boot) : boot();

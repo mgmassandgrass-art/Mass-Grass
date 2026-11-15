@@ -11,7 +11,7 @@
     'mk-bed': { w: 1024, h: 768, x: .3091, y: .1374, ww: .3809, wh: .3086, n: ['Over the bed', 'فوق السرير'] }, 'mk-desk': { w: 1024, h: 1280, x: .2988, y: .207, ww: .4131, wh: .4641, n: ['On the desk', 'على المكتب'] },
     'mk-girl': { w: 1024, h: 1280, x: .3003, y: .3195, ww: .4141, wh: .418, n: ['In the hands', 'بين اليدين'] }, 'wall-p': { w: 680, h: 848, x: .2993, y: .1492, ww: .4118, wh: .4399, n: ['On the wall', 'على الحائط'] },
     'held-4x5': { w: 1080, h: 1350, x: .3079, y: .0845, ww: .3861, wh: .3896, n: ['Held up', 'مرفوعة'] }, 'held-1x1': { w: 1080, h: 1350, x: .2676, y: .1311, ww: .438, wh: .3519, n: ['Held up', 'مرفوعة'] } };
-  const CARD = { 'pc-hands': { w: 1536, h: 1152, x: .1725, y: .1641, ww: .6628, wh: .5842, n: ['In the hand', 'في اليد'] }, 'pc-sea': { w: 1536, h: 1152, x: .2279, y: .2708, ww: .543, wh: .4384, n: ['By the sea', 'أمام البحر'] },
+  const CARD = { 'pc-desk2': { w: 1600, h: 1600, x: .3745, y: .3939, ww: .4859, wh: .3406, rot: 9.31, top: false, n: ['On the desk', 'على المكتب'] },
     'pcp-window': { w: 1536, h: 1920, x: .2168, y: .1391, ww: .5462, wh: .663, clip: '0.00% 0.47%,99.05% 0.00%,100.00% 99.92%,0.83% 100.00%', o: 'p', n: ['By the window', 'عند النافذة'] }, 'pcp-table': { w: 1536, h: 1152, x: .321, y: .1597, ww: .3561, wh: .6571, o: 'p', n: ['In both hands', 'بين اليدين'] } };
   const THING = { 'sk-laptop': { r: [.13, .15, .75, .70], s: .2, n: ['On a laptop', 'على الحاسوب'] }, 'sk-notebook': { r: [.275, .05, .395, .905], s: .24, n: ['On a notebook', 'على الدفتر'] }, 'sk-phone': { r: [.35, .25, .31, .665], s: .2, n: ['On a phone', 'على الهاتف'] } };
   const CAL = { 'cr2-wall': ['On the wall', 'على الحائط'], 'cr2-hands': ['In the hands', 'بين اليدين'], 'cr2-desk': ['On the desk', 'على المكتب'], 'cr2-flat': ['The pages', 'الصفحات'] };
@@ -31,8 +31,9 @@
     const src = esc(kind === 'calendar' ? '' : MG.img(id, p || MG.product(kind, id)));
     if (kind === 'painting') { const m = ROOM[key]; return `<div class="mscene" style="--ar:${m.w / m.h}"><img class="room" src="assets/${key}.webp" alt=""><img class="art framed" src="${src}" alt="" style="${artBox(id, m)}"></div>`; }
     if (kind === 'postcard') { const m = CARD[key], pos = `left:${m.x * 100}%;top:${m.y * 100}%;width:${m.ww * 100}%;height:${m.wh * 100}%`;
-      return `<div class="mscene" style="--ar:${m.w / m.h}"><img class="room" src="assets/${key}.webp" alt=""><img class="art card" src="${src}" alt="" style="${pos}${m.clip ? `;clip-path:polygon(${m.clip})` : ''}"><img class="top" src="assets/${key}-top.webp" alt=""></div>`; }
-    if (kind === 'sticker') { const m = THING[key], r = m.r, w = m.s * 1.5; return `<div class="mscene" style="--ar:${1536 / 1152}"><img class="room" src="assets/${key}.webp" alt=""><img class="art stuck" src="${src}" alt="" style="left:${(r[0] + r[2] / 2 - w / 2) * 100}%;top:${(r[1] + r[3] * .5) * 100}%;width:${w * 100}%"></div>`; }
+      return `<div class="mscene" style="--ar:${m.w / m.h}"><img class="room" src="assets/${key}.webp" alt=""><img class="art card" src="${src}" alt="" style="${pos}${m.clip ? `;clip-path:polygon(${m.clip})` : ''}${m.rot ? `;rotate:${m.rot}deg;box-shadow:0 1px 2px rgba(60,45,30,.25),0 10px 18px -8px rgba(60,45,30,.35)` : ''}">${m.top === false ? '' : `<img class="top" src="assets/${key}-top.webp" alt="">`}</div>`; }
+    /* a sticker the size a sticker is: about a fifth of a laptop lid, smaller still when it is tall */
+    if (kind === 'sticker') { const m = THING[key], r = m.r, a = asp(id) || .8, w = m.s * .82 * Math.min(1, Math.sqrt(a)); return `<div class="mscene" style="--ar:${1536 / 1152}"><img class="room" src="assets/${key}.webp" alt=""><img class="art stuck" src="${src}" alt="" style="left:${(r[0] + r[2] / 2 - w / 2) * 100}%;top:${(r[1] + r[3] * .5) * 100}%;width:${w * 100}%"></div>`; }
     return `<div class="mscene" style="--ar:${3072 / 1728}"><img class="room" src="assets/${key}.webp" alt=""></div>`;
   }
   MG.mock = { scenes, scene, asp, ROOM, artBox };

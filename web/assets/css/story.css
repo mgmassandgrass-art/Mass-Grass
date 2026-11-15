@@ -110,3 +110,5 @@
 .who b{display:block;font:800 var(--fs-h3)/1 var(--f);margin-bottom:8px}.ar-on .who b{font-family:var(--fa)}
 .who figcaption span{font-size:var(--fs-body);color:var(--soft);line-height:1.6}
 @media(max-width:820px){.sp-in{grid-template-columns:minmax(0,1fr)}.who{max-width:300px}}
+/* the map and its chapters keep inside the column's margins, so the side list never covers a card */
+@media(min-width:1000px){main>section.jr{padding-inline:var(--side)!important;box-sizing:border-box}}

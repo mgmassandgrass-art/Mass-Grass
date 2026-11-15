@@ -93,3 +93,34 @@ html[data-hand]:not(.ar-on) header :is(.mainnav>a,.ddb,.ddp a,#mmenu a,#mmenu .m
 html[data-hand]:not(.ar-on) header .mainnav>a[aria-current]{background-size:calc(100% - 16px) 28px}
 html[data-hand]:not(.ar-on) header .ddb.cur,html[data-hand]:not(.ar-on) header .ddb[aria-expanded=true]{background-size:calc(100% - 16px) 28px}
 html[data-hand]:not(.ar-on) header :is(.bn,.ini){font-family:var(--cal-t);font-weight:400;font-size:17px}
+
+/* ---------- the other pages in the calendar's hand too (owner, 15 Nov 2026): page heads, category tabs, tiles ---------- */
+html[data-hand]:not(.ar-on) .pghd h1{font-family:var(--cal-t);font-weight:400;letter-spacing:.005em;font-size:clamp(48px,5vw,80px);color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) .pghd p{font-family:var(--cal-t);font-size:clamp(21px,1.6vw,24px);color:var(--cal-grey);line-height:1.35}
+html[data-hand]:not(.ar-on) .cats button{font-family:var(--cal-t);font-weight:400;font-size:22px;color:var(--cal-grey)}
+html[data-hand]:not(.ar-on) .cats button[aria-pressed=true]{color:var(--cal-ink);border-color:var(--cal-rose)}
+html[data-hand]:not(.ar-on) .cats button sup{font-size:14px}
+html[data-hand]:not(.ar-on) .pr-it h3{font-family:var(--cal-t);font-weight:400;font-size:24px;color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) .pr-it .pr{font-family:var(--cal-t);font-size:22px;color:var(--cal-rose)}
+html[data-hand]:not(.ar-on) .pr-it .kd{font-family:var(--cal-t);font-size:17px;color:var(--cal-sage);letter-spacing:.01em;text-transform:none}
+html[data-hand]:not(.ar-on) .pr-it .acts .add{font-family:var(--cal-t);font-size:19px;text-transform:none;letter-spacing:.01em}
+html[data-hand]:not(.ar-on) main [data-price]{font-family:var(--cal-t)!important;font-weight:400!important;color:var(--cal-rose)}
+html[data-hand]:not(.ar-on) main .note b{font-size:clamp(40px,3.4vw,52px)}
+html[data-hand]:not(.ar-on) main .note span,html[data-hand]:not(.ar-on) main .pi-p span{font-family:var(--cal-t);font-size:19px;line-height:1.4;color:var(--cal-grey)}
+/* the plain pages (sign-in, account, checkout, help, terms, 404): reading text, questions, labels and fields in the hand */
+html[data-hand]:not(.ar-on) body main section.pgx :is(p,li,dd,small,span:not(.fill)):not(.lead){font-family:var(--cal-t);font-size:19px;line-height:1.45;letter-spacing:.01em}
+html[data-hand]:not(.ar-on) body main section.pgx :is(summary,details>b,.q){font-family:var(--cal-t);font-weight:400;font-size:22px;color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) body main section.pgx :is(label,legend,.lbl){font-family:var(--cal-t);font-weight:400;font-size:18px;color:var(--cal-sage);letter-spacing:.01em;text-transform:none}
+html[data-hand]:not(.ar-on) body main section.pgx :is(input,select,textarea){font-family:var(--cal-t);font-size:19px}
+html[data-hand]:not(.ar-on) body main section.pgx :is(button,.ink,.ghost,a.btn){font-family:var(--cal-t);font-weight:400;font-size:20px;letter-spacing:.01em;text-transform:none}
+html[data-hand]:not(.ar-on) body main section.pgx :is(h2,h3,h4){font-family:var(--cal-t);font-weight:400}
+html[data-hand]:not(.ar-on) body main section.pgx a:not(.ink):not(.ghost){font-family:var(--cal-t)}
+/* the story: chapter cards and the map's labels in the hand, read at a comfortable size */
+html[data-hand]:not(.ar-on) .ch .tx{font-family:var(--cal-t);font-size:21px;line-height:1.45;color:var(--cal-ink)}
+html[data-hand]:not(.ar-on) .ch h2{font-family:var(--cal-t);font-weight:400;font-size:clamp(28px,2.4vw,36px);letter-spacing:.005em}
+html[data-hand]:not(.ar-on) .ch .tag{font-family:var(--cal-t);font-size:18px;color:var(--cal-grey)}
+html[data-hand]:not(.ar-on) .ch .tag b{font-weight:400;color:var(--cal-rose)}
+html[data-hand]:not(.ar-on) .sh h1{font-family:var(--cal-t);font-weight:400;letter-spacing:.005em}
+html[data-hand]:not(.ar-on) :is(.m-tag text,.m-town,.m-govl){font-family:var(--cal-t);font-weight:400}
+html[data-hand]:not(.ar-on) .m-tag text{font-size:20px}
+html[data-hand]:not(.ar-on) .m-town{font-size:17px}

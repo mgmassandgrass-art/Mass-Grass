@@ -13,3 +13,7 @@
 .hp .sheet{position:sticky;top:calc(var(--head,72px) + 24px)}
 .hp .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 @media(max-width:860px){.hp-grid{grid-template-columns:minmax(0,1fr)}.hp .sheet{position:static}.hp .two{grid-template-columns:minmax(0,1fr)}}
+/* the light system: hair-line rules, a plain plus in the rose, no coloured disc */
+.hp details{border-top:1px solid var(--line)}
+.hp details:last-child{border-bottom:1px solid var(--line)}
+.hp summary::after{background:none;border:1px solid var(--line);border-radius:0;color:var(--blue)}

@@ -2,9 +2,9 @@
 (function () {
   'use strict';
   const { $, t } = MG;
-  const CATS = [['all', 'Everything', 'الكل'], ['painting', 'Paintings', 'اللوحات'], ['postcard', 'Postcards', 'البطاقات البريدية'], ['sticker', 'Stickers', 'الملصقات'], ['calendar', 'Calendar', 'التقويم']];
-  const cal = { kind: 'calendar', id: MG.calendar.id, title_en: MG.calendar.title[0], title_ar: MG.calendar.title[1] };
-  const items = () => [...MG.products('painting'), ...MG.products('postcard'), ...MG.products('sticker'), cal];
+  const CATS = [['all', 'Everything', 'الكل'], ['painting', 'Paintings', 'اللوحات'], ['postcard', 'Postcards', 'البطاقات البريدية'], ['sticker', 'Stickers', 'الملصقات'], ['calendar', 'Calendars', 'التقاويم']];
+  const cals = MG.calendars.map((c) => ({ kind: 'calendar', id: c.id, title_en: c.title[0], title_ar: c.title[1] }));
+  const items = () => [...MG.products('painting'), ...MG.products('postcard'), ...MG.products('sticker'), ...cals];
   let cat = location.hash.slice(1); if (!CATS.some((c) => c[0] === cat)) cat = 'all';
   MG.page(function () {
     const all = items();
