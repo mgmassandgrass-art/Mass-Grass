@@ -1,0 +1,1128 @@
+{
+ "generated": "2026-11-15",
+ "total": 154,
+ "files": [
+  {
+   "id": "1b90vOPzQsN9epKZpOGgNgoHICFtFWsPhLmY1d-FpUbo",
+   "title": "For Farah - Orders & amount raised + products & price list",
+   "type": "sheet",
+   "size": 3210,
+   "path": "Root"
+  },
+  {
+   "id": "1TGUIlAf0q23zqt5D1izbfqRXFjNljwgD",
+   "title": "book FINAL FINAL.pdf",
+   "type": "pdf",
+   "size": 31328456,
+   "path": "Work/Book"
+  },
+  {
+   "id": "1_h6B3aWXNfLqOQWhqaKyC7S2_O6k672B",
+   "title": "stickers.pdf",
+   "type": "pdf",
+   "size": 854564,
+   "path": "Work/stickers Folder"
+  },
+  {
+   "id": "1WtybvtkCHjmP-MmgBsbFQDXMpb8DFLIy",
+   "title": "stickers.idml",
+   "type": "idml",
+   "size": 1939051,
+   "path": "Work/stickers Folder"
+  },
+  {
+   "id": "1NRtMCii9XSZJ1MgO6JK3cbWBJVP3wU-i",
+   "title": "stickers.indd",
+   "type": "indd",
+   "size": 9986048,
+   "path": "Work/stickers Folder"
+  },
+  {
+   "id": "17xdu6g9Ct8ys_b1ZV-4pVJobtFeLm2eZ",
+   "title": "IMG_0981 (1).JPEG",
+   "type": "jpeg",
+   "size": 362853,
+   "path": "Work/stickers Folder/Links"
+  },
+  {
+   "id": "1qniRJcfzMJ_sICYFxCP1Q6OQMCkfPA9q",
+   "title": "IMG_0985.png",
+   "type": "png",
+   "size": 1148802,
+   "path": "Work/stickers Folder/Links"
+  },
+  {
+   "id": "1rDLlJY2rMfUFFBHMK_69xbvB-zc96x_I",
+   "title": "Untitled-1.png",
+   "type": "png",
+   "size": 186846,
+   "path": "Work/stickers Folder/Links"
+  },
+  {
+   "id": "1Sof_wOS9WV5vVUa98iAhC6kLBDDVDN3D",
+   "title": "WhatsApp Image 2026-04-27 at 4.03.56 PM.jpeg",
+   "type": "jpeg",
+   "size": 39574,
+   "path": "Work/stickers Folder/Links"
+  },
+  {
+   "id": "1kXW7-5ApANPoVluMF92vvpw1o0DKXhwv",
+   "title": "WhatsApp Image 2026-04-27 at 3.58.48 PM.jpeg",
+   "type": "jpeg",
+   "size": 70015,
+   "path": "Work/stickers Folder/Links"
+  },
+  {
+   "id": "1PwmhsJuPlr3i7v3pMW49kYqV2S3rmhy9",
+   "title": "Gemini_Generated_Image_fkogvsfkogvsfkog.png",
+   "type": "png",
+   "size": 466834,
+   "path": "Work/stickers Folder/Links"
+  },
+  {
+   "id": "1P9mAQdtB9pAcV2EmRKiP_5rE0w4Hb1hT",
+   "title": "IMG_9908.HEIC",
+   "type": "heic",
+   "size": 258098,
+   "path": "Work/stickers Folder/Links"
+  },
+  {
+   "id": "1MPV8-IonkwMEodPluq4gonpmVKG-_8Xv",
+   "title": "WhatsApp Image 2026-04-15 at 2.04.10 PM (1).jpeg",
+   "type": "jpeg",
+   "size": 250554,
+   "path": "Work/stickers Folder/Links"
+  },
+  {
+   "id": "160nUcgxb8VXFNfMy91ODnw29p6_jw2RT",
+   "title": "aref-regular.ttf",
+   "type": "ttf",
+   "size": 104580,
+   "path": "Work/stickers Folder/Document fonts"
+  },
+  {
+   "id": "1BzEtTjWFzcutb-LZKu0kLTfXbdFZ4T6E",
+   "title": "Cairo-Black.ttf",
+   "type": "ttf",
+   "size": 175492,
+   "path": "Work/stickers Folder/Document fonts"
+  },
+  {
+   "id": "1cdPxjVY688RxFWO7PBBf8_gyNWgfvJam",
+   "title": "MinionPro-Regular.otf",
+   "type": "otf",
+   "size": 218640,
+   "path": "Work/stickers Folder/Document fonts"
+  },
+  {
+   "id": "1dV5-LzoALfnarhdFqxWj0jzWqVxJYrO5",
+   "title": "SPINDOUT.TTF",
+   "type": "ttf",
+   "size": 97884,
+   "path": "Work/stickers Folder/Document fonts"
+  },
+  {
+   "id": "1-oEj6PK7RVRX9Hm0zwI_saWE8H8I47GI",
+   "title": "NexaRustHandmade-Extended.otf",
+   "type": "otf",
+   "size": 105000,
+   "path": "Work/stickers Folder/Document fonts"
+  },
+  {
+   "id": "1lgxuaNAsPxX8GdXC7bD11am6MTDZXRnn",
+   "title": "bitsy-ar-standardline.ttf",
+   "type": "ttf",
+   "size": 32552,
+   "path": "Work/stickers Folder/Document fonts"
+  },
+  {
+   "id": "1sgOe5VY-09gMGtPTdqUEwgOZyjKm2MM6",
+   "title": "BrittanySignature.ttf",
+   "type": "ttf",
+   "size": 27536,
+   "path": "Work/stickers Folder/Document fonts"
+  },
+  {
+   "id": "11Lg3MpJbZyVzBt3Nm5HL_1Cs74c4Fyrn",
+   "title": "AdobeFnt24.lst",
+   "type": "lst",
+   "size": 4405,
+   "path": "Work/stickers Folder/Document fonts"
+  },
+  {
+   "id": "1-pnNYeQB0UAs4w2WnUkwAniwUHJCwvNo",
+   "title": "STICKERS updated .rar",
+   "type": "rar",
+   "size": 7023204,
+   "path": "Work"
+  },
+  {
+   "id": "1A-Hu0Fi-topo9a13oTM_IwiOX1Da96WD",
+   "title": "bookmark.pdf",
+   "type": "pdf",
+   "size": 1794025,
+   "path": "Work/Bookmark Folder"
+  },
+  {
+   "id": "1TckLXoNPM8yQK7tgrJq16eFqyyjsW_tA",
+   "title": "bookmark.idml",
+   "type": "idml",
+   "size": 66539,
+   "path": "Work/Bookmark Folder"
+  },
+  {
+   "id": "1O0gHV6M3lxNZRCoE1GVIcHVbkL-i4i4k",
+   "title": "bookmark.indd",
+   "type": "indd",
+   "size": 2457600,
+   "path": "Work/Bookmark Folder"
+  },
+  {
+   "id": "1WjV8GTcBEOeOnXOArkEoj9k2sXnlghoS",
+   "title": "Postcard - Farah.pdf",
+   "type": "pdf",
+   "size": 9755565,
+   "path": "Work/Postcard designs"
+  },
+  {
+   "id": "1kQN9IB3KXobsOpWqGdsXTm_A6qPwi7zK",
+   "title": "لوحات كافيه 08.pdf",
+   "type": "pdf",
+   "size": 17874785,
+   "path": "Work/Art"
+  },
+  {
+   "id": "1EcHnOYdqIwJQgRLG5eiDzVsKWqZnbJ_R",
+   "title": "IMG_0981.JPEG",
+   "type": "jpeg",
+   "size": 362853,
+   "path": "Work/Art"
+  },
+  {
+   "id": "1yyync3Czcvcu_jYq2306PY4WUHKjZyHH",
+   "title": "IMG_0985.JPEG",
+   "type": "jpeg",
+   "size": 286888,
+   "path": "Work/Art"
+  },
+  {
+   "id": "1_kUBgScTz6LLFjwvFbI1RgsWfFijK9wB",
+   "title": "IMG_0984.JPEG",
+   "type": "jpeg",
+   "size": 453478,
+   "path": "Work/Art"
+  },
+  {
+   "id": "1-N-dlpQ5NMXN6HfBWQL06Ejs-PuN5kqr",
+   "title": "IMG_0983.JPEG",
+   "type": "jpeg",
+   "size": 392475,
+   "path": "Work/Art"
+  },
+  {
+   "id": "1U781SIX6Fg1XFZORrcHWnbUiUxhw2dM3s",
+   "title": "Copy of IMG_0983.JPEG",
+   "type": "jpeg",
+   "size": 392475,
+   "path": "Work/Art"
+  },
+  {
+   "id": "1XFda0ycGEgUtFEG1EvfF3VMGi2G_SHFM",
+   "title": "IMG_9925.DNG",
+   "type": "dng",
+   "size": 25445566,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1Nt3Et9kp6qw5wtAlzZkZzljnRRkxS2_m",
+   "title": "IMG_9920.DNG",
+   "type": "dng(jpeg)",
+   "size": 2031172,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "176OpRwJCrcTw3E0m2VpDnDBd3MRFRiUU",
+   "title": "IMG_9922.DNG",
+   "type": "dng(jpeg)",
+   "size": 1660200,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1rk7chu208PSo3sWkavxU3TX3tPRm2mF1",
+   "title": "IMG_9919.DNG",
+   "type": "dng(jpeg)",
+   "size": 2511123,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1ECVLKuMXNLB6j-uzIfurKppDGpgrgW5e",
+   "title": "IMG_9917.DNG",
+   "type": "dng(jpeg)",
+   "size": 1838569,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1qrgqqo062jbF2YnAdqL_-P8hTOtzYKp9",
+   "title": "IMG_9916.DNG",
+   "type": "dng(jpeg)",
+   "size": 860416,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1HdrHWN2Pqa7wMAvUVVmH1vG39yTpB4uZ",
+   "title": "IMG_9915.DNG",
+   "type": "dng(jpeg)",
+   "size": 1636590,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1UYZwG91W-WarXBOlbV_l6gczsmX4qWXC",
+   "title": "IMG_9924.DNG",
+   "type": "dng(jpeg)",
+   "size": 1349747,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "14YSazuF6GsqAkL6Ms_z3QVVmFXVZ7Mvw",
+   "title": "IMG_9918.DNG",
+   "type": "dng(jpeg)",
+   "size": 2961769,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1H0s4wxY32PMcIKDuVVhv0vvr1H2uaN3T",
+   "title": "IMG_9923.DNG",
+   "type": "dng(jpeg)",
+   "size": 2021354,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1Qs3izwtRdCikfBcej3S7lUfXQfgV7KH7",
+   "title": "IMG_9914.DNG",
+   "type": "dng(jpeg)",
+   "size": 3008831,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1tOU6J7ChbNa11QUzxY0K9CHHZcCgfAYa",
+   "title": "IMG_9921.DNG",
+   "type": "dng(jpeg)",
+   "size": 1394497,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1M5Lj-WKi0X3kbS07PAwZBzNBn3WAIRvf",
+   "title": "IMG_9913.DNG",
+   "type": "dng",
+   "size": 18662221,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1167VXA-JByhF9NoKiru1UHq9DQFf5XOK",
+   "title": "IMG_9926.DNG",
+   "type": "dng(jpeg)",
+   "size": 1033817,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "15uovfFuVLeI5SQ7pAh7xB0q-6fWs8qfQ",
+   "title": "IMG_9912.HEIC",
+   "type": "heic",
+   "size": 213286,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1sooBigKCiNf9CCf_VazfeMv_vIkmI8AG",
+   "title": "IMG_9910.HEIC",
+   "type": "heic",
+   "size": 310763,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "16VG_YIey2vLQw6S2_JtTUtzefzhOEMSb",
+   "title": "IMG_9908.HEIC",
+   "type": "heic",
+   "size": 258098,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1VdP2jFaruXvfT7Hjab-ifGbSrMoLZd-Z",
+   "title": "IMG_9906.HEIC",
+   "type": "heic",
+   "size": 446824,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "10vNATrd13ujpzAgi2tF2BRDON1G2Fpdr",
+   "title": "WhatsApp Image 2026-04-27 at 4.03.56 PM.jpeg",
+   "type": "jpeg",
+   "size": 39574,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1mT7m6NhSNYl0mOKxWu9JC2GRhN-1W-De",
+   "title": "WhatsApp Image 2026-04-27 at 3.58.48 PM.jpeg",
+   "type": "jpeg",
+   "size": 70015,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1VMAI4JZZ4bEEe9K4FH5pZP61RZ8WImK8",
+   "title": "IMG_0100.HEIC",
+   "type": "heic",
+   "size": 401908,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1aolykcdAHmKebP_ZGB1h1y3SSnwAFdxJ",
+   "title": "IMG_9927.HEIC",
+   "type": "heic",
+   "size": 665318,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1z58996D7TFDd5QWSnPxyh8Lsn3mgzsdA",
+   "title": "IMG_9928.HEIC",
+   "type": "heic",
+   "size": 466322,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1WpIDaxLh3sXNg-4rPwN9K1PwBYlBi83l",
+   "title": "IMG_9929.HEIC",
+   "type": "heic",
+   "size": 1263007,
+   "path": "Work/Art/ART"
+  },
+  {
+   "id": "1-xW-mvHaJoomdRok7l9NpOr9MXjMs8Qs",
+   "title": "CALENDER2023.pdf",
+   "type": "pdf",
+   "size": 12082126,
+   "path": "Work/Calendars"
+  },
+  {
+   "id": "1yjRjsiutftAbE-6igLk_yVvZM8_eUJta",
+   "title": "Calendar 2025 .pdf",
+   "type": "pdf",
+   "size": 18278065,
+   "path": "Work/Calendars"
+  },
+  {
+   "id": "1RH2UHMqdSvvAxERhZOsrUMPU1QLTy4qD",
+   "title": "2025 Farah calendar .pdf",
+   "type": "pdf",
+   "size": 18278065,
+   "path": "Work/Calendars"
+  },
+  {
+   "id": "1plDWax_szc3XPfNcQfthRTWGbddIWwjT",
+   "title": "CALENDAR 2026.pdf",
+   "type": "pdf",
+   "size": 16723559,
+   "path": "Work/Calendars"
+  },
+  {
+   "id": "1pxhrdzZr5UjvxwXb-WfHMIWBhYi2QRPZ",
+   "title": "2022-01-06.png",
+   "type": "png",
+   "size": 1487837,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1Bfw4thw_Ei3xJEezGlzGX1mpWfAEtY-N",
+   "title": "2022-01-06 (33).png",
+   "type": "png",
+   "size": 830063,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "11XjWTt-cMoyU9KL_GumAjBgfcQD7Ry02",
+   "title": "2022-01-06 (32).png",
+   "type": "png",
+   "size": 919326,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1gX1lRL_Bn6vnJMGpIwhEx2FY7IzL-23R",
+   "title": "2022-01-06 (31).png",
+   "type": "png",
+   "size": 888875,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1HqrLTPLrS8mNG4ekz8i1WKp8vFLpZCu1",
+   "title": "2022-01-06 (27).png",
+   "type": "png",
+   "size": 542129,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1PU80EjJcmfNaion1UG35OcQSfqEwoGbH",
+   "title": "2022-01-06 (17).png",
+   "type": "png",
+   "size": 860578,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1fQg-4ViWbUSV3tdZXVv3D2RE121G0vF1",
+   "title": "193 Table Tent Mockup.png",
+   "type": "png",
+   "size": 4510551,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1WoBxlWz9ikbvtjjbrQFQ0kkmNqP-eJqu",
+   "title": "free-business-card-mockup-vol2.png",
+   "type": "png",
+   "size": 8972400,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1bMPvK8ZA6nweoQOurSLFsYLVVqItrrvF",
+   "title": "2025 CALENDAR.png",
+   "type": "png",
+   "size": 13963904,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1ybGvdAV4k6J7tLisfMXTYHnOJg87kmTP",
+   "title": "unnamed (6).jpg",
+   "type": "jpg",
+   "size": 601074,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1XwbffGFtIoO89HLURNA3xI4H63hpFcVz",
+   "title": "unnamed (5).jpg",
+   "type": "jpg",
+   "size": 369205,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1sky17jxSd7I1k_4kCBnZGd3a1MAFTYuI",
+   "title": "unnamed (4).jpg",
+   "type": "jpg",
+   "size": 592083,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1_gsrW7b0ZfIyk8C9YwkDPkBZv8XQbRLu",
+   "title": "unnamed (3).jpg",
+   "type": "jpg",
+   "size": 827676,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1k1TG-rdXF34DgA0oOA9TREBtq6H0-6Cw",
+   "title": "unnamed (2).jpg",
+   "type": "jpg",
+   "size": 577086,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1Z55ljlwZhdahtbuhvQIEmbYOIwMs46IC",
+   "title": "unnamed (1).jpg",
+   "type": "jpg",
+   "size": 482303,
+   "path": "Work/Calendars/calender photos"
+  },
+  {
+   "id": "1_GQw55V6EJG3SQmJKs51mg2KbOfZrEHR",
+   "title": "Farah_stamp_stickers.pdf",
+   "type": "pdf",
+   "size": 127232038,
+   "path": "PRINTING FILES/Dubai printing"
+  },
+  {
+   "id": "1gcw88I9uFAlcIkUG7-JO6u15CDtKvRs2",
+   "title": "stamp_sticker_3.png",
+   "type": "png",
+   "size": 449281,
+   "path": "PRINTING FILES/Jukebox printing (Canada)"
+  },
+  {
+   "id": "194XjjJ3izpKGQF-e6rHyFUMl5-__f8-G",
+   "title": "stamp_sticker_2.png",
+   "type": "png",
+   "size": 649726,
+   "path": "PRINTING FILES/Jukebox printing (Canada)"
+  },
+  {
+   "id": "1zlpWNQmWVxVlxSC7OomioQiPp3EMox-m",
+   "title": "stamp_sticker_1.png",
+   "type": "png",
+   "size": 550222,
+   "path": "PRINTING FILES/Jukebox printing (Canada)"
+  },
+  {
+   "id": "1okVNRq4ZuEsksi9dp2dN7NVrbiT6WoLh",
+   "title": "A4743627-BF28-4803-AF2D-8AF23235612B.jpg",
+   "type": "jpg",
+   "size": 410815,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1zOBbmJ33t-SljZecxkmFtXHOohr8JSdA",
+   "title": "farahhelo_1705581233_highlight.jpg",
+   "type": "jpg",
+   "size": 480085,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1n4xYmxoW61GAHMXMfRn1eSlSiPdlvboc",
+   "title": "farahhelo_1704631737_highlight.jpg",
+   "type": "jpg",
+   "size": 592786,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1dpvwf59Ur3gTF1lXIKUD57yHlo2QXVSl",
+   "title": "farahhelo_1704794780_highlight.jpg",
+   "type": "jpg",
+   "size": 596612,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "144XLdjK6ze7hZjCJwoiDBKjm-Ob2nLsG",
+   "title": "farahhelo_1705664518_highlight.jpg",
+   "type": "jpg",
+   "size": 623360,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1H9FWs3kssxijTMcg5A1-lDJMujCYA7fZ",
+   "title": "IMG_2330.HEIC",
+   "type": "heic",
+   "size": 3001458,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1twrQQjJgUE-X_eY4QJBAgxW42dl65-fQ",
+   "title": "IMG_2333.HEIC",
+   "type": "heic",
+   "size": 1660655,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1PIh2dlvpWzjr-W4m2vhDDNtR5MMPsm2d",
+   "title": "IMG_2332.HEIC",
+   "type": "heic",
+   "size": 2770010,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1XNTczTmVtKWAiTR-Tow0ork2bZcYJVpa",
+   "title": "IMG_4541.HEIC",
+   "type": "heic",
+   "size": 3749583,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1fZfW9mdZNhOLyhUiESl4UysuFH15tlEw",
+   "title": "40E99547-A06D-44F8-B13C-E9572D6DF77E.jpg",
+   "type": "jpg",
+   "size": 6601822,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1Mu5g1G_anhCVGH4H7Yzzie1EmGgib7TL",
+   "title": "IMG_0211.HEIC",
+   "type": "heic",
+   "size": 1156524,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1yuAD357kL4q4s8Z3essnycjgjj06pZ4K",
+   "title": "IMG_4544.HEIC",
+   "type": "heic",
+   "size": 3694280,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1jZ5kNQaJmYUWeY9K8CgwjPhGjSewEH8m",
+   "title": "IMG_0210.HEIC",
+   "type": "heic",
+   "size": 1669927,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1bWwKCaP8U4E_-2m2p65NNhHI9CJrAN95",
+   "title": "IMG_0213.HEIC",
+   "type": "heic",
+   "size": 2394853,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1NNBTyKE28c1vkVZHqm_jH0exFMp1JNET",
+   "title": "farahhelo_1714469305_highlight.jpg",
+   "type": "jpg",
+   "size": 435358,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1Mny5IzfWlDSoesGA7H8BOI3N7Ezqufxv",
+   "title": "farahhelo_1775148849_..2281740897.jpg",
+   "type": "jpg",
+   "size": 121646,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1V7DYLBSD0IEIq30-bWPUYvhLiAUncC3n",
+   "title": "farahhelo_1709290622_highlight.jpg",
+   "type": "jpg",
+   "size": 499512,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1ajAdBl1jMd_05b1E8WPqti1gCYz5xaRV",
+   "title": "farahhelo_1775148849_..2281740897 (b).jpg",
+   "type": "jpg",
+   "size": 399003,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "15urZWgUj3uXchdUGtp_EVuQnQbD2YWGM",
+   "title": "farahhelo_1712853082_highlight.jpg",
+   "type": "jpg",
+   "size": 814002,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1V93udH6UULZ9hFsl0cbl8EltR8LVScyY",
+   "title": "IMG_5516.HEIC",
+   "type": "heic",
+   "size": 2211732,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1J6yvP7ip-7oU-mILUr4i7dzQQi-kbt7W",
+   "title": "journal.defarah_1713026478.jpg",
+   "type": "jpg",
+   "size": 48410,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "17mD476kAnO-aFxqm2LHnj60_qxCtsmOj",
+   "title": "IMG_3057.HEIC",
+   "type": "heic",
+   "size": 1620248,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1PleU4maLWKTaEnUvKL8c5cz4niZQwy0L",
+   "title": "85E9B03E-193C-4B1E-90F3-5DFA84722EDE.jpg",
+   "type": "jpg",
+   "size": 311705,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1Izn6IV64QNCify_sD0nhwE66seZNRqEN",
+   "title": "D8ABDCEF-19F3-4E05-A8C4-6F817A325029.jpg",
+   "type": "jpg",
+   "size": 2002833,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "16TQrpldT9NHNNUdjOUJzOm2VQ74hVnCi",
+   "title": "IMG_7430.HEIC",
+   "type": "heic",
+   "size": 1663303,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1lkBWUuo24Py8TIggVBC81PiWTcDXaECX",
+   "title": "journal.defarah_1720813363_..556.jpg",
+   "type": "jpg",
+   "size": 411780,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1wq9l4aZInfoXcdyrKqbg5lXR0wYFAYeH",
+   "title": "7AEFF7C5-4E89-4315-ADFC-B6263C5AF8F9.jpg",
+   "type": "jpg",
+   "size": 180557,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "10MWPZuorxdgkM_mDZ9TLTBGwkH93U_bx",
+   "title": "IMG_3162.HEIC",
+   "type": "heic",
+   "size": 1247765,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1IGAr53sjzLpAePVAIXTiFhWKA97-Xlvl",
+   "title": "28BBA82E-AD49-42EF-9B7F-3C605284291B.jpg",
+   "type": "jpg",
+   "size": 217139,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1ZNeGQuJoRwNTvckSCCf7dtjxlXzqWK7x",
+   "title": "IMG_5828.HEIC",
+   "type": "heic",
+   "size": 2711336,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "11ZITBlrnA4U0UgQwFc-Q1BwoT25rZvhw",
+   "title": "journal.defarah_1723730366_..988.jpg",
+   "type": "jpg",
+   "size": 406598,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1SGZaAuTC63Gtyk-b8y3E03oVo3yzi2ut",
+   "title": "journal.defarah_1754822996.jpg",
+   "type": "jpg",
+   "size": 1092474,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1gAYjTFojACZWS7msIPG6ZohPEpa-UYEH",
+   "title": "journal.defarah_1712911677.jpg",
+   "type": "jpg",
+   "size": 593283,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1ib_v-Mrb4SMwZPAGfHemqBK4P59AI7Go",
+   "title": "IMG_1265.PNG",
+   "type": "png",
+   "size": 3780287,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1XgpUdT9M_W5DL2L40UI8FRwiMseA3Qhn",
+   "title": "journal.defarah_1723730366_..805.jpg",
+   "type": "jpg",
+   "size": 472447,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1beqONf660Eow3wL8SImZ8MiaDB3_UpA_",
+   "title": "5 october2025.jpg",
+   "type": "jpg",
+   "size": 152880,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "11iFOaCjc6PRbZmXSWtWbQ_7DSCG6wQd1",
+   "title": "IMG_1700.HEIC",
+   "type": "heic",
+   "size": 3323570,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1LfNgQzQNdUSWDeMJfqTmnQvCWBoDhivd",
+   "title": "5 october 2025.jpg",
+   "type": "jpg",
+   "size": 3182173,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1N-d2eawnHQpa-tYzwUSzielbeSEWZzvx",
+   "title": "journal.defarah_1712914361.jpg",
+   "type": "jpg",
+   "size": 235779,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1HBZTogoxSOgO5Yj-lTX9iKl-gBp6obHd",
+   "title": "IMG_5478.HEIC",
+   "type": "heic",
+   "size": 1849517,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1uQjF1cQe4QxKrC_oi3KCZuUooGVnZK86",
+   "title": "IMG_5689.HEIC",
+   "type": "heic",
+   "size": 3576069,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1GwH87Ai1CmV-4-tqslQQoxh2uPggp0Tz",
+   "title": "IMG_7424.HEIC",
+   "type": "heic",
+   "size": 1325035,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1se7Rf4Gj7ut3YLOXifc2f9gENyQu6o7r",
+   "title": "journal.defarah_1713024589.jpg",
+   "type": "jpg",
+   "size": 359039,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1lkrt_Yz5Bku0A82Sp8Npv_a8I7nJVi__",
+   "title": "IMG_6695.HEIC",
+   "type": "heic",
+   "size": 1832479,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1NlE3Klz66f3eBk-HoCvNGEO0N0WzAhNM",
+   "title": "journal.defarah_1720813363_..396.jpg",
+   "type": "jpg",
+   "size": 402890,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "12ZW8sk89A-T7ThI2ii5y6DHS4ppzG4Ln",
+   "title": "Wednesday January 7 2026.HEIC",
+   "type": "heic",
+   "size": 1912506,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1K8zK7z6BoIXizXa1Y1iywRHrCtBwE1hk",
+   "title": "Wednesday January 7 2026,2.HEIC",
+   "type": "heic",
+   "size": 1684453,
+   "path": "Work/Photography"
+  },
+  {
+   "id": "1raB01XB36XFoLXf5Xs5ccmicPZCbHH1q",
+   "title": "Photo from farah 18",
+   "type": "jpeg",
+   "size": 55987,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "10h66vJkrcRw_1pcuZ_Ft53418dlLjv_w",
+   "title": "Photo from farah 17",
+   "type": "jpeg",
+   "size": 107273,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1Uk_0SlQ5l_RqySDIapYCzWddOAk3qzOj",
+   "title": "Photo from farah 16",
+   "type": "jpeg",
+   "size": 156635,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1ATnKAugaNLUrShPIlNAGz8aT08wuQcNz",
+   "title": "Photo from farah 15",
+   "type": "jpeg",
+   "size": 94499,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1koskSl7ZPSJh__RMCIMUmlRxi3XV-JCy",
+   "title": "Photo from farah 14",
+   "type": "jpeg",
+   "size": 908740,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1PFTOKaTO73foikPdrUi6hoZFXD7NDCcp",
+   "title": "Photo from farah 13",
+   "type": "jpeg",
+   "size": 212144,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1sgFQZFqbmG59pANNz2OqYhNxpcRJnmNy",
+   "title": "Photo from farah 12",
+   "type": "jpeg",
+   "size": 126447,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1yJ29PVsF3EscZrbGBEVPmw98FYi-byGj",
+   "title": "Photo from farah 11",
+   "type": "jpeg",
+   "size": 123177,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1EBeZjY4bUAOSeSuvUIIMr-ACNPKIJfIx",
+   "title": "Photo from farah 10",
+   "type": "jpeg",
+   "size": 2897729,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1DcMgQ2-1npa9FSgbORLXTFw-XBTbyZmq",
+   "title": "Photo from farah 9",
+   "type": "jpeg",
+   "size": 113851,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1I1Fm3ls0ESeT6C-5-SsAGD7-OEfq0iYF",
+   "title": "Photo from farah 8",
+   "type": "jpeg",
+   "size": 128933,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1jiu4bNarEkvpkl_ghQ39onYbDDJBxCCc",
+   "title": "Photo from Farah 7",
+   "type": "jpeg",
+   "size": 73657,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1i0ys_S3S9SzIx4J8pZDMY7-Pf5HupVev",
+   "title": "Photo from farah 6",
+   "type": "jpeg",
+   "size": 98326,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1Tloybfj39yV7IpR6hl033a0dp6wr5k0Q",
+   "title": "Photo from farah 5",
+   "type": "jpeg",
+   "size": 71493,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1DYPQF2iOOPTCVZ_vD_qdASUKLEoF6EQe",
+   "title": "Photo from farah 4",
+   "type": "jpeg",
+   "size": 1500710,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1R708DOCco38n4OxL3l7ARjGlFBgd4ZKI",
+   "title": "Photo from farah 1",
+   "type": "jpeg",
+   "size": 2840373,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1pIkNYiY77xS_CzHKAqFypPbN7vhZ5B1R",
+   "title": "Photo from farah 3",
+   "type": "jpeg",
+   "size": 126447,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1kUS3mD15IyWDDS8r0FyrE12pyv-RSZo8",
+   "title": "Photo from farah 2",
+   "type": "jpeg",
+   "size": 2874300,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1w7DPB5CWPHsoiRhZjUB4L5PcBQSazl1E",
+   "title": "Video from farah 10",
+   "type": "mp4",
+   "size": 719545,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1oPg-vnUEzUl7GQYHiJpldPFC-buFSg2Z",
+   "title": "Video from farah 9",
+   "type": "mp4",
+   "size": 1744959,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1bO2ePhNDbe8rhgnj1M3H-VDOGjBvhH8K",
+   "title": "Video from farah 8",
+   "type": "mp4",
+   "size": 8411601,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1_y3HbNe8kgCMDuqIb1XmJ0zdqYhG3U3U",
+   "title": "Video from farah 7",
+   "type": "mp4",
+   "size": 3108513,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1T7UfrQxG329xRmbKx9Cx9b9TA4LuDr8V",
+   "title": "Video from farah 6",
+   "type": "mp4",
+   "size": 6022680,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1yh8QWTJ76mSalcRJ948hV9TwsVMpaNgT",
+   "title": "Video from farah 5",
+   "type": "mp4",
+   "size": 1452886,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1nTyKl_lFBFoSRLmfn_sB4P1F7XS95AHC",
+   "title": "Video from farah 4",
+   "type": "mp4",
+   "size": 5042088,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1vZyKe0UVuh_WNmdAAMYDJVqLaJpkH4Bd",
+   "title": "Video from farah 3",
+   "type": "mp4",
+   "size": 1190748,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1MZluwcS70MeyYyz08Sv5nhkdHYBtE0VO",
+   "title": "Video from farah 2",
+   "type": "mp4",
+   "size": 1559761,
+   "path": "Video project/Video clips & photos"
+  },
+  {
+   "id": "1rnw9mrn0kM-L1WBXzy12I0WfOznkwzMX",
+   "title": "Video from farah 1",
+   "type": "mp4",
+   "size": 2216936,
+   "path": "Video project/Video clips & photos"
+  }
+ ],
+ "mapping": {
+  "postcards_pdf": {
+   "file": "1WjV8GTcBEOeOnXOArkEoj9k2sXnlghoS",
+   "note": "10 postcard fronts, text-read titles",
+   "matches": {
+    "Gaza Coast": "postcard:hero",
+    "The Boat": "postcard:boattop",
+    "Me & the Fishes": "NEW",
+    "Crashing Waves | port of Gaza": "postcard:waves (likely)",
+    "Fire Taboon (displacement house)": "NEW",
+    "Ramadan Sparks": "postcard:sparklers (likely)",
+    "Fishing | Gaza Sea": "NEW (maybe seafish)",
+    "Al-Maghazi Camp": "NEW",
+    "The Bridal Thoub": "NEW",
+    "Soul Reflection": "NEW"
+   }
+  },
+  "cafe_paintings_pdf": {
+   "file": "1kQN9IB3KXobsOpWqGdsXTm_A6qPwi7zK",
+   "note": "13 architectural/landscape watercolours, text-read titles; only Bridal Thoub, Sea Harvest, Maghazi lanes, Deir al-Balah spring overlap catalog (deirbalah)",
+   "titles": [
+    "Balcony Embrace / Al-Shurfa",
+    "Mosaic Underfoot",
+    "Art of Al-Ablaq",
+    "Shaded Aperture",
+    "Courtyard Sun",
+    "Crowned Roof",
+    "Clay Craft",
+    "Zawayda Gateway",
+    "Shores of Displacement",
+    "Al-Maghazi Lanes",
+    "Spring in Deir al-Balah (catalog: deirbalah)",
+    "Sea Harvest",
+    "The Bridal Thoub"
+   ]
+  },
+  "calendar_2026_palestine": "1plDWax_szc3XPfNcQfthRTWGbddIWwjT (16.7 MB, original of palestine-2027)",
+  "calendar_2027_bottles": "NOT in Drive (owner has V2 PDF locally / uploaded earlier)",
+  "stickers": {
+   "sheet_pdf": "1_h6B3aWXNfLqOQWhqaKyC7S2_O6k672B 0.85MB; indd 1NRtMCii9XSZJ1MgO6JK3cbWBJVP3wU-i; print file 1_GQw55V6EJG3SQmJKs51mg2KbOfZrEHR 127MB",
+   "note": "stamp_sticker_1..3.png (0.45-0.65MB) in Jukebox printing"
+  },
+  "paintings": "No high-res per-painting files found by name. Art/ART holds 28 phone photos/DNG/HEIC (IMG_9906-9929, 0.2-25MB) that are probably photos of originals; cannot map by name without viewing."
+ }
+}

@@ -4,3 +4,4 @@ __pycache__/
 drafts/collage/.wstate/
 worker/.dryrun/
 worker/.state/
+.claude/worktrees/
