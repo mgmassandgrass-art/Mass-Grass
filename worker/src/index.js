@@ -345,7 +345,8 @@ async function api(req, env, url, p) {
   // CSRF: state-changing requests must come from our own origin.
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     const o = req.headers.get('origin');
-    if (!o || (o !== env.SITE_ORIGIN && !/^https?:\/\/localhost(:\d+)?$/.test(o))) return fail('forbidden', 403);
+    const dev = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+    if (!o || (o !== env.SITE_ORIGIN && !(dev && /^https?:\/\/localhost(:\d+)?$/.test(o)))) return fail('forbidden', 403);
   }
   if (p === '/api/signup' && req.method === 'POST') return signup(env, req);
   if (p === '/api/login' && req.method === 'POST') return login(env, req);
@@ -463,6 +464,8 @@ async function handle(req, env0) {
     const url = new URL(req.url);
     // massandgrass.com (no www) sends everyone to the one real address.
     if (url.hostname === 'massandgrass.com') return Response.redirect(`https://www.massandgrass.com${url.pathname}${url.search}`, 301);
+    // plain http goes to https (Cloudflare usually does this first; this makes sure)
+    if (url.protocol === 'http:' && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') return Response.redirect(`https://${url.host}${url.pathname}${url.search}`, 301);
     const env = { ...env0, SITE_ORIGIN: url.origin }; // same origin as the page: production host or the staging workers.dev host
     let path = url.pathname;
     try { path = decodeURIComponent(path); } catch {} // '/%61dmin/' must meet the same checks as '/admin/' (the asset server decodes it)

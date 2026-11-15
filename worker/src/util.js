@@ -16,3 +16,15 @@ export const CALS = {
   'palestine-2027': ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027', 'palestine-2027'],
 };
 export const calFile = (k) => (CALS[k] || CALS['calendar-2027'])[2];
+
+// What a file really is, read from its first bytes (the browser's content-type is only a claim): pdf, png, jpeg, webp or zip.
+export function sniff(buf) {
+  const b = buf instanceof Uint8Array ? buf : new Uint8Array(buf), s = (i, n) => String.fromCharCode(...b.subarray(i, i + n));
+  if (b.length < 12) return null;
+  if (s(0, 5) === '%PDF-') return 'application/pdf';
+  if (b[0] === 0x89 && s(1, 3) === 'PNG') return 'image/png';
+  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'image/jpeg';
+  if (s(0, 4) === 'RIFF' && s(8, 4) === 'WEBP') return 'image/webp';
+  if (b[0] === 0x50 && b[1] === 0x4b && b[2] === 0x03 && b[3] === 0x04) return 'application/zip';
+  return null;
+}

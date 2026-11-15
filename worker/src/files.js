@@ -1,5 +1,5 @@
 // Files sold with each product: uploaded from the admin, kept in D1 in chunks, downloaded by buyers through order-bound links.
-import { json, fail, clean, calFile } from './util.js';
+import { json, fail, clean, calFile, sniff } from './util.js';
 
 const MAX = 45 * 1024 * 1024; // stays inside the free plan's 50 database queries per request
 const CHUNK = 1.5 * 1024 * 1024; // D1 keeps up to 2 MB per value
@@ -69,10 +69,12 @@ export async function filesAdmin(env, req, url, p) {
     const buf = new Uint8Array(await req.arrayBuffer());
     if (!buf.length) return fail('empty');
     if (buf.length > MAX) return fail('too_big', 413);
+    const real = sniff(buf);
+    if (!real) return fail('bad_type'); // not a PDF, PNG, JPEG, WebP or ZIP, whatever its name or header says
     const id = crypto.randomUUID().replace(/-/g, '').slice(0, 20), n = Math.ceil(buf.length / CHUNK);
     for (let i = 0; i < n; i++) await env.DB.prepare('INSERT INTO file_chunks(file_id,idx,data) VALUES(?,?,?)').bind(id, i, buf.subarray(i * CHUNK, (i + 1) * CHUNK)).run();
     await env.DB.prepare('INSERT INTO product_files(id,kind,product_id,name,size,type,chunks,created_at) VALUES(?,?,?,?,?,?,?,?)')
-      .bind(id, kind, pid, name, buf.length, type, n, Date.now()).run();
+      .bind(id, kind, pid, name, buf.length, real, n, Date.now()).run();
     return json({ ok: true, id });
   }
   if (m === 'DELETE') {

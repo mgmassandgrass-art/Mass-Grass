@@ -1,5 +1,5 @@
 // Catalog, orders, PayPal and the admin API.
-import { json, fail, readJson, clean, CALS, calFile } from './util.js';
+import { json, fail, readJson, clean, CALS, calFile, sniff } from './util.js';
 import { orderFiles } from './files.js';
 import { orderPaidEmails, shippedEmail } from './mail.js';
 
@@ -331,10 +331,11 @@ export async function admin(env, req, url, p) {
     if (!/^image\/(webp|jpeg|png)$/.test(type)) return fail('bad_type');
     const data = await req.arrayBuffer();
     if (data.byteLength > 1.8e6) return fail('too_big', 413);
+    if (!/^image\/(webp|jpeg|png)$/.test(sniff(data) || '')) return fail('bad_type');
     const key = clean(url.searchParams.get('key'), 40) || 'u-' + crypto.randomUUID().slice(0, 8);
     if (!/^u-[a-z0-9-]{2,37}$/.test(key)) return fail('bad_id');
     await env.DB.prepare('INSERT INTO images(key,type,data,created_at,name) VALUES(?,?,?,?,?) ON CONFLICT(key) DO UPDATE SET type=excluded.type, data=excluded.data')
-      .bind(key, type, data, Date.now(), clean(url.searchParams.get('name'), 120)).run();
+      .bind(key, sniff(data), data, Date.now(), clean(url.searchParams.get('name'), 120)).run();
     return json({ key });
   }
   if (p === '/api/admin/images' && m === 'GET') {

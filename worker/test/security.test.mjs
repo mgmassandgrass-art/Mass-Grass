@@ -46,7 +46,8 @@ ok('failed admin sign-in is an alert', (await anon('POST', '/api/login', { email
 // messages from the help page reach the admin
 r = await anon('POST', '/api/contact', { email: 'someone@example.com', name: 'Someone', topic: 'A question', message: 'Hello from the test.' }); ok('contact accepted', r.s === 200);
 r = await admin('GET', '/api/admin/messages'); const msg = r.j.messages.find((m) => m.email === 'someone@example.com'); ok('message is in the inbox', !!msg && msg.read === 0);
-r = await admin('PUT', '/api/admin/messages', { id: msg.id, read: true }); r = await admin('GET', '/api/admin/overview'); ok('marking read lowers unread', r.j.unread === 0);
+const un0 = (await admin('GET', '/api/admin/overview')).j.unread;
+r = await admin('PUT', '/api/admin/messages', { id: msg.id, read: true }); r = await admin('GET', '/api/admin/overview'); ok('marking read lowers unread', r.j.unread === un0 - 1);
 
 // an order is priced on the server, whatever the browser says
 r = await anon('POST', '/api/orders', { email: 'buyer@example.com', items: [{ k: 'hero', kind: 'painting', p: 0.01 }, { k: 'calendar-2027', kind: 'calendar', p: 0 }] });

@@ -1,6 +1,6 @@
 // Page and image control for the admin panel: page texts, hidden pages/sections, image library and replacements.
 import MANIFEST from './manifest.json';
-import { json, fail, readJson, clean } from './util.js';
+import { json, fail, readJson, clean, sniff } from './util.js';
 import { getSetting, dropCache } from './shop.js';
 
 export const PAGES = MANIFEST.files.filter((f) => f.path.endsWith('.html')).map((f) => f.path);
@@ -192,7 +192,8 @@ export async function siteAdmin(env, req, url, p) {
     if (!/^image\/(webp|jpeg|png)$/.test(type)) return fail('bad_type');
     const data = await req.arrayBuffer();
     if (data.byteLength > 1.8e6) return fail('too_big', 413);
-    await env.DB.prepare('INSERT OR REPLACE INTO images(key,type,data,created_at,name) VALUES(?,?,?,?,?)').bind(file, type, data, Date.now(), file).run();
+    if (!/^image\/(webp|jpeg|png)$/.test(sniff(data) || '')) return fail('bad_type');
+    await env.DB.prepare('INSERT OR REPLACE INTO images(key,type,data,created_at,name) VALUES(?,?,?,?,?)').bind(file, sniff(data), data, Date.now(), file).run();
     const key = file.replace(/\.\w+$/, '');
     await env.DB.prepare('UPDATE products SET big=0 WHERE id=?').bind(key).run(); // the old zoom file no longer matches
     imgCache = null; dropCache();
