@@ -9,11 +9,15 @@
   const { $, $$, esc, t, L } = MG, C = MG.calendar, P = C.pages;
   const name = (p) => (p.m ? (MG.ar ? C.monthsAr[p.m - 1] : C.months[p.m - 1]) : t('The cover', 'الغلاف'));
   const pad = (n) => String(n).padStart(2, '0');
+  /* calendars from earlier years, set for 2027 (each has its own page; add more here) */
+  const OLD = [Object.assign({}, MG.palestine, { when: ['From 2026, set for 2027', 'من 2026، بتواريخ 2027'], img: ['assets/pm-3.webp', 'assets/pm-4.webp'] })];
 
   /* ---------- 1 · full page: the cover first, then the months, a slow cross-fade every 4.5s ---------- */
   const stage = $('#cfstage'), dots = $('#cfdots');
-  stage.innerHTML = P.map((p, i) => `<img${i ? '' : ' class="on"'} src="assets/cd-${pad(i)}.webp" alt="" ${i > 1 ? 'loading="lazy" ' : ''}decoding="async" draggable="false">`).join('');
-  dots.innerHTML = P.map((p, i) => `<button type="button" aria-pressed="${!i}" data-i="${i}"></button>`).join('');
+  /* the calendar on a wall and laid on a table (cww-MM / cwf-MM), the cover in both, then the months by turns */
+  const SL = [['w', 0], ['f', 0], ...P.filter((p) => p.m).map((p) => [p.m % 2 ? 'f' : 'w', p.m])];
+  stage.innerHTML = SL.map((x, i) => `<img class="${x[0] === 'f' ? 'sf' : 'sw'}${i ? '' : ' on'}" src="assets/cw${x[0]}-${pad(x[1])}.webp" alt="" ${i > 1 ? 'loading="lazy" ' : ''}decoding="async" draggable="false">`).join('');
+  dots.innerHTML = SL.map((x, i) => `<button type="button" aria-pressed="${!i}" data-i="${i}"></button>`).join('');
   const ims = $$('img', stage), dbs = $$('button', dots); let at = 0, timer = 0, seen = true;
   function go(i) {
     ims[at].classList.remove('on'); dbs[at].setAttribute('aria-pressed', 'false');
@@ -32,8 +36,8 @@
   function show(i, scroll) {
     sel = (i + MS.length) % MS.length; const p = MS[sel];
     bts.forEach((b, k) => b.setAttribute('aria-pressed', String(k === sel)));
-    const src = view === 'desk' ? `assets/cd-${pad(p.m)}.webp` : `assets/v2-${pad(p.m)}.webp`;
-    const alt = name(p) + (view === 'desk' ? t(', the calendar on a desk', '، التقويم على مكتب') : t(', the page', '، الصفحة'));
+    const src = view === 'desk' ? `assets/cwf-${pad(p.m)}.webp` : `assets/v2-${pad(p.m)}.webp`;
+    const alt = name(p) + (view === 'desk' ? t(', the calendar on a table', '، التقويم على طاولة') : t(', the page', '، الصفحة'));
     $('#btsim').classList.toggle('page', view === 'page');
     if (front.getAttribute('src') !== src) {
       const back = front === A ? B : A; back.src = src; back.alt = alt;
@@ -58,8 +62,10 @@
   MG.page(function (why) {
     $('#cprint').innerHTML = printBlock();
     if (why === 'bag' || why === 'user') return;
-    ims.forEach((im, i) => { im.alt = name(P[i]) + t(': the 2027 calendar on a desk', ': تقويم 2027 على مكتب'); });
-    dbs.forEach((b, i) => b.setAttribute('aria-label', name(P[i])));
+    ims.forEach((im, i) => { const x = SL[i], p = P.find((q) => q.m === x[1]); im.alt = name(p) + (x[0] === 'w' ? t(': the 2027 calendar on a wall', ': تقويم 2027 على الحائط') : t(': the 2027 calendar on a table', ': تقويم 2027 على طاولة')); });
+    dbs.forEach((b, i) => b.setAttribute('aria-label', name(P.find((q) => q.m === SL[i][1]))));
+    /* calendars from earlier years: one card each, each with its own page */
+    $('#olgrid').innerHTML = OLD.map((c) => `<li><a class="ol-c" href="${c.page}"><span class="ol-im"><img src="${c.img[0]}" alt="" loading="lazy"><img src="${c.img[1]}" alt="" loading="lazy"></span><span class="ol-y">${esc(L(c.when))}</span><span class="ol-n">${esc(L(c.short))}</span><span class="ol-p"><b>${MG.fmt(MG.price('calendar'))}</b><span class="go">${t('Open the calendar', 'افتحوا التقويم')}</span></span></a></li>`).join('');
     bts.forEach((b, i) => { b.setAttribute('aria-label', name(MS[i])); b.querySelector('.btn-n').textContent = name(MS[i]); });
     $$('[data-alt-ar]').forEach((e) => { if (e.dataset.altEn == null) e.dataset.altEn = e.alt; e.alt = MG.ar ? e.dataset.altAr : e.dataset.altEn; });
     show(sel);

@@ -158,3 +158,24 @@ html[data-hand]:not(.ar-on) .cf-b .fig{font-family:var(--cal-t)}
 .ps-cover{background:#fff}
 .ps-cover img{filter:none;max-height:min(76vh,700px)}
 @media(max-width:900px){.psfull .cf-bar{background:#fff}}
+
+/* round 3: the opening shows the whole calendar (wall / table photographs, the calendar kept in frame) */
+.cf-stage img.sw{object-position:44% 40%}
+.cf-stage img.sf{object-position:72% 50%}
+@media(max-width:900px){.cfull .cf-stage{aspect-ratio:16/9}}
+.bts-im{aspect-ratio:16/9}
+.bts-im img{object-position:72% 50%}
+.bts-buy{display:flex;align-items:center;gap:16px;margin-top:16px}
+.bts-buy .ink{min-height:52px;padding:0 28px;display:inline-flex;align-items:center;border:1.5px solid var(--cv-ink)}
+.bts-buy .fig{font-weight:400;font-size:clamp(30px,2.6vw,40px);color:var(--cv-rose)}
+html[data-hand]:not(.ar-on) .bts-buy :is(.ink,.fig){font-family:var(--cal-t)}
+html[data-hand]:not(.ar-on) .bts-buy .ink{font-size:21px}
+/* earlier calendars: a grid of cards */
+.ol-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,28px)}
+.ol-c{display:grid;gap:8px;color:inherit;text-decoration:none;padding-bottom:12px}
+.ol-c .ol-im{position:relative;display:block;aspect-ratio:3/2;overflow:hidden;background:#fff;border:1px solid var(--line)}
+.ol-c .ol-n{font-size:clamp(24px,2vw,30px);line-height:1.1;color:var(--cv-ink)}
+.ol-c .ol-y{font-size:19px}
+.ol-c .ol-p b{font-size:28px}
+@media(hover:hover){.ol-c:hover .ol-im img+img{opacity:1}}
+@media(max-width:900px){.ol-grid{grid-template-columns:minmax(0,1fr)}}
