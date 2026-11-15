@@ -48,7 +48,7 @@ a{color:inherit}
 .top-a{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .menu{display:none;width:40px;height:40px;border:0;background:none;padding:0;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:4px}
 .menu i{width:20px;height:2px;background:var(--ink)}
-#view{padding:clamp(16px,3vw,32px);display:grid;gap:24px;align-content:start;outline:0}
+#view{padding:clamp(16px,3vw,32px);display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-content:start;outline:0;min-width:0}
 
 /* controls */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:0 14px;border:1px solid var(--rule-strong);border-radius:var(--r1);background:var(--leaf-white);cursor:pointer;font-weight:600;white-space:nowrap;text-decoration:none;transition:background .15s,transform .1s}
@@ -70,7 +70,7 @@ label.f{display:grid;gap:4px;font-size:var(--fs-cap);font-weight:600;color:var(-
 .bar .grow{flex:1 1 220px;max-width:360px}
 
 /* a leaf of the ledger */
-.leaf{background:var(--leaf);border:1px solid var(--rule);border-radius:var(--r2)}
+.leaf{background:var(--leaf);border:1px solid var(--rule);border-radius:var(--r2);min-width:0}
 .leaf>h2,.leaf>.hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0;padding:14px var(--pad);border-bottom:1px solid var(--rule);font:700 var(--fs-h4)/1.2 var(--f)}
 [dir=rtl] .leaf>h2,[dir=rtl] .leaf>.hd,[dir=rtl] .hd h2{font-family:var(--fa)}
 .hd h2{margin:0;font:700 var(--fs-h4)/1.2 var(--f)}
@@ -146,6 +146,7 @@ label.f{display:grid;gap:4px;font-size:var(--fs-cap);font-weight:600;color:var(-
 .msg{display:grid;gap:6px;padding:14px var(--pad);border-bottom:1px solid var(--rule-soft)}
 .msg:last-child{border:0}.msg.new{background:var(--leaf-white);box-shadow:inset 3px 0 0 var(--terra)}[dir=rtl] .msg.new{box-shadow:inset -3px 0 0 var(--terra)}
 .msg .hdr{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.msg p{margin:0;white-space:pre-wrap;max-width:80ch}
+.msg p.bidi{unicode-bidi:plaintext;text-align:start}
 .msg .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 
 /* forms inside leaves and the sheet */
@@ -163,7 +164,7 @@ label.f{display:grid;gap:4px;font-size:var(--fs-cap);font-weight:600;color:var(-
 .codes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;direction:ltr}
 
 /* the one sheet that lifts off the page */
-dialog.sheet{width:min(720px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:0;border:1px solid var(--rule-strong);border-radius:var(--r2);background:var(--leaf);color:var(--ink);box-shadow:0 24px 60px -20px rgba(var(--ink-rgb),.5)}
+dialog.sheet{width:min(720px,calc(100vw - 24px));max-width:calc(100vw - 24px);overflow-wrap:anywhere;max-height:calc(100dvh - 24px);padding:0;border:1px solid var(--rule-strong);border-radius:var(--r2);background:var(--leaf);color:var(--ink);box-shadow:0 24px 60px -20px rgba(var(--ink-rgb),.5)}
 dialog.sheet::backdrop{background:rgba(var(--ink-rgb),.4)}
 dialog.sheet[open]{animation:sheet .2s cubic-bezier(.23,1,.32,1)}@keyframes sheet{from{opacity:0;transform:scale(.97)}}
 .sh-hd{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px var(--pad);border-bottom:1px solid var(--rule);background:var(--leaf)}
@@ -178,7 +179,9 @@ dialog.sheet[open]{animation:sheet .2s cubic-bezier(.23,1,.32,1)}@keyframes shee
 @media(max-width:820px){.app{grid-template-columns:minmax(0,1fr)}.menu{display:flex}
   .index{position:fixed;inset-block:0;inset-inline-start:0;z-index:30;width:min(280px,86vw);background:var(--table);translate:-100% 0;transition:translate .25s cubic-bezier(.23,1,.32,1);box-shadow:0 0 40px rgba(var(--ink-rgb),.3)}
   [dir=rtl] .index{translate:100% 0}.index.open{translate:0 0}
-  .form .two,.form .three,.pair{grid-template-columns:minmax(0,1fr)}.top{padding-block:10px}}
+  .form .two,.form .three,.pair{grid-template-columns:minmax(0,1fr)}.top{padding-block:10px;flex-wrap:wrap}.top-a{flex:1 1 100%;justify-content:flex-start}
+  .seg{display:flex;max-width:100%;overflow-x:auto;scrollbar-width:none}.seg>*{flex:none}
+  .leaf:has(>table.rows),.leaf:has(>.hd+table.rows){overflow-x:auto}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 /* printed copies and shipping */
 fieldset.print{border:1.5px dashed var(--rule-strong);border-radius:8px;padding:12px 16px 16px;margin:0;display:grid;gap:12px;min-width:0}

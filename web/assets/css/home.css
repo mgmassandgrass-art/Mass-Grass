@@ -181,7 +181,7 @@ html:not(.js) .hs-pg:first-child{opacity:1;transform:none}
 .rg-list.in .rg-b{opacity:1}
 .rg-b img{position:absolute;left:0;top:0;translate:-50% -50%;display:block;height:clamp(70px,11vh,118px);width:auto;max-width:none;filter:drop-shadow(0 6px 8px rgba(80,60,40,.14));transition:filter 1.2s ease;-webkit-user-drag:none;user-select:none}
 .rg-list.up .rg-b img{filter:drop-shadow(0 24px 20px rgba(80,60,40,.2))}
-.rg-sky img{position:absolute;max-width:none;pointer-events:none}
+.rg-sky img{position:absolute;max-width:none;height:auto;pointer-events:none}
 .rg-sky .moon{width:clamp(48px,4.4vw,72px);inset-inline-end:16%;top:9%;animation:rgFloat 9s ease-in-out infinite}
 .rg-sky .st{width:12px;opacity:.85;animation:rgTwinkle 4s ease-in-out infinite}
 .rg-sky .s1{inset-inline-end:26%;top:13%}.rg-sky .s2{inset-inline-end:22%;top:19%;width:9px;animation-delay:1.3s}.rg-sky .s3{inset-inline-end:12%;top:24%;width:10px;animation-delay:2.6s}

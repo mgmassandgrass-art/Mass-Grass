@@ -1,5 +1,5 @@
 // Mass & Grass API: accounts and sign-in (step 1). Orders, PayPal and files come next.
-import { json, fail, readJson, clean, sniff, bytes } from './util.js';
+import { json, fail, readJson, clean, sniff, bytes, CALS } from './util.js';
 import { filesAdmin, download } from './files.js';
 import { sendMail, layout, contactEmail, p as mp, pAr, small, btn as mbtn, MONO, C } from './mail.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
@@ -561,7 +561,8 @@ async function sharePage(env, url, p) {
   const [, , kind, id = ''] = p.split('/'), page = SHARE_PAGE[kind], o = url.origin;
   if (!page) return Response.redirect(`${o}/shop`, 302);
   const h = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  let title = 'Things kept in bottles, the calendar', image = 'assets/c27-00.webp', to = `${o}/calendar`;
+  let title = 'Things kept in bottles, the calendar', image = 'assets/v2-00.webp', to = `${o}/calendar`;
+  if (kind === 'calendar' && id === 'palestine-2027') { title = CALS[id][0]; image = 'assets/pm-1.webp'; to = `${o}/palestine`; }
   if (kind === 'book') { const cat = await catalog(env); title = (cat.book && cat.book.title[0]) || 'Zero Waste & Our Palestinian Ancestors'; image = (cat.book && cat.book.imgs[0]) || 'assets/book/pg-01.webp'; to = `${o}/book`; }
   else if (kind !== 'calendar') {
     const cat = await catalog(env), pr = cat.products.find((x) => x.kind === kind && x.id === id);

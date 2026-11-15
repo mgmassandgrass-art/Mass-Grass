@@ -63,7 +63,8 @@
   }
   const shipping = (server && server.shipping) || {};
   const isFree = (kind, id) => { const p = id && product(kind, id); return !!p && p.price === 0; };
-  const fmt = (e) => (e === 0 ? t('Free', 'مجانًا') : '€' + (Math.round(e * 100) % 100 ? e.toFixed(2) : String(Math.round(e))));
+  /* in Arabic the price is isolated (LRI…PDI) so brackets and commas around it keep their places */
+  const fmt = (e) => { if (e === 0) return t('Free', 'مجانًا'); const s = '€' + (Math.round(e * 100) % 100 ? e.toFixed(2) : String(Math.round(e))); return AR ? '\u2066' + s + '\u2069' : s; };
   const KIND = {
     painting: ['Painting, PDF and PNG', 'لوحة، PDF وPNG'], postcard: ['Postcard, PDF and PNG', 'بطاقة بريدية، PDF وPNG'],
     sticker: ['Sticker, PNG', 'ملصق، PNG'], pack: ['Sticker pack, PNG', 'مجموعة ملصقات، PNG'], calendar: ['Calendar, PDF in A5', 'تقويم، PDF بمقاس A5'],
@@ -269,16 +270,16 @@
   };
   /* the address people share: on the live site a small page of its own (so the link shows the piece's picture), else the piece's place on its page */
   const shareUrl = (kind, id) => { const base = 'https://www.massandgrass.com/'; return cat.live ? `${base}s/${kind}/${encodeURIComponent(id || 'calendar')}` : base + PAGE[kind].replace('.html', '') + (kind === 'calendar' || kind === 'book' ? '' : '#' + id); };
-  const shareName = (kind, id) => { const p = product(kind, id); return kind === 'calendar' ? t('Things kept in bottles, the calendar', 'أشياء نحفظها في قوارير، التقويم') : kind === 'book' ? L(BOOK.title) : title(p) || id; };
+  const shareName = (kind, id) => { const p = product(kind, id); return kind === 'calendar' ? (id && calOf(id).id === id && calOf(id).title ? L(calOf(id).title) : t('Things kept in bottles, the calendar', 'أشياء نحفظها في قوارير، التقويم')) : kind === 'book' ? L(BOOK.title) : title(p) || id; };
   const shareBtn = (kind, id) => `<button type="button" class="shr" data-share="${kind}" data-id="${esc(id || '')}" aria-label="${esc(t('Share', 'شاركوها') + ': ' + shareName(kind, id))}">${IC.share}</button>`;
   let shrm = null;
   function closeShare() { if (shrm) { shrm.remove(); shrm = null; } }
   async function share(btn) {
     const kind = btn.dataset.share, id = btn.dataset.id, url = shareUrl(kind, id), name = shareName(kind, id);
-    const text = t(`${name}, a watercolour by Farah Al-Helou from Gaza`, `${name}، لوحة مائية لفرح الحلو من غزة`);
+    const text = kind === 'book' ? t(`${name}, a book with drawings by Farah Al-Helou`, `${name}، كتاب برسوم فرح الحلو`) : kind === 'calendar' ? t(`${name}, a calendar by Farah Al-Helou from Gaza`, `${name}، تقويم لفرح الحلو من غزة`) : t(`${name}, a watercolour by Farah Al-Helou from Gaza`, `${name}، لوحة مائية لفرح الحلو من غزة`);
     if (navigator.share && matchMedia('(pointer:coarse)').matches) { try { await navigator.share({ title: 'Mass & Grass', text, url }); } catch (e) {} return; }
     if (shrm && shrm._for === btn) return closeShare(); closeShare();
-    const u = encodeURIComponent(url), tx = encodeURIComponent(text), image = encodeURIComponent('https://www.massandgrass.com/' + (kind === 'calendar' ? 'assets/c27-00.webp' : kind === 'book' ? BOOK.cover : img(id, product(kind, id))));
+    const u = encodeURIComponent(url), tx = encodeURIComponent(text), image = encodeURIComponent('https://www.massandgrass.com/' + (kind === 'calendar' ? (id === 'palestine-2027' ? 'assets/pm-1.webp' : 'assets/v2-00.webp') : kind === 'book' ? BOOK.cover : img(id, product(kind, id))));
     const rows = [['whatsapp', 'WhatsApp', `https://wa.me/?text=${tx}%20${u}`], ['facebook', 'Facebook', `https://www.facebook.com/sharer/sharer.php?u=${u}`], ['x', 'X', `https://twitter.com/intent/tweet?text=${tx}&url=${u}`],
       ['pinterest', 'Pinterest', `https://pinterest.com/pin/create/button/?url=${u}&media=${image}&description=${tx}`], ['telegram', 'Telegram', `https://t.me/share/url?url=${u}&text=${tx}`]];
     shrm = doc.createElement('div'); shrm.className = 'shrm'; shrm._for = btn; shrm.setAttribute('role', 'menu'); shrm.dir = AR ? 'rtl' : 'ltr';
@@ -320,7 +321,7 @@
     const src = cal ? (c.cover || 'assets/t-v2-00.webp') : thumb(p.id, p), href = cal ? (c.page || PAGE.calendar) : PAGE[p.kind] + '#' + p.id;
     const btn = cal ? `<button type="button" class="add" data-add="calendar" data-cal="${esc(c.id)}" aria-pressed="${bag.has('calendar', c.id)}">${bag.has('calendar', c.id) ? t('In your bag', 'في السلة') : t('Add to bag', 'أضيفوه إلى السلة')}</button>` : addBtn(p.kind, p.id);
     return `<li class="pr-it"><a class="lk" href="${href}"${cal ? '' : ` data-peek="${p.kind}:${esc(p.id)}"`}><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
-      <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? c.id : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${cal ? '' : shareBtn(p.kind, p.id)}</div></li>`;
+      <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? c.id : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${shareBtn(p.kind, cal ? c.id : p.id)}</div></li>`;
   }
   window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, calOf, calendars: CALS, book: BOOK };
 

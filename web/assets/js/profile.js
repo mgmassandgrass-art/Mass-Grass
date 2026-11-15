@@ -60,7 +60,7 @@ function render(){const box=$('pf');const a=(me&&me.addr)||{};
   box.innerHTML=`${sum}<div class="pf-grid"><section class="pf-files" aria-labelledby="files-h"><h2 class="sec" id="files-h">${T('Your orders and files','طلباتكم وملفاتكم')}</h2>${list}</section>
    <div class="pf-set"><form class="sheet pf-me" id="nf" novalidate><h2>${T('Your details','بياناتكم')}</h2>
      <div class="av-row"><span class="av">${me.photo?`<img src="${esc(me.photo)}" alt="">`:`<b aria-hidden="true">${esc((me.name||me.email||'?').trim()[0].toUpperCase())}</b>`}</span>
-      <span class="av-acts"><label class="linkb" for="avIn">${me.photo?T('Change the photo','غيّروا الصورة'):T('Add a photo','أضيفوا صورة')}</label><input type="file" id="avIn" accept="image/jpeg,image/png,image/webp" hidden>${me.photo?`<button class="linkb" type="button" id="avDel">${T('Remove','احذفوها')}</button>`:''}</span></div>
+      <span class="av-acts"><label class="linkb" for="avIn">${me.photo?T('Change the photo','غيّروا الصورة'):T('Add a photo','أضيفوا صورة')}</label><input type="file" class="sr" id="avIn" accept="image/jpeg,image/png,image/webp">${me.photo?`<button class="linkb" type="button" id="avDel">${T('Remove','احذفوها')}</button>`:''}</span></div>
      <label class="fld">${T('Name','الاسم')}<input id="nm" autocomplete="name" maxlength="60" value="${esc(me.name||'')}" required></label>
      <label class="fld">${T('E-mail','البريد الإلكتروني')}<input value="${esc(me.email)}" disabled dir="ltr"></label>
      <label class="fld">${T('Phone','الهاتف')}<input id="ph" type="tel" autocomplete="tel" maxlength="30" dir="ltr" placeholder="+971 50 123 4567" value="${esc(me.phone||'')}"></label>

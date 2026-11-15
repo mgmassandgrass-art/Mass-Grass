@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   const { $, t } = MG;
-  const LIMIT = 1950000, f = $('#cmf'), msg = $('#cm-msg'), file = $('#cm-ref'), thumb = $('#cm-thumb'), rm = $('#cm-x');
+  const LIMIT = 1950000, f = $('#cmf'), msg = $('#cm-msg'), file = $('#cm-ref'), thumb = $('#cm-thumb'), rm = $('#cm-x'), fn = $('#cm-fn');
   let pic = null, sent = false;
   const say = (m, ok) => { msg.textContent = m; msg.classList.toggle('ok', !!ok); };
   /* the date can't be in the past */
@@ -21,13 +21,13 @@
     throw new Error('too_big');
   }
   file.addEventListener('change', async () => {
-    const fl = file.files[0]; pic = null; thumb.hidden = true; rm.hidden = true; say('');
+    const fl = file.files[0]; pic = null; thumb.hidden = true; rm.hidden = true; fn.textContent = ''; say('');
     if (!fl) return;
     if (!/^image\/(png|jpeg|webp)$/.test(fl.type)) { file.value = ''; return say(t('Please choose a PNG, JPEG or WebP picture.', 'اختاروا صورة PNG أو JPEG أو WebP.')); }
     try { pic = fl.size > LIMIT ? await shrink(fl) : fl; } catch (e) { file.value = ''; return say(t('That picture is too big. Please choose a smaller one.', 'الصورة كبيرة جدًا. اختاروا صورة أصغر.')); }
-    thumb.src = URL.createObjectURL(pic); thumb.hidden = false; rm.hidden = false;
+    thumb.src = URL.createObjectURL(pic); thumb.hidden = false; rm.hidden = false; fn.textContent = fl.name;
   });
-  rm.addEventListener('click', () => { file.value = ''; pic = null; thumb.hidden = true; rm.hidden = true; file.focus(); });
+  rm.addEventListener('click', () => { file.value = ''; pic = null; fn.textContent = ''; thumb.hidden = true; rm.hidden = true; file.focus(); });
 
   function thanks() {
     f.innerHTML = `<h2>${t('Thank you', 'شكرًا لكم')}</h2><p class="fmsg ok" role="status">${t('Your request reached Farah. We reply by e-mail within three days.', 'وصل طلبكم إلى فرح، ونرد عليكم بالبريد خلال ثلاثة أيام.')}</p><a class="go" href="designs.html">${t('Back to more designs', 'عودوا إلى التصاميم')}</a>`;
