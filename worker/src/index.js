@@ -157,7 +157,23 @@ async function deleteMe(env, req, u) {
 }
 
 async function exportMe(env, req, u) {
-  return json({ user: publicUser(u), exported_at: new Date().toISOString() });
+  const { results: orders } = await env.DB.prepare('SELECT id, items, total_cents, currency, status, created_at, ship, ship_status, tracking FROM orders WHERE user_id=? ORDER BY created_at DESC').bind(u.id).all();
+  const sub = await env.DB.prepare('SELECT source, created_at FROM subscribers WHERE email=?').bind(u.email).first();
+  const { results: sessions } = await env.DB.prepare('SELECT created_at, seen_at, ip, ua FROM sessions WHERE user_id=? AND expires_at>?').bind(u.id, Date.now()).all();
+  await audit(env, req, u.email, 'data_exported');
+  return json({ user: publicUser(u), orders: orders.map((o) => ({ ...o, items: JSON.parse(o.items), ship: o.ship ? JSON.parse(o.ship) : null })), newsletter: sub || null, sessions, exported_at: new Date().toISOString() },
+    200, { 'content-disposition': 'attachment; filename="mass-and-grass-my-data.json"' });
+}
+
+// The monthly painting e-mail, from the account page: on (the account's own address) or off.
+async function myNews(env, req, u) {
+  if (req.method === 'POST') {
+    const b = await readJson(req); if (!b || typeof b.on !== 'boolean') return fail('bad_request');
+    if (b.on) await env.DB.prepare("INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?, 'profile', ?)").bind(u.email, Date.now()).run();
+    else await env.DB.prepare('DELETE FROM subscribers WHERE email=?').bind(u.email).run();
+  }
+  const r = await env.DB.prepare('SELECT 1 FROM subscribers WHERE email=?').bind(u.email).first();
+  return json({ on: !!r });
 }
 
 async function forgot(env, req) {
@@ -168,10 +184,10 @@ async function forgot(env, req) {
   const u = await env.DB.prepare('SELECT id FROM users WHERE email=?').bind(email).first();
   if (u) {
     const t = token();
-    await env.DB.prepare('INSERT INTO reset_tokens(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await sha256(t), u.id, Date.now() + 3600e3).run();
+    await env.DB.prepare('INSERT INTO reset_tokens(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await sha256(t), u.id, Date.now() + 30 * 60e3).run();
     const link = `${env.SITE_ORIGIN}/account.html?reset=${t}`;
     await sendMail(env, email, 'Reset your Mass & Grass password · تغيير كلمة السر', layout(
-      `<p>Open this link to choose a new password (valid for one hour):</p><p><a href="${link}" style="display:inline-block;background:#2E241B;color:#FAF5E9;padding:10px 16px;text-decoration:none;font:600 13px monospace">Choose a new password</a></p><p dir="rtl" style="text-align:right">افتح الرابط لتختار كلمة سر جديدة (صالح لمدة ساعة).</p><p style="color:#6f604d;font-size:13px">If you didn't ask for this, ignore this email.</p>`));
+      `<p>Open this link to choose a new password (valid for 30 minutes):</p><p><a href="${link}" style="display:inline-block;background:#2E241B;color:#FAF5E9;padding:10px 16px;text-decoration:none;font:600 13px monospace">Choose a new password</a></p><p dir="rtl" style="text-align:right">افتح الرابط لتختار كلمة سر جديدة (صالح لمدة 30 دقيقة).</p><p style="color:#6f604d;font-size:13px">If you didn't ask for this, ignore this email.</p>`));
   }
   return json({ ok: true }); // same answer whether or not the account exists
 }
@@ -389,6 +405,7 @@ async function api(req, env, url, p) {
   if (p === '/api/me/sessions' && req.method === 'DELETE') return endSessions(env, req, u, url);
   const tf = p.match(/^\/api\/me\/2fa\/(setup|enable|disable)$/);
   if (tf && req.method === 'POST') return twofa(env, req, u, tf[1]);
+  if (p === '/api/me/news' && (req.method === 'GET' || req.method === 'POST')) return myNews(env, req, u);
   if (p === '/api/me' && req.method === 'PATCH') return updateMe(env, req, u);
   if (p === '/api/me' && req.method === 'DELETE') return u.role === 'admin' ? fail('cannot_delete_admin') : deleteMe(env, req, u);
   return fail('not_found', 404);

@@ -20,3 +20,26 @@
 .confirm{border:0;padding:0;background:none;max-width:min(480px,calc(100vw - 32px));color:var(--ink)}
 .confirm::backdrop{background:rgba(var(--ink-rgb),.45)}
 .confirm p{margin:0 0 24px;color:var(--soft)}
+/* the account in numbers, parcels, the monthly e-mail switch and the devices list (light system: hair-lines, no colour blocks) */
+.pf-sum{list-style:none;margin:0 0 clamp(28px,3vw,44px);padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--line)}
+.pf-sum li{display:grid;gap:4px;padding:16px 18px;border-inline-end:1px solid var(--line)}
+.pf-sum li:last-child{border-inline-end:0}
+.pf-sum b{font-weight:400;font-size:clamp(24px,2vw,32px);line-height:1.1;color:var(--blue)}
+.pf-sum span{color:var(--soft)}
+.parcel{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.parcel b{font-weight:400}
+.parcel .pst{padding:2px 8px;border:1px solid var(--line)}
+.parcel .pst.sent{border-color:var(--blue);color:var(--blue)}
+.parcel .pst.delivered{color:var(--olive)}
+.parcel address{flex-basis:100%;font-style:normal;color:var(--soft)}
+.parcel code{font-family:var(--mono2);font-size:14px}
+.its small{color:var(--soft)}
+.tgl{display:flex;align-items:center;gap:10px;cursor:pointer}
+.tgl input{width:20px;height:20px;accent-color:var(--blue)}
+.devs{list-style:none;margin:0 0 12px;padding:0;display:grid}
+.devs li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.devs li small{grid-column:1;color:var(--soft)}
+.devs li .linkb{grid-row:1/3;grid-column:2;align-self:center}
+.devs em{font-style:normal;color:var(--blue)}
+.pf-set .sheet{border:1px solid var(--line);background:#FBF8F1;padding:20px 22px}
+@media(max-width:900px){.pf-sum{grid-template-columns:repeat(2,minmax(0,1fr))}.pf-sum li{border-bottom:1px solid var(--line)}}
