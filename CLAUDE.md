@@ -394,7 +394,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   a drag ends (and the ruler closes) wherever the button is let go. Narrower screens get a thin blue stroke
   under the header (`--sf`).
 - Next, page by page with the owner: paintings, postcards, stickers, calendar, story, checkout/account; admin charts;
-  the admin's link fields for facebook / tiktok. Not deployed yet.
+  the admin's link fields for facebook / tiktok. Deployed 15 Nov 2026.
 - Shelves, round 3 (owner, 14 Nov 2026): the postcard (finger in the hands photo), sticker and calendar photos were replaced by
   three new ones in one light (warm oak desk, window light from the left), made from blank Canva photos (holder page 57 of
   `DAHWgLZfDEc`, blanks kept in `drafts/mockups/shelves/`) with the real art laid in by `tools/shelf_mockups.py` (perspective warp, the
@@ -427,7 +427,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   calendar id (`calendar-2027`, `palestine-2027`); buttons carry `data-cal`. Worker: `CALS` / `calFile()` in `worker/src/util.js` (names,
   file key: the 2027 calendar keeps `current`, Palestine uses `palestine-2027`); unknown calendar ids are refused. Both use
   `prices.calendar` and `prices.calendarPrint`. The admin's Calendar tab has a second files box for the Palestine PDF.
-  Not deployed yet.
+  Deployed 15 Nov 2026.
 - Round 2 (owner, 15 Nov 2026): the film is off the page for now (files kept for later); `calendar.html` opens full page (`.hshow.cfull`):
   the desk photographs `cd-00..12` cross-fading every 4.5s with the title, Buy / Browse the months and the price on a light band, dots
   to choose; then "The calendar" (the V2 cover page, words, specs, buy, the printed line), the bottles, earlier calendars.
@@ -454,5 +454,5 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   (`/api/me/export`: account, orders, newsletter, sessions). Reset links live 30 minutes.
 - Security review (27 points, report https://claude.ai/artifact/RYG8Hg5rkeYNe1bBhdKYp2): uploads are checked by their real bytes
   (`sniff()` in util.js), the CSRF localhost exception only applies on localhost, http goes to https in the Worker, wrangler updated
-  (0 audit issues), `worker/test/hardening.test.mjs` (41 checks) is part of `npm test`. Owner to do: deploy, Cloudflare "Always Use
+  (0 audit issues), `worker/test/hardening.test.mjs` (41 checks) is part of `npm test`. Deployed 15 Nov 2026 (http now 301s to https). Owner to do: Cloudflare "Always Use
   HTTPS", 2FA on the admin account.
