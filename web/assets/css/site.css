@@ -463,3 +463,16 @@ main .note.paper>.fill{display:none}
 .sx-hd i{font-style:normal}.sx-hd i::before{content:" / "}
 .acct .av{width:28px;height:28px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px var(--line-2)}
 .acct.ph .ic,.acct.ph .ini{display:none}
+
+/* the footer set like the menu: Geist Mono 11px capitals spaced .15em, the menu's grey, ink on hover (Arabic: Readex 14px) */
+footer .ft-b a,footer .ft-d a,footer .ft-z a,footer .ft-z small,footer .ft-a p{font:500 11px/1.5 var(--mono2);letter-spacing:.15em;text-transform:uppercase;color:rgba(var(--ink-rgb),.62);transition:color .15s}
+footer .ft-a p{max-width:34ch;line-height:1.9}
+footer .ft-d ul{list-style:none;margin:0;padding:0}
+footer .ft-d li{padding:0}
+footer .ft-d a{display:block;padding:10px 0}
+footer .ft-d h2{margin:0 0 12px}
+footer .ft-z small{color:rgba(var(--ink-rgb),.5)}
+.ar-on footer .ft-b a,.ar-on footer .ft-d a,.ar-on footer .ft-z a,.ar-on footer .ft-z small,.ar-on footer .ft-a p{font:500 14px/1.6 var(--fa);letter-spacing:0;text-transform:none}
+@media(hover:hover){footer .ft-b a:hover,footer .ft-d a:hover,footer .ft-z a:hover{color:var(--ink);text-decoration:none}}
+footer .ft-b a[aria-current=page]{color:var(--ink)}
+footer .ft-b{grid-template-columns:repeat(2,max-content);gap:0 clamp(24px,3vw,48px)}@media(max-width:480px){footer .ft-b{grid-template-columns:repeat(2,minmax(0,1fr))}}

@@ -302,7 +302,7 @@
     const fc = $('#ftc'); if (!fc) return; const ext = ' target="_blank" rel="noopener noreferrer"', sup = k.donate || k.kofi;
     fc.innerHTML = `<li><a href="help.html">${t('Help and questions', 'المساعدة والأسئلة')}</a></li><li><a href="mailto:${esc(mail)}" dir="ltr">${esc(mail)}</a></li>` +
       rows.filter((r) => r[0] === 'whatsapp' || r[0] === 'instagram').map((r) => `<li><a href="${esc(r[2])}"${ext}>${r[1]}</a></li>`).join('') +
-      `<li><a href="commission.html">${t('Request a design', 'اطلبوا تصميمًا')}</a></li><li><a href="${sup ? esc(url(sup, 'https://')) + '"' + ext : 'story.html#support"'}>${t('Support Farah', 'ادعموا فرح')}</a></li>`;
+      `<li><a href="${sup ? esc(url(sup, 'https://')) + '"' + ext : 'story.html#support"'}>${t('Support Farah', 'ادعموا فرح')}</a></li>`;
   }
 
   /* an add-to-bag button for one piece (kept in step by rerender) */

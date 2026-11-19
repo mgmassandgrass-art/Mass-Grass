@@ -10,7 +10,7 @@ html[data-hand]{--cal-t:'Annie Use Your Telescope',var(--hand);--cal-m:var(--mon
 
 /* ---------- the shop's voice: Geist Mono ---------- */
 /* reading text */
-html[data-hand]:not(.ar-on) body :is(main,footer,dialog) :is(p,li,dd,td,small){font-family:var(--cal-m);font-weight:400;font-size:14px;line-height:1.75;letter-spacing:.005em;color:#4A463F;text-transform:none}
+html[data-hand]:not(.ar-on) body :is(main,dialog) :is(p,li,dd,td,small){font-family:var(--cal-m);font-weight:400;font-size:14px;line-height:1.75;letter-spacing:.005em;color:#4A463F;text-transform:none}
 html[data-hand]:not(.ar-on) body :is(main,dialog) section :is(.cl-txt p,.stx p,.ch .tx~p){max-width:56ch}
 html[data-hand]:not(.ar-on) body :is(main,dialog) em{font-style:normal;color:var(--cal-rose)}
 /* labels: section heads, the glass strip, kinds, specs, chips, form labels */
@@ -34,7 +34,7 @@ html[data-hand]:not(.ar-on) body :is(main,dialog) .go{color:var(--cal-rose);text
 html[data-hand]:not(.ar-on) body :is(main,dialog) :is(input,select,textarea){font-family:var(--cal-m);font-size:14px;letter-spacing:.01em}
 /* the side margin and the footer */
 html[data-hand]:not(.ar-on) .sx-side button{font-family:var(--cal-m);font-weight:500;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cal-grey)}
-html[data-hand]:not(.ar-on) footer :is(a,small,button,label,input){font-family:var(--cal-m);font-weight:500;font-size:12px;letter-spacing:.06em}
+html[data-hand]:not(.ar-on) footer :is(button,label,input){font-family:var(--cal-m);font-weight:500;font-size:12px;letter-spacing:.06em}
 html[data-hand]:not(.ar-on) footer button{font-size:11px;letter-spacing:.15em;text-transform:uppercase}
 html[data-hand]:not(.ar-on) body :is(main,dialog) .ship span,html[data-hand]:not(.ar-on) body :is(main,dialog) :is(.note span,.pi-p span){font-family:var(--cal-m);font-size:12px;line-height:1.6;letter-spacing:.04em;color:var(--cal-grey)}
 
