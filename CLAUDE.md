@@ -510,3 +510,20 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - Admin Products → "Upload many files": files named `<kind>__<id>.<ext>` (painting__hero.pdf, calendar__palestine-2027.pdf,
   book__zero-waste.pdf) are matched and sent one by one to `/api/admin/files` with a progress list.
 - Tests: `worker/test/commission.test.mjs` (in `npm test`, before security), e2e covers the three pages and the reader.
+
+## Hand-off, 20 Nov 2026 (end of a long session)
+
+- Deployed on 19 Nov: everything up to the QA pass (designs, book, commission, mockup fixes, checkout/e-mails, accounts). NOT deployed yet
+  (pushed on `claude/clever-ride-0z7fc2`): "Request a design" in the menu and phone menu, the footer set like the menu (Geist Mono 11px
+  capitals, the menu's grey). Deploy only when the owner says «انشر» (`cd worker && npm ci` if node_modules is gone, then
+  `CLOUDFLARE_API_TOKEN=placeholder npm run deploy`, then `sh test/smoke.sh`).
+- Third-party skills: 235 skills from the owner's two lists were copied into `.claude/skills/` (list and sources in `.claude/skills/THIRD_PARTY.md`;
+  skills only, no hooks / MCP / agents; ruflo not installed; graphify's own hooks and CLAUDE.md edits were reverted).
+- Mockups: `tools/mockup_on_photo.py` (desk calendar with rings) and `tools/mockup_flat_sheet.py` (flat sheet) lay the V2 calendar pages onto a free
+  mockup photograph (corners measured by eye, light fitted from the page margins, edges grown 1.3px). Owner's test photos came from the internet:
+  ask where from and check the licence before using them on the site. Plan agreed in principle, not built: render the calendar mockups live in
+  the browser from the calendar's page images so a new calendar/month added in the admin appears by itself (paintings, postcards and stickers already do).
+- Open for the owner: shipping fees (UAE, Denmark) in Settings; upload the real book PDF in Products > Book (ask Najla Abdellatif first, she wrote the
+  text); sale files for every piece (bulk upload `kind__id.ext`); Palestine calendar PDF; admin two-step sign-in; WhatsApp number.
+- Open for us: add the new Drive products (6 postcards, 12 architecture paintings; see `drafts/drive/INVENTORY.md`), page-by-page review with the owner
+  (paintings, postcards, stickers, story), admin charts, facebook / tiktok link fields, the calendar tear video, rewrite DESIGN.md.
