@@ -1,5 +1,5 @@
 /* The calendar page (2027, "Things kept in bottles"):
-   1 · full page: the desk calendar photographed open on the cover and each month (cd-MM), one after another, with buy / browse;
+   1 · full page: the owner's film of the desk calendar turning month after month, with buy / browse;
    2 · the calendar: its cover page, a few words, what it is, buy and the printed copy;
    3 · the twelve bottles side by side, floating on one line; a click shows that month in the calendar (on the desk, or the page);
    4 · calendars from earlier years, set for 2027 (palestine.html).
@@ -12,22 +12,16 @@
   /* calendars from earlier years, set for 2027 (each has its own page; add more here) */
   const OLD = [Object.assign({}, MG.palestine, { when: ['From 2026, set for 2027', 'من 2026، بتواريخ 2027'], img: ['assets/pm-3.webp', 'assets/pm-4.webp'] })];
 
-  /* ---------- 1 · full page: the cover first, then the months, a slow cross-fade every 4.5s ---------- */
-  const stage = $('#cfstage'), dots = $('#cfdots');
-  /* the calendar on a wall and laid on a table (cww-MM / cwf-MM), the cover in both, then the months by turns */
-  const SL = [['w', 0], ['f', 0], ...P.filter((p) => p.m).map((p) => [p.m % 2 ? 'f' : 'w', p.m])];
-  stage.innerHTML = SL.map((x, i) => `<img class="${x[0] === 'f' ? 'sf' : 'sw'}${i ? '' : ' on'}" src="assets/cw${x[0]}-${pad(x[1])}.webp" alt="" ${i > 1 ? 'loading="lazy" ' : ''}decoding="async" draggable="false">`).join('');
-  dots.innerHTML = SL.map((x, i) => `<button type="button" aria-pressed="${!i}" data-i="${i}"></button>`).join('');
-  const ims = $$('img', stage), dbs = $$('button', dots); let at = 0, timer = 0, seen = true;
-  function go(i) {
-    ims[at].classList.remove('on'); dbs[at].setAttribute('aria-pressed', 'false');
-    at = (i + ims.length) % ims.length; ims[at].classList.add('on'); dbs[at].setAttribute('aria-pressed', 'true');
-    const nx = ims[(at + 1) % ims.length]; nx.loading = 'eager';
+  /* ---------- 1 · full page: the owner's film of the desk calendar, its pages turning month after month (assets/cal-desk.*);
+     it plays muted and looped only while on screen; with reduced motion it stays on its first frame.
+     (The wall / table photographs cww-MM / cwf-MM are still used by the bottles below.) */
+  const film = $('#cffilm');
+  if (film) {
+    film.muted = true;
+    const play = () => { if (!MG.still && !document.hidden) { const pr = film.play(); if (pr) pr.catch(() => {}); } };
+    new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) play(); else film.pause(); }), { threshold: .15 }).observe(film);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) film.pause(); else play(); });
   }
-  const run = (wait) => { clearTimeout(timer); clearInterval(timer); if (MG.still) return; timer = setTimeout(() => { timer = setInterval(() => { if (seen && !document.hidden) go(at + 1); }, 4500); }, wait || 0); };
-  dots.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { go(+b.dataset.i); run(7000); } });
-  new IntersectionObserver((es) => es.forEach((en) => { seen = en.isIntersecting; }), { threshold: .2 }).observe(stage);
-  run();
 
   /* ---------- 3 · the bottles in a row, floating; one chosen shows its month ---------- */
   const MS = P.filter((p) => p.m > 0), row = $('#btrow');
@@ -62,8 +56,6 @@
   MG.page(function (why) {
     $('#cprint').innerHTML = printBlock();
     if (why === 'bag' || why === 'user') return;
-    ims.forEach((im, i) => { const x = SL[i], p = P.find((q) => q.m === x[1]); im.alt = name(p) + (x[0] === 'w' ? t(': the 2027 calendar on a wall', ': تقويم 2027 على الحائط') : t(': the 2027 calendar on a table', ': تقويم 2027 على طاولة')); });
-    dbs.forEach((b, i) => b.setAttribute('aria-label', name(P.find((q) => q.m === SL[i][1]))));
     /* calendars from earlier years: one card each, each with its own page */
     $('#olgrid').innerHTML = OLD.map((c) => `<li><a class="ol-c" href="${c.page}"><span class="ol-im"><img src="${c.img[0]}" alt="" loading="lazy"><img src="${c.img[1]}" alt="" loading="lazy"></span><span class="ol-y">${esc(L(c.when))}</span><span class="ol-n">${esc(L(c.short))}</span><span class="ol-p"><b>${MG.fmt(MG.price('calendar'))}</b><span class="go">${t('Open the calendar', 'افتحوا التقويم')}</span></span></a></li>`).join('');
     bts.forEach((b, i) => { b.setAttribute('aria-label', name(MS[i])); b.querySelector('.btn-n').textContent = name(MS[i]); });
