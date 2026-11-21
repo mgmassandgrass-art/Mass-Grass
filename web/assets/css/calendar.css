@@ -175,6 +175,8 @@ html[data-hand]:not(.ar-on) .ps-grid .pm{font-family:var(--cal-t)}
 @media(max-width:900px){.ol-grid{grid-template-columns:minmax(0,1fr)}}
 
 /* the opening film (owner, 21 Nov 2026): the desk calendar turning month after month, kept whole in frame */
-.cf-film{background:#EEEDEA}
-.cf-film video{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 38%;display:block}
-@media(max-width:900px){.cfull .cf-film{aspect-ratio:2800/1694}.cf-film video{object-position:50% 50%}}
+.cf-film{background:#F2F2ED}
+/* lifted a little so the title and the buttons sit on the empty floor under the calendars, not over their bases;
+   the floor of the film continues in the stage's own colour */
+.cf-film video{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 50%;display:block;translate:0 -9%}
+@media(max-width:900px){.cfull .cf-film{aspect-ratio:2800/1694}.cf-film video{translate:none}}
