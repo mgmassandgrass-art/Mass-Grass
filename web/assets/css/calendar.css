@@ -181,15 +181,35 @@ html[data-hand]:not(.ar-on) .ps-grid .pm{font-family:var(--cal-t)}
 .cf-film video{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 50%;display:block;translate:0 -9%}
 @media(max-width:900px){.cfull .cf-film{aspect-ratio:2800/1694}.cf-film video{translate:none}}
 
-/* the twelve months side by side (owner, 22 Nov 2026): the first thing on the page, whole, edge to edge */
-.c12{position:relative;margin:0;padding:0;height:calc(100svh - 48px);min-height:520px;overflow:hidden;background:#E9A452;line-height:0}
-/* the spread was widened in its own orange (tools: the background fitted as a smooth field and carried out), so it can fill the screen */
-.c12 picture,.c12 img{display:block;width:100%;height:100%;max-width:none}
-.c12 img{object-fit:cover;object-position:50% 50%}
-@media(min-aspect-ratio:21/10){.c12 img{object-fit:contain}}
-/* upright screens (tablets held tall): the whole widened spread at its own height, nothing cut */
-@media(max-aspect-ratio:13/10){.c12{height:auto;min-height:0}.c12 picture,.c12 img{height:auto}}
-@media(max-width:900px){.c12{height:auto;min-height:0}.c12 img{height:auto;object-fit:initial}}
+/* the twelve months side by side (owner, 22 Nov 2026): the first thing on the page, filling the screen, every page as large as
+   the screen allows (6 x 2 on wide screens, 4 x 3 on upright ones, 3 x 4 on phones), on the spread's own orange (bilinear, its four corners) */
+.c12{position:relative;isolation:isolate;display:grid;place-items:center;height:calc(100svh - 48px);min-height:520px;overflow:hidden;
+  --gap:clamp(10px,1.4vw,26px);--pad:clamp(16px,2.6vw,48px);--cols:6;--rows:2;
+  --pw:min(calc((100vw - 2*var(--pad) - (var(--cols) - 1)*var(--gap))/var(--cols)),calc((100svh - 48px - 2*var(--pad) - (var(--rows) - 1)*var(--gap))/var(--rows)*.7116));
+  background:linear-gradient(to right,#E8AF5A,#F2D577)}
+.c12::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to right,#E2964A,#ECBC64);-webkit-mask-image:linear-gradient(to top,#000,transparent);mask-image:linear-gradient(to top,#000,transparent)}
+.c12-g{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--cols),var(--pw));gap:var(--gap)}
+.c12-g li{margin:0;padding:0;line-height:0}
+.c12-g img{display:block;width:var(--pw);height:auto;max-width:none;aspect-ratio:960/1350;
+  box-shadow:0 1px 2px rgba(120,60,10,.18),0 10px 22px -6px rgba(120,60,10,.32),0 26px 48px -18px rgba(120,60,10,.30)}
+@media(min-width:1180px){.c12{--pad:clamp(56px,4.4vw,72px)}}   /* clear of the ruler on the right */
+@media(max-aspect-ratio:13/10){.c12{--cols:4;--rows:3}}
+.c12-b{display:block;padding:0;border:0;background:none;cursor:zoom-in;transition:translate .35s cubic-bezier(.22,1,.36,1)}
+@media(hover:hover){.c12-b:hover{translate:0 -6px}}
+.c12-b:focus-visible{outline:2px solid var(--cv-ink);outline-offset:4px}
+/* one month, large: the page as big as the screen allows */
+.c12-v{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:rgba(40,28,14,.82);overflow:hidden}
+.c12-v[open]{display:grid;place-items:center}
+.c12-v::backdrop{background:transparent}
+.c12-v img{display:block;max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);width:auto;height:auto;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+.c12-v button{position:absolute;display:grid;place-items:center;width:48px;height:48px;padding:0;border:0;background:rgba(243,238,229,.92);color:#2B2F2C;font:400 28px/1 var(--mono2,monospace);cursor:pointer}
+.c12-x{top:16px;inset-inline-end:16px;font-size:34px!important}
+.c12-n{top:50%;translate:0 -50%}
+.c12-p{inset-inline-start:16px}
+.c12-nx{inset-inline-end:16px}
+.ar-on .c12-n{scale:-1 1}
+.c12-v button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:900px){.c12{--cols:3;--rows:4;height:auto;min-height:0;padding:var(--pad) 0;--pw:calc((100vw - 2*var(--pad) - 2*var(--gap))/3)}}
 /* the film on upright screens: whole, at its own proportion, the words under it */
 @media(min-width:901px) and (max-aspect-ratio:13/10){
   .cfull{height:auto;min-height:0}
