@@ -232,3 +232,19 @@ html[data-hand]:not(.ar-on) .ps-grid .pm{font-family:var(--cal-t)}
 
 /* the side margin's section names stay away while the months fill the screen */
 html.c12-on .sx-side{opacity:0!important}
+
+/* ---------- the whole calendar page in the spread's orange (owner, 22 Nov 2026); only this page (:has(.c12)) ----------
+   one fixed warm wash behind everything, sections clear on it, the paper cards stay paper, lines and quiet text warmed */
+html:has(.c12){--cream:#EDBA62;--cv-rose:#7E2F31;--cal-rose:#7E2F31;--blue:#7E2F31;--line:rgba(92,52,12,.22);--line-2:rgba(92,52,12,.38);--cv-paper:#F6E7C8;--cal-grey:#6E4A22;--cv-grey:#6E4A22}
+html:has(.c12){background:linear-gradient(170deg,#F2D577 0,#ECBC64 900px,#E8AE58 45%,#E39A4C 100%) #E39A4C}
+html:has(.c12) body{background:transparent}
+html:has(.c12) main>section,html:has(.c12) .c12,html:has(.c12) footer,html:has(.c12) .cbuy{background:transparent!important}
+html:has(.c12) .c12::before{display:none}
+html:has(.c12) header,html:has(.c12) .mmenu{background:rgba(246,226,170,.9)}
+html:has(.c12) .where{background:rgba(246,226,170,.82)}
+html:has(.c12) .sx-side,html:has(.c12) .rail{color:#6E4A22}
+html:has(.c12) .cv-page{background:rgba(255,248,232,.55)}
+html:has(.c12) .bts-im{background:rgba(255,248,232,.55)}
+html:has(.c12) .ol-c .ol-im{background:#fff8ec;border-color:rgba(92,52,12,.22)}
+html:has(.c12) .cw-buy .ghost,html:has(.c12) .bts-nav .ghost{background:rgba(255,248,232,.35)}
+html:has(.c12) footer input{background:rgba(255,248,232,.6)}
