@@ -64,7 +64,7 @@
       : `<p class="pnote">${t('Printed copies, shipped to the UAE and Denmark, open soon.', 'النسخ المطبوعة، بالشحن إلى الإمارات والدنمارك، قريبًا.')}</p>`;
   }
   MG.page(function (why) {
-    $('#cprint').innerHTML = printBlock();
+    const cp = $('#cprint'); if (cp) cp.innerHTML = printBlock();
     if (why === 'bag' || why === 'user') return;
     /* calendars from earlier years: one card each, each with its own page */
     $('#olgrid').innerHTML = OLD.map((c) => `<li><a class="ol-c" href="${c.page}"><span class="ol-im"><img src="${c.img[0]}" alt="" loading="lazy"><img src="${c.img[1]}" alt="" loading="lazy"></span><span class="ol-y">${esc(L(c.when))}</span><span class="ol-n">${esc(L(c.short))}</span><span class="ol-p"><b>${MG.fmt(MG.price('calendar'))}</b><span class="go">${t('Open the calendar', 'افتحوا التقويم')}</span></span></a></li>`).join('');

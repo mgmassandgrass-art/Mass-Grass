@@ -19,10 +19,10 @@
 <link rel="preload" href="fonts/geist-mono-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts/all.css">
 <link rel="stylesheet" href="fonts/figtree.css">
-<link rel="stylesheet" href="assets/css/site.css?v=75629c4d">
-<link rel="stylesheet" href="assets/css/hand.css?v=75629c4d">
-<link rel="stylesheet" href="assets/css/calendar.css?v=75629c4d">
-<script src="assets/js/boot.js?v=75629c4d"></script>
+<link rel="stylesheet" href="assets/css/site.css?v=2abf4e77">
+<link rel="stylesheet" href="assets/css/hand.css?v=2abf4e77">
+<link rel="stylesheet" href="assets/css/calendar.css?v=2abf4e77">
+<script src="assets/js/boot.js?v=2abf4e77"></script>
 </head>
 <body>
 <a class="skip" href="#main" data-ar="انتقلوا إلى المحتوى">Skip to content</a>
@@ -73,6 +73,25 @@
     </div>
   </div>
 </section>
+
+<section class="btl" id="months" aria-labelledby="bt-h" data-meta="A bottle for every month" data-meta-ar="قارورة لكل شهر">
+  <div class="wrap">
+    <div class="btl-hd"><h2 class="big" id="bt-h" data-ar="ما في القوارير">What the bottles keep</h2><p data-ar="اختاروا قارورة لتروها في التقويم.">Choose a bottle to see it in the calendar.</p></div>
+    <ul class="btrow" id="btrow"></ul>
+    <div class="btshow" id="btshow" aria-live="polite">
+      <div class="bts-im" id="btsim"><img id="btsA" src="assets/cwf-01.webp" alt="" width="1920" height="1080"><img id="btsB" alt="" width="1920" height="1080"></div>
+      <div class="bts-tx">
+        <p class="bts-s" id="btss"></p>
+        <h3 class="bts-n" id="btsn"></h3>
+        <p class="hand bts-q" id="btsq"></p>
+        <p class="bts-d" id="btsd"></p>
+        <div class="bts-v" role="group" aria-label="View" data-label-ar="العرض"><button type="button" id="btvDesk" aria-pressed="true" data-ar="في التقويم">In the calendar</button><button type="button" id="btvPage" aria-pressed="false" data-ar="الصفحة">The page</button></div>
+        <div class="bts-nav"><button type="button" class="ghost" id="btprev" data-ar="الشهر السابق">Previous month</button><button type="button" class="ghost" id="btnext" data-ar="الشهر التالي">Next month</button></div>
+        <div class="bts-buy"><button class="ink" type="button" data-add="calendar" data-ar="اشتروا التقويم">Buy the calendar</button><b class="fig" data-price="calendar">€8</b></div>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="c12" id="year" aria-label="The twelve months of 2027" data-label-ar="أشهر 2027 الاثنا عشر">
   <ol class="c12-g">
     <li><button type="button" class="c12-b"><img src="assets/c27p-01.webp" width="960" height="1350" alt="January 2027" data-alt-ar="كانون الثاني 2027" decoding="async" fetchpriority="high"></button></li>
@@ -97,47 +116,7 @@
 </section>
 
 
-<section class="cv" id="about" aria-labelledby="cv-h" data-meta="The 2027 calendar|Watercolours by Farah" data-meta-ar="تقويم 2027|ألوان مائية لفرح">
-  <div class="wrap">
-    <div class="cv-grid">
-      <div class="cv-page"><img src="assets/v2-00.webp" alt="The cover of the 2027 calendar: a heart kept in a bottle" data-alt-ar="غلاف تقويم 2027: قلب محفوظ في قارورة" width="1100" height="1545" loading="lazy"></div>
-      <div class="cv-txt">
-        <h2 class="big" id="cv-h" data-ar="التقويم">The calendar</h2>
-        <p class="hand cw-sub" data-ar="قارورة لكل شهر">A bottle for every month</p>
-        <p class="lead" data-ar="قارورة رسمتها فرح لكل شهر، وفي كل واحدة شيء يستحق أن نحفظه: قلب، بحر صغير، زهرة شمس، طريق العودة إلى البيت.">A bottle Farah painted for every month, and in each one something worth keeping: a heart, a small sea, a sunflower, a road back home.</p>
-        <ul class="specs">
-          <li data-ar="12 شهرًا وغلاف">12 months and a cover</li>
-          <li data-ar="ملف PDF طولي بمقاس A5">A PDF, portrait, A5</li>
-          <li data-ar="الأسبوع يبدأ يوم السبت">Weeks start on Saturday</li>
-        </ul>
-        <div class="cw-buy">
-          <a class="ghost" href="#months" data-ar="تصفّحوا الأشهر">Browse the months</a>
-          <div class="cw-row"><button class="ink" type="button" data-add="calendar" data-ar="اشتروا التقويم">Buy the calendar</button><b class="fig" data-price="calendar">€8</b></div>
-        </div>
-        <div class="cv-print" id="cprint"></div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="btl" id="months" aria-labelledby="bt-h" data-meta="A bottle for every month" data-meta-ar="قارورة لكل شهر">
-  <div class="wrap">
-    <div class="btl-hd"><h2 class="big" id="bt-h" data-ar="ما في القوارير">What the bottles keep</h2><p data-ar="اختاروا قارورة لتروها في التقويم.">Choose a bottle to see it in the calendar.</p></div>
-    <ul class="btrow" id="btrow"></ul>
-    <div class="btshow" id="btshow" aria-live="polite">
-      <div class="bts-im" id="btsim"><img id="btsA" src="assets/cwf-01.webp" alt="" width="1920" height="1080"><img id="btsB" alt="" width="1920" height="1080"></div>
-      <div class="bts-tx">
-        <p class="bts-s" id="btss"></p>
-        <h3 class="bts-n" id="btsn"></h3>
-        <p class="hand bts-q" id="btsq"></p>
-        <p class="bts-d" id="btsd"></p>
-        <div class="bts-v" role="group" aria-label="View" data-label-ar="العرض"><button type="button" id="btvDesk" aria-pressed="true" data-ar="في التقويم">In the calendar</button><button type="button" id="btvPage" aria-pressed="false" data-ar="الصفحة">The page</button></div>
-        <div class="bts-nav"><button type="button" class="ghost" id="btprev" data-ar="الشهر السابق">Previous month</button><button type="button" class="ghost" id="btnext" data-ar="الشهر التالي">Next month</button></div>
-        <div class="bts-buy"><button class="ink" type="button" data-add="calendar" data-ar="اشتروا التقويم">Buy the calendar</button><b class="fig" data-price="calendar">€8</b></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section class="older" id="earlier" aria-labelledby="ol-h" data-meta="Set for 2027" data-meta-ar="بتواريخ 2027">
   <div class="wrap">
@@ -164,10 +143,10 @@
   <div class="ft-z"><small data-ar="© 2026 ماس آند غراس، غزة، فلسطين">© 2026 Mass &amp; Grass, Gaza, Palestine</small><div class="soc" id="soc"></div></div>
 </footer>
 
-<script src="assets/js/catalog.js?v=75629c4d" defer></script>
-<script src="assets/js/art.js?v=75629c4d" defer></script>
-<script src="assets/js/core.js?v=75629c4d" defer></script>
-<script src="assets/js/mock.js?v=75629c4d" defer></script>
-<script src="assets/js/calendar.js?v=75629c4d" defer></script>
+<script src="assets/js/catalog.js?v=2abf4e77" defer></script>
+<script src="assets/js/art.js?v=2abf4e77" defer></script>
+<script src="assets/js/core.js?v=2abf4e77" defer></script>
+<script src="assets/js/mock.js?v=2abf4e77" defer></script>
+<script src="assets/js/calendar.js?v=2abf4e77" defer></script>
 </body>
 </html>
