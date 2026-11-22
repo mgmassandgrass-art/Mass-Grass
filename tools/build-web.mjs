@@ -28,6 +28,8 @@ for (const f of readdirSync(join(web, '_src/pages')).filter((x) => x.endsWith('.
     .replaceAll('{{v}}', v).replace('{{css}}', css).replace('{{js}}', js).replace('{{main}}', main);
   if (meta.home) out = out.replace('<html lang="en">', '<html lang="en" data-page="home" data-hand>');
   else if (meta.hand) out = out.replace('<html lang="en">', '<html lang="en" data-hand>');
+  // each page carries its name, for its own colour (hand.css: one colour per page, from the calendar's months)
+  out = out.replace('<html lang="en"', `<html lang="en" data-pg="${f.replace(/\.html$/, '')}"`);
   // the current page is marked in both menus
   if (meta.nav) out = out.replaceAll(`<a href="${meta.nav}" data-ar`, `<a href="${meta.nav}" aria-current="page" data-ar`);
   if (meta.nav) out = out.replaceAll(`<a class="sub" href="${meta.nav}" data-ar`, `<a class="sub" href="${meta.nav}" aria-current="page" data-ar`);

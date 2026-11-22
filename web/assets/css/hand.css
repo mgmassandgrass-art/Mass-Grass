@@ -75,3 +75,32 @@ html[data-hand]:not(.ar-on) body :is(main,dialog) .ac-hd .no{color:var(--cream)!
 html[data-hand]:not(.ar-on) body dialog p.price{font-size:clamp(26px,2.2vw,34px);line-height:1.1;letter-spacing:-.02em;margin:12px 0 8px}
 html[data-hand]:not(.ar-on) body dialog :is(dt,th){font-family:var(--cal-m);font-weight:500;font-size:11px;line-height:1.9;letter-spacing:.15em;text-transform:uppercase;color:var(--cal-grey)}
 html[data-hand]:not(.ar-on) body dialog :is(.bagd .x,.sheetx){font-size:16px;letter-spacing:0}
+
+
+/* ---------- a colour for every page (owner, 22 Nov 2026), from the calendar's months and Farah's paintings ----------
+   the build marks <html data-pg="name">; each page sets four values: --pg-a (top), --pg-m (its paper, also --cream so every block
+   that sits on the page's paper follows), --pg-b (bottom), --pg-r (names and accents, dark enough to read on it).
+   The page is one soft wash from top to bottom; the menu and the footer sit on the same colour; cards stay paper.
+   The calendar page keeps its own orange (calendar.css). */
+html[data-pg="index"]{--pg-a:#F6E9D3;--pg-m:#F0DCC1;--pg-b:#E9CBA6;--pg-r:#8E3F41}
+html[data-pg="shop"]{--pg-a:#F4DCC4;--pg-m:#ECC6A6;--pg-b:#E2AE86;--pg-r:#7E3230}
+html[data-pg="paintings"]{--pg-a:#F3DFD9;--pg-m:#EAC9C2;--pg-b:#DDB1A9;--pg-r:#7E2F35}
+html[data-pg="postcards"]{--pg-a:#E3EFF0;--pg-m:#CEE1E4;--pg-b:#B6D2D7;--pg-r:#7A3438}
+html[data-pg="stickers"]{--pg-a:#ECF3E1;--pg-m:#DAE8CC;--pg-b:#C6DAB2;--pg-r:#7A3438}
+html[data-pg="palestine"]{--pg-a:#E8EBD9;--pg-m:#D6DCC1;--pg-b:#C2CBA4;--pg-r:#74302F}
+html[data-pg="designs"]{--pg-a:#F2ECD5;--pg-m:#E3DAB8;--pg-b:#D2C597;--pg-r:#7A3236}
+html[data-pg="book"]{--pg-a:#F1F2E2;--pg-m:#E3E6CC;--pg-b:#D1D6B0;--pg-r:#7A3236}
+html[data-pg="story"]{--pg-a:#E4E9F0;--pg-m:#D0D9E5;--pg-b:#B9C6D8;--pg-r:#7A3438}
+html[data-pg="commission"]{--pg-a:#E3EEEA;--pg-m:#CBDFD8;--pg-b:#B3CFC4;--pg-r:#7A3438}
+html[data-pg="account"]{--pg-a:#F2EADB;--pg-m:#E7D9C0;--pg-b:#D9C4A0;--pg-r:#7A3236}
+html[data-pg="profile"]{--pg-a:#F2EADB;--pg-m:#E7D9C0;--pg-b:#D9C4A0;--pg-r:#7A3236}
+html[data-pg="checkout"]{--pg-a:#F8F1D8;--pg-m:#F0E3B8;--pg-b:#E6D193;--pg-r:#7A3236}
+html[data-pg="help"]{--pg-a:#F2E8CB;--pg-m:#E8D6A6;--pg-b:#DCC283;--pg-r:#74302F}
+html[data-pg="terms"]{--pg-a:#E7EBE2;--pg-m:#D5DCCF;--pg-b:#C1CAB8;--pg-r:#74302F}
+html[data-pg="404"]{--pg-a:#F2DCD7;--pg-m:#E6C3BC;--pg-b:#D8ABA3;--pg-r:#7E2F35}
+html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]){--cream:var(--pg-m);--kraft:var(--pg-m);--c-efe9d9:var(--pg-m);--line:rgba(60,40,20,.16);--line-2:rgba(60,40,20,.3);
+  --cal-rose:var(--pg-r);--cv-rose:var(--pg-r);--blue:var(--pg-r);--indigo:var(--pg-r);--cal-grey:#5E5346;
+  background:linear-gradient(176deg,var(--pg-a) 0,var(--pg-m) 46%,var(--pg-b) 100%) var(--pg-b)}
+html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]) body{background:transparent}
+html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]) :is(header,.mmenu){background:color-mix(in srgb,var(--pg-a) 90%,#fff)}
+html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]) footer{background:transparent}
