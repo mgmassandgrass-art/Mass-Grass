@@ -1,5 +1,5 @@
 /* The calendar page (2027, "Things kept in bottles"):
-   1 · full page: the owner's film of the desk calendar turning month after month, with buy / browse;
+   0 · the twelve months filling the screen (a click opens one large), then a quiet band to buy;
    2 · the calendar: its cover page, a few words, what it is, buy and the printed copy;
    3 · the twelve bottles side by side, floating on one line; a click shows that month in the calendar (on the desk, or the page);
    4 · calendars from earlier years, set for 2027 (palestine.html).
@@ -12,7 +12,7 @@
   /* calendars from earlier years, set for 2027 (each has its own page; add more here) */
   const OLD = [Object.assign({}, MG.palestine, { when: ['From 2026, set for 2027', 'من 2026، بتواريخ 2027'], img: ['assets/pm-3.webp', 'assets/pm-4.webp'] })];
 
-  /* ---------- 1 · full page: the owner's film of the desk calendar, its pages turning month after month (assets/cal-desk.*);
+  /* ---------- 1 · (no film on the page for now; the film's files are in drafts/video) the owner's film of the desk calendar (assets/cal-desk.*);
      it plays muted and looped only while on screen; with reduced motion it stays on its first frame.
      (The wall / table photographs cww-MM / cwf-MM are still used by the bottles below.) */
   const film = $('#cffilm');
@@ -24,6 +24,7 @@
   }
 
   /* ---------- 0 · the twelve months: a click opens that month large; arrows and the keyboard go on ---------- */
+  new IntersectionObserver((es) => es.forEach((en) => document.documentElement.classList.toggle('c12-on', en.isIntersecting)), { threshold: .02 }).observe(MG.$('.c12'));
   const cb = $$('.c12-b'), dv = $('#c12v'), dvi = $('#c12vi'); let cv = 0;
   const showM = (i) => { cv = (i + 12) % 12; const im = $('img', cb[cv]); dvi.src = im.src; dvi.alt = im.alt; };
   cb.forEach((b, i) => b.addEventListener('click', () => { showM(i); dv.showModal(); }));

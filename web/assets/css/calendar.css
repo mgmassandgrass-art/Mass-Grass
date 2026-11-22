@@ -183,16 +183,16 @@ html[data-hand]:not(.ar-on) .ps-grid .pm{font-family:var(--cal-t)}
 
 /* the twelve months side by side (owner, 22 Nov 2026): the first thing on the page, filling the screen, every page as large as
    the screen allows (6 x 2 on wide screens, 4 x 3 on upright ones, 3 x 4 on phones), on the spread's own orange (bilinear, its four corners) */
-.c12{position:relative;isolation:isolate;display:grid;place-items:center;height:calc(100svh - 48px);min-height:520px;overflow:hidden;
+.c12{position:relative;isolation:isolate;display:grid;justify-items:center;align-content:start;row-gap:clamp(22px,2.4vw,36px);padding:var(--pv,var(--pad)) 0 clamp(36px,4vw,60px);overflow:hidden;
   --gap:clamp(10px,1.4vw,26px);--pad:clamp(16px,2.6vw,48px);--cols:6;--rows:2;
-  --pw:min(calc((100vw - 2*var(--pad) - (var(--cols) - 1)*var(--gap))/var(--cols)),calc((100svh - 48px - 2*var(--pad) - (var(--rows) - 1)*var(--gap))/var(--rows)*.7116));
+  --pw:min(calc((100vw - 2*var(--pad) - (var(--cols) - 1)*var(--gap))/var(--cols)),calc((100svh - 48px - 2*var(--pv,var(--pad)) - (var(--rows) - 1)*var(--gap))/var(--rows)*.7116));
   background:linear-gradient(to right,#E8AF5A,#F2D577)}
 .c12::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to right,#E2964A,#ECBC64);-webkit-mask-image:linear-gradient(to top,#000,transparent);mask-image:linear-gradient(to top,#000,transparent)}
 .c12-g{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(var(--cols),var(--pw));gap:var(--gap)}
 .c12-g li{margin:0;padding:0;line-height:0}
 .c12-g img{display:block;width:var(--pw);height:auto;max-width:none;aspect-ratio:960/1350;
   box-shadow:0 1px 2px rgba(120,60,10,.18),0 10px 22px -6px rgba(120,60,10,.32),0 26px 48px -18px rgba(120,60,10,.30)}
-@media(min-width:1180px){.c12{--pad:clamp(56px,4.4vw,72px)}}   /* clear of the ruler on the right */
+@media(min-width:1180px){.c12{--pad:clamp(56px,4.4vw,72px);--pv:clamp(18px,2vw,30px)}}   /* clear of the ruler on the right */
 @media(max-aspect-ratio:13/10){.c12{--cols:4;--rows:3}}
 .c12-b{display:block;padding:0;border:0;background:none;cursor:zoom-in;transition:translate .35s cubic-bezier(.22,1,.36,1)}
 @media(hover:hover){.c12-b:hover{translate:0 -6px}}
@@ -217,3 +217,18 @@ html[data-hand]:not(.ar-on) .ps-grid .pm{font-family:var(--cal-t)}
   .cf-film video{translate:none}
   .cf-bar{position:relative;background:#F3EEE5}
 }
+
+/* under the twelve months (owner, 22 Nov 2026; the film is off the page): a quiet band to buy the calendar, centred on the paper */
+.cbuy{position:relative;margin-top:-1px;padding:0 16px clamp(36px,4vw,64px);background:linear-gradient(to right,#E2964A,#ECBC64);text-align:center}   /* the spread's own orange, carried on under the months */
+.cbuy-in{display:grid;justify-items:center;gap:6px;max-width:760px;margin:0 auto}
+.cbuy h1{margin:0;font-size:clamp(36px,3.4vw,54px)!important;line-height:1}
+.cbuy .hand{margin:0;font-size:clamp(21px,1.7vw,26px)!important;color:var(--cv-rose);max-width:none}
+.cbuy-row{display:flex;align-items:center;gap:20px}
+.cbuy-row .ink{min-height:56px;padding:0 44px;display:inline-flex;align-items:center;border:1.5px solid var(--cv-ink)}
+.cbuy-row .fig{font-weight:400;font-size:clamp(32px,2.8vw,42px);color:#2B2F2C!important}
+.cbuy .go{margin-top:4px}
+.ar-on .cbuy h1{line-height:1.3}
+
+
+/* the side margin's section names stay away while the months fill the screen */
+html.c12-on .sx-side{opacity:0!important}
