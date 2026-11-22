@@ -40,8 +40,8 @@
   function show(i, scroll) {
     sel = (i + MS.length) % MS.length; const p = MS[sel];
     bts.forEach((b, k) => b.setAttribute('aria-pressed', String(k === sel)));
-    const src = view === 'desk' ? `assets/cwf-${pad(p.m)}.webp` : `assets/v2-${pad(p.m)}.webp`;
-    const alt = name(p) + (view === 'desk' ? t(', the calendar on a table', '، التقويم على طاولة') : t(', the page', '، الصفحة'));
+    const src = view === 'desk' ? `assets/cdm-${pad(p.m)}.webp` : `assets/v2-${pad(p.m)}.webp`;
+    const alt = name(p) + (view === 'desk' ? t(', the desk calendar', '، التقويم المكتبي') : t(', the page', '، الصفحة'));
     $('#btsim').classList.toggle('page', view === 'page');
     if (front.getAttribute('src') !== src) {
       const back = front === A ? B : A; back.src = src; back.alt = alt;

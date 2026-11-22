@@ -476,3 +476,9 @@ footer .ft-z small{color:rgba(var(--ink-rgb),.5)}
 @media(hover:hover){footer .ft-b a:hover,footer .ft-d a:hover,footer .ft-z a:hover{color:var(--ink);text-decoration:none}}
 footer .ft-b a[aria-current=page]{color:var(--ink)}
 footer .ft-b{grid-template-columns:repeat(2,max-content);gap:0 clamp(24px,3vw,48px)}@media(max-width:480px){footer .ft-b{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* the ruler, everywhere (owner, 22 Nov 2026): only the counter. No numbers, no ticks, no wash behind it, no section names beside it */
+.rl-sc{background:none!important}
+[dir=rtl] .rl-sc{background:none!important}
+.rl-k,.rl-w,.rl-n{display:none!important}
+.sx-side{display:none!important}
