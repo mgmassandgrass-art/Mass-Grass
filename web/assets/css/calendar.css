@@ -247,13 +247,15 @@ html:has(.c12) .cv-page,html:has(.c12) .bts-im{background:rgba(255,250,242,.6)}
 html:has(.c12) .ol-c .ol-im{background:#fff}
 /* the opening (owner, 22 Nov 2026): the two desk calendars, large, the first thing on the page; under them one quiet line
    in the shop's mono voice and the buy button. The photograph's edges melt into the page, which carries its light. */
-.cdesk{position:relative;margin:0;padding:0 0 clamp(28px,3.4vw,52px);text-align:center}
-.cdesk>img{display:block;width:100%;height:auto;max-width:none;max-height:calc(100svh - 48px - 150px);object-fit:cover;object-position:50% 60%;
-  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 5%,#000 92%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 5%,#000 92%,transparent)}
-.cdesk-t{display:grid;justify-items:center;gap:18px;margin-top:-8px;padding:0 16px}
+.cdesk{position:relative;margin:0;display:flex;flex-direction:column;height:calc(100svh - 49px);min-height:560px;padding:clamp(8px,1.4vh,20px) 0 clamp(22px,3.4vh,44px);box-sizing:border-box;text-align:center}
+/* the whole photograph, never cropped: it takes what height is left above the line and the button */
+.cdesk>img{display:block;flex:1 1 0;min-height:0;align-self:center;width:auto;height:auto;max-width:100%;aspect-ratio:2800/1580;object-fit:contain;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 94%,transparent);
+  -webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent),linear-gradient(to bottom,transparent,#000 4%,#000 94%,transparent);mask-composite:intersect}
+.cdesk-t{flex:none;display:grid;justify-items:center;gap:clamp(12px,1.8vh,18px);margin-top:clamp(4px,1vh,12px);padding:0 16px}
 html[data-hand] .cdesk-t .cdesk-l{margin:0;font-family:var(--mono2)!important;font-weight:500;font-size:12px!important;line-height:1.7;letter-spacing:.22em;text-transform:uppercase;color:#6E5640!important;max-width:none}
 .ar-on .cdesk-t .cdesk-l{font-size:16px;letter-spacing:0}
 .cdesk .cbuy-row{gap:18px}
 .cdesk .cbuy-row .ink{min-height:50px;padding:0 40px}
 .cdesk .cbuy-row .fig{font-size:clamp(28px,2.4vw,36px);color:#2B2F2C!important}
-@media(max-width:900px){.cdesk>img{max-height:none;width:112%;margin-inline-start:-6%;aspect-ratio:1.45;object-position:50% 62%}}
+@media(max-width:900px){.cdesk{height:auto;min-height:0}.cdesk>img{flex:none;width:100%}}
