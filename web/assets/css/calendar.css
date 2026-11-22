@@ -233,18 +233,22 @@ html[data-hand]:not(.ar-on) .ps-grid .pm{font-family:var(--cal-t)}
 /* the side margin's section names stay away while the months fill the screen */
 html.c12-on .sx-side{opacity:0!important}
 
-/* ---------- the whole calendar page in the spread's orange (owner, 22 Nov 2026); only this page (:has(.c12)) ----------
-   one fixed warm wash behind everything, sections clear on it, the paper cards stay paper, lines and quiet text warmed */
-html:has(.c12){--cream:#EDBA62;--cv-rose:#7E2F31;--cal-rose:#7E2F31;--blue:#7E2F31;--line:rgba(92,52,12,.22);--line-2:rgba(92,52,12,.38);--cv-paper:#F6E7C8;--cal-grey:#6E4A22;--cv-grey:#6E4A22}
-html:has(.c12){background:linear-gradient(170deg,#F2D577 0,#ECBC64 900px,#E8AE58 45%,#E39A4C 100%) #E39A4C}
+/* ---------- the whole calendar page in the desk photograph's light (owner, 22 Nov 2026); only this page (:has(.c12)) ----------
+   the photograph (cal-desk2) is peach on the left fading to cream on the right; the page carries that same light from side to side
+   all the way down, so the calendars seem to stand on the page itself */
+html:has(.c12){--cream:#FBF0E3;--line:rgba(110,70,30,.16);--line-2:rgba(110,70,30,.3);--cv-paper:#FFF8EF;--cal-grey:#6E5640;--cv-grey:#6E5640;
+  background:linear-gradient(to right,#ECCBA6 0,#F3DFC6 25%,#F8EDDD 50%,#FDF3E8 75%,#FDF3E8 100%) #FDF3E8}
 html:has(.c12) body{background:transparent}
-html:has(.c12) main>section,html:has(.c12) .c12,html:has(.c12) footer,html:has(.c12) .cbuy{background:transparent!important}
+html:has(.c12) main>section,html:has(.c12) .c12,html:has(.c12) footer{background:transparent!important}
 html:has(.c12) .c12::before{display:none}
-html:has(.c12) header,html:has(.c12) .mmenu{background:rgba(246,226,170,.9)}
-html:has(.c12) .where{background:rgba(246,226,170,.82)}
-html:has(.c12) .sx-side,html:has(.c12) .rail{color:#6E4A22}
-html:has(.c12) .cv-page{background:rgba(255,248,232,.55)}
-html:has(.c12) .bts-im{background:rgba(255,248,232,.55)}
-html:has(.c12) .ol-c .ol-im{background:#fff8ec;border-color:rgba(92,52,12,.22)}
-html:has(.c12) .cw-buy .ghost,html:has(.c12) .bts-nav .ghost{background:rgba(255,248,232,.35)}
-html:has(.c12) footer input{background:rgba(255,248,232,.6)}
+html:has(.c12) header,html:has(.c12) .mmenu{background:rgba(253,243,232,.92)}
+html:has(.c12) .where{background:rgba(253,243,232,.85)}
+html:has(.c12) .cv-page,html:has(.c12) .bts-im{background:rgba(255,250,242,.6)}
+html:has(.c12) .ol-c .ol-im{background:#fff}
+/* the desk photograph, full width, its top and bottom melting into the page */
+.cdesk{position:relative;margin:0;padding:0;line-height:0}
+.cdesk img{display:block;width:100%;height:auto;max-width:none;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 8%,#000 90%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 8%,#000 90%,transparent)}
+.cdesk-t{position:absolute;top:0;bottom:0;left:58%;right:6%;display:grid;align-content:center;justify-items:start;gap:22px;line-height:normal}
+.cdesk-t .hand{margin:0;font-size:clamp(26px,2.6vw,44px)!important;line-height:1.15;color:var(--cal-ink,#2B2F2C)!important;max-width:16ch}
+.cdesk .cbuy-row .fig{color:#2B2F2C!important}
+@media(max-width:900px){.cdesk img{aspect-ratio:1.15;object-fit:cover;object-position:6% 60%}.cdesk-t{position:static;padding:8px 16px 32px;justify-items:center;text-align:center}.cdesk-t .hand{max-width:none}}
