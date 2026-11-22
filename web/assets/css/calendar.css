@@ -261,8 +261,8 @@ html[data-hand] .cdesk-t .cdesk-l{margin:0;font-family:var(--mono2)!important;fo
 @media(max-width:900px){.cdesk{height:auto;min-height:0}.cdesk>img{flex:none;width:100%}}
 
 /* the bottles' month on the desk calendar mockup (cdm-MM, the kraft stand), and the words beside it in the opening's quiet voice */
-.btshow .bts-im{aspect-ratio:1;background:transparent!important}
-.btshow .bts-im img{object-fit:contain;object-position:50% 50%;-webkit-mask-image:radial-gradient(closest-side,#000 82%,transparent);mask-image:radial-gradient(closest-side,#000 82%,transparent)}
+.btshow .bts-im{aspect-ratio:900/1052;width:min(100%,calc(78vh * 900 / 1052));margin-inline:auto;background:transparent!important}
+.btshow .bts-im img{object-fit:contain;object-position:50% 50%;-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent),linear-gradient(to bottom,transparent,#000 10%,#000 88%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent),linear-gradient(to bottom,transparent,#000 10%,#000 88%,transparent);mask-composite:intersect}
 .btshow .bts-im.page img{-webkit-mask-image:none;mask-image:none}
 html[data-hand]:not(.ar-on) body main .btshow :is(.bts-s,.bts-q,.bts-d){font-family:var(--mono2)!important;font-weight:500;font-size:12px!important;line-height:1.8;letter-spacing:.18em;text-transform:uppercase;color:#6E5640!important;max-width:40ch}
 html[data-hand]:not(.ar-on) body main .btshow .bts-q{color:#2B2F2C!important;margin-bottom:10px}
