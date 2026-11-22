@@ -237,7 +237,7 @@ html.c12-on .sx-side{opacity:0!important}
    the photograph (cal-desk2) is peach on the left fading to cream on the right; the page carries that same light from side to side
    all the way down, so the calendars seem to stand on the page itself */
 html:has(.c12){--cream:#FBF0E3;--line:rgba(110,70,30,.16);--line-2:rgba(110,70,30,.3);--cv-paper:#FFF8EF;--cal-grey:#6E5640;--cv-grey:#6E5640;
-  background:linear-gradient(to right,#EAC8A6 0,#F2DCC6 25%,#F8ECDD 50%,#FBF1E7 75%,#FBF1E7 100%) #FBF1E7}
+  background:linear-gradient(to right,#E8C7A6 0,#F0D3B6 22%,#F5E0CA 50%,#F8EADA 75%,#FAF0E4 100%) #FAF0E4}
 html:has(.c12) body{background:transparent}
 html:has(.c12) main>section,html:has(.c12) .c12,html:has(.c12) footer{background:transparent!important}
 html:has(.c12) .c12::before{display:none}
@@ -245,10 +245,15 @@ html:has(.c12) header,html:has(.c12) .mmenu{background:rgba(253,243,232,.92)}
 html:has(.c12) .where{background:rgba(253,243,232,.85)}
 html:has(.c12) .cv-page,html:has(.c12) .bts-im{background:rgba(255,250,242,.6)}
 html:has(.c12) .ol-c .ol-im{background:#fff}
-/* the desk photograph, full width, its top and bottom melting into the page */
-.cdesk{position:relative;margin:0;padding:0;line-height:0}
-.cdesk img{display:block;width:100%;height:auto;max-width:none;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 8%,#000 90%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 8%,#000 90%,transparent)}
-.cdesk-t{position:absolute;top:0;bottom:0;left:56%;right:6%;display:grid;align-content:center;justify-items:start;gap:24px;line-height:normal}
-.cdesk-t .hand{margin:0;font-size:clamp(28px,3vw,52px)!important;line-height:1.12;color:var(--cal-ink,#2B2F2C)!important;max-width:18ch}
-.cdesk .cbuy-row .fig{color:#2B2F2C!important}
-@media(max-width:900px){.cdesk img{aspect-ratio:1.2;object-fit:cover;object-position:14% 62%}.cdesk-t{position:static;padding:8px 16px 36px;justify-items:center;text-align:center}.cdesk-t .hand{max-width:none}.cdesk-t .hand{max-width:none}}
+/* the opening (owner, 22 Nov 2026): the two desk calendars, large, the first thing on the page; under them one quiet line
+   in the shop's mono voice and the buy button. The photograph's edges melt into the page, which carries its light. */
+.cdesk{position:relative;margin:0;padding:0 0 clamp(28px,3.4vw,52px);text-align:center}
+.cdesk>img{display:block;width:100%;height:auto;max-width:none;max-height:calc(100svh - 48px - 150px);object-fit:cover;object-position:50% 60%;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 5%,#000 92%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 5%,#000 92%,transparent)}
+.cdesk-t{display:grid;justify-items:center;gap:18px;margin-top:-8px;padding:0 16px}
+html[data-hand] .cdesk-t .cdesk-l{margin:0;font-family:var(--mono2)!important;font-weight:500;font-size:12px!important;line-height:1.7;letter-spacing:.22em;text-transform:uppercase;color:#6E5640!important;max-width:none}
+.ar-on .cdesk-t .cdesk-l{font-size:16px;letter-spacing:0}
+.cdesk .cbuy-row{gap:18px}
+.cdesk .cbuy-row .ink{min-height:50px;padding:0 40px}
+.cdesk .cbuy-row .fig{font-size:clamp(28px,2.4vw,36px);color:#2B2F2C!important}
+@media(max-width:900px){.cdesk>img{max-height:none;width:112%;margin-inline-start:-6%;aspect-ratio:1.45;object-position:50% 62%}}
