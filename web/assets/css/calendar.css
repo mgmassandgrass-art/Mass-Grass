@@ -180,3 +180,7 @@ html[data-hand]:not(.ar-on) .ps-grid .pm{font-family:var(--cal-t)}
    the floor of the film continues in the stage's own colour */
 .cf-film video{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:50% 50%;display:block;translate:0 -9%}
 @media(max-width:900px){.cfull .cf-film{aspect-ratio:2800/1694}.cf-film video{translate:none}}
+
+/* the twelve months side by side (owner, 22 Nov 2026): the first thing on the page, whole, edge to edge */
+.c12{margin:0;padding:0;background:#E9A94F;line-height:0}
+.c12 img{display:block;width:100%;height:auto;max-width:none}
