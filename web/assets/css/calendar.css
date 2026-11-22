@@ -237,7 +237,7 @@ html.c12-on .sx-side{opacity:0!important}
    the photograph (cal-desk2) is peach on the left fading to cream on the right; the page carries that same light from side to side
    all the way down, so the calendars seem to stand on the page itself */
 html:has(.c12){--cream:#FBF0E3;--line:rgba(110,70,30,.16);--line-2:rgba(110,70,30,.3);--cv-paper:#FFF8EF;--cal-grey:#6E5640;--cv-grey:#6E5640;
-  background:linear-gradient(to right,#EECCA8 0,#F2D4B5 25%,#F6E3CC 50%,#F9EADB 75%,#FBF0E4 100%) #FBF0E4}
+  background:linear-gradient(to right,#EAC8A6 0,#F2DCC6 25%,#F8ECDD 50%,#FBF1E7 75%,#FBF1E7 100%) #FBF1E7}
 html:has(.c12) body{background:transparent}
 html:has(.c12) main>section,html:has(.c12) .c12,html:has(.c12) footer{background:transparent!important}
 html:has(.c12) .c12::before{display:none}
@@ -248,7 +248,7 @@ html:has(.c12) .ol-c .ol-im{background:#fff}
 /* the desk photograph, full width, its top and bottom melting into the page */
 .cdesk{position:relative;margin:0;padding:0;line-height:0}
 .cdesk img{display:block;width:100%;height:auto;max-width:none;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 8%,#000 90%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 8%,#000 90%,transparent)}
-.cdesk-t{display:grid;justify-items:center;text-align:center;gap:20px;margin-top:-4vw;padding:0 16px clamp(40px,5vw,80px);line-height:normal;position:relative}
-.cdesk-t .hand{margin:0;font-size:clamp(26px,2.6vw,44px)!important;line-height:1.15;color:var(--cal-ink,#2B2F2C)!important}
+.cdesk-t{position:absolute;top:0;bottom:0;left:56%;right:6%;display:grid;align-content:center;justify-items:start;gap:24px;line-height:normal}
+.cdesk-t .hand{margin:0;font-size:clamp(28px,3vw,52px)!important;line-height:1.12;color:var(--cal-ink,#2B2F2C)!important;max-width:18ch}
 .cdesk .cbuy-row .fig{color:#2B2F2C!important}
-@media(max-width:900px){.cdesk img{aspect-ratio:1.25;object-fit:cover;object-position:50% 55%}.cdesk-t{margin-top:0;padding:8px 16px 32px}.cdesk-t .hand{max-width:none}}
+@media(max-width:900px){.cdesk img{aspect-ratio:1.2;object-fit:cover;object-position:14% 62%}.cdesk-t{position:static;padding:8px 16px 36px;justify-items:center;text-align:center}.cdesk-t .hand{max-width:none}.cdesk-t .hand{max-width:none}}
