@@ -290,3 +290,5 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--mono2)!im
 .btshow .bts-buy .ink{min-height:54px;padding:0 40px}
 .btshow .bts-tx{position:relative;z-index:1}
 @media(max-width:900px){.btshow .bts-im{width:100%;margin:-4vh 0 -2vh}}
+/* the description beside the month: the site's plain face (Figtree), easier to read than mono */
+html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!important;font-weight:400;font-size:16px!important;line-height:1.6;letter-spacing:0;color:#5E4A36!important;max-width:36ch}
