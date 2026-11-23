@@ -260,11 +260,27 @@ html[data-hand] .cdesk-t .cdesk-l{margin:0;font-family:var(--mono2)!important;fo
 .cdesk .cbuy-row .fig{font-size:clamp(28px,2.4vw,36px);color:#2B2F2C!important}
 @media(max-width:900px){.cdesk{height:auto;min-height:0}.cdesk>img{flex:none;width:100%}}
 
-/* the bottles' month on the desk calendar mockup (cdm-MM, the kraft stand), and the words beside it in the opening's quiet voice */
-.btshow .bts-im{aspect-ratio:900/1052;width:min(100%,calc(78vh * 900 / 1052));margin-inline:auto;background:transparent!important}
-.btshow .bts-im img{object-fit:contain;object-position:50% 50%;-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent),linear-gradient(to bottom,transparent,#000 10%,#000 88%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent),linear-gradient(to bottom,transparent,#000 10%,#000 88%,transparent);mask-composite:intersect}
-.btshow .bts-im.page img{-webkit-mask-image:none;mask-image:none}
-html[data-hand]:not(.ar-on) body main .btshow :is(.bts-s,.bts-q,.bts-d){font-family:var(--mono2)!important;font-weight:500;font-size:12px!important;line-height:1.8;letter-spacing:.18em;text-transform:uppercase;color:#6E5640!important;max-width:40ch}
-html[data-hand]:not(.ar-on) body main .btshow .bts-q{color:#2B2F2C!important;margin-bottom:10px}
-html[data-hand]:not(.ar-on) body main .btshow .bts-n{font-size:clamp(34px,3vw,48px)!important;margin-bottom:14px}
-html[data-hand]:not(.ar-on) body main .btshow .bts-d{text-transform:none;letter-spacing:.02em;font-size:13px!important}
+/* the bottles' month on the desk calendar (owner, 23 Nov 2026): one photograph (cdm-base), and only its page changes, in place;
+   the words in the opening's quiet mono voice; small text buttons, only Buy stays a solid block */
+.btshow .bts-im{aspect-ratio:1180/1380;width:min(100%,calc(80vh * 1180 / 1380));margin-inline:auto;background:transparent!important;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 10%,#000 90%,transparent),linear-gradient(to bottom,transparent,#000 6%,#000 92%,transparent);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent,#000 10%,#000 90%,transparent),linear-gradient(to bottom,transparent,#000 6%,#000 92%,transparent);mask-composite:intersect}
+.btshow .bts-im>img,.btshow .bts-pg img{position:absolute;max-width:none;opacity:0;padding:0}
+.btshow .bts-im .bts-base{inset:0;width:100%;height:100%;opacity:1;transition:opacity .25s}
+.btshow .bts-pg{position:absolute;left:24.576%;top:13.043%;width:59.237%;height:70.29%}
+.btshow .bts-pg img{inset:0;width:100%;height:100%;transition:opacity .18s ease}
+.btshow .bts-pg img.on{opacity:1}
+.btshow .bts-im.page :is(.bts-base,.bts-pg){opacity:0}
+.btshow .bts-im>#btsA,.btshow .bts-im>#btsB{inset:6% 12%;width:76%;height:88%;object-fit:contain;transition:opacity .25s;filter:drop-shadow(0 14px 24px rgba(80,60,40,.22))}
+.btshow .bts-im.page>img.on{opacity:1}
+html[data-hand]:not(.ar-on) body main .btshow :is(.bts-s,.bts-q,.bts-d,.bts-n){font-family:var(--mono2)!important;font-weight:500;font-size:12px!important;line-height:1.85;letter-spacing:.2em;text-transform:uppercase;color:#6E5640!important;max-width:42ch}
+html[data-hand]:not(.ar-on) body main .btshow .bts-n{font-size:15px!important;letter-spacing:.28em;color:#2B2F2C!important;margin:0 0 14px}
+html[data-hand]:not(.ar-on) body main .btshow .bts-q{color:#2B2F2C!important;margin-bottom:8px}
+html[data-hand]:not(.ar-on) body main .btshow .bts-d{text-transform:none;letter-spacing:.04em;font-size:12.5px!important}
+.btshow .bts-v{gap:18px;margin:4px 0 14px}
+.btshow .bts-v button,.btshow .bts-nav .ghost{font-size:10px!important;letter-spacing:.18em!important}
+.btshow .bts-nav{gap:18px;margin-bottom:6px}
+.btshow .bts-nav .ghost{min-height:0;padding:4px 0;border:0;border-bottom:1px solid rgba(43,47,44,.35);background:none;color:#2B2F2C;width:auto}
+@media(hover:hover){.btshow .bts-nav .ghost:hover{border-bottom-color:#2B2F2C}}
+.btshow .bts-buy{margin-top:22px}
+.btshow .bts-buy .ink{min-height:54px;padding:0 40px}

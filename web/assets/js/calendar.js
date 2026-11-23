@@ -37,17 +37,24 @@
   const MS = P.filter((p) => p.m > 0), row = $('#btrow');
   row.innerHTML = MS.map((p, i) => `<li><button type="button" class="btb" data-i="${i}" aria-pressed="${!i}" style="--d:${(-i * .37).toFixed(2)}s"><img src="assets/bt-${pad(i + 1)}.webp" alt="" draggable="false"><span class="btn-n"></span></button></li>`).join('');
   const bts = $$('.btb', row), A = $('#btsA'), B = $('#btsB'); let sel = 0, view = 'desk', front = A;
+  /* the desk calendar: one photograph, and only its page changes (cdp-MM: the printed page cut to the page's shape, laid where it sits);
+     all twelve pages are fetched once the section comes near, so a click turns the page at once */
+  const pg = $('#btspg');
+  pg.innerHTML = MS.map((p, i) => `<img src="assets/cdp-${pad(p.m)}.webp" alt="" ${i ? 'loading="lazy" ' : ''}decoding="async" draggable="false"${i ? '' : ' class="on"'}>`).join('');
+  const pgs = $$('img', pg);
+  new IntersectionObserver((es, o) => es.forEach((en) => { if (en.isIntersecting) { pgs.forEach((im) => { im.loading = 'eager'; }); o.disconnect(); } }), { rootMargin: '600px' }).observe(pg);
   function show(i, scroll) {
     sel = (i + MS.length) % MS.length; const p = MS[sel];
     bts.forEach((b, k) => b.setAttribute('aria-pressed', String(k === sel)));
-    const src = view === 'desk' ? `assets/cdm-${pad(p.m)}.webp` : `assets/v2-${pad(p.m)}.webp`;
-    const alt = name(p) + (view === 'desk' ? t(', the desk calendar', '، التقويم المكتبي') : t(', the page', '، الصفحة'));
+    const alt = name(p) + (view === 'desk' ? t(', on the desk calendar', '، على التقويم المكتبي') : t(', the page', '، الصفحة'));
     $('#btsim').classList.toggle('page', view === 'page');
-    if (front.getAttribute('src') !== src) {
+    pgs.forEach((im, k) => im.classList.toggle('on', k === sel)); $('.bts-base').alt = view === 'desk' ? alt : '';
+    const src = `assets/c27p-${pad(p.m)}.webp`;
+    if (view === 'page' && front.getAttribute('src') !== src) {
       const back = front === A ? B : A; back.src = src; back.alt = alt;
       const swap = () => { back.classList.add('on'); front.classList.remove('on'); front = back; };
       if (back.complete && back.naturalWidth) swap(); else back.onload = swap;
-    } else front.alt = alt;
+    } else if (view === 'page') front.alt = alt;
     $('#btss').textContent = L(p.s); $('#btsn').textContent = name(p); $('#btsq').textContent = L(p.q); $('#btsd').textContent = L(p.d);
     if (scroll) { const r = $('#btshow').getBoundingClientRect(); if (r.top > innerHeight * .7 || r.bottom < 0) $('#btshow').scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'center' }); }
   }
@@ -55,7 +62,6 @@
   $('#btprev').addEventListener('click', () => show(sel - 1)); $('#btnext').addEventListener('click', () => show(sel + 1));
   const setView = (v) => { view = v; $('#btvDesk').setAttribute('aria-pressed', String(v === 'desk')); $('#btvPage').setAttribute('aria-pressed', String(v === 'page')); show(sel); };
   $('#btvDesk').addEventListener('click', () => setView('desk')); $('#btvPage').addEventListener('click', () => setView('page'));
-  A.classList.add('on');
 
   /* the printed copy: a button when the admin has switched it on, else a plain line */
   function printBlock() {

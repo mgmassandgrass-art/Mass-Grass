@@ -38,5 +38,10 @@ for m in range(1,13):
     a=(A*(1-keep))[...,None]
     out=np.clip(hero*(1-a)+pr*a,0,255).astype(np.uint8)
     cv2.imwrite(f'L{m:02d}.png',out[60:1440,120:1300])
+    al=(a[...,0]*255).astype(np.uint8)[60:1440,120:1300]; o=out[60:1440,120:1300]
+    ys,xs=np.nonzero(al>0); y0,y1,x0,x1=ys.min(),ys.max()+1,xs.min(),xs.max()+1
+    cv2.imwrite(f'P{m:02d}.png',np.dstack([o,al])[y0:y1,x0:x1]); BB=(x0,y0,x1,y1)
 cv2.imwrite('keep.png',(keep*255).astype(np.uint8))
 print(q.round().tolist())
+
+print('bbox',BB)
