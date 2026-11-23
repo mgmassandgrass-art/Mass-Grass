@@ -265,8 +265,8 @@ html[data-hand] .cdesk-t .cdesk-l{margin:0;font-family:var(--mono2)!important;fo
    Type: Farah's voice in the hand (the month, her line), the shop's voice in mono (season, description, the small text buttons);
    only Buy stays a solid block. */
 .btshow .bts-im{aspect-ratio:1480/1800;width:min(112%,calc(92vh * 1480 / 1800));margin-block:-6vh;margin-inline-start:-8%;margin-inline:auto;background:transparent!important;
-  -webkit-mask-image:radial-gradient(ellipse 52% 50% at 54% 52%,#000 66%,rgba(0,0,0,.5) 84%,transparent 100%);
-  mask-image:radial-gradient(ellipse 52% 50% at 54% 52%,#000 66%,rgba(0,0,0,.5) 84%,transparent 100%)}
+  -webkit-mask-image:radial-gradient(ellipse 54% 52% at 54% 52%,#000 70%,transparent 100%);
+  mask-image:radial-gradient(ellipse 54% 52% at 54% 52%,#000 70%,transparent 100%)}
 .btshow .bts-im>img,.btshow .bts-pg img{position:absolute;max-width:none;opacity:0;padding:0}
 .btshow .bts-im .bts-base{inset:0;width:100%;height:100%;opacity:1;transition:opacity .25s}
 .btshow .bts-pg{position:absolute;left:38.514%;top:21.611%;width:47.5%;height:54.333%}

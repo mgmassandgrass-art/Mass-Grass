@@ -59,9 +59,6 @@
     if (scroll) { const r = $('#btshow').getBoundingClientRect(); if (r.top > innerHeight * .7 || r.bottom < 0) $('#btshow').scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'center' }); }
   }
   row.addEventListener('click', (e) => { const b = e.target.closest('.btb'); if (b) show(+b.dataset.i, true); });
-  $('#btprev').addEventListener('click', () => show(sel - 1)); $('#btnext').addEventListener('click', () => show(sel + 1));
-  const setView = (v) => { view = v; $('#btvDesk').setAttribute('aria-pressed', String(v === 'desk')); $('#btvPage').setAttribute('aria-pressed', String(v === 'page')); show(sel); };
-  $('#btvDesk').addEventListener('click', () => setView('desk')); $('#btvPage').addEventListener('click', () => setView('page'));
 
   /* the printed copy: a button when the admin has switched it on, else a plain line */
   function printBlock() {
