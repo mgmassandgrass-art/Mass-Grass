@@ -298,3 +298,11 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 .btshow .bts-im{-webkit-mask-image:none!important;mask-image:none!important;isolation:auto}
 .btshow .bts-im>.bts-sh{position:absolute;inset:0;width:100%;height:100%;max-width:none;opacity:1;mix-blend-mode:multiply;transition:opacity .25s}
 .btshow .bts-im.page>.bts-sh{opacity:0}
+
+/* one page laid flat on the table (owner, 23 Nov 2026): the page's own colour is the table; the photo's shadow multiplies onto it */
+.cflat{margin:0;padding:clamp(8px,2vw,32px) 0}
+.cfl-in{position:relative;width:min(100%,calc(100svh * 2000 / 1526));aspect-ratio:2000/1526;margin:0 auto}
+.cfl-in img{position:absolute;max-width:none}
+.cfl-sh{inset:0;width:100%;height:100%;mix-blend-mode:multiply}
+.cfl-pg{left:31.1%;top:16.186%;width:36.4%;height:67.038%}
+@media(max-width:700px){.cflat{overflow:hidden}.cfl-in{width:210%;margin-left:-54%}}
