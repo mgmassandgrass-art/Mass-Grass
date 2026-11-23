@@ -4,11 +4,16 @@ hero=cv2.imread('lcrop.png').astype(np.float32); H,W=hero.shape[:2]
 M=np.load('lM.npy'); P='../pdf27/'
 p1=cv2.imread(P+'p01.png').astype(np.float32); ph,pw=p1.shape[:2]; S=np.float32([[0,0],[pw,0],[pw,ph],[0,ph]])
 q=cv2.perspectiveTransform(S.reshape(-1,1,2),M).reshape(-1,2)
+def push(q,i,j,d):   # move edge i-j outward by d px
+    p=q[j]-q[i]; n=np.array([p[1],-p[0]])/np.hypot(*p); c=q.mean(0)
+    if np.dot(n,(q[i]+q[j])/2-c)<0: n=-n
+    q=q.copy(); q[i]+=n*d; q[j]+=n*d; return q
+qa=push(push(q,1,2,3.0),2,3,7.0)      # right and bottom edges: the old page showed a hair beyond the fitted edge
 def warp(img):
     K=3; big=cv2.warpPerspective(img,np.diag([K,K,1])@M,(W*K,H*K),flags=cv2.INTER_LINEAR,borderMode=cv2.BORDER_REPLICATE)
     return cv2.resize(big,(W,H),interpolation=cv2.INTER_AREA)
 def qmask(s=8):
-    m=np.zeros((H*s,W*s),np.uint8); cv2.fillPoly(m,[np.int32(np.round(q*s))],255); return cv2.resize(m,(W,H),interpolation=cv2.INTER_AREA).astype(np.float32)/255
+    m=np.zeros((H*s,W*s),np.uint8); cv2.fillPoly(m,[np.int32(np.round(qa*s))],255); return cv2.resize(m,(W,H),interpolation=cv2.INTER_AREA).astype(np.float32)/255
 A=qmask(); Y,X=np.mgrid[0:H,0:W].astype(np.float32); u=X/W; v=Y/H
 w1=warp(p1)
 fit=ndimage.binary_erosion(A>.99,iterations=12); fit[:int(q[:2,1].max())+70]=False
