@@ -292,3 +292,9 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--mono2)!im
 @media(max-width:900px){.btshow .bts-im{width:100%;margin:-4vh 0 -2vh}}
 /* the description beside the month: the site's plain face (Figtree), easier to read than mono */
 html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!important;font-weight:400;font-size:16px!important;line-height:1.6;letter-spacing:0;color:#5E4A36!important;max-width:36ch}
+
+/* the desk calendar in two layers (owner, 23 Nov 2026): its shadow multiplies onto whatever the page colour is, the calendar sits on top;
+   no photograph edge, no seam, no mask */
+.btshow .bts-im{-webkit-mask-image:none!important;mask-image:none!important;isolation:auto}
+.btshow .bts-im>.bts-sh{position:absolute;inset:0;width:100%;height:100%;max-width:none;opacity:1;mix-blend-mode:multiply;transition:opacity .25s}
+.btshow .bts-im.page>.bts-sh{opacity:0}
