@@ -319,3 +319,7 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 .btshow .bts-pg{left:43.8148%;top:34.15%;width:44.6927%;height:38.9%}
 .btshow .bts-im>#btsA,.btshow .bts-im>#btsB{inset:30% 6% 24% 38%;width:56%;height:46%}
 @media(max-width:900px){.btshow .bts-im{width:100%;margin:-18vh 0 -10vh}}
+
+/* the flat page: the owner's PNG (March, its shadow in the alpha) */
+.cfl-in{aspect-ratio:2000/1688;width:min(100%,calc(100svh * 2000 / 1688))}
+.cfl-in .cfl-one{position:static;display:block;width:100%;height:auto}
