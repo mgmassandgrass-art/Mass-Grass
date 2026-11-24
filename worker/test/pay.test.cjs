@@ -16,7 +16,7 @@ const api = async (m, p, body, raw) => { const r = await fetch(B + p, { method: 
   const c = await b.newContext(); const p = await c.newPage(); const errs = []; p.on('pageerror', (x) => errs.push(x.message));
   await p.goto(B + '/paintings#hero', { waitUntil: 'load' }); await p.waitForSelector('dialog#view[open]'); await p.click('#vadd'); await p.keyboard.press('Escape');
   await p.goto(B + '/checkout', { waitUntil: 'load' }); await p.waitForSelector('#f'); await p.fill('#em', 'buyer@example.com');
-  await Promise.all([p.waitForURL('**/checkout.html*'), p.click('#f [type=submit]')]);
+  await Promise.all([p.waitForURL('**/checkout*'), p.click('#f [type=submit]')]);
   await p.waitForSelector('.cd', { timeout: 10000 }).catch(() => {});
   ok('back from PayPal, the order is paid', (await p.locator('.cd').count()) === 1, await p.textContent('#co'));
   const href = await p.getAttribute('.cd .cd-files a', 'href').catch(() => null);

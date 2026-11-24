@@ -154,7 +154,7 @@ export async function createOrder(env, req, user) {
       amount: { currency_code: 'EUR', value: (total / 100).toFixed(2), breakdown: { item_total: { currency_code: 'EUR', value: ((total - shipCents) / 100).toFixed(2) }, shipping: { currency_code: 'EUR', value: (shipCents / 100).toFixed(2) } } },
       ...(ship ? { shipping: { name: { full_name: ship.name }, address: { address_line_1: ship.line1, address_line_2: ship.line2 || undefined, admin_area_2: ship.city, postal_code: ship.postal || undefined, country_code: ship.country } } } : {}) }],
     payment_source: { paypal: { experience_context: { brand_name: 'Mass & Grass', shipping_preference: ship ? 'SET_PROVIDED_ADDRESS' : 'NO_SHIPPING', user_action: 'PAY_NOW', landing_page: 'LOGIN', // PayPal accounts only (the owner also switches off card payments without an account in PayPal)
-      return_url: `${env.SITE_ORIGIN}/checkout.html?order=${id}`, cancel_url: `${env.SITE_ORIGIN}/checkout.html?cancelled=${id}` } } },
+      return_url: `${env.SITE_ORIGIN}/checkout?order=${id}`, cancel_url: `${env.SITE_ORIGIN}/checkout?cancelled=${id}` } } },
   });
   if (!r.ok) { console.error('paypal create', r.status, JSON.stringify(r.data)); return fail('payment_error', 502); }
   await env.DB.prepare('UPDATE orders SET paypal_id=? WHERE id=?').bind(r.data.id, id).run();

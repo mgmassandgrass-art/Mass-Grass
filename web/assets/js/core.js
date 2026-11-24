@@ -204,7 +204,13 @@
   const pages = []; let ready = false;
   function page(fn) { pages.push(fn); if (ready) run(fn, 'init'); }
   function run(fn, why) { try { fn(why); } catch (e) { console.error(e); } }
-  function rerender(why) { if (!ready) return; pages.forEach((fn) => run(fn, why || 'init')); $$('[data-price]').forEach((e) => (e.textContent = fmt(price(e.dataset.price)))); paintAcct(); paintBag(); tear(); }
+  /* on the live shop the addresses carry no ".html" (the server sends /x.html to /x): links are written clean so no click
+     waits for that hop; the static preview has no server, so its links stay as they are */
+  const cleanLinks = () => { if (!server) return; $$('a[href*=".html"]').forEach((a) => { const h = a.getAttribute('href'); if (/^[a-z]+:|^\/\//i.test(h)) return;
+    a.setAttribute('href', h.replace(/^(\/?)index\.html(?=$|[?#])/, '$1./').replace(/([\w-]+)\.html(?=$|[?#])/, '$1')); }); };
+  /* links drawn later (the account link, cards) are made clean the moment they are pressed */
+  if (server) ['pointerdown', 'click', 'focusin'].forEach((ev) => doc.addEventListener(ev, (e) => { if (e.target.closest && e.target.closest('a[href*=".html"]')) cleanLinks(); }, true));
+  function rerender(why) { if (!ready) return; pages.forEach((fn) => run(fn, why || 'init')); $$('[data-price]').forEach((e) => (e.textContent = fmt(price(e.dataset.price)))); paintAcct(); paintBag(); tear(); cleanLinks(); }
 
   /* ---------- header, menu, newsletter ---------- */
   function shell() {

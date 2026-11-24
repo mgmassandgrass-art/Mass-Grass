@@ -61,7 +61,7 @@ const AE = { country: 'AE', name: 'Test Buyer', phone: '+971 50 123 4567', line1
   await p.click('#f [type=submit]');
   ok('Denmark without a postcode is stopped on the page', /postcode/i.test(await p.textContent('#f')));
   await p.fill('#spc', '2200');
-  await Promise.all([p.waitForURL('**/checkout.html*'), p.click('#f [type=submit]')]);
+  await Promise.all([p.waitForURL('**/checkout*'), p.click('#f [type=submit]')]);
   await p.waitForSelector('.cd', { timeout: 10000 }).catch(() => {});
   ok('back from PayPal, the prints are on their way', /København/.test(await p.textContent('#co')), (await p.textContent('#co')).slice(0, 300));
   const ord = (await api('GET', '/api/admin/orders')).j.orders.find((x) => x.email === 'dk@example.com');

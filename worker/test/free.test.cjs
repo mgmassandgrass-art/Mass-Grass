@@ -22,7 +22,7 @@ const api = async (m, p, body, raw, noCookie) => { const r = await fetch(B + p, 
   const tile = p.locator('.pr-it', { has: p.locator('h3', { hasText: 'Hill & Boat' }) });
   ok('the shop shows it as free', /Free/.test(await tile.locator('.pr').textContent()));
   ok('its button says free download', /Free download/.test(await tile.locator('.add').textContent()));
-  await Promise.all([p.waitForURL('**/checkout.html'), tile.locator('.add').click()]); await p.waitForSelector('#f');
+  await Promise.all([p.waitForURL('**/checkout*'), tile.locator('.add').click()]); await p.waitForSelector('#f');
   ok('checkout offers the files, not a payment', /Get the files/.test(await p.textContent('#f [type=submit]')));
   await p.fill('#em', 'visitor@example.com'); await p.click('#f [type=submit]'); await p.waitForSelector('.cd', { timeout: 8000 }).catch(() => {});
   ok('the files are on the page', (await p.locator('.cd .cd-files a').count()) === 1);

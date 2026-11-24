@@ -274,7 +274,7 @@ async function forgot(env, req) {
   if (u) {
     const t = token();
     await env.DB.prepare('INSERT INTO reset_tokens(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await sha256(t), u.id, Date.now() + 30 * 60e3).run();
-    const link = `${env.SITE_ORIGIN}/account.html?reset=${t}`;
+    const link = `${env.SITE_ORIGIN}/account?reset=${t}`;
     await sendMail(env, email, 'Reset your Mass & Grass password · تغيير كلمة السر', layout(
       `${mp('Open this link to choose a new password. It is valid for 30 minutes.')}<p style="margin:8px 0 24px">${mbtn(link, 'Choose a new password')}</p>
       ${pAr('افتحوا الرابط لتختاروا كلمة مرور جديدة، وهو صالح لمدة 30 دقيقة.')}${small("If you didn't ask for this, ignore this e-mail. · إذا لم تطلبوه، تجاهلوا الرسالة.")}`));
@@ -394,7 +394,7 @@ async function twofaEmail(env, req, u, step) {
 
 // ---------- Google OAuth (authorization code flow) ----------
 async function googleStart(env, req, url) {
-  if (!env.GOOGLE_CLIENT_ID) return new Response(null, { status: 302, headers: { location: `${env.SITE_ORIGIN}/account.html?error=google_not_configured` } });
+  if (!env.GOOGLE_CLIENT_ID) return new Response(null, { status: 302, headers: { location: `${env.SITE_ORIGIN}/account?error=google_not_configured` } });
   const state = token(), next = safeNext(url.searchParams.get('next'));
   const q = new URLSearchParams({
     client_id: env.GOOGLE_CLIENT_ID, redirect_uri: `${env.SITE_ORIGIN}/api/auth/google/callback`,
@@ -407,7 +407,7 @@ async function googleStart(env, req, url) {
 }
 
 async function googleCallback(env, req, url) {
-  const back = (e) => new Response(null, { status: 302, headers: { location: `${env.SITE_ORIGIN}/account.html?error=${e}` } });
+  const back = (e) => new Response(null, { status: 302, headers: { location: `${env.SITE_ORIGIN}/account?error=${e}` } });
   const raw = cookies(req)['__Host-mgo'] || '', dot = raw.indexOf('.');
   const state = dot > 0 ? raw.slice(0, dot) : raw, next = dot > 0 ? raw.slice(dot + 1) : '';
   if (!state || state !== url.searchParams.get('state')) return back('state');
@@ -603,10 +603,15 @@ async function handle(req, env0) {
       if (p.startsWith('/api/')) return await api(req, env, url, p);
       if (p.startsWith('/s/') && env.ONLY === 'calendar' && !/^\/s\/calendar(\/calendar-2027)?\/?$/.test(p)) return Response.redirect(`${url.origin}/calendar`, 302);
       if (p.startsWith('/s/')) return await sharePage(env, url, p);
+      // Clean addresses (owner, 24 Nov 2026): no page shows ".html" in the address bar; /calendar.html goes to /calendar, /index.html to /.
+      if ((req.method === 'GET' || req.method === 'HEAD') && /\.html$/.test(p) && PAGES.includes(p.slice(1))) {
+        const to = p === '/index.html' ? '/' : p.slice(0, -5);
+        return new Response(null, { status: 301, headers: { location: `${url.origin}${to}${url.search}`, 'cache-control': 'no-store' } });
+      }
       if (p === '/admin' || p.startsWith('/admin/')) {
         const u = await currentUser(env, req);
         if (!isAdmin(env, u)) {
-          if (p === '/admin' || p === '/admin/index.html') return Response.redirect(`${url.origin}/account.html?next=admin/`, 302);
+          if (p === '/admin' || p === '/admin/index.html') return Response.redirect(`${url.origin}/account?next=admin/`, 302);
           return env.ASSETS.fetch(new Request(`${url.origin}/404.html`)).then((r) => new Response(r.body, { status: 404, headers: r.headers }));
         }
         const r = await env.ASSETS.fetch(req);
