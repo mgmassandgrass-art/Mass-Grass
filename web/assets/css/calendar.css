@@ -383,3 +383,7 @@ html:has(.cdesk) .where{background:rgba(255,255,255,.88)}
 /* the cover first, alone in the middle, one page wide, then the months two by two */
 .cfl-pages .cfl-cover{grid-column:1/-1;justify-self:center;width:calc((100% - clamp(20px,3vw,56px))/2)}
 @media(max-width:600px){.cfl-pages .cfl-cover{width:calc((100% - 12px)/2)}}
+/* larger pages (owner, 24 Nov 2026): the pairs fill the column, no longer capped by the screen's height */
+.cfl-pages{width:100%;max-width:1500px;gap:clamp(20px,2.4vw,40px)}
+.cflat{padding-inline:clamp(12px,2vw,32px)}
+.cfl-pages .cfl-cover{width:calc((100% - clamp(20px,2.4vw,40px))/2)}
