@@ -612,7 +612,9 @@ async function handle(req, env0) {
       if (p === '/admin' || p.startsWith('/admin/')) {
         const u = await currentUser(env, req);
         if (!isAdmin(env, u)) {
-          if (p === '/admin' || p === '/admin/index.html') return Response.redirect(`${url.origin}/account?next=admin/`, 302);
+          // signed out: to the sign-in page; signed in with another account: the same, marked, so the page asks for the shop's
+          // account instead of sending the visitor straight back here (that back-and-forth made the page flicker)
+          if (p === '/admin' || p === '/admin/index.html') return Response.redirect(`${url.origin}/account?next=admin/${u ? '&other=1' : ''}`, 302);
           return env.ASSETS.fetch(new Request(`${url.origin}/404.html`)).then((r) => new Response(r.body, { status: 404, headers: r.headers }));
         }
         const r = await env.ASSETS.fetch(req);

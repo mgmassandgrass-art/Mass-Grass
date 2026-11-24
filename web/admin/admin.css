@@ -202,3 +202,21 @@ fieldset.print legend{padding:0 8px;font-weight:700}
 .ordk a{cursor:pointer}
 .today.ordk{grid-template-columns:repeat(4,minmax(0,1fr));margin:0 0 16px}
 @media(max-width:760px){.today.ordk{grid-template-columns:repeat(2,minmax(0,1fr))}.today.ordk>div:nth-child(2){border-inline-end:0}.today.ordk>div:nth-child(-n+2){border-bottom:1px solid var(--rule)}}
+
+/* ---------- the shop's look (owner, 24 Nov 2026): the dashboard dressed like the site: a white sheet, fine grey rules, square
+   corners, ink buttons, the calendar's rose for the open tab and accents, Quicksand for reading and Patrick Hand for the name ---------- */
+:root{--table:#FFFFFF;--leaf:#FFFFFF;--leaf-white:#FFFFFF;--inset:#F6F5F2;--kraft:#9C4F52;--kraft-soft:#F7EEEE;
+  --ink:#2B2F2C;--ink-2:#4B4F4C;--ink-3:#7A766F;--ink-rgb:43,47,44;
+  --rule:rgba(17,17,20,.12);--rule-soft:rgba(17,17,20,.06);--rule-strong:rgba(17,17,20,.26);
+  --olive:#2B2F2C;--olive-dk:#7A3236;--olive-wash:#F7EEEE;--indigo:#9C4F52;--indigo-wash:#F7EEEE;
+  --f:'Quicksand','Readex Pro',system-ui,sans-serif;--hand:'Patrick Hand',cursive;--r1:0px;--r2:0px}
+body{background:#FFFFFF}
+.brand span{font:400 22px/1 var(--hand);color:var(--ink)}
+#nav a{border-radius:0!important;letter-spacing:.01em}
+#nav a[aria-current=page]{background:var(--kraft-soft);color:var(--kraft)}
+#nav .n{border-radius:0;background:var(--kraft)}
+.tag{border-radius:0}
+.seg{border-radius:0}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff}
+.today{border-radius:0}
+.stamp{rotate:0deg;border-width:1px;border-radius:0}

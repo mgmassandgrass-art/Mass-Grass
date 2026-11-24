@@ -55,7 +55,9 @@ async function submit(e){e.preventDefault();const f=e.target,btn=f.querySelector
   if(!r.ok){say(err(r));return}
   U.set(r.data.user);location.href=next}
 /* already signed in: straight to the profile */
-U.sync().then(u=>{if(u&&!resetTok)location.replace(next)});
+/* sent here from the dashboard while signed in with an account that is not the shop's: sign that one out and ask for the shop's */
+if(Q.get('other')&&/^admin/.test(next)){U.out().then(()=>{msg=['The dashboard opens with the shop\'s account. Sign in with it here.','لوحة التحكم تُفتح بحساب المتجر. سجّلوا الدخول به هنا.'];render()})}
+else U.sync().then(u=>{if(u&&!resetTok)location.replace(next)});
 
 MG.page(function(why){AR=MG.ar;if(why==='init'||why==='lang')render()});
 })();
