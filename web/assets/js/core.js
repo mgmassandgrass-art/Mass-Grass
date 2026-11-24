@@ -39,6 +39,7 @@
     products: server && server.products && server.products.length ? server.products : DEF.products,
     links: (server && server.links) || {},
     live: !!server,
+    only: (server && server.only) || '',
   };
   /* the book: the shop's own details, with the admin's manifest (titles, credit, preview pictures) over them when served */
   const BOOK = Object.assign({}, DEF.book, server && server.book ? { title: server.book.title, credit: server.book.credit[0] ? server.book.credit : (DEF.book || {}).credit, pages: server.book.pages, cover: server.book.imgs[0], live: server.book } : {});
@@ -75,7 +76,7 @@
   /* ---------- the bag (kept in this browser; the server prices every line again at checkout) ---------- */
   const bag = {
     /* calendar-only opening: a bag kept from before holds only what can be bought now */
-    get() { const a = store.get('mgBag', []); return Array.isArray(a) ? (server && server.only === 'calendar' ? a.filter((x) => x && x.kind === 'calendar' && !x.pack) : a) : []; },
+    get() { const a = store.get('mgBag', []); return Array.isArray(a) ? (server && server.only === 'calendar' ? a.filter((x) => x && x.kind === 'calendar' && x.k === DEF.calendar.id && !x.pack) : a) : []; },
     set(a) { store.set('mgBag', a); paintBag(); rerender('bag'); },
     count() { return this.get().length; },
     total() { return this.get().reduce((n, x) => n + (+x.p || 0) * (x.q || 1), 0); },
