@@ -517,3 +517,17 @@ footer .ft-l{font:500 15px/1.6 var(--f);color:rgba(var(--ink-rgb),.7);margin-bot
 footer .ft-c .ink{min-width:0;padding:0 20px}
 footer .ft-c input{padding:0 14px}
 .ar-on footer .ft-l{font:400 15px/1.8 var(--fa);color:rgba(var(--ink-rgb),.7)}
+/* spacing (owner, 24 Nov 2026): columns sized to what they hold (the e-mail never runs into the newsletter), one even gap */
+footer .ft{grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr) minmax(0,1fr) minmax(0,1.3fr) minmax(0,1.6fr);column-gap:clamp(28px,3.2vw,56px);row-gap:40px}
+footer .ft-d a{overflow-wrap:anywhere}
+footer .ft-a p{max-width:26ch}
+/* the social links: quiet icons; on hover a faint ground, never a solid block */
+footer .soc{gap:6px;margin-inline-end:-12px}
+footer .soc a{width:40px;height:40px;border-radius:50%;color:rgba(var(--ink-rgb),.62)}
+@media(hover:hover){footer .soc a:hover{background:rgba(var(--ink-rgb),.06);color:var(--ink)}}
+footer .soc a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media(max-width:1100px){footer .ft{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){footer .ft{grid-template-columns:repeat(2,minmax(0,1fr))}footer .soc{margin-inline-start:-12px;margin-inline-end:0}}
+/* link columns as wide as their longest link, so the gaps between all columns read as one even rhythm */
+@media(min-width:1101px){footer .ft{grid-template-columns:minmax(200px,1fr) repeat(3,max-content) minmax(260px,1.15fr);column-gap:clamp(36px,4.2vw,72px)}}
+@media(min-width:1101px){footer .ft{grid-template-columns:minmax(180px,1fr) repeat(3,max-content) minmax(230px,1.1fr);column-gap:clamp(28px,3.4vw,60px)}}
