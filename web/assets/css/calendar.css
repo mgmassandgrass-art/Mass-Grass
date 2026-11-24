@@ -438,3 +438,7 @@ html[data-hand] body main.ps26 .psb[aria-pressed=true] .btn-n{color:var(--ink)!i
 html body .cdesk .cbuy2>.ink{display:block;text-align:center;line-height:52px;padding:0 16px;color:#fff}
 html body .cdesk .cbuy2>.ink span{color:inherit!important;font:inherit!important;letter-spacing:inherit!important;text-transform:inherit!important}
 html body .cdesk .cbuy2>.ink,html body .cdesk .cbuy2 .cbuy-pr .ghost{height:54px;min-height:54px;line-height:52px;box-sizing:border-box}
+/* under the two buttons: what the printed price is made of, for where the visitor is */
+html[data-hand] body .cdesk .cdesk-ship{margin:0;font-family:var(--mono2)!important;font-size:12px!important;line-height:1.6;letter-spacing:.04em;color:#6E5640!important;max-width:none}
+.cdesk .cdesk-ship:empty{display:none}
+.ar-on .cdesk .cdesk-ship{font-size:14px!important;letter-spacing:0}

@@ -66,7 +66,7 @@ export async function orderPaidEmails(env, o) {
     ${heading('thanks', 'thanks-ar', 'Thank you')}
     ${p(`${o.name ? e(o.name) + ', your' : 'Your'} order is sealed in Gaza and sent to you. Each piece you take home helps Farah keep painting.`)}
     ${pAr('خُتم طلبكم في غزة وأُرسل إليكم. كل قطعة تأخذونها تساعد فرح على مواصلة الرسم.')}
-    ${rows([['Order', e(o.id)], ['Date', e(when)], ['Total', o.total_cents ? '€' + (o.total_cents / 100).toFixed(2) : 'Free · مجانًا']])}
+    ${rows([['Order', e(o.id)], ['Date', e(when)], ...(o.ship_cents ? [['Pieces · القطع', '€' + ((o.total_cents - o.ship_cents) / 100).toFixed(2)], ['Shipping · الشحن', '€' + (o.ship_cents / 100).toFixed(2)]] : []), ['Total', o.total_cents ? '€' + (o.total_cents / 100).toFixed(2) : 'Free · مجانًا']])}
     ${items.filter((it) => !it.gift).map((it) => piece(env, it, files)).join('')}
     ${shipBlock(o)}${gifts.length ? p(`Gifts on their way to ${gifts.map((g) => e(g.gift.to)).join(', ')}.`) : ''}
     <img src="${ORIGIN}/assets/signature.png" alt="Farah" width="120" style="display:block;margin:24px 0 0;border:0">
@@ -82,7 +82,7 @@ export async function orderPaidEmails(env, o) {
       ${piece(env, g, files)}`), o.email);
   }
   if (env.ADMIN_EMAIL && o.total_cents > 0) await sendMail(env, env.ADMIN_EMAIL, `New order ${o.id} · €${(o.total_cents / 100).toFixed(2)} · طلب جديد`, layout(`
-    ${p(`<b>${e(o.name || '')}</b> &lt;${e(o.email)}&gt; paid <b>€${(o.total_cents / 100).toFixed(2)}</b>.`)}
+    ${p(`<b>${e(o.name || '')}</b> &lt;${e(o.email)}&gt; paid <b>€${(o.total_cents / 100).toFixed(2)}</b>${o.ship_cents ? ` (pieces €${((o.total_cents - o.ship_cents) / 100).toFixed(2)} + shipping €${(o.ship_cents / 100).toFixed(2)})` : ''}.`)}
     ${rows(items.map((it) => [e(KIND[it.kind] || it.kind), `${e(it.t || it.k)}${it.fmt === 'print' ? ` · PRINTED × ${it.q || 1}` : ''}${it.gift ? ` → gift for ${e(it.gift.to)}` : ''}`]))}${shipBlock(o)}
     <p style="margin:24px 0 0">${btn(env.SITE_ORIGIN + '/admin/#orders', 'Open orders')}</p>`), o.email);
 }

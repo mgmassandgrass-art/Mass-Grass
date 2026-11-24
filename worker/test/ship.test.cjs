@@ -81,6 +81,11 @@ const AE = { country: 'AE', name: 'Test Buyer', phone: '+971 50 123 4567', line1
   ok('every other country: France is shipped to, shipping included', r.s === 201 && r.j.total === 30, JSON.stringify(r.j));
   r = await api('POST', '/api/orders', { email: 'fr@example.com', items: [{ k: 'calendar-2027', kind: 'calendar', fmt: 'print' }], ship: { name: 'A B', phone: '+33 1 23 45 67', country: 'XX1', city: 'Paris', line1: '1 rue X' } }, true);
   ok('a made-up country is refused', r.s === 400 && r.j.error === 'ship_country', JSON.stringify(r.j));
+  r = await api('PUT', '/api/admin/settings', { shipping: { GCC: { on: true, fee: 10 }, ALL: { on: true, fee: 20 } } });
+  r = await api('POST', '/api/orders', { email: 'sa@example.com', items: [{ k: 'calendar-2027', kind: 'calendar', fmt: 'print' }], ship: { name: 'A B', phone: '+966 50 123 4567', country: 'SA', city: 'Riyadh', line1: '1 King Rd' } }, true);
+  ok('the Gulf: Saudi Arabia pays 30 + 10', r.s === 201 && r.j.total === 40, JSON.stringify(r.j));
+  r = await api('POST', '/api/orders', { email: 'jp@example.com', items: [{ k: 'calendar-2027', kind: 'calendar', fmt: 'print' }], ship: { name: 'A B', phone: '+81 3 1234 5678', country: 'JP', city: 'Tokyo', line1: '1 Chome' } }, true);
+  ok('every other country: Japan pays 30 + 20', r.s === 201 && r.j.total === 50, JSON.stringify(r.j));
   ok('no page errors', !errs.length, errs.join('|')); await b.close();
   console.log(bad ? `${bad} failed` : 'all passed'); process.exit(bad ? 1 : 0);
 })();

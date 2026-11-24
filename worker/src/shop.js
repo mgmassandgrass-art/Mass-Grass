@@ -39,7 +39,11 @@ function bookOut(b) {
 }
 
 // The countries shipped to right now: switched on, with a fee set (0 means free shipping).
-export const COUNTRIES = { AE: ['United Arab Emirates', 'الإمارات العربية المتحدة'], DK: ['Denmark', 'الدنمارك'], ALL: ['Every other country', 'كل الدول الأخرى'] };
+export const COUNTRIES = { AE: ['United Arab Emirates', 'الإمارات العربية المتحدة'], DK: ['Denmark', 'الدنمارك'], GCC: ['The Gulf countries (GCC)', 'دول الخليج'], ALL: ['Every other country', 'كل الدول الأخرى'] };
+// The Gulf: one shipping zone for the six GCC countries
+export const GCC = ['AE', 'SA', 'KW', 'QA', 'BH', 'OM'];
+// A country's shipping zone: its own fee if it has one, else the Gulf zone, else every other country
+export const zoneOf = (sh, c) => sh[c] || (GCC.includes(c) && sh.GCC) || (/^[A-Z]{2}$/.test(c || '') && sh.ALL) || null;
 // A country code the buyer may choose when the ALL zone is open: two capital letters (ISO 3166), not a zone name.
 const isCountry = (c) => /^[A-Z]{2}$/.test(c);
 function openCountries(sh) {
@@ -123,7 +127,7 @@ export async function createOrder(env, req, user) {
   // Printed pieces: an address in a country shipped to, and its fee once per order.
   let ship = null, shipCents = 0;
   if (printed) {
-    const s0 = b.ship || {}, c = String(s0.country || '').toUpperCase(), zone = cat.shipping[c] || (isCountry(c) && cat.shipping.ALL);
+    const s0 = b.ship || {}, c = String(s0.country || '').toUpperCase(), zone = isCountry(c) ? zoneOf(cat.shipping, c) : null;
     if (!zone) return fail('ship_country', 400);
     ship = { name: clean(s0.name, 80), phone: clean(s0.phone, 30), country: c, city: clean(s0.city, 60), line1: clean(s0.line1, 120), line2: clean(s0.line2, 120), postal: clean(s0.postal, 16) };
     if (!ship.name || !ship.line1 || !ship.city || !/^[+\d][\d\s()-]{5,}$/.test(ship.phone) || (c === 'DK' && !/^\d{4}$/.test(ship.postal))) return fail('ship_address', 400);

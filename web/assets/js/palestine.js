@@ -29,9 +29,15 @@
   }
   row.addEventListener('click', (e) => { const b = e.target.closest('.btb'); if (b) show(+b.dataset.i, true); });
 
+  /* what the printed price is made of, for where the visitor is */
+  function shipLine(pr) {
+    const sh = MG.shipHere();
+    return sh ? (sh.fee ? t(`${MG.fmt(pr.price)} for the calendar + ${MG.fmt(sh.fee)} shipping to ${sh.name}.`, `${MG.fmt(pr.price)} للتقويم + ${MG.fmt(sh.fee)} شحن إلى ${sh.name}.`) : t(`Shipping to ${sh.name} is included.`, `الشحن إلى ${sh.name} مشمول.`))
+      : t('Printed on paper and shipped to every country.', 'مطبوع على الورق ويُشحن إلى كل الدول.');
+  }
   function printBlock() {
     const pr = MG.printOf('calendar', C.id), sh = Object.values(MG.shipping), to = sh.length ? sh.map((c) => L(c.name)).join(t(' and ', ' و')) : t('the UAE and Denmark', 'الإمارات والدنمارك');
-    if (pr && MG.shipping.ALL) return `${MG.printBtn('calendar', C.id, 'ghost')}<p class="pnote">${MG.shipping.ALL.fee ? t('Printed copies are shipped to every country.', 'نشحن النسخ المطبوعة إلى كل الدول.') : t('Printed on paper and shipped to every country, shipping included.', 'مطبوع على الورق ويُشحن إلى كل الدول، والشحن مشمول.')}</p>`;
+    if (pr && (MG.shipping.ALL || MG.shipping.GCC)) return `${MG.printBtn('calendar', C.id, 'ghost')}<p class="pnote">${shipLine(pr)}</p>`;
     return pr ? `${MG.printBtn('calendar', C.id, 'ghost')}<p class="pnote">${t('Printed copies are shipped to ', 'نشحن النسخ المطبوعة إلى ')}${esc(to)}.</p>`
       : `<p class="pnote">${t('Printed copies, shipped to the UAE and Denmark, open soon.', 'النسخ المطبوعة، بالشحن إلى الإمارات والدنمارك، قريبًا.')}</p>`;
   }

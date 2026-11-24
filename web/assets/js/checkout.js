@@ -51,11 +51,11 @@ function render(){const box=$('co'),h=$('co-h');
   const sc=$('sc');if(sc)sc.onchange=()=>{ship.country=sc.value;const z=zone();$('shipFee').textContent=feeTx(z);const tt=S.fmt(B.total()+(z?z.fee:0));$('coTotal').textContent=tt;const pt=box.querySelector('[data-paytotal]');if(pt)pt.textContent=tt;const pc=$('spc');if(pc)pc.closest('label').hidden=sc.value!=='DK'}}
 /* the address for printed pieces: only the countries shipped to now; kept while the page is open */
 /* a signed-in buyer's own details fill the address (they can still change it here) */
-const ship=(()=>{const u=MG.user.get(),a=(u&&u.addr)||{};return u?{country:MG.shipZone(a.country)?a.country:'',name:u.name||'',phone:u.phone||'',line1:a.line1||'',line2:a.line2||'',city:a.city||'',postal:a.postal||''}:{country:''}})();
+const ship=(()=>{const u=MG.user.get(),a=(u&&u.addr)||{};const here=MG.shipZone(a.country)?a.country:(MG.shipZone(MG.visitor)?MG.visitor:'');return u?{country:here,name:u.name||'',phone:u.phone||'',line1:a.line1||'',line2:a.line2||'',city:a.city||'',postal:a.postal||''}:{country:here}})();
 function zone(){return MG.shipZone(ship.country)}
 /* the fee on screen: nothing extra reads as included */
 const feeTx=z=>z?(z.fee?S.fmt(z.fee):T('Included','مشمول')):T('Choose the country','اختاروا البلد');
-function shipFields(){const all=!!MG.shipping.ALL,C=all?MG.countries().map(([c,n])=>[c,{name:[n,n],days:(MG.shipZone(c)||{}).days||''}]):Object.entries(MG.shipping);if(C.length===1&&!ship.country)ship.country=C[0][0];
+function shipFields(){const all=!!(MG.shipping.ALL||MG.shipping.GCC),C=all?MG.countries().map(([c,n])=>[c,{name:[n,n],days:(MG.shipZone(c)||{}).days||''}]):Object.entries(MG.shipping);if(C.length===1&&!ship.country)ship.country=C[0][0];
   if(!C.length)return `<p class="fmsg" role="status">${T('Printed pieces cannot be shipped right now. Remove them to buy the files.','لا يمكن شحن القطع المطبوعة الآن. أزيلوها لشراء الملفات.')}</p>`;
   const v=k=>esc(ship[k]||'');
   return `<fieldset class="shipf"><legend>${T('Shipping address','عنوان الشحن')}</legend>
