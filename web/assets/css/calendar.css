@@ -370,3 +370,10 @@ html:has(.c12) .where{background:rgba(255,255,255,.88)}
 .cflat{padding:clamp(24px,4vh,56px) 16px}
 .cfl-in.cfl-may{aspect-ratio:auto;width:min(100%,calc((100svh - 49px - 8vh) * 1844 / 2578));margin:0 auto}
 .cfl-may img{position:static;display:block;width:100%;height:auto;filter:drop-shadow(0 2px 3px rgba(40,30,20,.12)) drop-shadow(0 22px 34px rgba(40,30,20,.16))}
+
+/* section 3 (24 Nov 2026): the pages two by two, all twelve down the page, each a printed sheet on the white page */
+.cfl-pages{list-style:none;margin:0 auto;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,72px) clamp(20px,3vw,56px);
+  width:min(100%,calc((100svh - 49px - 14vh) * 960 / 1350 * 2 + 56px),1200px)}
+.cfl-pages li{margin:0;line-height:0}
+.cfl-pages img{display:block;width:100%;height:auto;filter:drop-shadow(0 2px 3px rgba(40,30,20,.12)) drop-shadow(0 22px 34px rgba(40,30,20,.16))}
+@media(max-width:600px){.cfl-pages{gap:20px 12px}}
