@@ -300,7 +300,7 @@
     el.innerHTML = rows.map((r) => `<a href="${esc(r[2])}" aria-label="${r[1]}"${r[0] === 'email' ? '' : ' target="_blank" rel="noopener noreferrer"'}>${IC[r[0]]}</a>`).join('');
     /* the footer's contact list: help, the e-mail, WhatsApp and Instagram when set, and how to support Farah */
     const fc = $('#ftc'); if (!fc) return; const ext = ' target="_blank" rel="noopener noreferrer"', sup = k.donate || k.kofi;
-    fc.innerHTML = `<li><a href="help.html">${t('Help and questions', 'المساعدة والأسئلة')}</a></li><li><a href="mailto:${esc(mail)}" dir="ltr">${esc(mail)}</a></li>` +
+    fc.innerHTML = `<li><a href="mailto:${esc(mail)}" dir="ltr">${esc(mail)}</a></li>` +
       rows.filter((r) => r[0] === 'whatsapp' || r[0] === 'instagram').map((r) => `<li><a href="${esc(r[2])}"${ext}>${r[1]}</a></li>`).join('') +
       `<li><a href="${sup ? esc(url(sup, 'https://')) + '"' + ext : 'story.html#support"'}>${t('Support Farah', 'ادعموا فرح')}</a></li>`;
   }

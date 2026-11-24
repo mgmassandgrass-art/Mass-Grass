@@ -486,3 +486,34 @@ footer .ft-b{grid-template-columns:repeat(2,max-content);gap:0 clamp(24px,3vw,48
 /* type, option B (owner, 24 Nov 2026): the calendar's printed sans (Quicksand) for reading text, labels, the menu and buttons;
    Arabic keeps its own faces (Quicksand has no Arabic, so Readex Pro still sets every Arabic word) */
 :root{--f:'Quicksand','Readex Pro',system-ui,sans-serif;--mono2:'Quicksand','Readex Pro',system-ui,sans-serif}
+
+/* footer, rearranged (owner, 24 Nov 2026): the name and a line, then three labelled lists (shop, the house, contact), then the
+   newsletter; every column opens with the same small label at the same height; links in sentence case, easy to scan */
+footer .ft{max-width:1440px;padding:56px var(--side,clamp(16px,4vw,48px)) 40px;grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,1fr)) minmax(0,1.5fr);gap:40px clamp(24px,3vw,56px)}
+@media(max-width:999px){footer .ft{padding-inline:clamp(16px,4vw,48px)}}
+footer .ft-h{margin:0 0 18px;font:600 11px/1.4 var(--mono2);letter-spacing:.18em;text-transform:uppercase;color:rgba(var(--ink-rgb),.5)}
+.ar-on footer .ft-h{font:600 13px/1.4 var(--fa);letter-spacing:0;text-transform:none}
+footer .ft-g{display:flex;flex-direction:column;align-items:flex-start;gap:0}
+footer .ft-b{display:flex;grid-template-columns:none}
+footer .ft-b a,footer .ft-d a{display:block;padding:6px 0;font:500 15px/1.4 var(--f);letter-spacing:0;text-transform:none;color:rgba(var(--ink-rgb),.78)}
+.ar-on footer .ft-b a,.ar-on footer .ft-d a{font:400 15px/1.5 var(--fa)}
+footer .ft-d ul{display:flex;flex-direction:column}
+footer .ft-a img{height:40px;margin-bottom:18px}
+footer .ft-a p{font:500 15px/1.6 var(--f);letter-spacing:0;text-transform:none;color:rgba(var(--ink-rgb),.7);max-width:28ch}
+.ar-on footer .ft-a p{font:400 15px/1.8 var(--fa)}
+footer .ft-l{margin:0 0 14px;font:400 20px/1.3 var(--cal-t,var(--hand));color:var(--cal-rose,var(--blue));max-width:26ch}
+.ar-on footer .ft-l{font:400 16px/1.7 var(--fa);color:rgba(var(--ink-rgb),.78)}
+footer .ft-c h2.ft-h{font:600 11px/1.4 var(--mono2);color:rgba(var(--ink-rgb),.5)}
+.ar-on footer .ft-c h2.ft-h{font:600 13px/1.4 var(--fa)}
+footer .ft-c .ink{min-width:96px}
+footer .ft-z{max-width:1440px;padding:18px var(--side,clamp(16px,4vw,48px)) 26px}
+@media(max-width:999px){footer .ft-z{padding-inline:clamp(16px,4vw,48px)}}
+footer .soc{display:flex;gap:18px}
+@media(max-width:1100px){footer .ft{grid-template-columns:repeat(3,minmax(0,1fr))}footer .ft-a,footer .ft-c{grid-column:1/-1}footer .ft-c{max-width:440px}}
+@media(max-width:560px){footer .ft{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 20px}footer .ft-d{grid-column:1/-1}}
+/* every column head is Farah's hand at one size and one gap; the newsletter line is plain text under it */
+html footer :is(.ft-b,.ft-d,.ft-c) h2.ft-h{margin:0 0 14px!important;line-height:1.1}
+footer .ft-l{font:500 15px/1.6 var(--f);color:rgba(var(--ink-rgb),.7);margin-bottom:16px}
+footer .ft-c .ink{min-width:0;padding:0 20px}
+footer .ft-c input{padding:0 14px}
+.ar-on footer .ft-l{font:400 15px/1.8 var(--fa);color:rgba(var(--ink-rgb),.7)}
