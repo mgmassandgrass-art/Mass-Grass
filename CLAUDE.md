@@ -527,3 +527,13 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   text); sale files for every piece (bulk upload `kind__id.ext`); Palestine calendar PDF; admin two-step sign-in; WhatsApp number.
 - Open for us: add the new Drive products (6 postcards, 12 architecture paintings; see `drafts/drive/INVENTORY.md`), page-by-page review with the owner
   (paintings, postcards, stickers, story), admin charts, facebook / tiktok link fields, the calendar tear video, rewrite DESIGN.md.
+
+## Calendar-only opening (deployed 24 Nov 2026)
+
+- `ONLY = "calendar"` in `worker/wrangler.toml`: `/` goes to `/calendar`; shop, paintings, postcards, stickers, designs, book,
+  commission and palestine serve `later.html` ("opens soon"); `/api/orders` takes only `calendar-2027`; the kept bag holds only it
+  (`core.js`); the calendar page drops its earlier-calendars section. The signed-in admin sees everything. Empty `ONLY` = whole shop.
+- Deployed with the new calendar page, the Palestine page (months laid on the stand photo by `tools/palestine/month_on_stand.py`),
+  the footer foot row as words, and the white look on checkout / account / profile / help / terms / later / 404.
+- Local test of the mode: `npx wrangler dev --local --persist-to .state -c wrangler.local.toml --port 8788 --var ONLY:calendar`
+  on a fresh `.state` (the admin tests leave saved copies of scripts in the local `site_files`).
