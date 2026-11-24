@@ -344,3 +344,6 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 @media(max-width:900px){.btshow .bts-im{width:140%;margin:0 -20%}}
 .btshow .bts-im{width:min(150%,calc(76vh * 1396 / 955));margin:4vh 0;justify-self:center}
 @media(max-width:900px){.btshow .bts-im{width:min(140%,calc(60vh * 1396 / 955));margin:0}}
+.btshow .bts-pg{left:35.2436%;top:6.0733%;width:40.0430%;height:80.6283%}
+.btshow .bts-pg{left:35.2436%;top:6.0733%;width:40.0430%;height:80.6283%}
+.btshow .bts-pg{left:35.1719%;top:5.5497%;width:40.3295%;height:81.2565%}
