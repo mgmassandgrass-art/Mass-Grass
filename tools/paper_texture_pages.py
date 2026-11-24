@@ -26,11 +26,12 @@ dc=np.sqrt(np.clip(R-cx,0,None)**2+np.clip(R-cy,0,None)**2)
 alpha=np.clip(R-dc+.5,0,1)*255
 alpha=np.where((cx>=R)|(cy>=R),255,alpha).astype(np.uint8)
 fl=[None,1,0,-1]
+fl_cover=None
 k0,l0=k.copy(),light.copy()
-for m in range(1,13):
-    f=fl[m%4]; k=k0 if f is None else cv2.flip(k0,f); light=l0 if f is None else cv2.flip(l0,f)
+for m in range(0,13):
+    f=fl[m%4] if m else None; k=k0 if f is None else cv2.flip(k0,f); light=l0 if f is None else cv2.flip(l0,f)
     sh=(m*137)%400; k=np.roll(k,sh,0); light=np.roll(light,sh,0)   # each page its own piece of the sheet
-    pg=cv2.imread(P+f'p{m:02d}.png').astype(np.float32)
+    pg=cv2.imread(P+f'p{m:02d}.png' if m else '/home/user/Mass-Grass/drafts/calendar-v2/pg-000.jpg').astype(np.float32)
     pg=cv2.resize(pg,(W,H),interpolation=cv2.INTER_AREA)
     out=pg*k*light[...,None]*edge[...,None]
     # paper shows through the light inks a little more than the dark ones

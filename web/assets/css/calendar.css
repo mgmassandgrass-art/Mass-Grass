@@ -379,3 +379,7 @@ html:has(.cdesk) .where{background:rgba(255,255,255,.88)}
 @media(max-width:600px){.cfl-pages{gap:20px 12px}}
 /* the sheets lie on the white page: a tight contact shadow and a soft wide one, no grey halo box */
 .cfl-pages img{filter:drop-shadow(0 1px 1px rgba(40,30,20,.18)) drop-shadow(0 6px 10px rgba(40,30,20,.08)) drop-shadow(0 24px 30px rgba(40,30,20,.10))}
+
+/* the cover first, alone in the middle, one page wide, then the months two by two */
+.cfl-pages .cfl-cover{grid-column:1/-1;justify-self:center;width:calc((100% - clamp(20px,3vw,56px))/2)}
+@media(max-width:600px){.cfl-pages .cfl-cover{width:calc((100% - 12px)/2)}}
