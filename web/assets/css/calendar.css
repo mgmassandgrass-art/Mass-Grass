@@ -365,3 +365,8 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 html:has(.c12){--cream:#FFFFFF;--cv-paper:#FFFFFF;--line:rgba(17,17,20,.12);--line-2:rgba(17,17,20,.24);background:#FFFFFF}
 html:has(.c12) :is(header,.mmenu){background:rgba(255,255,255,.94)}
 html:has(.c12) .where{background:rgba(255,255,255,.88)}
+
+/* section 3: the owner's May page, whole, as large as the screen allows, a printed sheet on the white page */
+.cflat{padding:clamp(24px,4vh,56px) 16px}
+.cfl-in.cfl-may{aspect-ratio:auto;width:min(100%,calc((100svh - 49px - 8vh) * 1844 / 2578));margin:0 auto}
+.cfl-may img{position:static;display:block;width:100%;height:auto;filter:drop-shadow(0 2px 3px rgba(40,30,20,.12)) drop-shadow(0 22px 34px rgba(40,30,20,.16))}
