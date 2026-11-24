@@ -39,13 +39,7 @@
     if (why === 'bag' || why === 'user') return;
     bts.forEach((b, i) => { b.setAttribute('aria-label', mon(MS[i])); b.querySelector('.btn-n').textContent = MG.ar ? mon(MS[i]) : mon(MS[i]).slice(0, 3); });
     $('#pspages').innerHTML = P.map((p) => `<li${p.m ? '' : ' class="cfl-cover"'}><img src="assets/ps-${pad(p.m)}.webp" alt="${esc(p.m ? mon(p) + ' 2027, ' + L(p.n) : t('The cover: a clay jug on a tiled plate', 'الغلاف: جرّة فخار على صحن من البلاط'))}" loading="lazy" decoding="async"></li>`).join('');
-    /* the 2027 calendar, shown like a month above: its photograph whole on the left, its name, a line, buy and a link to its page */
-    const K = MG.calendar;
-    $('#olgrid').outerHTML = `<div class="btshow olf" id="olgrid"><a class="olf-im" href="calendar.html" aria-label="${esc(t('Open the 2027 calendar', 'افتحوا تقويم 2027'))}"><img src="assets/cal-hero.webp" srcset="assets/cal-hero-m.webp 1100w, assets/cal-hero.webp 1326w" sizes="(min-width: 900px) 55vw, 100vw" width="1326" height="589" alt="${esc(t('The 2027 desk calendar, open on the cover and on March', 'تقويم 2027 المكتبي، مفتوحًا على الغلاف وعلى آذار'))}" loading="lazy"></a>
-      <div class="bts-tx"><p class="bts-s">${t('New for 2027', 'جديد لعام 2027')}</p><h3 class="bts-n">${esc(t('Things kept in bottles', 'أشياء نحفظها في قوارير'))}</h3>
-      <p class="bts-d">${esc(t('Twelve watercolour bottles, one for every month, each keeping something small worth remembering.', 'اثنتا عشرة قارورة بالألوان المائية، واحدة لكل شهر، تحفظ كل منها شيئًا صغيرًا يستحق أن نتذكره.'))}</p>
-      <div class="bts-buy"><button class="ink" type="button" data-add="calendar" data-cal="${esc(K.id)}">${t('Buy the calendar', 'اشتروا التقويم')}</button><b class="fig">${MG.fmt(MG.price('calendar'))}</b></div>
-      <p class="olf-go"><a class="go" href="calendar.html">${t('Open the calendar', 'افتحوا التقويم')}</a></p></div></div>`;
+    $('#olgrid').innerHTML = `<li><a class="ol-c" href="calendar.html"><span class="ol-im"><img src="assets/cal-hero-m.webp" alt="" loading="lazy"></span><span class="ol-y">${t('New for 2027', 'جديد لعام 2027')}</span><span class="ol-n">${esc(t('Things kept in bottles', 'أشياء نحفظها في قوارير'))}</span><span class="ol-p"><b>${MG.fmt(MG.price('calendar'))}</b><span class="go">${t('Open the calendar', 'افتحوا التقويم')}</span></span></a></li>`;
     $$('[data-alt-ar]').forEach((e) => { if (e.dataset.altEn == null) e.dataset.altEn = e.alt; e.alt = MG.ar ? e.dataset.altAr : e.dataset.altEn; });
     show(sel);
   });
