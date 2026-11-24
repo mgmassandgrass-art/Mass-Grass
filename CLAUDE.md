@@ -549,3 +549,9 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   the printed button shows the total, `#hship` the split; checkout starts on that country; admin orders, CSV and e-mails show
   pieces and shipping apart. Clean addresses: `/x.html` 301 → `/x` (pages only), links cleaned in `core.js` (`cleanLinks`).
   The calendar's sale PDF was STILL not uploaded at this deploy.
+- 24 Nov 2026, fourth deploy: shipping by Emirates Post zones from the UAE (`COUNTRIES`/`ZONES` in shop.js and core.js: AE, GCC,
+  MENA, EUR, AME, ASIA, ALL; migration 0014 starts AE/GCC €10, the rest €20 until the owner enters Emirates Post's real quotes
+  in Settings; their site is unreachable from the cloud session). Buttons read "Digital PDF, x" / "Printed and shipped, y".
+  Prices show in the visitor's currency: `worker/src/fx.js` (country → currency map, open.er-api.com EUR rates kept 12 h in
+  settings `fx`, admin `rates` pins one) → page data `cur {code, rate}` → `MG.fmt` (shown) vs `MG.fmtEur` (charged; pay button,
+  past orders); checkout `#coFx` says PayPal charges euros and converts. Localhost ignores the guessed location (use `?cc=`).
