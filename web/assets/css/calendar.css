@@ -437,3 +437,4 @@ html[data-hand] body main.ps26 .psb[aria-pressed=true] .btn-n{color:var(--ink)!i
 @media(max-width:560px){.cdesk .cbuy2{grid-template-columns:minmax(0,1fr);padding:0 16px}}
 html body .cdesk .cbuy2>.ink{display:block;text-align:center;line-height:52px;padding:0 16px;color:#fff}
 html body .cdesk .cbuy2>.ink span{color:inherit!important;font:inherit!important;letter-spacing:inherit!important;text-transform:inherit!important}
+html body .cdesk .cbuy2>.ink,html body .cdesk .cbuy2 .cbuy-pr .ghost{height:54px;min-height:54px;line-height:52px;box-sizing:border-box}
