@@ -98,12 +98,12 @@ html[data-pg="checkout"]{--pg-a:#F8F1D8;--pg-m:#F0E3B8;--pg-b:#E6D193;--pg-r:#7A
 html[data-pg="help"]{--pg-a:#F2E8CB;--pg-m:#E8D6A6;--pg-b:#DCC283;--pg-r:#74302F}
 html[data-pg="terms"]{--pg-a:#E7EBE2;--pg-m:#D5DCCF;--pg-b:#C1CAB8;--pg-r:#74302F}
 html[data-pg="404"]{--pg-a:#F2DCD7;--pg-m:#E6C3BC;--pg-b:#D8ABA3;--pg-r:#7E2F35}
-html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]){--cream:var(--pg-m);--kraft:var(--pg-m);--c-efe9d9:var(--pg-m);--line:rgba(60,40,20,.16);--line-2:rgba(60,40,20,.3);
+html[data-pg]:not([data-pg="calendar"]):not([data-pg="palestine"]):not([data-pg="soon"]){--cream:var(--pg-m);--kraft:var(--pg-m);--c-efe9d9:var(--pg-m);--line:rgba(60,40,20,.16);--line-2:rgba(60,40,20,.3);
   --cal-rose:var(--pg-r);--cv-rose:var(--pg-r);--blue:var(--pg-r);--indigo:var(--pg-r);--cal-grey:#5E5346;
   background:linear-gradient(176deg,var(--pg-a) 0,var(--pg-m) 46%,var(--pg-b) 100%) var(--pg-b)}
-html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]) body{background:transparent}
-html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]) :is(header,.mmenu){background:color-mix(in srgb,var(--pg-a) 90%,#fff)}
-html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]) footer{background:transparent}
+html[data-pg]:not([data-pg="calendar"]):not([data-pg="palestine"]):not([data-pg="soon"]) body{background:transparent}
+html[data-pg]:not([data-pg="calendar"]):not([data-pg="palestine"]):not([data-pg="soon"]) :is(header,.mmenu){background:color-mix(in srgb,var(--pg-a) 90%,#fff)}
+html[data-pg]:not([data-pg="calendar"]):not([data-pg="palestine"]):not([data-pg="soon"]) footer{background:transparent}
 
 /* option B: Farah's voice in Patrick Hand (Latin only; Arabic keeps Aref Ruqaa through .ar-on rules) */
 html[data-hand]{--cal-t:'Patrick Hand','Aref Ruqaa',cursive}
