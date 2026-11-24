@@ -60,7 +60,7 @@ const AE = { country: 'AE', name: 'Test Buyer', phone: '+971 50 123 4567', line1
   await p.fill('#em', 'dk@example.com'); await p.fill('#sf', 'Dansk'); await p.fill('#sl', 'Køber'); await p.fill('#sp', '12 34 56 78'); await p.fill('#s1', 'Nørrebrogade 1'); await p.fill('#sci', 'København');
   await p.click('#f [type=submit]');
   ok('Denmark without a postcode is stopped on the page', /postal code/i.test(await p.textContent('#spc-e')));
-  ok('the phone gets the dialling code', (await p.textContent('#sdial')) === '+45');
+  ok('the phone gets the dialling code', (await p.textContent('#sdialv')) === '+45');
   await p.fill('#spc', '2200');
   await Promise.all([p.waitForURL('**/checkout*'), p.click('#f [type=submit]')]);
   await p.waitForSelector('.cd', { timeout: 10000 }).catch(() => {});

@@ -562,3 +562,9 @@ html body .shipf .ferr{color:#A3362F!important;font-size:12px!important;letter-s
 .shipf .tel .dial::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);opacity:.6}
 .shipf .tel .dial select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0}
 .shipf .tel .dial:focus-within{outline:2px solid #9C4F52;outline-offset:-2px}
+/* the payment marks (PayPal, Visa, Mastercard): small cards in the footer's last row and under the pay button */
+footer .ft-z .payi{display:flex;gap:6px;align-items:center;margin-inline:auto 0}
+footer .ft-z .payi img{width:38px;height:24px;display:block}
+footer .ft-z{gap:12px 24px}
+.co-pay{display:flex;justify-content:center;gap:8px;margin:12px 0 0}
+.co-pay img{width:48px;height:30px;display:block}
