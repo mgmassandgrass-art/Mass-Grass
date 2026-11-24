@@ -537,3 +537,5 @@ footer .soc a{width:auto;height:auto;display:inline-block;padding:8px 0;border-r
 .ar-on footer .soc a{font:500 14px/1.6 var(--fa);letter-spacing:0;text-transform:none}
 @media(hover:hover){footer .soc a:hover{color:var(--ink);text-decoration:none}}
 @media(max-width:560px){footer .soc{margin:0}}
+/* checkout: the line saying PayPal charges euros and converts them */
+.co-fx{margin:8px 0 0;font-size:12px;line-height:1.6;color:rgba(var(--ink-rgb),.6)}.co-fx:empty{display:none}

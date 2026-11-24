@@ -39,11 +39,15 @@ function bookOut(b) {
 }
 
 // The countries shipped to right now: switched on, with a fee set (0 means free shipping).
-export const COUNTRIES = { AE: ['United Arab Emirates', 'الإمارات العربية المتحدة'], DK: ['Denmark', 'الدنمارك'], GCC: ['The Gulf countries (GCC)', 'دول الخليج'], ALL: ['Every other country', 'كل الدول الأخرى'] };
-// The Gulf: one shipping zone for the six GCC countries
-export const GCC = ['AE', 'SA', 'KW', 'QA', 'BH', 'OM'];
-// A country's shipping zone: its own fee if it has one, else the Gulf zone, else every other country
-export const zoneOf = (sh, c) => sh[c] || (GCC.includes(c) && sh.GCC) || (/^[A-Z]{2}$/.test(c || '') && sh.ALL) || null;
+// Printed pieces go from the UAE by Emirates Post. Shipping is priced by zone, as Emirates Post prices it: the UAE itself, the
+// Gulf, Arab countries and the Middle East, Europe, the Americas, Asia and Oceania, and every other country. Each zone has its
+// own fee and delivery time in the admin's Settings; DK stays for the orders made when Denmark had a fee of its own.
+export const COUNTRIES = { AE: ['United Arab Emirates', 'الإمارات العربية المتحدة'], GCC: ['The Gulf (GCC)', 'دول الخليج'], MENA: ['Arab countries and the Middle East', 'الدول العربية والشرق الأوسط'],
+  EUR: ['Europe', 'أوروبا'], AME: ['The Americas', 'الأمريكتان'], ASIA: ['Asia and Oceania', 'آسيا وأوقيانوسيا'], ALL: ['Every other country', 'كل الدول الأخرى'], DK: ['Denmark', 'الدنمارك'] };
+export const ZONES = { GCC: 'AE SA KW QA BH OM'.split(' '), MENA: 'EG JO LB SY IQ PS YE TR IR SD LY TN DZ MA MR DJ SO KM IL'.split(' '), EUR: 'AD AL AT BA BE BG BY CH CY CZ DE DK EE ES FI FR GB GR HR HU IE IS IT LI LT LU LV MC MD ME MK MT NL NO PL PT RO RS RU SE SI SK SM UA VA XK'.split(' '), AME: 'US CA MX AG AR BB BO BR BS BZ CL CO CR CU DM DO EC GD GT GY HN HT JM KN LC NI PA PE PY SR SV TT UY VC VE'.split(' '), ASIA: 'AF AM AZ BD BN BT CN GE HK ID IN JP KG KH KP KR KZ LA LK MM MN MV MY NP PH PK SG TH TJ TL TM TW UZ VN AU NZ FJ PG'.split(' ') };
+export const GCC = ZONES.GCC;
+// A country's shipping zone: its own fee if it has one, else the zone it belongs to, else every other country
+export const zoneOf = (sh, c) => { if (!/^[A-Z]{2}$/.test(c || '')) return null; if (sh[c]) return sh[c]; for (const [z, l] of Object.entries(ZONES)) if (l.includes(c)) return sh[z] || sh.ALL || null; return sh.ALL || null; };
 // A country code the buyer may choose when the ALL zone is open: two capital letters (ISO 3166), not a zone name.
 const isCountry = (c) => /^[A-Z]{2}$/.test(c);
 function openCountries(sh) {

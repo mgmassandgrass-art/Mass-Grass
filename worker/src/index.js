@@ -2,6 +2,7 @@
 import { json, fail, readJson, clean, sniff, bytes, CALS } from './util.js';
 import { filesAdmin, download } from './files.js';
 import { sendMail, layout, contactEmail, p as mp, pAr, small, btn as mbtn, MONO, C } from './mail.js';
+import { visitorCurrency } from './fx.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin, sweepPending } from './shop.js';
 import { migrate } from './migrate.js';
@@ -455,7 +456,7 @@ async function withCatalog(env, res, path) {
   if (!(res.headers.get('content-type') || '').includes('text/html')) return res;
   const cat = await catalog(env);
   // The catalog travels as data (a JSON block the page's own script reads), so pages need no inline script at all.
-  const data = JSON.stringify({ products: cat.products, prices: cat.prices, links: cat.links, shipping: cat.shipping, book: cat.book, only: env.ONLY || '', visitor: env.VISITOR || '' }).replace(/</g, '\\u003c');
+  const data = JSON.stringify({ products: cat.products, prices: cat.prices, links: cat.links, shipping: cat.shipping, book: cat.book, only: env.ONLY || '', visitor: env.VISITOR || '', cur: await visitorCurrency(env, cat) }).replace(/</g, '\\u003c');
   const js = data;
   const css = hideCss(cat.pages || {}, path || '');
   const out = new HTMLRewriter().on('head', { element(e) { e.append(`<script type="application/json" id="mg-cat">${js}</script>${css}`, { html: true }); } }).transform(res);
@@ -594,7 +595,7 @@ async function handle(req, env0) {
     if (url.hostname === 'massandgrass.com') return Response.redirect(`https://www.massandgrass.com${url.pathname}${url.search}`, 301);
     // plain http goes to https (Cloudflare usually does this first; this makes sure)
     if (url.protocol === 'http:' && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') return Response.redirect(`https://${url.host}${url.pathname}${url.search}`, 301);
-    const env = { ...env0, SITE_ORIGIN: url.origin, VISITOR: (url.hostname === 'localhost' && /^[A-Z]{2}$/.test(url.searchParams.get('cc') || '')) ? url.searchParams.get('cc') : /^[A-Z]{2}$/.test((req.cf && req.cf.country) || '') ? req.cf.country : '' }; // the visitor's country, from Cloudflare // same origin as the page: production host or the staging workers.dev host
+    const env = { ...env0, SITE_ORIGIN: url.origin, VISITOR: url.hostname === 'localhost' ? (/^[A-Z]{2}$/.test(url.searchParams.get('cc') || '') ? url.searchParams.get('cc') : '') : /^[A-Z]{2}$/.test((req.cf && req.cf.country) || '') ? req.cf.country : '' }; // the visitor's country, from Cloudflare // same origin as the page: production host or the staging workers.dev host
     let path = url.pathname;
     try { path = decodeURIComponent(path); } catch {} // '/%61dmin/' must meet the same checks as '/admin/' (the asset server decodes it)
     path = path.replace(/\/{2,}/g, '/'); // '//admin/' must not slip past the admin gate either
