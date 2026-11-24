@@ -347,3 +347,16 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 .btshow .bts-pg{left:35.2436%;top:6.0733%;width:40.0430%;height:80.6283%}
 .btshow .bts-pg{left:35.2436%;top:6.0733%;width:40.0430%;height:80.6283%}
 .btshow .bts-pg{left:35.1719%;top:5.5497%;width:40.3295%;height:81.2565%}
+
+/* rendered from the owner's PSD (Free Mini Desktop Calendar Mockup) with our pages in its smart objects, 24 Nov 2026:
+   the pair opens the page; the bottles show the right-hand calendar, one whole render per month swapped in place */
+.cdesk>img{aspect-ratio:3818/2120;width:min(100%,calc((100svh - 49px - 170px) * 3818 / 2120),1700px)}
+.btshow .bts-im{aspect-ratio:1100/1554;width:min(100%,calc(82vh * 1100 / 1554));margin:2vh 0;justify-self:center}
+.btshow .bts-pg{inset:0;left:0;top:0;width:100%;height:100%}
+@media(max-width:900px){.btshow .bts-im{width:min(100%,calc(70vh * 1100 / 1554));margin:0}}
+/* the left calendar of the PSD on its own (Mockup2), one whole render per month */
+.btshow .bts-im{aspect-ratio:1100/1187;width:min(100%,calc(80vh * 1100 / 1187));margin:2vh 0;justify-self:center}
+@media(max-width:900px){.btshow .bts-im{width:100%;margin:0}}
+/* the render keeps a wide margin for its soft shadow: let it spill past the column so the calendar itself is large */
+.btshow .bts-im{width:min(140%,calc(100vh * 1100 / 1187));margin:-4vh -20% -4vh -20%}
+@media(max-width:900px){.btshow .bts-im{width:130%;margin:-6% -15%}}
