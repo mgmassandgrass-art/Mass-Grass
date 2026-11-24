@@ -387,3 +387,6 @@ html:has(.cdesk) .where{background:rgba(255,255,255,.88)}
 .cfl-pages{width:100%;max-width:1500px;gap:clamp(20px,2.4vw,40px)}
 .cflat{padding-inline:clamp(12px,2vw,32px)}
 .cfl-pages .cfl-cover{width:calc((100% - clamp(20px,2.4vw,40px))/2)}
+/* the pages sit inside the page's column, between its two side lines */
+.cflat{padding-inline:calc(var(--side,0px) + clamp(16px,2vw,32px))}
+.cfl-pages{max-width:none}
