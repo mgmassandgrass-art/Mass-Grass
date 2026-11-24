@@ -36,7 +36,7 @@ function render(){const box=$('co'),h=$('co-h');
   h.textContent=T('Checkout','إتمام الشراء');const a=B.get(),u=U.get(),pr=B.printed();
   if(!a.length){box.innerHTML=`<div class="co-empty">${msg?`<p class="fmsg" role="status">${T(...msg)}</p>`:''}<p>${T('Your bag is empty.','السلة فارغة.')}</p><a class="ink" href="paintings.html">${T('See the paintings','شاهدوا اللوحات')}</a></div>`;return}
   box.innerHTML=`<div class="co-grid"><div><ul class="co-ls">${a.map((x,i)=>`<li><span class="th"><img src="${esc(x.img||S.img(x.k))}" alt=""></span><div><b>${esc(AR?(x.ta||x.t):x.t)}</b><small>${x.fmt==='print'?T('Printed and shipped','مطبوعة وتُشحن'):esc(T(...(KIND[x.kind]||['Digital file','ملف رقمي'])))}</small>${x.fmt==='print'?`<span class="qty"><button type="button" data-q="${i}" data-d="-1" aria-label="${T('One less','نسخة أقل')}"${(x.q||1)<=1?' disabled':''}>−</button><b>${x.q||1}</b><button type="button" data-q="${i}" data-d="1" aria-label="${T('One more','نسخة أخرى')}"${(x.q||1)>=10?' disabled':''}>+</button></span>`:''}</div><div class="pr">${S.fmt((+x.p||0)*(x.q||1))}<button type="button" class="rm" data-rm="${i}">${T('Remove','إزالة')}</button></div></li>`).join('')}</ul>
-    ${pr?`<p class="co-sub"><span>${T('Shipping','الشحن')}</span><span id="shipFee">${zone()?S.fmt(zone().fee):T('Choose the country','اختاروا البلد')}</span></p>`:''}
+    ${pr?`<p class="co-sub"><span>${T('Shipping','الشحن')}</span><span id="shipFee">${feeTx(zone())}</span></p>`:''}
     <p class="co-tt"><span>${T('Total','المجموع')}</span><b id="coTotal">${S.fmt(B.total()+(pr&&zone()?zone().fee:0))}</b></p></div>
    <form class="sheet paper" data-tear="6" id="f" novalidate><span class="fill"></span><h2>${pr?T('Where should we send it?','إلى أين نرسل الطلب؟'):T('Where should we send the files?','إلى أين نرسل الملفات؟')}</h2>
     <label class="fld">${T('Email','البريد الإلكتروني')}<input id="em" type="email" autocomplete="email" required value="${esc(u?u.email:'')}"></label>
@@ -44,16 +44,18 @@ function render(){const box=$('co'),h=$('co-h');
     ${pr?shipFields():''}
     <label class="chk"><input type="checkbox" id="news"><span>${T('Send me one new painting from Gaza each month.','أرسلوا لي لوحة جديدة من غزة كل شهر.')}</span></label>
     <p class="fmsg${soon?' ok':''}" role="status">${msg?esc(T(...msg)):''}</p>
-    <button class="ink full" type="submit"${pr&&!Object.keys(MG.shipping).length?' disabled':''}>${B.total()===0&&!pr?T('Get the files','احصلوا على الملفات'):`${T('Pay','ادفعوا')} <span data-paytotal>${S.fmt(B.total()+(pr&&zone()?zone().fee:0))}</span> ${T('with PayPal or a card','عبر PayPal أو البطاقة')}`}</button>
+    <button class="ink full" type="submit"${pr&&!Object.keys(MG.shipping).length?' disabled':''}>${B.total()===0&&!pr?T('Get the files','احصلوا على الملفات'):`${T('Pay','ادفعوا')} <span data-paytotal>${S.fmt(B.total()+(pr&&zone()?zone().fee:0))}</span> ${T('with PayPal','عبر PayPal')}`}</button>
     <p class="fine">${u?'':`${T('Have an account?','لديكم حساب؟')} <a href="account.html?next=checkout.html">${T('Sign in','سجّلوا الدخول')}</a> ${T('to keep your files in your profile.','لتبقى ملفاتكم في حسابكم.')} `}${pr?T('Printed pieces are shipped by hand from the studio. By paying you accept the','تُشحن القطع المطبوعة باليد من المرسم. بالدفع توافقون على'):T('Digital files, nothing is shipped. By paying you accept the','ملفات رقمية، لا شيء يُشحن. بالدفع توافقون على')} <a href="terms.html">${T('terms and licence','الشروط والرخصة')}</a>.</p></form></div>`;
   retear();$('f').onsubmit=pay;box.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{B.remove(+b.dataset.rm);render()});
   box.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const i=+b.dataset.q;B.qty(i,(B.get()[i].q||1)+(+b.dataset.d));render()});
-  const sc=$('sc');if(sc)sc.onchange=()=>{ship.country=sc.value;const z=zone();$('shipFee').textContent=z?S.fmt(z.fee):T('Choose the country','اختاروا البلد');const tt=S.fmt(B.total()+(z?z.fee:0));$('coTotal').textContent=tt;const pt=box.querySelector('[data-paytotal]');if(pt)pt.textContent=tt;const pc=$('spc');if(pc)pc.closest('label').hidden=sc.value!=='DK'}}
+  const sc=$('sc');if(sc)sc.onchange=()=>{ship.country=sc.value;const z=zone();$('shipFee').textContent=feeTx(z);const tt=S.fmt(B.total()+(z?z.fee:0));$('coTotal').textContent=tt;const pt=box.querySelector('[data-paytotal]');if(pt)pt.textContent=tt;const pc=$('spc');if(pc)pc.closest('label').hidden=sc.value!=='DK'}}
 /* the address for printed pieces: only the countries shipped to now; kept while the page is open */
 /* a signed-in buyer's own details fill the address (they can still change it here) */
-const ship=(()=>{const u=MG.user.get(),a=(u&&u.addr)||{};return u?{country:MG.shipping[a.country]?a.country:'',name:u.name||'',phone:u.phone||'',line1:a.line1||'',line2:a.line2||'',city:a.city||'',postal:a.postal||''}:{country:''}})();
-function zone(){return MG.shipping[ship.country]||null}
-function shipFields(){const C=Object.entries(MG.shipping);if(C.length===1&&!ship.country)ship.country=C[0][0];
+const ship=(()=>{const u=MG.user.get(),a=(u&&u.addr)||{};return u?{country:MG.shipZone(a.country)?a.country:'',name:u.name||'',phone:u.phone||'',line1:a.line1||'',line2:a.line2||'',city:a.city||'',postal:a.postal||''}:{country:''}})();
+function zone(){return MG.shipZone(ship.country)}
+/* the fee on screen: nothing extra reads as included */
+const feeTx=z=>z?(z.fee?S.fmt(z.fee):T('Included','مشمول')):T('Choose the country','اختاروا البلد');
+function shipFields(){const all=!!MG.shipping.ALL,C=all?MG.countries().map(([c,n])=>[c,{name:[n,n],days:(MG.shipZone(c)||{}).days||''}]):Object.entries(MG.shipping);if(C.length===1&&!ship.country)ship.country=C[0][0];
   if(!C.length)return `<p class="fmsg" role="status">${T('Printed pieces cannot be shipped right now. Remove them to buy the files.','لا يمكن شحن القطع المطبوعة الآن. أزيلوها لشراء الملفات.')}</p>`;
   const v=k=>esc(ship[k]||'');
   return `<fieldset class="shipf"><legend>${T('Shipping address','عنوان الشحن')}</legend>

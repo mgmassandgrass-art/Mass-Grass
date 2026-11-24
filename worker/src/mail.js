@@ -14,26 +14,27 @@ export async function sendMail(env, to, subject, html, replyTo) {
 }
 
 const e = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-// The site's look in an e-mail: cream paper, hair-lines, the logo, headings lettered in the calendar's hand (as pictures, since
-// Gmail ignores web fonts) and everything else in Geist Mono where the mail app allows it, a plain monospace where it does not.
+// The site's look in an e-mail (owner, 24 Nov 2026: like the calendar page): a white sheet, fine grey rules, the logo, headings
+// lettered in the calendar's hand (as pictures, since Gmail ignores web fonts), the reading text in Quicksand where the mail app
+// allows it and a plain sans where it does not, the calendar's rose for links.
 const ORIGIN = 'https://www.massandgrass.com';
-export const C = { paper: '#F3F2EE', sheet: '#FBF8F1', ink: '#2B2F2C', grey: '#6B675E', rose: '#9C4F52', line: '#D6D2C8' };
-export const MONO = "'Geist Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace";
+export const C = { paper: '#FFFFFF', sheet: '#FFFFFF', soft: '#F7F6F3', ink: '#2B2F2C', grey: '#6E5640', rose: '#9C4F52', line: '#E3E1DC' };
+export const MONO = "'Quicksand','Helvetica Neue',Helvetica,Arial,sans-serif";
 const cap = `font:500 11px/1.5 ${MONO};letter-spacing:.15em;text-transform:uppercase;color:${C.grey}`;
-export const btn = (href, label) => `<a href="${e(href)}" style="display:inline-block;background:${C.ink};color:${C.paper};text-decoration:none;padding:10px 16px;font:500 11px/1 ${MONO};letter-spacing:.15em;text-transform:uppercase">${e(label)}</a>`;
+export const btn = (href, label) => `<a href="${e(href)}" style="display:inline-block;background:${C.ink};color:#FFFFFF;text-decoration:none;padding:12px 18px;font:500 11px/1 ${MONO};letter-spacing:.15em;text-transform:uppercase">${e(label)}</a>`;
 // a heading lettered in the hand: the English and the Arabic pictures (made by the session's tools, in web/assets)
 export const heading = (en, ar, alt) => `<div style="margin:0 0 6px"><img src="${ORIGIN}/assets/mail-${en}.png" alt="${e(alt)}" height="56" style="display:block;height:56px;width:auto;border:0"></div>${ar ? `<div dir="rtl" style="text-align:right;margin:0 0 20px"><img src="${ORIGIN}/assets/mail-${ar}.png" alt="" height="40" style="display:inline-block;height:40px;width:auto;border:0"></div>` : ''}`;
 export const p = (html, extra = '') => `<p style="margin:0 0 16px;font:400 14px/1.75 ${MONO};color:${C.ink};${extra}">${html}</p>`;
 export const pAr = (html) => `<p dir="rtl" style="margin:0 0 16px;text-align:right;font:400 15px/1.8 'Readex Pro',Tahoma,Arial,sans-serif;color:${C.ink}">${html}</p>`;
 export const small = (html) => `<p style="margin:16px 0 0;font:400 12px/1.7 ${MONO};color:${C.grey}">${html}</p>`;
 export const layout = (body) => `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light">
-<style>@font-face{font-family:'Geist Mono';font-weight:500;src:url(${ORIGIN}/fonts/geist-mono-latin-500-normal.woff2) format('woff2')}@font-face{font-family:'Readex Pro';font-weight:500;src:url(${ORIGIN}/fonts/readex-pro-arabic-500.woff2) format('woff2')}
-a{color:${C.rose}}@media(max-width:620px){.pad{padding:24px 20px!important}}</style></head>
+<style>@font-face{font-family:'Quicksand';font-weight:400;src:url(${ORIGIN}/fonts/quicksand-latin-400-normal.woff2) format('woff2')}@font-face{font-family:'Quicksand';font-weight:500;src:url(${ORIGIN}/fonts/quicksand-latin-500-normal.woff2) format('woff2')}@font-face{font-family:'Readex Pro';font-weight:500;src:url(${ORIGIN}/fonts/readex-pro-arabic-500.woff2) format('woff2')}
+a{color:${C.rose}}@media(max-width:620px){.pad{padding:28px 4px!important}}</style></head>
 <body style="margin:0;padding:0;background:${C.paper}">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.paper}"><tr><td align="center" style="padding:32px 12px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px">
 <tr><td align="center" style="padding:0 0 24px"><a href="${ORIGIN}" style="text-decoration:none"><img src="${ORIGIN}/assets/mail-logo.png" alt="MASS &amp; GRASS" width="74" height="56" style="display:block;border:0"></a></td></tr>
-<tr><td class="pad" style="background:${C.sheet};border:1px solid ${C.line};padding:40px 44px">${body}</td></tr>
+<tr><td class="pad" style="background:${C.sheet};border-top:1px solid ${C.ink};border-bottom:1px solid ${C.line};padding:40px 8px">${body}</td></tr>
 <tr><td style="padding:20px 4px 0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
 <td style="${cap}">Painted by hand in Gaza</td><td align="right" style="${cap}"><a href="mailto:info@massandgrass.com" style="color:${C.rose};text-decoration:none">info@massandgrass.com</a></td></tr></table></td></tr>
 </table></td></tr></table></body></html>`;
@@ -77,7 +78,7 @@ export async function orderPaidEmails(env, o) {
       ${heading('gift', 'gift-ar', 'A gift for you')}
       ${p(`${e(g.gift.to)}, someone sent you a watercolour from Gaza, painted by Farah Al-Helou.`)}
       ${pAr('أرسل إليكم أحدهم لوحة مائية من غزة، رسمتها فرح الحلو.')}
-      ${g.gift.m ? `<div style="margin:0 0 24px;padding:16px 20px;border-left:2px solid ${C.rose};background:${C.paper};font:400 14px/1.75 ${MONO};color:${C.ink}">${e(g.gift.m)}</div>` : ''}
+      ${g.gift.m ? `<div style="margin:0 0 24px;padding:16px 20px;border-left:2px solid ${C.rose};background:${C.soft};font:400 14px/1.75 ${MONO};color:${C.ink}">${e(g.gift.m)}</div>` : ''}
       ${piece(env, g, files)}`), o.email);
   }
   if (env.ADMIN_EMAIL && o.total_cents > 0) await sendMail(env, env.ADMIN_EMAIL, `New order ${o.id} · €${(o.total_cents / 100).toFixed(2)} · طلب جديد`, layout(`
@@ -90,7 +91,7 @@ export async function orderPaidEmails(env, o) {
 function shipBlock(o) {
   const s = o.ship ? (typeof o.ship === 'string' ? JSON.parse(o.ship) : o.ship) : null;
   if (!s) return '';
-  return `<div style="margin:8px 0 24px;padding:16px 20px;background:${C.paper};border:1px solid ${C.line}"><div style="${cap};margin:0 0 8px">Shipping to · الشحن إلى</div>
+  return `<div style="margin:8px 0 24px;padding:16px 20px;background:${C.soft};border:1px solid ${C.line}"><div style="${cap};margin:0 0 8px">Shipping to · الشحن إلى</div>
     <div style="font:400 13px/1.7 ${MONO};color:${C.ink}">${e(s.name)}<br>${e(s.line1)}${s.line2 ? '<br>' + e(s.line2) : ''}<br>${e(s.postal ? s.postal + ' ' : '')}${e(s.city)}, ${e(s.country)}<br>${e(s.phone)}</div></div>`;
 }
 // Sent when the admin marks a printed order as sent.
@@ -105,7 +106,7 @@ export async function shippedEmail(env, o) {
 export async function contactEmail(env, b) {
   return sendMail(env, env.ADMIN_EMAIL || 'info@massandgrass.com', `Contact · ${b.topic || 'Message'} · ${b.name || b.email}`, layout(`
     ${p(`<b>${e(b.name || '')}</b> &lt;${e(b.email)}&gt;`)}${b.topic ? p(`<b>${e(b.topic)}</b>`) : ''}
-    <div style="white-space:pre-wrap;background:${C.paper};border:1px solid ${C.line};padding:16px 20px;font:400 14px/1.75 ${MONO};color:${C.ink}">${e(b.message)}</div>
+    <div style="white-space:pre-wrap;background:${C.soft};border:1px solid ${C.line};padding:16px 20px;font:400 14px/1.75 ${MONO};color:${C.ink}">${e(b.message)}</div>
     ${small('Reply to this e-mail to answer them.')}`), b.email);
 }
 
@@ -118,7 +119,7 @@ export async function commissionEmail(env, c) {
     ${p(`<b>${e(c.name)}</b> &lt;${e(c.email)}&gt; asks for ${e(w[0].toLowerCase())}.`)}
     ${pAr(`طلب جديد: ${e(w[1])} من ${e(c.name)}.`)}
     ${rows([['What · ماذا', e(w[0])], ['Size or use · المقاس', e(c.size || '—')], ['Budget · الميزانية', e(BUDGET[c.budget] || '—')], ['By · الموعد', e(c.deadline || '—')], ['Phone · الهاتف', e(c.phone || '—')], ['Picture · صورة', c.ref ? 'Yes, in the admin' : 'None']])}
-    <div style="white-space:pre-wrap;background:${C.paper};border:1px solid ${C.line};padding:16px 20px;font:400 14px/1.75 ${MONO};color:${C.ink}" dir="auto">${e(c.body)}</div>
+    <div style="white-space:pre-wrap;background:${C.soft};border:1px solid ${C.line};padding:16px 20px;font:400 14px/1.75 ${MONO};color:${C.ink}" dir="auto">${e(c.body)}</div>
     <p style="margin:24px 0 0">${btn(env.SITE_ORIGIN + '/admin/#requests', 'Open requests')}</p>
     ${small('Reply to this e-mail to answer them.')}`), c.email);
 }

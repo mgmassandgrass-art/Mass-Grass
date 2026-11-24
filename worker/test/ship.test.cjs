@@ -15,6 +15,7 @@ const AE = { country: 'AE', name: 'Test Buyer', phone: '+971 50 123 4567', line1
   const waves = (await api('GET', '/api/admin/products')).j.products.find((p) => p.id === 'waves' && p.kind === 'painting');
   r = await api('PUT', '/api/admin/products', { ...waves, extra: { ...waves.extra, print: { on: true, price: 35, size: '30 × 40 cm', size_ar: '30 × 40 سم' } } });
   ok('admin offers a painting printed', r.s === 200);
+  await api('PUT', '/api/admin/settings', { shipping: {} }); // start closed (the launch opened every country)
   r = await api('POST', '/api/orders', { email: 's@example.com', items: [{ k: 'waves', kind: 'painting', fmt: 'print' }], ship: AE }, true);
   ok('no shipping fee set yet: the country is closed', r.s === 400 && r.j.error === 'ship_country', JSON.stringify(r.j));
   r = await api('PUT', '/api/admin/settings', { shipping: { AE: { on: true, fee: 15, days: '7 to 10 days' }, DK: { on: true, fee: 12, days: '' } } });
@@ -70,10 +71,16 @@ const AE = { country: 'AE', name: 'Test Buyer', phone: '+971 50 123 4567', line1
   const [cn, ...cv] = jar.split('=');
   await c.addCookies([{ name: cn, value: cv.join('='), domain: 'localhost', path: '/', secure: cn.startsWith('__'), httpOnly: true, sameSite: 'Lax' }]);
   await a.goto(B + '/admin/#orders', { waitUntil: 'load' }); await a.waitForSelector('#ordSeg');
-  await a.click('#ordSeg [data-f="ship"]');
+  await a.click('#ordSeg [data-f="to_ship"]');
   ok('the "to ship" filter lists the Danish order', /dk@example.com/.test(await a.textContent('#ordL')));
   await a.goto(B + '/admin/#settings', { waitUntil: 'load' }); await a.waitForSelector('#shF');
   ok('settings show the shipping fees', (await a.inputValue('#shF [name=AE_fee]')) === '15');
+  // every other country (the ALL zone): any real country code, shipping included
+  r = await api('PUT', '/api/admin/settings', { shipping: { AE: { on: true, fee: 15 }, DK: { on: true, fee: 12 }, ALL: { on: true, fee: 0 } } });
+  r = await api('POST', '/api/orders', { email: 'fr@example.com', items: [{ k: 'calendar-2027', kind: 'calendar', fmt: 'print' }], ship: { name: 'A B', phone: '+33 1 23 45 67', country: 'FR', city: 'Paris', line1: '1 rue X' } }, true);
+  ok('every other country: France is shipped to, shipping included', r.s === 201 && r.j.total === 30, JSON.stringify(r.j));
+  r = await api('POST', '/api/orders', { email: 'fr@example.com', items: [{ k: 'calendar-2027', kind: 'calendar', fmt: 'print' }], ship: { name: 'A B', phone: '+33 1 23 45 67', country: 'XX1', city: 'Paris', line1: '1 rue X' } }, true);
+  ok('a made-up country is refused', r.s === 400 && r.j.error === 'ship_country', JSON.stringify(r.j));
   ok('no page errors', !errs.length, errs.join('|')); await b.close();
   console.log(bad ? `${bad} failed` : 'all passed'); process.exit(bad ? 1 : 0);
 })();

@@ -3,7 +3,7 @@
    The server's catalog (the admin's products, prices and hidden pieces) replaces this list when the page
    is served by the Worker; opened as plain files (previews) the site sells from this list. */
 window.MG_DEFAULT = {
-  prices: { painting: 12, postcard: 2, sticker: 1, pack: 3, calendar: 8, design: 6, book: 10 },
+  prices: { painting: 12, postcard: 2, sticker: 1, pack: 3, calendar: 10, calendarPrint: 30, design: 6, book: 10 },
   products: [
     /* paintings */
     ['painting', 'hero', 'Gaza Coast', 'ساحل غزة'],

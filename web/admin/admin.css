@@ -194,3 +194,11 @@ fieldset.print legend{padding:0 8px;font-weight:700}
 .rq-meta{display:flex;flex-wrap:wrap;gap:4px 16px}
 .rq-ref img{display:block;max-width:180px;max-height:180px;border:1px solid var(--rule);margin-top:4px}
 #pBulk{margin-inline-end:8px}
+/* orders: the parcel's state as a small word with a dot of its colour; the bar wraps its two choice rows */
+.pc{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:var(--fs-cap)}
+.pc::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--rule-strong)}
+.pc.to_print::before{background:#C9832E}.pc.sent::before{background:#3D6FA8}.pc.delivered::before{background:var(--olive-dk)}
+.bar:has(#ordTy){flex-wrap:wrap;gap:10px}
+.ordk a{cursor:pointer}
+.today.ordk{grid-template-columns:repeat(4,minmax(0,1fr));margin:0 0 16px}
+@media(max-width:760px){.today.ordk{grid-template-columns:repeat(2,minmax(0,1fr))}.today.ordk>div:nth-child(2){border-inline-end:0}.today.ordk>div:nth-child(-n+2){border-bottom:1px solid var(--rule)}}

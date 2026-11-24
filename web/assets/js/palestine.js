@@ -31,6 +31,7 @@
 
   function printBlock() {
     const pr = MG.printOf('calendar', C.id), sh = Object.values(MG.shipping), to = sh.length ? sh.map((c) => L(c.name)).join(t(' and ', ' و')) : t('the UAE and Denmark', 'الإمارات والدنمارك');
+    if (pr && MG.shipping.ALL) return `${MG.printBtn('calendar', C.id, 'ghost')}<p class="pnote">${MG.shipping.ALL.fee ? t('Printed copies are shipped to every country.', 'نشحن النسخ المطبوعة إلى كل الدول.') : t('Printed on paper and shipped to every country, shipping included.', 'مطبوع على الورق ويُشحن إلى كل الدول، والشحن مشمول.')}</p>`;
     return pr ? `${MG.printBtn('calendar', C.id, 'ghost')}<p class="pnote">${t('Printed copies are shipped to ', 'نشحن النسخ المطبوعة إلى ')}${esc(to)}.</p>`
       : `<p class="pnote">${t('Printed copies, shipped to the UAE and Denmark, open soon.', 'النسخ المطبوعة، بالشحن إلى الإمارات والدنمارك، قريبًا.')}</p>`;
   }

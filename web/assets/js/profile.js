@@ -5,7 +5,7 @@ let AR=MG.ar;
    printed pieces, the parcel's state, tracking and address; then the settings: name, password, the monthly e-mail, the
    devices signed in, a copy of your data, sign out and delete. */
 const S={esc:MG.esc,fmt:MG.fmt,toast:MG.toast,USER:{get:()=>MG.user.get(),set:u=>MG.user.set(u),api:MG.api,out:()=>MG.user.out()}},U=S.USER,T=(en,ar)=>AR?ar:en,esc=S.esc,$=id=>document.getElementById(id);
-let me=U.get(),orders=null,offline=false,news=null,sessions=null;
+let me=U.get(),orders=null,offline=false,news=null,sessions=null,tab=['orders','details','security','data'].includes(location.hash.slice(1))?location.hash.slice(1):'orders';
 const ERR={password_short:['The new password needs at least 10 characters.','تحتاج كلمة المرور الجديدة إلى 10 أحرف على الأقل.'],bad_credentials:['The current password is not right.','كلمة المرور الحالية غير صحيحة.'],
   name_required:['Please write your name.','اكتبوا اسمكم.'],phone_invalid:['Please write the phone with its country code, like +971 50 123 4567.','اكتبوا الهاتف مع رمز البلد، مثل ‎+971 50 123 4567.'],
   too_big:['That picture is too large.','الصورة كبيرة جدًا.'],bad_type:['Please choose a JPG, PNG or WebP picture.','اختاروا صورة JPG أو PNG أو WebP.'],code_invalid:['That code is wrong or has expired.','الرمز غير صحيح أو انتهت صلاحيته.'],
@@ -52,13 +52,16 @@ function render(){const box=$('pf');const a=(me&&me.addr)||{};
     <li><b>${me.joined?date(me.joined):'-'}</b><span>${T('With us since','معنا منذ')}</span></li>
     <li><b>${os.length}</b><span>${T('Orders','الطلبات')}</span></li>
     <li><b>${nFiles}</b><span>${T('Files','الملفات')}</span></li>
-    <li><b>${spent?S.fmt(spent):'€0'}</b><span>${T('Spent with Farah','دعمتم بها فرح')}</span></li>
     <li><b>${onWay}</b><span>${T('Parcels on the way','طرود في الطريق')}</span></li></ul>`;
   const list=orders===null?`<p class="fmsg ok" role="status">${T('Loading your orders…','نحمّل طلباتكم…')}</p>`:os.length?os.map(orderHTML).join('')
     :`<div class="pf-empty"><p>${T('No orders yet. Everything you buy stays here.','لا طلبات بعد. كل ما تشترونه يبقى هنا.')}</p><a class="go" href="shop.html">${T('See the shop','شاهدوا المتجر')}</a></div>`;
   const devs=sessions===null?'':`<ul class="devs">${sessions.map(x=>`<li><span>${esc(device(x.ua))}${x.current?` <em>${T('this one','هذا الجهاز')}</em>`:''}</span><small>${date(x.seen)}${x.ip?', '+esc(x.ip):''}</small>${x.current?'':`<button class="linkb" type="button" data-end="${esc(x.id)}">${T('Sign out','إخراج')}</button>`}</li>`).join('')}</ul>${sessions.length>1?`<button class="linkb" type="button" id="endAll">${T('Sign out everywhere else','الخروج من كل الأجهزة الأخرى')}</button>`:''}`;
-  box.innerHTML=`${sum}<div class="pf-grid"><section class="pf-files" aria-labelledby="files-h"><h2 class="sec" id="files-h">${T('Your orders and files','طلباتكم وملفاتكم')}</h2>${list}</section>
-   <div class="pf-set"><form class="sheet pf-me" id="nf" novalidate><h2>${T('Your details','بياناتكم')}</h2>
+  /* four plain tabs, as on the rest of the site: the orders first (what people come for), then details, security, e-mails and data */
+  const TABS=[['orders',T('Orders and files','الطلبات والملفات')],['details',T('Details and address','البيانات والعنوان')],['security',T('Sign-in and security','الدخول والأمان')],['data',T('E-mails and data','البريد والبيانات')]];
+  const pane=(k,html,cls)=>`<div class="pf-p${cls?' '+cls:''}" role="tabpanel" id="pp-${k}" aria-labelledby="pt-${k}"${tab===k?'':' hidden'}>${html}</div>`;
+  box.innerHTML=`${sum}<div class="pf-tabs" role="tablist" aria-label="${T('Your account','حسابكم')}">${TABS.map(([k,n])=>`<button type="button" role="tab" id="pt-${k}" aria-controls="pp-${k}" aria-selected="${tab===k}" data-tab="${k}"${tab===k?'':' tabindex="-1"'}>${n}</button>`).join('')}</div>
+   ${pane('orders',`<h2 class="sr">${T('Your orders and files','طلباتكم وملفاتكم')}</h2>${list}`,'pf-files')}
+   ${pane('details',`<form class="sheet pf-me" id="nf" novalidate><h2>${T('Your details','بياناتكم')}</h2>
      <div class="av-row"><span class="av">${me.photo?`<img src="${esc(me.photo)}" alt="">`:`<b aria-hidden="true">${esc((me.name||me.email||'?').trim()[0].toUpperCase())}</b>`}</span>
       <span class="av-acts"><label class="linkb" for="avIn">${me.photo?T('Change the photo','غيّروا الصورة'):T('Add a photo','أضيفوا صورة')}</label><input type="file" class="sr" id="avIn" accept="image/jpeg,image/png,image/webp">${me.photo?`<button class="linkb" type="button" id="avDel">${T('Remove','احذفوها')}</button>`:''}</span></div>
      <label class="fld">${T('Name','الاسم')}<input id="nm" autocomplete="name" maxlength="60" value="${esc(me.name||'')}" required></label>
@@ -70,16 +73,16 @@ function render(){const box=$('pf');const a=(me&&me.addr)||{};
       <label class="fld">${T('Street and number','الشارع والرقم')}<input id="a1" autocomplete="address-line1" maxlength="120" value="${esc(a.line1||'')}"></label>
       <label class="fld">${T('Building, flat (optional)','المبنى، الشقة (اختياري)')}<input id="a2" autocomplete="address-line2" maxlength="120" value="${esc(a.line2||'')}"></label>
       <label class="fld">${T('Postcode','الرمز البريدي')}<input id="apc" autocomplete="postal-code" maxlength="12" dir="ltr" value="${esc(a.postal||'')}"></label></fieldset>
-     <p class="fmsg" role="status"></p><button class="ink" type="submit">${T('Save','احفظوا')}</button></form>
-    <form class="sheet" id="pwf" novalidate><h2>${T('Password','كلمة المرور')}</h2>
+     <p class="fmsg" role="status"></p><button class="ink" type="submit">${T('Save','احفظوا')}</button></form>`)}
+   ${pane('security',`<form class="sheet" id="pwf" novalidate><h2>${T('Password','كلمة المرور')}</h2>
      ${me.via==='google'?`<p>${T('You sign in with Google. You can also add a password here.','تدخلون عبر Google، ويمكنكم إضافة كلمة مرور هنا أيضًا.')}</p>`:`<label class="fld">${T('Current password','كلمة المرور الحالية')}<input id="opw" type="password" autocomplete="current-password"></label>`}
-     <label class="fld">${T('New password','كلمة المرور الجديدة')}<input id="npw" type="password" autocomplete="new-password" minlength="10"><small>${T('At least 10 characters.','10 أحرف على الأقل.')}</small></label><p class="fmsg" role="status"></p><button class="ink" type="submit">${T('Change the password','غيّروا كلمة المرور')}</button></form>
-    <section class="sheet" id="tfs"><h2>${T('Two-step sign-in','التحقق بخطوتين')}</h2>${tfHTML()}</section>
-    <section class="sheet"><h2>${T('One painting a month','لوحة كل شهر')}</h2><p>${T('A new painting from Farah in your e-mail, once a month.','لوحة جديدة من فرح في بريدكم، مرة كل شهر.')}</p>
-     <label class="tgl"><input type="checkbox" id="news" ${news?'checked':''} ${news===null?'disabled':''}><span>${T('Send it to ','أرسلوها إلى ')}${esc(me.email)}</span></label></section>
-    <section class="sheet"><h2>${T('Signed in on','الأجهزة المسجّلة')}</h2>${devs||`<p>${T('Loading…','نحمّل…')}</p>`}</section>
-    <section class="sheet"><h2>${T('Your data','بياناتكم')}</h2><p>${T('Take a copy of everything we keep about you, or leave.','خذوا نسخة من كل ما نحفظه عنكم، أو غادروا.')}</p>
-     <div class="acts"><a class="linkb" href="/api/me/export" download>${T('Download my data','تحميل بياناتي')}</a><button class="linkb" type="button" id="out">${T('Sign out','الخروج')}</button><button class="linkb danger" type="button" id="del">${T('Delete the account','حذف الحساب')}</button></div></section></div></div>`;
+     <label class="fld">${T('New password','كلمة المرور الجديدة')}<input id="npw" type="password" autocomplete="new-password" minlength="10"><small>${T('At least 10 characters.','10 أحرف على الأقل.')}</small></label><p class="fmsg" role="status"></p><button class="ink" type="submit">${T('Change the password','غيّروا كلمة المرور')}</button></form><section class="sheet" id="tfs"><h2>${T('Two-step sign-in','التحقق بخطوتين')}</h2>${tfHTML()}</section><section class="sheet"><h2>${T('Signed in on','الأجهزة المسجّلة')}</h2>${devs||`<p>${T('Loading…','نحمّل…')}</p>`}</section>`,'pf-two')}
+   ${pane('data',`<section class="sheet"><h2>${T('One painting a month','لوحة كل شهر')}</h2><p>${T('A new painting from Farah in your e-mail, once a month.','لوحة جديدة من فرح في بريدكم، مرة كل شهر.')}</p>
+     <label class="tgl"><input type="checkbox" id="news" ${news?'checked':''} ${news===null?'disabled':''}><span>${T('Send it to ','أرسلوها إلى ')}${esc(me.email)}</span></label></section><section class="sheet"><h2>${T('Your data','بياناتكم')}</h2><p>${T('Take a copy of everything we keep about you, or leave.','خذوا نسخة من كل ما نحفظه عنكم، أو غادروا.')}</p>
+     <div class="acts"><a class="linkb" href="/api/me/export" download>${T('Download my data','تحميل بياناتي')}</a><button class="linkb" type="button" id="out">${T('Sign out','الخروج')}</button><button class="linkb danger" type="button" id="del">${T('Delete the account','حذف الحساب')}</button></div></section>`,'pf-two')}`;
+  const tabs=[...box.querySelectorAll('[data-tab]')],go=(k,focus)=>{tab=k;tabs.forEach(b=>{const on=b.dataset.tab===k;b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;if(on&&focus)b.focus()});
+    box.querySelectorAll('.pf-p').forEach(x=>x.hidden=x.id!=='pp-'+k);history.replaceState(null,'','#'+k)};
+  tabs.forEach((b,i)=>{b.onclick=()=>go(b.dataset.tab);b.onkeydown=e=>{const d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(!d)return;e.preventDefault();const n=tabs[(i+(AR?-d:d)+tabs.length)%tabs.length];go(n.dataset.tab,true)}});
   const say=(f,m,good)=>{const el=f.querySelector('.fmsg');el.textContent=m;el.classList.toggle('ok',!!good)};
   $('nf').onsubmit=async e=>{e.preventDefault();const f=e.target,n=$('nm').value.trim();if(!n)return say(f,T(...ERR.name_required));
     const g=id=>$(id).value.trim(),ph=g('ph');if(ph&&!/^[+\d][\d\s()-]{5,}$/.test(ph))return say(f,T(...ERR.phone_invalid));

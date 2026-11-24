@@ -420,3 +420,11 @@ html[data-hand].ar-on body main.ps26 .psb .btn-n{font:500 12px/1.4 var(--fa)!imp
 html[data-hand] body main.ps26 .psb[aria-pressed=true] .btn-n{color:var(--ink)!important}
 .ps26 .btshow .bts-pg{right:auto;bottom:auto}
 .ps26 .ol-c .ol-im{aspect-ratio:1326/589}.ps26 .ol-c .ol-im img{object-fit:contain}
+
+/* the printed copy beside the PDF in the opening: a quiet outlined button under Buy now */
+.cdesk .cbuy-pr:empty{display:none}
+.cdesk .cbuy-pr .ghost{min-height:44px;padding:0 24px;background:transparent;border:1px solid rgba(43,47,44,.5);color:#2B2F2C;border-style:solid}
+@media(hover:hover){.cdesk .cbuy-pr .ghost:hover{border-color:#2B2F2C}}
+.cdesk .cbuy-pr .ghost[aria-pressed=true]{background:#2B2F2C;color:#fff}
+.btshow .cv-print{max-width:360px}
+.btshow .cv-print .ghost{border-style:solid}

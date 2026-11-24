@@ -56,3 +56,22 @@
 .pf-me input:disabled{opacity:.6}
 @media(max-width:560px){.pf-me .adr{grid-template-columns:minmax(0,1fr)}}
 .pf-set .pf-me{grid-column:1/-1}
+/* the profile in four tabs (owner, 24 Nov 2026): plain words with an underline under the open one, as elsewhere on the site */
+.pf-sum{grid-template-columns:repeat(4,minmax(0,1fr))}
+.pf-tabs{display:flex;gap:clamp(18px,2.6vw,40px);margin:0 0 clamp(24px,3vw,40px);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.pf-tabs button{flex:none;border:0;background:none;padding:12px 0;margin-bottom:-1px;border-bottom:2px solid transparent;cursor:pointer;font:500 11px/1.4 var(--mono2);letter-spacing:.15em;text-transform:uppercase;color:rgba(var(--ink-rgb),.55);transition:color .15s,border-color .15s}
+.ar-on .pf-tabs button{font:500 15px/1.5 var(--fa);letter-spacing:0;text-transform:none}
+.pf-tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--ink)}
+@media(hover:hover){.pf-tabs button:hover{color:var(--ink)}}
+.pf-tabs button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.pf-p[hidden]{display:none}
+.pf-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:32px;align-items:start}
+.pf-p .sheet{border:1px solid var(--line);background:#fff;padding:24px 26px;display:flex;flex-direction:column;gap:4px}
+.pf-p .sheet>.ink{align-self:flex-start;margin-top:12px}
+.pf-p .pf-me{max-width:760px}
+.pf-p .pf-me .adr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}
+.pf-p .pf-me .adr legend{grid-column:1/-1}
+@media(max-width:600px){.pf-p .pf-me .adr{grid-template-columns:minmax(0,1fr)}}
+.pf-files .order:first-of-type{border-top:1px solid var(--ink)}
+.pf-files .pf-empty{border-top:0;padding-top:0}
+.pf-sum li:first-child b{font-size:clamp(18px,1.4vw,22px);line-height:1.3}

@@ -55,11 +55,13 @@
   /* the printed copy: a button when the admin has switched it on, else a plain line */
   function printBlock() {
     const pr = MG.printOf('calendar', C.id), sh = Object.values(MG.shipping), to = sh.length ? sh.map((c) => L(c.name)).join(t(' and ', ' و')) : t('the UAE and Denmark', 'الإمارات والدنمارك');
+    if (pr && MG.shipping.ALL) return `${MG.printBtn('calendar', C.id, 'ghost')}<p class="pnote">${MG.shipping.ALL.fee ? t('Printed copies are shipped to every country.', 'نشحن النسخ المطبوعة إلى كل الدول.') : t('Printed on paper and shipped to every country, shipping included.', 'مطبوع على الورق ويُشحن إلى كل الدول، والشحن مشمول.')}</p>`;
     return pr ? `${MG.printBtn('calendar', C.id, 'ghost')}<p class="pnote">${t('Printed copies are shipped to ', 'نشحن النسخ المطبوعة إلى ')}${esc(to)}.</p>`
       : `<p class="pnote">${t('Printed copies, shipped to the UAE and Denmark, open soon.', 'النسخ المطبوعة، بالشحن إلى الإمارات والدنمارك، قريبًا.')}</p>`;
   }
   MG.page(function (why) {
     const cp = $('#cprint'); if (cp) cp.innerHTML = printBlock();
+    const hp = $('#hprint'); if (hp) hp.innerHTML = MG.printBtn('calendar', C.id, 'ghost');
     if (why === 'bag' || why === 'user') return;
     /* calendars from earlier years: one card each, each with its own page */
     $('#olgrid').innerHTML = OLD.map((c) => `<li><a class="ol-c" href="${c.page}"><span class="ol-im"><img src="${c.img[0]}" alt="" loading="lazy"><img src="${c.img[1]}" alt="" loading="lazy"></span><span class="ol-y">${esc(L(c.when))}</span><span class="ol-n">${esc(L(c.short))}</span><span class="ol-p"><b>${MG.fmt(MG.price('calendar'))}</b><span class="go">${t('Open the calendar', 'افتحوا التقويم')}</span></span></a></li>`).join('');

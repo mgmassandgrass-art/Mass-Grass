@@ -1,5 +1,5 @@
 // Catalog, orders, PayPal and the admin API.
-import { json, fail, readJson, clean, CALS, BOOKS, BOOK_ID, fileKeys, sniff, bytes } from './util.js';
+import { json, fail, readJson, clean, CALS, calFile, BOOKS, BOOK_ID, fileKeys, sniff, bytes } from './util.js';
 import { orderFiles } from './files.js';
 import { orderPaidEmails, shippedEmail } from './mail.js';
 
@@ -25,6 +25,9 @@ export async function catalog(env) {
   const { results } = await env.DB.prepare('SELECT * FROM products WHERE hidden=0 AND deleted=0 ORDER BY kind, sort, title_en').all();
   const { results: off } = await env.DB.prepare('SELECT kind, id FROM products WHERE hidden=1 OR deleted=1').all();
   cache = { off: off.map((r) => `${r.kind}:${r.id}`), pages: await getSetting(env, 'pages', { hidden: [], sections: {} }), products: results.map(pub), prices: await getSetting(env, 'prices', {}), rates: await getSetting(env, 'rates', {}), links: await getSetting(env, 'links', {}), shipping: openCountries(await getSetting(env, 'shipping', {})), book: bookOut(await getSetting(env, 'book', null)) };
+  // whether each calendar's sale file is uploaded (only yes / no, so anyone may see it): checked before telling buyers it is ready
+  const { results: cf } = await env.DB.prepare("SELECT product_id, COUNT(*) n, SUM(size) size FROM product_files WHERE kind='calendar' GROUP BY product_id").all();
+  cache.files = Object.fromEntries(Object.keys(CALS).map((k) => { const r = cf.find((x) => x.product_id === calFile(k)); return [k, r ? { n: r.n, mb: Math.round(r.size / 1048576 * 10) / 10 } : null]; }));
   cacheAt = Date.now();
   return cache;
 }
@@ -36,7 +39,9 @@ function bookOut(b) {
 }
 
 // The countries shipped to right now: switched on, with a fee set (0 means free shipping).
-export const COUNTRIES = { AE: ['United Arab Emirates', 'الإمارات العربية المتحدة'], DK: ['Denmark', 'الدنمارك'] };
+export const COUNTRIES = { AE: ['United Arab Emirates', 'الإمارات العربية المتحدة'], DK: ['Denmark', 'الدنمارك'], ALL: ['Every other country', 'كل الدول الأخرى'] };
+// A country code the buyer may choose when the ALL zone is open: two capital letters (ISO 3166), not a zone name.
+const isCountry = (c) => /^[A-Z]{2}$/.test(c);
 function openCountries(sh) {
   const out = {};
   for (const [c, v] of Object.entries(sh || {})) if (COUNTRIES[c] && v && v.on && typeof v.fee === 'number' && v.fee >= 0) out[c] = { fee: v.fee, days: String(v.days || '').slice(0, 60), name: COUNTRIES[c] };
@@ -118,7 +123,7 @@ export async function createOrder(env, req, user) {
   // Printed pieces: an address in a country shipped to, and its fee once per order.
   let ship = null, shipCents = 0;
   if (printed) {
-    const s0 = b.ship || {}, c = String(s0.country || '').toUpperCase(), zone = cat.shipping[c];
+    const s0 = b.ship || {}, c = String(s0.country || '').toUpperCase(), zone = cat.shipping[c] || (isCountry(c) && cat.shipping.ALL);
     if (!zone) return fail('ship_country', 400);
     ship = { name: clean(s0.name, 80), phone: clean(s0.phone, 30), country: c, city: clean(s0.city, 60), line1: clean(s0.line1, 120), line2: clean(s0.line2, 120), postal: clean(s0.postal, 16) };
     if (!ship.name || !ship.line1 || !ship.city || !/^[+\d][\d\s()-]{5,}$/.test(ship.phone) || (c === 'DK' && !/^\d{4}$/.test(ship.postal))) return fail('ship_address', 400);
@@ -148,7 +153,7 @@ export async function createOrder(env, req, user) {
     purchase_units: [{ reference_id: id, custom_id: id, description: ship ? 'Mass & Grass prints and files' : 'Mass & Grass digital files',
       amount: { currency_code: 'EUR', value: (total / 100).toFixed(2), breakdown: { item_total: { currency_code: 'EUR', value: ((total - shipCents) / 100).toFixed(2) }, shipping: { currency_code: 'EUR', value: (shipCents / 100).toFixed(2) } } },
       ...(ship ? { shipping: { name: { full_name: ship.name }, address: { address_line_1: ship.line1, address_line_2: ship.line2 || undefined, admin_area_2: ship.city, postal_code: ship.postal || undefined, country_code: ship.country } } } : {}) }],
-    payment_source: { paypal: { experience_context: { brand_name: 'Mass & Grass', shipping_preference: ship ? 'SET_PROVIDED_ADDRESS' : 'NO_SHIPPING', user_action: 'PAY_NOW',
+    payment_source: { paypal: { experience_context: { brand_name: 'Mass & Grass', shipping_preference: ship ? 'SET_PROVIDED_ADDRESS' : 'NO_SHIPPING', user_action: 'PAY_NOW', landing_page: 'LOGIN', // PayPal accounts only (the owner also switches off card payments without an account in PayPal)
       return_url: `${env.SITE_ORIGIN}/checkout.html?order=${id}`, cancel_url: `${env.SITE_ORIGIN}/checkout.html?cancelled=${id}` } } },
   });
   if (!r.ok) { console.error('paypal create', r.status, JSON.stringify(r.data)); return fail('payment_error', 502); }

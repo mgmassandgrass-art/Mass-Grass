@@ -63,6 +63,11 @@
     return pr && pr.on && Number(pr.price) > 0 ? { price: Number(pr.price), size: pr.size ? [pr.size, pr.size_ar || pr.size] : null } : null;
   }
   const shipping = (server && server.shipping) || {};
+  /* every country, by its name in the page's language (for the address and for shipping to all countries) */
+  const ISO = 'AD AE AF AG AL AM AO AR AT AU AZ BA BB BD BE BF BG BH BI BJ BN BO BR BS BT BW BY BZ CA CD CF CG CH CI CL CM CN CO CR CU CV CY CZ DE DJ DK DM DO DZ EC EE EG ER ES ET FI FJ FR GA GB GD GE GH GM GN GQ GR GT GW GY HK HN HR HT HU ID IE IN IQ IR IS IT JM JO JP KE KG KH KM KN KR KW KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MG MK ML MM MN MR MT MU MV MW MX MY MZ NA NE NG NI NL NO NP NZ OM PA PE PG PH PK PL PS PT PY QA RO RS RU RW SA SB SC SD SE SG SI SK SL SM SN SO SR SS ST SV SY SZ TD TG TH TJ TL TM TN TO TR TT TW TZ UA UG US UY UZ VA VC VE VN VU WS YE ZA ZM ZW'.split(' ');
+  const countries = () => { let dn; try { dn = new Intl.DisplayNames([AR ? 'ar' : 'en'], { type: 'region' }); } catch (e) {} return ISO.map((c) => [c, dn ? dn.of(c) : c]).sort((a, b) => a[1].localeCompare(b[1], AR ? 'ar' : 'en')); };
+  /* the shipping zone of a country: its own, else "every other country" when that is open */
+  const shipZone = (c) => shipping[c] || (/^[A-Z]{2}$/.test(c || '') && ISO.includes(c) && shipping.ALL) || null;
   const isFree = (kind, id) => { const p = id && product(kind, id); return !!p && p.price === 0; };
   /* in Arabic the price is isolated (LRI…PDI) so brackets and commas around it keep their places */
   const fmt = (e) => { if (e === 0) return t('Free', 'مجانًا'); const s = '€' + (Math.round(e * 100) % 100 ? e.toFixed(2) : String(Math.round(e))); return AR ? '\u2066' + s + '\u2069' : s; };
@@ -328,7 +333,7 @@
     return `<li class="pr-it"><a class="lk" href="${href}"${cal ? '' : ` data-peek="${p.kind}:${esc(p.id)}"`}><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
       <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? c.id : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${shareBtn(p.kind, cal ? c.id : p.id)}</div></li>`;
   }
-  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, calOf, calendars: CALS, book: BOOK };
+  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, shipZone, countries, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, calOf, calendars: CALS, book: BOOK };
 
   function boot() { applyLang(); shell(); ready = true; rerender('init'); user.sync(); }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', boot) : boot();

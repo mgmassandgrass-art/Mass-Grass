@@ -42,9 +42,9 @@ let bad = 0; const ok = (n, c, extra) => { if (!c) { bad++; console.log('FAIL', 
     await p.goto(B + '/stickers', { waitUntil: 'load' }); for (let i = 0; i < 6; i++) await p.click(`#grid .sc >> nth=${i}`);
     await p.click('#pbAdd'); await p.waitForTimeout(300);
     ok('six stickers go in as one pack', (await p.textContent('[data-bagn]')) === '3');
-    await p.goto(B + '/calendar', { waitUntil: 'load' }); await p.click('.cw-row [data-add=calendar]'); await p.waitForTimeout(200);
+    await p.goto(B + '/calendar', { waitUntil: 'load' }); await p.click('.cdesk [data-add=calendar]'); await p.waitForTimeout(200);
     await p.click('#bagb'); await p.waitForSelector('dialog.bagd[open]');
-    ok('bag sheet totals 12+12+3+8', /€35/.test(await p.textContent('.bagd .tt')));
+    ok('bag sheet totals 12+12+3+10', /€37/.test(await p.textContent('.bagd .tt')));
     await p.click('.bagd a.ink'); await p.waitForURL('**/checkout**'); await p.waitForSelector('#f');
     await p.fill('#em', 'buyer@example.com'); if (await p.locator('#nm').count()) await p.fill('#nm', 'Test Buyer');
     await p.click('#f [type=submit]'); await p.waitForTimeout(1200);
@@ -55,7 +55,7 @@ let bad = 0; const ok = (n, c, extra) => { if (!c) { bad++; console.log('FAIL', 
   { const { c, p, errs } = await ctx(390, 844, false);
     await p.goto(B + '/account?mode=up', { waitUntil: 'load' }); await p.waitForSelector('#f');
     const em = `e2e${Date.now()}@example.com`; await p.fill('#nm', 'Lina'); await p.fill('#em', em); await p.fill('#pw', 'correct horse battery'); await p.click('#f [type=submit]');
-    await p.waitForURL('**/profile**'); await p.waitForSelector('#nm'); ok('profile shows the name', (await p.inputValue('#nm')) === 'Lina');
+    await p.waitForURL('**/profile**'); await p.waitForSelector('[data-tab=details]'); ok('profile opens on the orders tab', (await p.getAttribute('[data-tab=orders]', 'aria-selected')) === 'true'); await p.click('[data-tab=details]'); await p.waitForSelector('#nm'); ok('profile shows the name', (await p.inputValue('#nm')) === 'Lina');
     await p.click('#lang'); await p.waitForTimeout(200); ok('language toggles to Arabic', (await p.evaluate(() => document.documentElement.dir)) === 'rtl');
     await p.goto(B + '/', { waitUntil: 'load' }); ok('language is remembered', (await p.evaluate(() => document.documentElement.lang)) === 'ar');
     await p.click('#menub'); await p.waitForTimeout(200); const r = await p.evaluate(() => document.getElementById('mmenu').getBoundingClientRect().width);
