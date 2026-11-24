@@ -170,6 +170,15 @@ export async function createOrder(env, req, user) {
   return json({ id, access, total: total / 100, approve: approve && approve.href }, 201);
 }
 
+// What a buyer may see of their order with its number and e-mail (the "Track your order" page): no files, no address.
+export async function trackOrder(env, b) {
+  const id = clean(b && b.id, 20).toUpperCase().replace(/^(?!MG-)/, 'MG-'), email = clean(b && b.email, 120).toLowerCase();
+  const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first();
+  if (!o || o.email.toLowerCase() !== email) return fail('not_found', 404);
+  const items = JSON.parse(o.items), ship = o.ship ? JSON.parse(o.ship) : null;
+  return json({ order: { id: o.id, date: new Date(o.created_at).toISOString(), status: o.status, items: items.map((i) => ({ t: i.t, ta: i.ta, kind: i.kind, k: i.k, fmt: i.fmt, q: i.q })),
+    printed: !!ship, ship_status: o.ship_status || null, tracking: o.tracking || '', country: ship ? ship.country : null, city: ship ? ship.city : null } });
+}
 export const orderOut = (o) => ({ id: o.id, email: o.email, name: o.name, items: JSON.parse(o.items), total: o.total_cents / 100, currency: o.currency, status: o.status, date: new Date(o.created_at).toISOString(),
   ship: o.ship ? JSON.parse(o.ship) : null, shipping: (o.ship_cents || 0) / 100, ship_status: o.ship_status || null, tracking: o.tracking || '' });
 
@@ -326,7 +335,7 @@ export async function admin(env, req, url, p) {
     const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(clean(url.searchParams.get('id'), 20)).first();
     if (!o) return fail('not_found', 404);
     const files = o.status === 'paid' ? await orderFiles(env, o) : [];
-    return json({ order: { ...orderOut(o), paypal_id: o.paypal_id, news: !!o.news, user_id: o.user_id, paid: o.paid_at ? new Date(o.paid_at).toISOString() : null, files: files.map((f) => ({ name: f.name, size: f.size, kind: f.kind, product_id: f.product_id })) } });
+    return json({ order: { ...orderOut(o), paypal_id: o.paypal_id, news: !!o.news, user_id: o.user_id, paid: o.paid_at ? new Date(o.paid_at).toISOString() : null, note: o.note || '', files: files.map((f) => ({ name: f.name, size: f.size, kind: f.kind, product_id: f.product_id })) } });
   }
   if (p === '/api/admin/products' && m === 'GET') {
     const { results } = await env.DB.prepare('SELECT * FROM products WHERE deleted=0 ORDER BY kind, sort, title_en').all();
@@ -431,7 +440,7 @@ export async function admin(env, req, url, p) {
   }
   if (p === '/api/admin/orders' && m === 'GET') {
     const { results } = await env.DB.prepare('SELECT * FROM orders ORDER BY created_at DESC LIMIT 1000').all();
-    return json({ orders: results.map(orderOut) });
+    return json({ orders: results.map((o) => ({ ...orderOut(o), note: o.note || '' })) }); // the note is the owner's alone: only here and in the admin's sheet
   }
   // Ask PayPal about an order still awaiting payment: if the buyer approved it but never came back, this takes the payment and sends the files.
   if (p === '/api/admin/orders/check' && m === 'POST') {
@@ -449,6 +458,37 @@ export async function admin(env, req, url, p) {
     const tracking = clean(b.tracking, 120);
     await env.DB.prepare('UPDATE orders SET ship_status=?, tracking=? WHERE id=?').bind(b.status, tracking, o.id).run();
     if (b.status === 'sent' && o.ship_status !== 'sent') { try { await shippedEmail(env, { ...o, tracking }); } catch (e) { console.error('mail', e.message); } }
+    return json({ ok: true });
+  }
+  // Delete orders: one (from its sheet) or many (ticked in the list). They leave the shop's records for good.
+  if (p === '/api/admin/orders/delete' && m === 'POST') {
+    const b = await readJson(req), ids = Array.isArray(b && b.ids) ? b.ids.map((x) => clean(x, 20)).filter((x) => /^MG-[A-Z0-9]{4,12}$/.test(x)).slice(0, 200) : [];
+    if (!ids.length) return fail('bad_request');
+    await env.DB.prepare(`DELETE FROM orders WHERE id IN (${ids.map(() => '?').join(',')})`).bind(...ids).run();
+    return json({ ok: true, deleted: ids.length });
+  }
+  // The owner's own note on an order (never shown to the buyer)
+  if (p === '/api/admin/orders/note' && m === 'PUT') {
+    const b = await readJson(req), id = clean(b && b.id, 20);
+    const r = await env.DB.prepare('UPDATE orders SET note=? WHERE id=?').bind(String((b && b.note) || '').slice(0, 2000), id).run();
+    return r.meta && r.meta.changes ? json({ ok: true }) : fail('not_found', 404);
+  }
+  // Correct a printed order's delivery address (a buyer wrote to say it is wrong)
+  if (p === '/api/admin/orders/address' && m === 'PUT') {
+    const b = await readJson(req), o = await env.DB.prepare('SELECT ship FROM orders WHERE id=?').bind(clean(b && b.id, 20)).first();
+    if (!o || !o.ship) return fail('not_found', 404);
+    const a = (b && b.ship) || {}, c = String(a.country || '').toUpperCase();
+    const ship = { name: clean(a.name, 80), phone: clean(a.phone, 30), country: /^[A-Z]{2}$/.test(c) ? c : JSON.parse(o.ship).country, city: clean(a.city, 60), region: clean(a.region, 60), line1: clean(a.line1, 120), line2: clean(a.line2, 120), postal: clean(a.postal, 16) };
+    if (!ship.name || !ship.line1 || !ship.city) return fail('ship_address');
+    await env.DB.prepare('UPDATE orders SET ship=? WHERE id=?').bind(JSON.stringify(ship), clean(b.id, 20)).run();
+    return json({ ok: true });
+  }
+  // Send the paid order's e-mail again (the buyer lost it, or wrote from a new address that was corrected)
+  if (p === '/api/admin/orders/resend' && m === 'POST') {
+    const b = await readJson(req), o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(clean(b && b.id, 20)).first();
+    if (!o) return fail('not_found', 404);
+    if (o.status !== 'paid') return fail('not_paid', 409);
+    await orderPaidEmails(env, { ...o, _resend: true });
     return json({ ok: true });
   }
   if (p === '/api/admin/orders' && m === 'PUT') {

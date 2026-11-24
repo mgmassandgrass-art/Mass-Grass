@@ -1,0 +1,24 @@
+/* Track your order: the form beside the order card; the steps as a ruled line with a dot for each */
+.tr-grid{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start;padding-bottom:var(--sec)}
+@media(max-width:860px){.tr-grid{grid-template-columns:minmax(0,1fr)}}
+.tr .sheet{border:1px solid var(--line);background:#fff;padding:24px}
+.tr .sheet .ink{width:100%;min-height:48px}
+.tr-card{border:1px solid var(--line);padding:24px;display:grid;gap:20px}
+.tr-hd{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.tr-hd span{color:rgba(var(--ink-rgb),.6)}
+.tr-steps{list-style:none;margin:0;padding:0;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;font-size:13px}
+.tr-steps li{display:grid;gap:8px;color:rgba(var(--ink-rgb),.45)}
+.tr-steps li span{display:block;height:3px;background:var(--line)}
+.tr-steps li.done{color:var(--ink)}
+.tr-steps li.done span{background:var(--ink)}
+.tr-steps li.now{color:#9C4F52;font-weight:600}
+.tr-steps li.now span{background:#9C4F52}
+@media(max-width:560px){.tr-steps{grid-auto-flow:row}.tr-steps li{grid-template-columns:24px 1fr;align-items:center}.tr-steps li span{height:10px;width:10px;border-radius:50%}}
+.tr-its{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.tr-its li{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.tr-its small{color:rgba(var(--ink-rgb),.6)}
+.tr-num{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;padding:16px;background:#F6F5F2}
+.tr-num span{color:rgba(var(--ink-rgb),.6)}
+.tr-num b{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.tr-num .ink{margin-inline-start:auto;min-height:44px;padding:0 20px;display:inline-flex;align-items:center}
+.tr-note{margin:0;color:rgba(var(--ink-rgb),.7)}

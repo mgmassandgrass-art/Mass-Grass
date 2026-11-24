@@ -27,7 +27,7 @@ const device=ua=>{ua=String(ua||'');const b=/Edg\//.test(ua)?'Edge':/Chrome\//.t
 function orderHTML(o){
   const prints=o.items.filter(i=>i.fmt==='print'),files=o.items.filter(i=>i.fmt!=='print');
   const parcel=prints.length?`<div class="parcel"><b>${T('Printed and shipped','مطبوعة وتُشحن')}</b><span class="pst ${esc(o.ship_status||'')}">${esc(T(...(SHIP[o.ship_status]||SHIP.to_print)))}</span>
-    ${o.tracking?`<span>${T('Tracking: ','رقم التتبع: ')}<code>${esc(o.tracking)}</code></span>`:''}
+    ${o.tracking?`<span>${T('Tracking: ','رقم التتبع: ')}<code>${esc(o.tracking)}</code> <a class="linkb" href="https://t.17track.net/en#nums=${encodeURIComponent(o.tracking)}" target="_blank" rel="noopener noreferrer">${T('Follow the parcel','تتبّعوا الطرد')}</a></span>`:''}
     ${o.ship?`<address>${esc([o.ship.name,o.ship.line1,o.ship.line2,[o.ship.postal,o.ship.city,o.ship.region].filter(Boolean).join(' '),o.ship.country].filter(Boolean).join(', '))}</address>`:''}</div>`:'';
   const dl=files.length?((o.files||[]).length?`<ul class="files">${o.files.map(f=>`<li><a href="${esc(f.url)}" download><span>${esc(f.name)}</span><small>${T('Download','تحميل')}</small></a></li>`).join('')}</ul>`
     :`<p class="fmsg ok">${T('Farah is preparing these files. They reach your email within a day.','تجهّز فرح هذه الملفات، وتصل إلى بريدكم خلال يوم.')}</p>`):'';

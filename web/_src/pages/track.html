@@ -1,0 +1,17 @@
+<!--{"title": "Track your order", "desc": "Follow your Mass & Grass order with its number and your e-mail.", "css": ["track"], "js": ["track"], "noindex": true, "hand": true}-->
+<main id="main">
+<section class="pgx pgx-tr">
+<div class="wrap tr">
+  <div class="pghd"><h1 data-ar="تتبّعوا طلبكم">Track your order</h1></div>
+  <div class="tr-grid">
+    <form id="tf" class="sheet" novalidate>
+      <label class="fld"><span data-ar="رقم الطلب">Order number</span><input id="tid" autocomplete="off" maxlength="20" dir="ltr" placeholder="MG-1A2B3C4D" required></label>
+      <label class="fld"><span data-ar="البريد الإلكتروني">Email</span><input id="tem" type="email" autocomplete="email" maxlength="120" required></label>
+      <p class="fmsg" role="status" id="tmsg"></p>
+      <button class="ink" type="submit" data-ar="اعرضوا الطلب">Show the order</button>
+    </form>
+    <div id="tres" aria-live="polite"></div>
+  </div>
+</div>
+</section>
+</main>

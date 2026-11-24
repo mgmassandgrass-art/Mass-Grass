@@ -220,3 +220,7 @@ body{background:#FFFFFF}
 .seg button[aria-pressed=true]{background:var(--ink);color:#fff}
 .today{border-radius:0}
 .stamp{rotate:0deg;border-width:1px;border-radius:0}
+/* orders: the bar for ticked orders, and a note's first words under the order number */
+.pickbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 12px;padding:10px 14px;border:1px solid var(--rule-strong);background:var(--inset)}
+.pickbar span{margin-inline-end:auto}
+.onote{color:var(--kraft)!important;font-style:normal}

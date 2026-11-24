@@ -81,7 +81,7 @@ export async function orderPaidEmails(env, o) {
       ${g.gift.m ? `<div style="margin:0 0 24px;padding:16px 20px;border-left:2px solid ${C.rose};background:${C.soft};font:400 14px/1.75 ${MONO};color:${C.ink}">${e(g.gift.m)}</div>` : ''}
       ${piece(env, g, files)}`), o.email);
   }
-  if (env.ADMIN_EMAIL && o.total_cents > 0) await sendMail(env, env.ADMIN_EMAIL, `New order ${o.id} · €${(o.total_cents / 100).toFixed(2)} · طلب جديد`, layout(`
+  if (env.ADMIN_EMAIL && o.total_cents > 0 && !o._resend) await sendMail(env, env.ADMIN_EMAIL, `New order ${o.id} · €${(o.total_cents / 100).toFixed(2)} · طلب جديد`, layout(`
     ${p(`<b>${e(o.name || '')}</b> &lt;${e(o.email)}&gt; paid <b>€${(o.total_cents / 100).toFixed(2)}</b>${o.ship_cents ? ` (pieces €${((o.total_cents - o.ship_cents) / 100).toFixed(2)} + shipping €${(o.ship_cents / 100).toFixed(2)})` : ''}.`)}
     ${rows(items.map((it) => [e(KIND[it.kind] || it.kind), `${e(it.t || it.k)}${it.fmt === 'print' ? ` · PRINTED × ${it.q || 1}` : ''}${it.gift ? ` → gift for ${e(it.gift.to)}` : ''}`]))}${shipBlock(o)}
     <p style="margin:24px 0 0">${btn(env.SITE_ORIGIN + '/admin/#orders', 'Open orders')}</p>`), o.email);
@@ -94,13 +94,16 @@ function shipBlock(o) {
   return `<div style="margin:8px 0 24px;padding:16px 20px;background:${C.soft};border:1px solid ${C.line}"><div style="${cap};margin:0 0 8px">Shipping to · الشحن إلى</div>
     <div style="font:400 13px/1.7 ${MONO};color:${C.ink}">${e(s.name)}<br>${e(s.line1)}${s.line2 ? '<br>' + e(s.line2) : ''}<br>${e(s.postal ? s.postal + ' ' : '')}${e(s.city)}${s.region ? ', ' + e(s.region) : ''}, ${e(s.country)}<br>${e(s.phone)}</div></div>`;
 }
+// The parcel's own page with the carrier: 17TRACK reads Emirates Post and the post of the country it arrives in.
+export const trackLink = (n) => `https://t.17track.net/en#nums=${encodeURIComponent(n)}`;
 // Sent when the admin marks a printed order as sent.
 export async function shippedEmail(env, o) {
   return sendMail(env, o.email, `Your prints are on their way · ${o.id} · طلبكم في الطريق`, layout(`
     ${heading('way', 'way-ar', 'On their way')}
     ${p(`Your printed pieces from order <b>${e(o.id)}</b> left Farah’s studio today.`)}
     ${pAr(`خرجت قطعكم المطبوعة من الطلب ${e(o.id)} من المرسم اليوم.`)}
-    ${o.tracking ? rows([['Tracking · رقم التتبع', e(o.tracking)]]) : ''}${shipBlock(o)}`));
+    ${o.tracking ? rows([['Tracking · رقم التتبع', e(o.tracking)]]) : ''}
+    <p style="margin:0 0 24px">${o.tracking ? btn(trackLink(o.tracking), 'Track the parcel · تتبّعوا الطرد') + '&nbsp; ' : ''}${btn(`${ORIGIN}/track?order=${encodeURIComponent(o.id)}`, 'Your order · طلبكم')}</p>${shipBlock(o)}`));
 }
 
 export async function contactEmail(env, b) {

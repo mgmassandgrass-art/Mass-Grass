@@ -4,7 +4,7 @@ import { filesAdmin, download } from './files.js';
 import { sendMail, layout, contactEmail, p as mp, pAr, small, btn as mbtn, MONO, C } from './mail.js';
 import { visitorCurrency } from './fx.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
-import { catalog, createOrder, captureOrder, myOrders, serveImage, admin, sweepPending } from './shop.js';
+import { catalog, createOrder, captureOrder, myOrders, serveImage, admin, sweepPending, trackOrder } from './shop.js';
 import { migrate } from './migrate.js';
 import { commissionPost, commissionsAdmin } from './commission.js';
 import { audit, limitKey, clearKey, ipOf, newSecret, totpStep, otpauth, newRecovery, useRecovery } from './security.js';
@@ -480,6 +480,10 @@ async function api(req, env, url, p) {
   if (p === '/api/auth/google/callback' && req.method === 'GET') return googleCallback(env, req, url);
   if (p === '/api/me' && req.method === 'GET') return me(env, req);
   if (p === '/api/catalog' && req.method === 'GET') return json(await catalog(env));
+  if (p === '/api/track' && req.method === 'POST') {
+    if (!(await limit(env, req, 'track', 20, 3600))) return fail('rate_limited', 429);
+    return trackOrder(env, await readJson(req));
+  }
   if (p === '/api/contact' && req.method === 'POST') {
     if (!(await limit(env, req, 'contact', 5, 3600))) return fail('rate_limited', 429);
     const b = await readJson(req), email = clean(b?.email, 120).toLowerCase(), message = String(b?.message || '').slice(0, 3000).trim();
