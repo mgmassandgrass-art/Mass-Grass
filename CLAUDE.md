@@ -543,3 +543,9 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   `/api/catalog` → `files` says whether each calendar's sale file is uploaded (it was NOT at deploy time: the owner must upload
   the PDF in admin Products → Calendar); e-mails white with Patrick Hand headings (`mail-*.png`); admin Orders: four figures,
   kind (shipped / digital) and parcel columns, full CSV; profile in four tabs (#orders, #details, #security, #data).
+- 24 Nov 2026, third deploy: printed calendar €30 + shipping (zone `GCC` = AE SA KW QA BH OM €10, `ALL` €20; migration 0013;
+  `zoneOf()` in shop.js, `shipZone()` in core.js); the visitor's country comes from Cloudflare (`req.cf.country` → `env.VISITOR`
+  → page data `visitor`; `?cc=XX` overrides it on localhost only), a signed-in buyer's saved address wins (`MG.shipHere()`);
+  the printed button shows the total, `#hship` the split; checkout starts on that country; admin orders, CSV and e-mails show
+  pieces and shipping apart. Clean addresses: `/x.html` 301 → `/x` (pages only), links cleaned in `core.js` (`cleanLinks`).
+  The calendar's sale PDF was STILL not uploaded at this deploy.
