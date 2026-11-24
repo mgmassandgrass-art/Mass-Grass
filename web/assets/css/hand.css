@@ -104,3 +104,7 @@ html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]){--cream:var(--pg-m
 html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]) body{background:transparent}
 html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]) :is(header,.mmenu){background:color-mix(in srgb,var(--pg-a) 90%,#fff)}
 html[data-pg]:not([data-pg="calendar"]):not([data-pg="soon"]) footer{background:transparent}
+
+/* option B: Farah's voice in Patrick Hand (Latin only; Arabic keeps Aref Ruqaa through .ar-on rules) */
+html[data-hand]{--cal-t:'Patrick Hand','Aref Ruqaa',cursive}
+html[data-hand]:not(.ar-on) body :is(main,dialog) :is(p,li,dd,td,small){font-weight:500}

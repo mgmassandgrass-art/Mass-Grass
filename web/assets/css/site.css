@@ -482,3 +482,7 @@ footer .ft-b{grid-template-columns:repeat(2,max-content);gap:0 clamp(24px,3vw,48
 [dir=rtl] .rl-sc{background:none!important}
 .rl-k,.rl-w,.rl-n{display:none!important}
 .sx-side{display:none!important}
+
+/* type, option B (owner, 24 Nov 2026): the calendar's printed sans (Quicksand) for reading text, labels, the menu and buttons;
+   Arabic keeps its own faces (Quicksand has no Arabic, so Readex Pro still sets every Arabic word) */
+:root{--f:'Quicksand','Readex Pro',system-ui,sans-serif;--mono2:'Quicksand','Readex Pro',system-ui,sans-serif}
