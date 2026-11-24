@@ -428,3 +428,12 @@ html[data-hand] body main.ps26 .psb[aria-pressed=true] .btn-n{color:var(--ink)!i
 .cdesk .cbuy-pr .ghost[aria-pressed=true]{background:#2B2F2C;color:#fff}
 .btshow .cv-print{max-width:360px}
 .btshow .cv-print .ghost{border-style:solid}
+/* the opening's two buttons, the same size side by side (owner, 24 Nov 2026): the PDF filled, the printed copy outlined */
+.cdesk .cbuy2{display:grid;grid-template-columns:repeat(2,minmax(0,250px));gap:12px;justify-content:center;width:100%}
+.cdesk .cbuy2>.ink,.cdesk .cbuy2 .cbuy-pr .ghost{width:100%;min-height:52px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
+.cdesk .cbuy2 .cbuy-pr{display:block}
+.cdesk .cbuy2 .cbuy-pr:empty{display:none}
+.cdesk .cbuy2:has(.cbuy-pr:empty){grid-template-columns:minmax(0,250px)}
+@media(max-width:560px){.cdesk .cbuy2{grid-template-columns:minmax(0,1fr);padding:0 16px}}
+html body .cdesk .cbuy2>.ink{display:block;text-align:center;line-height:52px;padding:0 16px;color:#fff}
+html body .cdesk .cbuy2>.ink span{color:inherit!important;font:inherit!important;letter-spacing:inherit!important;text-transform:inherit!important}
