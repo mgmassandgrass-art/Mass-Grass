@@ -13,7 +13,18 @@ fine=fib/np.repeat(cv2.GaussianBlur(fib.mean(2),(0,0),80)[...,None],3,2)
 k=1+(np.clip(fine,.92,1.06)-1)*1.0                                    # fibres a touch stronger so they read at this size
 light=1+(low-1)*.8
 yy,xx=np.mgrid[0:H,0:W].astype(np.float32)
-d=np.minimum.reduce([xx,yy,W-1-xx,H-1-yy]); edge=1-.05*np.clip(1-d/14,0,1)
+# a cut sheet: hairline highlight where the light catches the top and left edges, a hairline of shade on the right and bottom,
+# corners eased by a pixel and a half, and the faintest lift of the sheet's bottom-right corner (lighter toward it)
+edge=np.ones((H,W),np.float32)
+edge[:2,:]*=1.035; edge[:,:2]*=1.025
+edge[-2:,:]*=.93; edge[:,-2:]*=.95
+lift=1+.018*np.clip(((xx/W)+(yy/H)-1.35)/.65,0,1)
+edge*=lift
+R=3.0
+cx=np.minimum(xx,W-1-xx); cy=np.minimum(yy,H-1-yy)
+dc=np.sqrt(np.clip(R-cx,0,None)**2+np.clip(R-cy,0,None)**2)
+alpha=np.clip(R-dc+.5,0,1)*255
+alpha=np.where((cx>=R)|(cy>=R),255,alpha).astype(np.uint8)
 fl=[None,1,0,-1]
 k0,l0=k.copy(),light.copy()
 for m in range(1,13):
@@ -25,5 +36,5 @@ for m in range(1,13):
     # paper shows through the light inks a little more than the dark ones
     out=np.clip(out,0,255).astype(np.uint8)
     cv2.imwrite(f'pt{m:02d}.png',out)
-    Image.fromarray(out[...,::-1]).save(A+f'c27t-{m:02d}.webp',quality=90,method=6)
+    im=Image.fromarray(out[...,::-1]); im.putalpha(Image.fromarray(alpha)); im.save(A+f'c27t-{m:02d}.webp',quality=90,alpha_quality=100,method=6)
 print('ok')

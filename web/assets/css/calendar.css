@@ -377,3 +377,5 @@ html:has(.c12) .where{background:rgba(255,255,255,.88)}
 .cfl-pages li{margin:0;line-height:0}
 .cfl-pages img{display:block;width:100%;height:auto;filter:drop-shadow(0 2px 3px rgba(40,30,20,.12)) drop-shadow(0 22px 34px rgba(40,30,20,.16))}
 @media(max-width:600px){.cfl-pages{gap:20px 12px}}
+/* the sheets lie on the white page: a tight contact shadow and a soft wide one, no grey halo box */
+.cfl-pages img{filter:drop-shadow(0 1px 1px rgba(40,30,20,.18)) drop-shadow(0 6px 10px rgba(40,30,20,.08)) drop-shadow(0 24px 30px rgba(40,30,20,.10))}
