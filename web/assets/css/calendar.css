@@ -390,3 +390,10 @@ html:has(.cdesk) .where{background:rgba(255,255,255,.88)}
 /* the pages sit inside the page's column, between its two side lines */
 .cflat{padding-inline:calc(var(--side,0px) + clamp(16px,2vw,32px))}
 .cfl-pages{max-width:none}
+
+/* the pages are a framed section like the rest: the column's lines, its head row and the rule between sections */
+.cflat{padding-inline:0;padding-block:clamp(40px,5vw,72px)}
+.cflat .cfl-pages{width:100%}
+/* the lines run unbroken from one section's rule to the next: no section padding outside its framed .wrap */
+main>section.btl,main>section.cflat,main>section.older{padding-block:0}
+main>section.cflat>.wrap{padding-bottom:var(--sec)}
