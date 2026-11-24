@@ -323,3 +323,5 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 /* the flat page: the owner's PNG (March, its shadow in the alpha) */
 .cfl-in{aspect-ratio:2000/1688;width:min(100%,calc(100svh * 2000 / 1688))}
 .cfl-in .cfl-one{position:static;display:block;width:100%;height:auto}
+/* the pair cropped to the calendars and their shadow, so they fill the opening */
+.cdesk>img{aspect-ratio:1200/629;width:min(96%,1500px);margin-inline:auto}
