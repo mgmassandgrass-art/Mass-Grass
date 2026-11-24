@@ -325,3 +325,10 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 .cfl-in .cfl-one{position:static;display:block;width:100%;height:auto}
 /* the pair cropped to the calendars and their shadow, so they fill the opening */
 .cdesk>img{aspect-ratio:1200/629;width:min(96%,1500px);margin-inline:auto}
+/* the July calendar cropped to itself and its shadow: it fills its column, centred */
+.btshow .bts-im{aspect-ratio:1104/969;width:100%;max-width:none;margin:0}
+.btshow .bts-pg{left:45.3804%;top:5.5728%;width:50.7246%;height:80.289%}
+.btshow .bts-im>#btsA,.btshow .bts-im>#btsB{inset:4% 4% 12% 44%;width:52%;height:84%}
+.btshow{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+@media(max-width:900px){.btshow .bts-im{width:100%;margin:0}}
+@media(max-width:900px){.btshow{grid-template-columns:minmax(0,1fr)}}
