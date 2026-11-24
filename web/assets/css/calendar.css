@@ -236,15 +236,15 @@ html.c12-on .sx-side{opacity:0!important}
 /* ---------- the whole calendar page in the desk photograph's light (owner, 22 Nov 2026); only this page (:has(.c12)) ----------
    the photograph (cal-desk2) is peach on the left fading to cream on the right; the page carries that same light from side to side
    all the way down, so the calendars seem to stand on the page itself */
-html:has(.c12){--cream:#FBF0E3;--line:rgba(110,70,30,.16);--line-2:rgba(110,70,30,.3);--cv-paper:#FFF8EF;--cal-grey:#6E5640;--cv-grey:#6E5640;
+html:has(.cdesk){--cream:#FBF0E3;--line:rgba(110,70,30,.16);--line-2:rgba(110,70,30,.3);--cv-paper:#FFF8EF;--cal-grey:#6E5640;--cv-grey:#6E5640;
   background:linear-gradient(to right,#E8C7A6 0,#F0D3B6 22%,#F5E0CA 50%,#F8EADA 75%,#FAF0E4 100%) #FAF0E4}
-html:has(.c12) body{background:transparent}
-html:has(.c12) main>section,html:has(.c12) .c12,html:has(.c12) footer{background:transparent!important}
-html:has(.c12) .c12::before{display:none}
-html:has(.c12) header,html:has(.c12) .mmenu{background:rgba(253,243,232,.92)}
-html:has(.c12) .where{background:rgba(253,243,232,.85)}
-html:has(.c12) .cv-page,html:has(.c12) .bts-im{background:rgba(255,250,242,.6)}
-html:has(.c12) .ol-c .ol-im{background:#fff}
+html:has(.cdesk) body{background:transparent}
+html:has(.cdesk) main>section,html:has(.cdesk) .c12,html:has(.cdesk) footer{background:transparent!important}
+html:has(.cdesk) .c12::before{display:none}
+html:has(.cdesk) header,html:has(.cdesk) .mmenu{background:rgba(253,243,232,.92)}
+html:has(.cdesk) .where{background:rgba(253,243,232,.85)}
+html:has(.cdesk) .cv-page,html:has(.cdesk) .bts-im{background:rgba(255,250,242,.6)}
+html:has(.cdesk) .ol-c .ol-im{background:#fff}
 /* the opening (owner, 22 Nov 2026): the two desk calendars, large, the first thing on the page; under them one quiet line
    in the shop's mono voice and the buy button. The photograph's edges melt into the page, which carries its light. */
 .cdesk{position:relative;margin:0;display:flex;flex-direction:column;height:calc(100svh - 49px);min-height:560px;padding:clamp(8px,1.4vh,20px) 0 clamp(22px,3.4vh,44px);box-sizing:border-box;text-align:center}
@@ -362,9 +362,9 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 @media(max-width:900px){.btshow .bts-im{width:130%;margin:-6% -15%}}
 /* the owner's render opens the page again (24 Nov 2026), on a white page */
 .cdesk>img{aspect-ratio:1326/589;width:min(100%,calc((100svh - 49px - 190px) * 1326 / 589),1600px)}
-html:has(.c12){--cream:#FFFFFF;--cv-paper:#FFFFFF;--line:rgba(17,17,20,.12);--line-2:rgba(17,17,20,.24);background:#FFFFFF}
-html:has(.c12) :is(header,.mmenu){background:rgba(255,255,255,.94)}
-html:has(.c12) .where{background:rgba(255,255,255,.88)}
+html:has(.cdesk){--cream:#FFFFFF;--cv-paper:#FFFFFF;--line:rgba(17,17,20,.12);--line-2:rgba(17,17,20,.24);background:#FFFFFF}
+html:has(.cdesk) :is(header,.mmenu){background:rgba(255,255,255,.94)}
+html:has(.cdesk) .where{background:rgba(255,255,255,.88)}
 
 /* section 3: the owner's May page, whole, as large as the screen allows, a printed sheet on the white page */
 .cflat{padding:clamp(24px,4vh,56px) 16px}

@@ -23,16 +23,6 @@
     document.addEventListener('visibilitychange', () => { if (document.hidden) film.pause(); else play(); });
   }
 
-  /* ---------- 0 · the twelve months: a click opens that month large; arrows and the keyboard go on ---------- */
-  new IntersectionObserver((es) => es.forEach((en) => document.documentElement.classList.toggle('c12-on', en.isIntersecting)), { threshold: .02 }).observe(MG.$('.c12'));
-  const cb = $$('.c12-b'), dv = $('#c12v'), dvi = $('#c12vi'); let cv = 0;
-  const showM = (i) => { cv = (i + 12) % 12; const im = $('img', cb[cv]); dvi.src = im.src; dvi.alt = im.alt; };
-  cb.forEach((b, i) => b.addEventListener('click', () => { showM(i); dv.showModal(); }));
-  $('#c12x').addEventListener('click', () => dv.close());
-  $('#c12p').addEventListener('click', () => showM(cv - 1)); $('#c12n').addEventListener('click', () => showM(cv + 1));
-  dv.addEventListener('click', (e) => { if (e.target === dv) dv.close(); });
-  dv.addEventListener('keydown', (e) => { const f = MG.ar ? -1 : 1; if (e.key === 'ArrowRight') showM(cv + f); if (e.key === 'ArrowLeft') showM(cv - f); });
-
   /* ---------- 3 · the bottles in a row, floating; one chosen shows its month ---------- */
   const MS = P.filter((p) => p.m > 0), row = $('#btrow');
   row.innerHTML = MS.map((p, i) => `<li><button type="button" class="btb" data-i="${i}" aria-pressed="${!i}" style="--d:${(-i * .37).toFixed(2)}s"><img src="assets/bt-${pad(i + 1)}.webp" alt="" draggable="false"><span class="btn-n"></span></button></li>`).join('');
