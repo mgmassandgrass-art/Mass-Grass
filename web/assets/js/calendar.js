@@ -56,8 +56,8 @@
   /* what the printed price is made of, for where the visitor is */
   function shipLine(pr) {
     const sh = MG.shipHere();
-    return sh ? (sh.fee ? t(`Printed: ${MG.fmt(pr.price)} + ${MG.fmt(sh.fee)} shipping to ${sh.name}, sent from the UAE by Emirates Post.`, `المطبوع: ${MG.fmt(pr.price)} + ${MG.fmt(sh.fee)} شحن إلى ${sh.name}، يُرسل من الإمارات عبر بريد الإمارات.`) : t(`Printed: shipping to ${sh.name} is included, sent from the UAE by Emirates Post.`, `المطبوع: الشحن إلى ${sh.name} مشمول، يُرسل من الإمارات عبر بريد الإمارات.`))
-      : t('Printed on paper and sent from the UAE by Emirates Post to every country.', 'مطبوع على الورق ويُرسل من الإمارات عبر بريد الإمارات إلى كل الدول.');
+    /* only the two prices: the calendar and the shipping where the visitor is */
+    return sh ? (sh.fee ? t(`Printed ${MG.fmt(pr.price)} + shipping ${MG.fmt(sh.fee)}`, `المطبوع ${MG.fmt(pr.price)} + الشحن ${MG.fmt(sh.fee)}`) : t(`Printed ${MG.fmt(pr.price)}, shipping included`, `المطبوع ${MG.fmt(pr.price)}، والشحن مشمول`)) : '';
   }
   function printBlock() {
     const pr = MG.printOf('calendar', C.id), sh = Object.values(MG.shipping), to = sh.length ? sh.map((c) => L(c.name)).join(t(' and ', ' و')) : t('the UAE and Denmark', 'الإمارات والدنمارك');
