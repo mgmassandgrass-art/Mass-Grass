@@ -332,3 +332,15 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 .btshow{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
 @media(max-width:900px){.btshow .bts-im{width:100%;margin:0}}
 @media(max-width:900px){.btshow{grid-template-columns:minmax(0,1fr)}}
+/* centring (owner, 24 Nov 2026): both images are now padded so the calendars themselves sit in the middle of the image
+   (the soft shadow just spills into the transparent side); the bottles' calendar overflows its column a little so the
+   calendar body, not its shadow, fills the column, centred on it and on the text beside it */
+.cdesk>img{aspect-ratio:1326/589;width:min(100%,calc((100svh - 49px - 190px) * 1326 / 589),1600px)}
+.btshow{align-items:center}
+.btshow .bts-im{aspect-ratio:1396/955;width:150%;margin:0 -25%;justify-self:center;max-width:none}
+.btshow .bts-pg{left:35.1719%;top:5.2356%;width:40.1146%;height:81.466%}
+.btshow .bts-im>#btsA,.btshow .bts-im>#btsB{inset:4% 30% 10% 30%;width:40%;height:86%}
+.btshow>.bts-im{position:relative;z-index:0}.btshow>.bts-tx{position:relative;z-index:1}
+@media(max-width:900px){.btshow .bts-im{width:140%;margin:0 -20%}}
+.btshow .bts-im{width:min(150%,calc(76vh * 1396 / 955));margin:4vh 0;justify-self:center}
+@media(max-width:900px){.btshow .bts-im{width:min(140%,calc(60vh * 1396 / 955));margin:0}}
