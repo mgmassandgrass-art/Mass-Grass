@@ -92,7 +92,7 @@ function shipBlock(o) {
   const s = o.ship ? (typeof o.ship === 'string' ? JSON.parse(o.ship) : o.ship) : null;
   if (!s) return '';
   return `<div style="margin:8px 0 24px;padding:16px 20px;background:${C.soft};border:1px solid ${C.line}"><div style="${cap};margin:0 0 8px">Shipping to · الشحن إلى</div>
-    <div style="font:400 13px/1.7 ${MONO};color:${C.ink}">${e(s.name)}<br>${e(s.line1)}${s.line2 ? '<br>' + e(s.line2) : ''}<br>${e(s.postal ? s.postal + ' ' : '')}${e(s.city)}, ${e(s.country)}<br>${e(s.phone)}</div></div>`;
+    <div style="font:400 13px/1.7 ${MONO};color:${C.ink}">${e(s.name)}<br>${e(s.line1)}${s.line2 ? '<br>' + e(s.line2) : ''}<br>${e(s.postal ? s.postal + ' ' : '')}${e(s.city)}${s.region ? ', ' + e(s.region) : ''}, ${e(s.country)}<br>${e(s.phone)}</div></div>`;
 }
 // Sent when the admin marks a printed order as sent.
 export async function shippedEmail(env, o) {

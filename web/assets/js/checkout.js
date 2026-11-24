@@ -38,9 +38,9 @@ function render(){const box=$('co'),h=$('co-h');
   box.innerHTML=`<div class="co-grid"><div><ul class="co-ls">${a.map((x,i)=>`<li><span class="th"><img src="${esc(x.img||S.img(x.k))}" alt=""></span><div><b>${esc(AR?(x.ta||x.t):x.t)}</b><small>${x.fmt==='print'?T('Printed and shipped','مطبوعة وتُشحن'):esc(T(...(KIND[x.kind]||['Digital file','ملف رقمي'])))}</small>${x.fmt==='print'?`<span class="qty"><button type="button" data-q="${i}" data-d="-1" aria-label="${T('One less','نسخة أقل')}"${(x.q||1)<=1?' disabled':''}>−</button><b>${x.q||1}</b><button type="button" data-q="${i}" data-d="1" aria-label="${T('One more','نسخة أخرى')}"${(x.q||1)>=10?' disabled':''}>+</button></span>`:''}</div><div class="pr">${S.fmt((+x.p||0)*(x.q||1))}<button type="button" class="rm" data-rm="${i}">${T('Remove','إزالة')}</button></div></li>`).join('')}</ul>
     ${pr?`<p class="co-sub"><span>${T('Shipping','الشحن')}</span><span id="shipFee">${feeTx(zone())}</span></p>`:''}
     <p class="co-tt"><span>${T('Total','المجموع')}</span><b id="coTotal">${S.fmt(B.total()+(pr&&zone()?zone().fee:0))}</b></p></div>
-   <form class="sheet paper" data-tear="6" id="f" novalidate><span class="fill"></span><h2>${pr?T('Where should we send it?','إلى أين نرسل الطلب؟'):T('Where should we send the files?','إلى أين نرسل الملفات؟')}</h2>
+   <form class="sheet paper" data-tear="6" id="f" novalidate><span class="fill"></span><h2>${pr?T('Contact and delivery','التواصل والتوصيل'):T('Where should we send the files?','إلى أين نرسل الملفات؟')}</h2>
     <label class="fld">${T('Email','البريد الإلكتروني')}<input id="em" type="email" autocomplete="email" required value="${esc(u?u.email:'')}"></label>
-    <label class="fld"><span>${T('Your name','الاسم')} <small>${T('(optional)','(اختياري)')}</small></span><input id="nm" autocomplete="name" maxlength="60" value="${esc(u?u.name:'')}"></label>
+    ${pr?'':`<label class="fld"><span>${T('Your name','الاسم')} <small>${T('(optional)','(اختياري)')}</small></span><input id="nm" autocomplete="name" maxlength="60" value="${esc(u?u.name:'')}"></label>`}
     ${pr?shipFields():''}
     <label class="chk"><input type="checkbox" id="news"><span>${T('Send me one new painting from Gaza each month.','أرسلوا لي لوحة جديدة من غزة كل شهر.')}</span></label>
     <p class="fmsg${soon?' ok':''}" role="status">${msg?esc(T(...msg)):''}</p>
@@ -48,32 +48,43 @@ function render(){const box=$('co'),h=$('co-h');
     <p class="fine">${u?'':`${T('Have an account?','لديكم حساب؟')} <a href="account.html?next=checkout.html">${T('Sign in','سجّلوا الدخول')}</a> ${T('to keep your files in your profile.','لتبقى ملفاتكم في حسابكم.')} `}${pr?T('By paying you accept the','بالدفع توافقون على'):T('By paying you accept the','بالدفع توافقون على')} <a href="terms.html">${T('terms and licence','الشروط والرخصة')}</a>.</p></form></div>`;
   retear();$('f').onsubmit=pay;box.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{B.remove(+b.dataset.rm);render()});
   box.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const i=+b.dataset.q;B.qty(i,(B.get()[i].q||1)+(+b.dataset.d));render()});
-  const sc=$('sc');if(sc)sc.onchange=()=>{ship.country=sc.value;const z=zone();$('shipFee').textContent=feeTx(z);const sum=B.total()+(z?z.fee:0),tt=S.fmt(sum);$('coTotal').textContent=tt;const pt=box.querySelector('[data-paytotal]');if(pt)pt.textContent=MG.fmtEur(sum);const pc=$('spc');if(pc)pc.closest('label').hidden=sc.value!=='DK'}}
+  const sc=$('sc');if(sc)sc.onchange=()=>{ship.country=sc.value;const z=zone();$('shipFee').textContent=feeTx(z);const sum=B.total()+(z?z.fee:0),tt=S.fmt(sum);$('coTotal').textContent=tt;const pt=box.querySelector('[data-paytotal]');if(pt)pt.textContent=MG.fmtEur(sum);const dl=$('sdial');if(dl)dl.textContent=DIAL[sc.value]?'+'+DIAL[sc.value]:'+';const po=$('spc');if(po)po.placeholder=POSTAL_REQ.includes(sc.value)?'':T('Optional','اختياري');ferr('sc',null)}}
 /* the address for printed pieces: only the countries shipped to now; kept while the page is open */
 /* a signed-in buyer's own details fill the address (they can still change it here) */
-const ship=(()=>{const u=MG.user.get(),a=(u&&u.addr)||{};const here=MG.shipZone(a.country)?a.country:(MG.shipZone(MG.visitor)?MG.visitor:'');return u?{country:here,name:u.name||'',phone:u.phone||'',line1:a.line1||'',line2:a.line2||'',city:a.city||'',postal:a.postal||''}:{country:here}})();
+const ship=(()=>{const u=MG.user.get(),a=(u&&u.addr)||{};const here=MG.shipZone(a.country)?a.country:(MG.shipZone(MG.visitor)?MG.visitor:'');return u?{country:here,name:u.name||'',phone:u.phone||'',line1:a.line1||'',line2:a.line2||'',city:a.city||'',region:a.region||'',postal:a.postal||''}:{country:here}})();
 function zone(){return MG.shipZone(ship.country)}
 /* the fee on screen: nothing extra reads as included */
 const feeTx=z=>z?(z.fee?S.fmt(z.fee):T('Included','مشمول')):T('Choose the country','اختاروا البلد');
-function shipFields(){const all=!!(MG.shipping.ALL||MG.shipping.GCC),C=all?MG.countries().map(([c,n])=>[c,{name:[n,n],days:(MG.shipZone(c)||{}).days||''}]):Object.entries(MG.shipping);if(C.length===1&&!ship.country)ship.country=C[0][0];
+/* the delivery form, set out as the big shops do: country first, first and last name, street and apartment, city with
+   state / province and postcode, the phone with the country's dialling code in front; each field says what is wrong under it */
+const DIAL=Object.fromEntries('AD376 AE971 AF93 AG1 AL355 AM374 AO244 AR54 AT43 AU61 AZ994 BA387 BB1 BD880 BE32 BF226 BG359 BH973 BI257 BJ229 BN673 BO591 BR55 BS1 BT975 BW267 BY375 BZ501 CA1 CD243 CF236 CG242 CH41 CI225 CL56 CM237 CN86 CO57 CR506 CU53 CV238 CY357 CZ420 DE49 DJ253 DK45 DM1 DO1 DZ213 EC593 EE372 EG20 ER291 ES34 ET251 FI358 FJ679 FR33 GA241 GB44 GD1 GE995 GH233 GM220 GN224 GQ240 GR30 GT502 GW245 GY592 HK852 HN504 HR385 HT509 HU36 ID62 IE353 IL972 IN91 IQ964 IR98 IS354 IT39 JM1 JO962 JP81 KE254 KG996 KH855 KM269 KN1 KP850 KR82 KW965 KZ7 LA856 LB961 LC1 LI423 LK94 LR231 LS266 LT370 LU352 LV371 LY218 MA212 MC377 MD373 ME382 MG261 MK389 ML223 MM95 MN976 MR222 MT356 MU230 MV960 MW265 MX52 MY60 MZ258 NA264 NE227 NG234 NI505 NL31 NO47 NP977 NZ64 OM968 PA507 PE51 PG675 PH63 PK92 PL48 PS970 PT351 PY595 QA974 RO40 RS381 RU7 RW250 SA966 SC248 SD249 SE46 SG65 SI386 SK421 SL232 SM378 SN221 SO252 SR597 SS211 ST239 SV503 SY963 SZ268 TD235 TG228 TH66 TJ992 TL670 TM993 TN216 TR90 TT1 TW886 TZ255 UA380 UG256 US1 UY598 UZ998 VA39 VC1 VE58 VN84 XK383 YE967 ZA27 ZM260 ZW263'.split(' ').map(x=>[x.slice(0,2),x.slice(2)]));
+const POSTAL_REQ=['DK'];
+function shipFields(){const all=!!(MG.shipping.ALL||MG.shipping.GCC),C=all?MG.countries().map(([c,n])=>[c,{name:[n,n]}]):Object.entries(MG.shipping);if(C.length===1&&!ship.country)ship.country=C[0][0];
   if(!C.length)return `<p class="fmsg" role="status">${T('Printed pieces cannot be shipped right now. Remove them to buy the files.','لا يمكن شحن القطع المطبوعة الآن. أزيلوها لشراء الملفات.')}</p>`;
-  const v=k=>esc(ship[k]||'');
-  return `<fieldset class="shipf"><legend>${T('Shipping address','عنوان الشحن')}</legend>
-    <label class="fld">${T('Country','البلد')}<select id="sc" required><option value="">${T('Choose','اختاروا')}</option>${C.map(([c,z])=>`<option value="${c}"${ship.country===c?' selected':''}>${esc(MG.L(z.name))}${z.days?` (${esc(z.days)})`:''}</option>`).join('')}</select></label>
-    <label class="fld">${T('Full name','الاسم الكامل')}<input id="sn" autocomplete="name" maxlength="80" required value="${v('name')}"></label>
-    <label class="fld">${T('Phone, for the courier','الهاتف، لمندوب التوصيل')}<input id="sp" type="tel" autocomplete="tel" maxlength="30" required dir="ltr" value="${v('phone')}"></label>
-    <label class="fld">${T('Street and number','الشارع والرقم')}<input id="s1" autocomplete="address-line1" maxlength="120" required value="${v('line1')}"></label>
-    <label class="fld"><span>${T('Flat, building','الشقة، المبنى')} <small>${T('(optional)','(اختياري)')}</small></span><input id="s2" autocomplete="address-line2" maxlength="120" value="${v('line2')}"></label>
-    <label class="fld">${T('City','المدينة')}<input id="sci" autocomplete="address-level2" maxlength="60" required value="${v('city')}"></label>
-    <label class="fld"${ship.country==='DK'?'':' hidden'}>${T('Postcode','الرمز البريدي')}<input id="spc" autocomplete="postal-code" inputmode="numeric" maxlength="4" dir="ltr" value="${v('postal')}"></label></fieldset>`}
+  const v=k=>esc(ship[k]||''),opt=`<small>${T('(optional)','(اختياري)')}</small>`,fld=(id,label,input,cls)=>`<div class="fld${cls?' '+cls:''}"><label for="${id}">${label}</label>${input}<small class="ferr" id="${id}-e" aria-live="polite"></small></div>`;
+  const [fn,...ln]=String(ship.first!=null?ship.first+' '+(ship.last||''):ship.name||'').trim().split(/\s+/);
+  return `<fieldset class="shipf"><legend>${T('Delivery','التوصيل')}</legend>
+    ${fld('sc',T('Country or region','البلد أو المنطقة'),`<select id="sc" autocomplete="country" required><option value="">${T('Choose','اختاروا')}</option>${C.map(([c,z])=>`<option value="${c}"${ship.country===c?' selected':''}>${esc(MG.L(z.name))}</option>`).join('')}</select>`)}
+    <div class="frow two">${fld('sf',T('First name','الاسم الأول'),`<input id="sf" autocomplete="given-name" maxlength="40" required value="${esc(ship.first!=null?ship.first:fn||'')}">`)}${fld('sl',T('Last name','اسم العائلة'),`<input id="sl" autocomplete="family-name" maxlength="40" required value="${esc(ship.last!=null?ship.last:ln.join(' '))}">`)}</div>
+    ${fld('s1',T('Address','العنوان'),`<input id="s1" autocomplete="address-line1" maxlength="120" required placeholder="${T('Street and house number','الشارع ورقم المبنى')}" value="${v('line1')}">`)}
+    ${fld('s2',T('Apartment, suite, floor','الشقة، الطابق'),`<input id="s2" autocomplete="address-line2" maxlength="120" placeholder="${T('Optional','اختياري')}" value="${v('line2')}">`)}
+    <div class="frow three">${fld('sci',T('City','المدينة'),`<input id="sci" autocomplete="address-level2" maxlength="60" required value="${v('city')}">`)}${fld('srg',T('State','الولاية'),`<input id="srg" autocomplete="address-level1" maxlength="60" placeholder="${T('Optional','اختياري')}" value="${v('region')}">`)}${fld('spc',T('Postal code','الرمز البريدي'),`<input id="spc" autocomplete="postal-code" maxlength="12" dir="ltr" placeholder="${POSTAL_REQ.includes(ship.country)?'':T('Optional','اختياري')}" value="${v('postal')}">`)}</div>
+    ${fld('sp',T('Phone','الهاتف'),`<div class="tel" dir="ltr"><span id="sdial">${ship.country&&DIAL[ship.country]?'+'+DIAL[ship.country]:'+'}</span><input id="sp" type="tel" autocomplete="tel-national" inputmode="tel" maxlength="20" required value="${esc(String(ship.phone||'').replace(/^\+\d+\s*/,''))}"></div>`)}
+  </fieldset>`}
+/* one field's message, under it */
+function ferr(id,m){const i=$(id),e=$(id+'-e');if(e)e.textContent=m?T(...m):'';if(i)i.setAttribute('aria-invalid',m?'true':'false');return !m}
+function checkShip(){const g=id=>(($(id)||{}).value||'').trim(),c=g('sc'),req=['Required','مطلوب'];
+  const phone=g('sp').replace(/[^\d]/g,''),postal=g('spc');
+  const ok=[ferr('sc',MG.shipZone(c)?null:['Choose your country','اختاروا بلدكم']),ferr('sf',g('sf')?null:req),ferr('sl',g('sl')?null:req),ferr('s1',g('s1').length>=3?null:['Enter your street and house number','اكتبوا الشارع ورقم المبنى']),
+    ferr('sci',g('sci')?null:req),ferr('spc',c==='DK'&&!/^\d{4}$/.test(postal)?['Enter a 4-digit postal code','اكتبوا رمزًا بريديًا من 4 أرقام']:null),ferr('sp',phone.length>=6&&phone.length<=15?null:['Enter a phone number the courier can call','اكتبوا رقم هاتف يتصل به المندوب'])];
+  Object.assign(ship,{country:c,first:g('sf'),last:g('sl'),name:(g('sf')+' '+g('sl')).trim(),line1:g('s1'),line2:g('s2'),city:g('sci'),region:g('srg'),postal,phone:(DIAL[c]?'+'+DIAL[c]+' ':'')+g('sp').replace(/^\+?0*/,'')});
+  const bad=['sc','sf','sl','s1','sci','spc','sp'].find((id,i)=>!ok[i]);if(bad)$(bad).focus();return !bad}
 function retear(){MG.tear()}
 async function pay(e){e.preventDefault();const f=e.target,btn=f.querySelector('[type=submit]'),say=(m,good)=>{msg=m;soon=!!good;const el=f.querySelector('.fmsg');el.textContent=T(...m);el.classList.toggle('ok',!!good)};
   const em=$('em').value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){say(ERR.email_invalid);$('em').focus();return}
   const pr=B.printed();
-  if(pr){const g=id=>($(id)||{}).value||'';Object.assign(ship,{country:g('sc'),name:g('sn').trim(),phone:g('sp').trim(),line1:g('s1').trim(),line2:g('s2').trim(),city:g('sci').trim(),postal:g('spc').trim()});
-    if(!zone()){say(ERR.ship_country);$('sc').focus();return}
-    if(!ship.name||!ship.line1||!ship.city||!/^[+\d][\d\s()-]{5,}$/.test(ship.phone)||(ship.country==='DK'&&!/^\d{4}$/.test(ship.postal))){say(ERR.ship_address);return}}
-  btn.disabled=true;const r=await U.api('POST','/api/orders',{email:em,name:$('nm').value.trim(),news:$('news').checked,items:B.get(),ship:pr?ship:undefined});btn.disabled=false;
+  if(pr&&!checkShip()){msg=null;const el=f.querySelector('.fmsg');if(el)el.textContent='';return}
+  btn.disabled=true;const r=await U.api('POST','/api/orders',{email:em,name:($('nm')?$('nm').value.trim():ship.name),news:$('news').checked,items:B.get(),ship:pr?ship:undefined});btn.disabled=false;
   /* free pieces: no payment, the files are ready at once */
   if(r.ok&&r.data.free&&r.data.order){order=r.data.order;state='done';B.clear();render();scrollTo(0,0);return}
   if(r.ok&&!r.data.approve&&r.data.payments!=='off'){say(ERR.payment_error);return}

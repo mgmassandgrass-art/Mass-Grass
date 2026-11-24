@@ -57,9 +57,10 @@ const AE = { country: 'AE', name: 'Test Buyer', phone: '+971 50 123 4567', line1
   ok('quantity goes up', (await p.textContent('.qty b')) === '2');
   await p.selectOption('#sc', 'DK');
   ok('the fee follows the country', /12/.test(await p.textContent('#shipFee')) && /82/.test(await p.textContent('#coTotal')), await p.textContent('#coTotal'));
-  await p.fill('#em', 'dk@example.com'); await p.fill('#sn', 'Dansk Køber'); await p.fill('#sp', '+45 12 34 56 78'); await p.fill('#s1', 'Nørrebrogade 1'); await p.fill('#sci', 'København');
+  await p.fill('#em', 'dk@example.com'); await p.fill('#sf', 'Dansk'); await p.fill('#sl', 'Køber'); await p.fill('#sp', '12 34 56 78'); await p.fill('#s1', 'Nørrebrogade 1'); await p.fill('#sci', 'København');
   await p.click('#f [type=submit]');
-  ok('Denmark without a postcode is stopped on the page', /postcode/i.test(await p.textContent('#f')));
+  ok('Denmark without a postcode is stopped on the page', /postal code/i.test(await p.textContent('#spc-e')));
+  ok('the phone gets the dialling code', (await p.textContent('#sdial')) === '+45');
   await p.fill('#spc', '2200');
   await Promise.all([p.waitForURL('**/checkout*'), p.click('#f [type=submit]')]);
   await p.waitForSelector('.cd', { timeout: 10000 }).catch(() => {});

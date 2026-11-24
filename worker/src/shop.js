@@ -133,7 +133,7 @@ export async function createOrder(env, req, user) {
   if (printed) {
     const s0 = b.ship || {}, c = String(s0.country || '').toUpperCase(), zone = isCountry(c) ? zoneOf(cat.shipping, c) : null;
     if (!zone) return fail('ship_country', 400);
-    ship = { name: clean(s0.name, 80), phone: clean(s0.phone, 30), country: c, city: clean(s0.city, 60), line1: clean(s0.line1, 120), line2: clean(s0.line2, 120), postal: clean(s0.postal, 16) };
+    ship = { name: clean(s0.name, 80), phone: clean(s0.phone, 30), country: c, city: clean(s0.city, 60), region: clean(s0.region, 60), line1: clean(s0.line1, 120), line2: clean(s0.line2, 120), postal: clean(s0.postal, 16) };
     if (!ship.name || !ship.line1 || !ship.city || !/^[+\d][\d\s()-]{5,}$/.test(ship.phone) || (c === 'DK' && !/^\d{4}$/.test(ship.postal))) return fail('ship_address', 400);
     shipCents = Math.round(zone.fee * 100); total += shipCents;
   }
@@ -160,7 +160,7 @@ export async function createOrder(env, req, user) {
     intent: 'CAPTURE',
     purchase_units: [{ reference_id: id, custom_id: id, description: ship ? 'Mass & Grass prints and files' : 'Mass & Grass digital files',
       amount: { currency_code: 'EUR', value: (total / 100).toFixed(2), breakdown: { item_total: { currency_code: 'EUR', value: ((total - shipCents) / 100).toFixed(2) }, shipping: { currency_code: 'EUR', value: (shipCents / 100).toFixed(2) } } },
-      ...(ship ? { shipping: { name: { full_name: ship.name }, address: { address_line_1: ship.line1, address_line_2: ship.line2 || undefined, admin_area_2: ship.city, postal_code: ship.postal || undefined, country_code: ship.country } } } : {}) }],
+      ...(ship ? { shipping: { name: { full_name: ship.name }, address: { address_line_1: ship.line1, address_line_2: ship.line2 || undefined, admin_area_2: ship.city, admin_area_1: ship.region || undefined, postal_code: ship.postal || undefined, country_code: ship.country } } } : {}) }],
     payment_source: { paypal: { experience_context: { brand_name: 'Mass & Grass', shipping_preference: ship ? 'SET_PROVIDED_ADDRESS' : 'NO_SHIPPING', user_action: 'PAY_NOW', landing_page: 'LOGIN', // PayPal accounts only (the owner also switches off card payments without an account in PayPal)
       return_url: `${env.SITE_ORIGIN}/checkout?order=${id}`, cancel_url: `${env.SITE_ORIGIN}/checkout?cancelled=${id}` } } },
   });
