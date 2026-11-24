@@ -537,3 +537,9 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   the footer foot row as words, and the white look on checkout / account / profile / help / terms / later / 404.
 - Local test of the mode: `npx wrangler dev --local --persist-to .state -c wrangler.local.toml --port 8788 --var ONLY:calendar`
   on a fresh `.state` (the admin tests leave saved copies of scripts in the local `site_files`).
+- 24 Nov 2026, second deploy: the whole shop white like the calendar page (end of `hand.css`); calendar €10 PDF / €30 printed with
+  shipping included to every country (migration 0012 in `migrate.js`, shipping zone `ALL` in `COUNTRIES`, `MG.shipZone` /
+  `MG.countries` in core.js); PayPal `landing_page: 'LOGIN'` (the owner must also switch off "PayPal account optional" in PayPal);
+  `/api/catalog` → `files` says whether each calendar's sale file is uploaded (it was NOT at deploy time: the owner must upload
+  the PDF in admin Products → Calendar); e-mails white with Patrick Hand headings (`mail-*.png`); admin Orders: four figures,
+  kind (shipped / digital) and parcel columns, full CSV; profile in four tabs (#orders, #details, #security, #data).
