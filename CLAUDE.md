@@ -555,3 +555,11 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   Prices show in the visitor's currency: `worker/src/fx.js` (country → currency map, open.er-api.com EUR rates kept 12 h in
   settings `fx`, admin `rates` pins one) → page data `cur {code, rate}` → `MG.fmt` (shown) vs `MG.fmtEur` (charged; pay button,
   past orders); checkout `#coFx` says PayPal charges euros and converts. Localhost ignores the guessed location (use `?cc=`).
+- 24 Nov 2026, later deploys: checkout delivery form like the big shops (country, first/last name, address + apartment, city /
+  state / postal code, phone with the dialling code `DIAL`, per-field messages `ferr()`; `ship.region` kept everywhere); admin
+  restyled like the site and no more loop when signed in with a customer account (`?other=1` on the sign-in page signs it out).
+  Orders: tick boxes + "Delete selected" (`POST /api/admin/orders/delete`), internal note (`orders.note`, admin only), address
+  correction, resend the order e-mail; migration 0015 cleared every order made before 24 Nov 2026 19:51 UTC (owner's request).
+  `/track` (order number + e-mail → `POST /api/track`, 20 an hour per address; steps, tracking number, 17TRACK link), linked
+  from the footer, the thank-you page, the profile and the "on its way" e-mail. Admin password: only the owner knows it
+  (reset by "Forgot password" at /account). A one-time upload key that bypasses the admin login was refused: never add one.
