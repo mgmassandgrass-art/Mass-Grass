@@ -555,3 +555,10 @@ footer .soc a{width:auto;height:auto;display:inline-block;padding:8px 0;border-r
 .shipf [aria-invalid=true]{border-color:#A3362F!important}
 html body .shipf .ferr{color:#A3362F!important;font-size:12px!important;letter-spacing:0!important;text-transform:none!important;font-weight:500}
 .shipf .frow>.fld>label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* the phone's country code: a narrow list in front of the number, showing only "+971" closed */
+.shipf .tel select{flex:0 0 auto;width:96px;min-width:0;border:1px solid var(--line-2);border-inline-end:0;background:#F6F5F2;padding:0 8px;font-variant-numeric:tabular-nums;color:var(--ink);border-radius:0;text-overflow:ellipsis}
+.shipf .tel .dial{position:relative;display:flex;align-items:center;gap:6px;padding:0 10px 0 12px;border:1px solid var(--line-2);border-inline-end:0;background:#F6F5F2;cursor:pointer;white-space:nowrap}
+.shipf .tel .dial b{font-weight:500;font-variant-numeric:tabular-nums;color:var(--ink)}
+.shipf .tel .dial::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);opacity:.6}
+.shipf .tel .dial select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0}
+.shipf .tel .dial:focus-within{outline:2px solid #9C4F52;outline-offset:-2px}
