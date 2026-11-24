@@ -19,6 +19,9 @@ run_worker_first = ["/*", "!/fonts/*"]
 ADMIN_EMAIL = "info@massandgrass.com"
 SITE_ORIGIN = "https://www.massandgrass.com"
 SOON = "0"
+# Calendar-only opening (owner, Nov 2026): "calendar" opens only the calendars (the home page goes to the calendar, the other
+# shop pages say they open soon, and orders take calendars only); accounts, sign-in and checkout work as usual. Empty = whole shop.
+ONLY = "calendar"
 MAIL_FROM = "Mass & Grass <info@massandgrass.com>"
 # Real money. Kept here because a deploy replaces variables set on the dashboard (secrets stay):
 # PAYPAL_CLIENT_ID and PAYPAL_SECRET are secrets (wrangler secret put / dashboard), never in this file.

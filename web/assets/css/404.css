@@ -7,3 +7,5 @@
 .nf p{margin:0 0 24px;max-width:40ch;color:var(--soft);font-size:var(--fs-lead)}
 .nf-go{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
 @media(max-width:760px){.nf{grid-template-columns:minmax(0,1fr)}.nf-env{width:70%}}
+.nf-cal{display:block;line-height:0}.nf-cal img{width:100%;height:auto}
+html body .nf-go a.ink{color:#fff!important;display:inline-flex;align-items:center}

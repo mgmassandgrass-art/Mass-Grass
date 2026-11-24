@@ -455,7 +455,7 @@ async function withCatalog(env, res, path) {
   if (!(res.headers.get('content-type') || '').includes('text/html')) return res;
   const cat = await catalog(env);
   // The catalog travels as data (a JSON block the page's own script reads), so pages need no inline script at all.
-  const data = JSON.stringify({ products: cat.products, prices: cat.prices, links: cat.links, shipping: cat.shipping, book: cat.book }).replace(/</g, '\\u003c');
+  const data = JSON.stringify({ products: cat.products, prices: cat.prices, links: cat.links, shipping: cat.shipping, book: cat.book, only: env.ONLY || '' }).replace(/</g, '\\u003c');
   const js = data;
   const css = hideCss(cat.pages || {}, path || '');
   const out = new HTMLRewriter().on('head', { element(e) { e.append(`<script type="application/json" id="mg-cat">${js}</script>${css}`, { html: true }); } }).transform(res);
@@ -601,6 +601,7 @@ async function handle(req, env0) {
     const p = path.replace(/\/+$/, '') || '/';
     try {
       if (p.startsWith('/api/')) return await api(req, env, url, p);
+      if (p.startsWith('/s/') && env.ONLY === 'calendar' && !p.startsWith('/s/calendar')) return Response.redirect(`${url.origin}/calendar`, 302);
       if (p.startsWith('/s/')) return await sharePage(env, url, p);
       if (p === '/admin' || p.startsWith('/admin/')) {
         const u = await currentUser(env, req);
@@ -618,6 +619,18 @@ async function handle(req, env0) {
         const r = await env.ASSETS.fetch(new Request(`${url.origin}/soon`));
         const h = new Headers(r.headers); h.set('cache-control', 'no-store'); h.delete('etag');
         return new Response(r.body, { status: 200, headers: h });
+      }
+      // Calendar-only opening (ONLY=calendar): the home page goes to the calendar, the other shop pages say they open soon.
+      // The signed-in admin still sees everything.
+      if (env.ONLY === 'calendar') {
+        const pg = p.replace(/^\//, '').replace(/\.html$/, '');
+        const closed = ['shop', 'paintings', 'postcards', 'stickers', 'designs', 'book', 'commission'].includes(pg);
+        const home = p === '/' || pg === 'index';
+        if ((closed || home) && !isAdmin(env, await currentUser(env, req))) {
+          if (home) return new Response(null, { status: 302, headers: { location: `${url.origin}/calendar${url.search}`, 'cache-control': 'no-store' } });
+          const r = await env.ASSETS.fetch(new Request(`${url.origin}/later`));
+          return withCatalog(env, new Response(r.body, { status: 200, headers: r.headers }), 'later.html');
+        }
       }
       const notFound = async () => {
         const nf = await env.ASSETS.fetch(new Request(`${url.origin}/404.html`));

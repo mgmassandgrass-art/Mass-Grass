@@ -74,7 +74,8 @@
 
   /* ---------- the bag (kept in this browser; the server prices every line again at checkout) ---------- */
   const bag = {
-    get() { const a = store.get('mgBag', []); return Array.isArray(a) ? a : []; },
+    /* calendar-only opening: a bag kept from before holds only what can be bought now */
+    get() { const a = store.get('mgBag', []); return Array.isArray(a) ? (server && server.only === 'calendar' ? a.filter((x) => x && x.kind === 'calendar' && !x.pack) : a) : []; },
     set(a) { store.set('mgBag', a); paintBag(); rerender('bag'); },
     count() { return this.get().length; },
     total() { return this.get().reduce((n, x) => n + (+x.p || 0) * (x.q || 1), 0); },
