@@ -360,3 +360,8 @@ html[data-hand]:not(.ar-on) body main .btshow .bts-d{font-family:var(--f)!import
 /* the render keeps a wide margin for its soft shadow: let it spill past the column so the calendar itself is large */
 .btshow .bts-im{width:min(140%,calc(100vh * 1100 / 1187));margin:-4vh -20% -4vh -20%}
 @media(max-width:900px){.btshow .bts-im{width:130%;margin:-6% -15%}}
+/* the owner's render opens the page again (24 Nov 2026), on a white page */
+.cdesk>img{aspect-ratio:1326/589;width:min(100%,calc((100svh - 49px - 190px) * 1326 / 589),1600px)}
+html:has(.c12){--cream:#FFFFFF;--cv-paper:#FFFFFF;--line:rgba(17,17,20,.12);--line-2:rgba(17,17,20,.24);background:#FFFFFF}
+html:has(.c12) :is(header,.mmenu){background:rgba(255,255,255,.94)}
+html:has(.c12) .where{background:rgba(255,255,255,.88)}
