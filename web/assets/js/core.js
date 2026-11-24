@@ -297,7 +297,10 @@
     const url = (v, base) => (/^https?:\/\//.test(v) ? v : base + String(v).replace(/^@/, ''));
     const rows = [k.instagram && ['instagram', 'Instagram', url(k.instagram, 'https://instagram.com/')], k.facebook && ['facebook', 'Facebook', url(k.facebook, 'https://facebook.com/')], k.tiktok && ['tiktok', 'TikTok', url(k.tiktok, 'https://tiktok.com/@')],
       k.whatsapp && ['whatsapp', 'WhatsApp', url(k.whatsapp, 'https://wa.me/').replace(/[+\s]/g, '')], ['email', 'E-mail', 'mailto:' + mail]].filter(Boolean);
-    el.innerHTML = rows.map((r) => `<a href="${esc(r[2])}" aria-label="${r[1]}"${r[0] === 'email' ? '' : ' target="_blank" rel="noopener noreferrer"'}>${IC[r[0]]}</a>`).join('');
+    /* the foot of the page: the networks as words, set like the menu (the e-mail is already in the contact list), and a way back up */
+    el.innerHTML = rows.filter((r) => r[0] !== 'email').map((r) => `<a href="${esc(r[2])}" target="_blank" rel="noopener noreferrer">${r[1]}</a>`).join('') +
+      `<a href="#top" data-top>${t('Back to top', 'إلى أعلى الصفحة')}</a>`;
+    const up = el.querySelector('[data-top]'); if (up) up.addEventListener('click', (e) => { e.preventDefault(); scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); const m = $('#main'); if (m) { m.setAttribute('tabindex', '-1'); m.focus({ preventScroll: true }); } });
     /* the footer's contact list: help, the e-mail, WhatsApp and Instagram when set, and how to support Farah */
     const fc = $('#ftc'); if (!fc) return; const ext = ' target="_blank" rel="noopener noreferrer"', sup = k.donate || k.kofi;
     fc.innerHTML = `<li><a href="mailto:${esc(mail)}" dir="ltr">${esc(mail)}</a></li>` +

@@ -531,3 +531,9 @@ footer .soc a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 /* link columns as wide as their longest link, so the gaps between all columns read as one even rhythm */
 @media(min-width:1101px){footer .ft{grid-template-columns:minmax(200px,1fr) repeat(3,max-content) minmax(260px,1.15fr);column-gap:clamp(36px,4.2vw,72px)}}
 @media(min-width:1101px){footer .ft{grid-template-columns:minmax(180px,1fr) repeat(3,max-content) minmax(230px,1.1fr);column-gap:clamp(28px,3.4vw,60px)}}
+/* the foot row: the networks as words set like the menu (no icons; the e-mail is already in the contact list), and a way back up */
+footer .soc{gap:4px 28px;margin:0;flex-wrap:wrap}
+footer .soc a{width:auto;height:auto;display:inline-block;padding:8px 0;border-radius:0;background:none!important;font:500 11px/1.5 var(--mono2);letter-spacing:.15em;text-transform:uppercase;color:rgba(var(--ink-rgb),.62)}
+.ar-on footer .soc a{font:500 14px/1.6 var(--fa);letter-spacing:0;text-transform:none}
+@media(hover:hover){footer .soc a:hover{color:var(--ink);text-decoration:none}}
+@media(max-width:560px){footer .soc{margin:0}}
