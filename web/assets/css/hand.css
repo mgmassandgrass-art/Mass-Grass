@@ -108,3 +108,11 @@ html[data-pg]:not([data-pg="calendar"]):not([data-pg="palestine"]):not([data-pg=
 /* option B: Farah's voice in Patrick Hand (Latin only; Arabic keeps Aref Ruqaa through .ar-on rules) */
 html[data-hand]{--cal-t:'Patrick Hand','Aref Ruqaa',cursive}
 html[data-hand]:not(.ar-on) body :is(main,dialog) :is(p,li,dd,td,small){font-weight:500}
+
+/* the calendar's way through the shop (owner, 24 Nov 2026): while only the calendars are open, every page a buyer passes on the
+   way (sign in, profile, checkout, help, terms, "opens soon", not found) wears the calendar pages' look: a plain white sheet,
+   the same fine rules, the calendar's rose for links and accents */
+html:is([data-pg="checkout"],[data-pg="account"],[data-pg="profile"],[data-pg="help"],[data-pg="terms"],[data-pg="later"],[data-pg="404"]){
+  --pg-a:#FFFFFF;--pg-m:#FFFFFF;--pg-b:#FFFFFF;--pg-r:#9C4F52;--line:rgba(17,17,20,.12);--line-2:rgba(17,17,20,.24);background:#FFFFFF}
+html:is([data-pg="checkout"],[data-pg="account"],[data-pg="profile"],[data-pg="help"],[data-pg="terms"],[data-pg="later"],[data-pg="404"]) :is(header,.mmenu){background:rgba(255,255,255,.94)}
+html:is([data-pg="checkout"],[data-pg="account"],[data-pg="profile"],[data-pg="help"],[data-pg="terms"],[data-pg="later"],[data-pg="404"]) .where{background:rgba(255,255,255,.88)}
