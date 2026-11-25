@@ -164,7 +164,28 @@
   }
   /* the world map: countries tinted by how many bought (or visited) from them in the period; the list beside it, the reading under
      the pointer. The map is Natural Earth's outline (world.svg, one path per country with its ISO code), loaded once. */
-  let mapBy = 'orders', WORLD = null;
+  let mapBy = 'orders', WORLD = null, MAPROWS = {};
+  /* zoom and pan: the wheel or the buttons zoom (round the pointer), a drag moves, two fingers pinch, a double click zooms in */
+  function zoomable(box, svg) {
+    if (svg.dataset.zoom) return; svg.dataset.zoom = 1;
+    const W0 = 960, H0 = 470, v = { x: 0, y: 0, w: W0, h: H0 }, MIN = W0 / 16;
+    const set = () => { v.w = Math.min(W0, Math.max(MIN, v.w)); v.h = v.w * H0 / W0; v.x = Math.min(W0 - v.w, Math.max(0, v.x)); v.y = Math.min(H0 - v.h, Math.max(0, v.y));
+      svg.setAttribute('viewBox', `${v.x} ${v.y} ${v.w} ${v.h}`); box.classList.toggle('zoomed', v.w < W0 - 1); };
+    const pt = (cx, cy) => { const r = svg.getBoundingClientRect(); return [v.x + ((cx - r.left) / r.width) * v.w, v.y + ((cy - r.top) / r.height) * v.h, r]; };
+    const zoom = (k, cx, cy) => { const r = svg.getBoundingClientRect(); if (cx == null) { cx = r.left + r.width / 2; cy = r.top + r.height / 2; } const [px, py] = pt(cx, cy), nw = Math.min(W0, Math.max(MIN, v.w / k));
+      v.x = px - ((cx - r.left) / r.width) * nw; v.y = py - ((cy - r.top) / r.height) * (nw * H0 / W0); v.w = nw; set(); };
+    svg.addEventListener('wheel', (e) => { e.preventDefault(); zoom(Math.exp(-e.deltaY * 0.0022), e.clientX, e.clientY); }, { passive: false });
+    svg.addEventListener('dblclick', (e) => zoom(2, e.clientX, e.clientY));
+    const P = new Map(); let last = null, pinch = 0;
+    svg.addEventListener('pointerdown', (e) => { P.set(e.pointerId, [e.clientX, e.clientY]); svg.setPointerCapture(e.pointerId); last = [e.clientX, e.clientY]; if (P.size === 2) { const [a, b] = [...P.values()]; pinch = Math.hypot(a[0] - b[0], a[1] - b[1]); } });
+    svg.addEventListener('pointermove', (e) => { if (!P.has(e.pointerId)) return; P.set(e.pointerId, [e.clientX, e.clientY]); const r = svg.getBoundingClientRect();
+      if (P.size === 2) { const [a, b] = [...P.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (pinch) zoom(d / pinch, (a[0] + b[0]) / 2, (a[1] + b[1]) / 2); pinch = d; return; }
+      v.x -= ((e.clientX - last[0]) / r.width) * v.w; v.y -= ((e.clientY - last[1]) / r.height) * v.h; last = [e.clientX, e.clientY]; box.classList.add('drag'); set(); });
+    const up = (e) => { P.delete(e.pointerId); pinch = 0; if (P.size === 1) last = [...P.values()][0]; if (!P.size) box.classList.remove('drag'); };
+    svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+    box.insertAdjacentHTML('beforeend', `<div class="wm-z"><button type="button" data-z="in" aria-label="${t('تكبير', 'Zoom in')}">+</button><button type="button" data-z="out" aria-label="${t('تصغير', 'Zoom out')}">−</button><button type="button" data-z="reset" aria-label="${t('العالم كله', 'Whole world')}">⟲</button></div>`);
+    box.querySelector('.wm-z').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; if (b.dataset.z === 'reset') { v.x = 0; v.y = 0; v.w = W0; set(); } else zoom(b.dataset.z === 'in' ? 1.8 : 1 / 1.8); });
+  }
   const SRCN = { direct: ['مباشرة أو رابط محفوظ', 'Direct or a saved link'] };
   const srcName = (n) => t(...(SRCN[n] || [n, n]));
   const pageName = (p) => ({ index: t('الرئيسية', 'Home'), calendar: t('التقويم', 'Calendar'), checkout: t('الدفع', 'Checkout'), account: t('الحساب', 'Account'), profile: t('الملف الشخصي', 'Profile'), track: t('تتبع الطلب', 'Track order'), later: t('قريبًا', 'Opening soon'), help: t('المساعدة', 'Help'), terms: t('الشروط', 'Terms'), palestine: t('تقويم فلسطين', 'Palestine calendar') }[p] || p);
@@ -172,14 +193,17 @@
     const box = $('#wmMap'); if (!box) return;
     if (!WORLD) { try { const r = await fetch('world.svg', { credentials: 'same-origin' }); WORLD = r.ok ? await r.text() : ''; } catch (e) { WORLD = ''; } }
     if (!$('#wmMap')) return;
-    const rows = (mapBy === 'orders' ? (o.map || []) : V.countries).filter((x) => x.country), byC = Object.fromEntries(rows.map((x) => [x.country, x]));
+    const src = mapBy === 'orders' ? (o.map || []) : V.countries, acc = {};
+    for (const x of src) { if (!x.country) continue; const c = x.country === 'IL' ? 'PS' : x.country, a = acc[c] || (acc[c] = { country: c, n: 0, revenue: 0, views: 0 }); a.n += x.n; a.revenue += x.revenue || 0; a.views += x.views || 0; }
+    const rows = Object.values(acc).sort((a, b) => b.n - a.n), byC = Object.fromEntries(rows.map((x) => [x.country, x]));
     const total = rows.reduce((a, x) => a + x.n, 0), unknown = (mapBy === 'orders' ? (o.map || []) : V.countries).filter((x) => !x.country).reduce((a, x) => a + x.n, 0), mx = Math.max(1, ...rows.map((x) => x.n));
     let svg = box.querySelector('svg');
     if (!svg && WORLD) { box.insertAdjacentHTML('afterbegin', WORLD); svg = box.querySelector('svg'); if (svg) { svg.setAttribute('aria-hidden', 'true'); svg.querySelectorAll('title').forEach((x) => x.remove()); } }
     if (svg) svg.querySelectorAll('path').forEach((pth) => { const c = pth.dataset.c, r = c && byC[c]; pth.removeAttribute('class'); if (r) pth.setAttribute('class', 'l' + Math.min(5, Math.max(1, Math.ceil((Math.sqrt(r.n) / Math.sqrt(mx)) * 5)))); });
-    const tip = $('#wmTip');
+    MAPROWS = byC; const tip = $('#wmTip');
+    if (svg) zoomable(box, svg);
     if (svg && !svg.dataset.wired) { svg.dataset.wired = 1;
-      svg.addEventListener('pointermove', (e) => { const pth = e.target.closest('path[data-c]'); if (!pth) { tip.hidden = true; return; } const c = pth.dataset.c, r = (mapBy === 'orders' ? (o.map || []) : V.countries).find((x) => x.country === c), bx = box.getBoundingClientRect();
+      svg.addEventListener('pointermove', (e) => { const pth = e.target.closest('path[data-c]'); if (!pth) { tip.hidden = true; return; } const c = pth.dataset.c, r = MAPROWS[c], bx = box.getBoundingClientRect();
         tip.hidden = false; tip.innerHTML = `<b>${esc(cname(c))}</b><span class="num">${r ? (mapBy === 'orders' ? `${num(r.n)} ${t('طلب', 'orders')}, ${eur(r.revenue)}` : `${num(r.n)} ${t('زيارة', 'visits')}`) : t('لا شيء بعد', 'Nothing yet')}</span>`;
         tip.style.left = Math.min(bx.width - 170, Math.max(0, e.clientX - bx.left + 12)) + 'px'; tip.style.top = Math.max(0, e.clientY - bx.top - 50) + 'px'; });
       svg.addEventListener('pointerleave', () => { tip.hidden = true; }); }

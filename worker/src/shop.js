@@ -148,7 +148,7 @@ export async function createOrder(env, req, user) {
   // The order secret: only the buyer's browser (and later their email) gets it; downloads need it.
   const access = [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, '0')).join('');
   await env.DB.prepare('INSERT INTO orders(id,user_id,email,name,items,total_cents,news,created_at,access,ship,ship_cents,ship_status,country) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
-    .bind(id, user ? user.id : null, email, clean(b.name, 60) || (ship ? ship.name : ''), JSON.stringify(items), total, b.news ? 1 : 0, Date.now(), access, ship ? JSON.stringify(ship) : null, shipCents, ship ? 'to_print' : null, env.VISITOR || '').run();
+    .bind(id, user ? user.id : null, email, clean(b.name, 60) || (ship ? ship.name : ''), JSON.stringify(items), total, b.news ? 1 : 0, Date.now(), access, ship ? JSON.stringify(ship) : null, shipCents, ship ? 'to_print' : null, env.VISITOR === 'IL' ? 'PS' : env.VISITOR || '').run();
   if (b.news) await env.DB.prepare('INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?,?,?)').bind(email, 'checkout', Date.now()).run();
   if (total === 0) {
     const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first();

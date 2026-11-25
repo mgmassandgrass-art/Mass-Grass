@@ -570,4 +570,5 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   page of a browser session, marked by the `__Host-mgv` session cookie). The overview adds Visits and Conversion cards, a visits
   line, a world map (`web/admin/world.svg`, Natural Earth 110m, one path per country with `data-c` = ISO code, made with
   world-atlas + d3-geo) tinted by buyers or visitors, the visit-to-sale funnel, sources and devices, most viewed pages.
-  e2e must run on a fresh database (after `npm test` the prices differ).
+  e2e must run on a fresh database (after `npm test` the prices differ). The map zooms (wheel, + / − / reset, drag, pinch); Palestine
+  is one shape (Israel merged into it, `tools/world_map.mjs`) and visitors or orders Cloudflare marks IL are counted as PS.

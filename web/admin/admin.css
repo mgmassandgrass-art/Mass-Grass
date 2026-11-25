@@ -327,3 +327,11 @@ body{background:#FFFFFF}
 .leaf .note{margin:0;padding:0 var(--pad) var(--pad);font-size:11px;color:var(--ink-3)}
 .devs{display:flex;gap:18px;flex-wrap:wrap;margin:0;padding:12px var(--pad) var(--pad);border-top:1px solid var(--rule-soft);font-size:var(--fs-cap);color:var(--ink-2)}
 .devs b{display:block;font-size:18px;color:var(--ink)}
+/* the map zooms (owner, 25 Nov 2026): wheel, buttons, drag, pinch; borders keep their width at every scale */
+.wm-map svg{touch-action:none;cursor:grab;user-select:none}
+.wm-map.drag svg{cursor:grabbing}
+.wm-map path{vector-effect:non-scaling-stroke}
+.wm-z{position:absolute;inset-inline-end:0;bottom:0;display:grid;border:1px solid var(--rule);background:var(--leaf)}
+.wm-z button{width:32px;height:32px;border:0;border-bottom:1px solid var(--rule);background:none;font:500 18px/1 var(--f);color:var(--ink);cursor:pointer}
+.wm-z button:last-child{border:0;font-size:15px}.wm-z button:hover{background:var(--inset)}
+.wm-z button:focus-visible{outline:2px solid var(--kraft);outline-offset:-2px}

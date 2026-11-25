@@ -25,7 +25,7 @@ export function track(env, req, url, fp, res, admin) {
     const ua = req.headers.get('user-agent') || '';
     if (!ua || BOT.test(ua) || /prefetch|prerender/i.test(req.headers.get('sec-purpose') || req.headers.get('purpose') || '') || admin) return res;
     const first = !/(?:^|;\s*)__Host-mgv=1/.test(req.headers.get('cookie') || '');
-    const day = new Date().toISOString().slice(0, 10), c = env.VISITOR || '', path = fp.replace(/\.html$/, '').slice(0, 40);
+    const day = new Date().toISOString().slice(0, 10), c = env.VISITOR === 'IL' ? 'PS' : env.VISITOR || '', path = fp.replace(/\.html$/, '').slice(0, 40);
     const q = [env.DB.prepare('INSERT INTO visits(day,country,path,views,visits) VALUES(?,?,?,1,?) ON CONFLICT(day,country,path) DO UPDATE SET views=views+1, visits=visits+excluded.visits').bind(day, c, path, first ? 1 : 0)];
     if (first) for (const [k, v] of [['src', source(req, url)], ['dev', device(ua)]])
       q.push(env.DB.prepare('INSERT INTO visit_stats(day,k,v,n) VALUES(?,?,?,1) ON CONFLICT(day,k,v) DO UPDATE SET n=n+1').bind(day, k, v));
