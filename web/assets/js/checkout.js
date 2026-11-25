@@ -24,7 +24,7 @@ function render(){const box=$('co'),h=$('co-h');
     box.innerHTML=`<div class="cd">
       <div class="cd-l"><p class="hand cd-say">${T('Sealed in Gaza, sent to you.','خُتمت في غزة وأُرسلت إليكم.')}</p>
         <ul class="cd-its">${its.map(i=>`<li><span class="cd-pr"><img src="${esc(th(i))}" alt=""></span><span class="cd-nm">${esc(AR?(i.ta||i.t):i.t)}</span><small>${i.fmt==='print'?T('Printed','مطبوعة')+(i.q>1?' ×'+i.q:''):esc(T(...(KIND[i.kind]||['Digital file','ملف رقمي'])))}</small></li>`).join('')}</ul>
-        <p class="cd-tx">${T(`A copy of every link is in your e-mail. Each piece you take home helps Farah keep painting.`,`أرسلنا نسخة من كل رابط إلى بريدكم. كل قطعة تأخذونها تساعد فرح على مواصلة الرسم.`)}</p>
+        <p class="cd-tx">${dig?T('Download your files below. We have also sent the download links to your e-mail.','حمّلوا ملفاتكم من الأسفل، وأرسلنا روابط التحميل إلى بريدكم أيضًا.'):T('We have sent the order details to your e-mail, and we write again when your parcel is on its way.','أرسلنا تفاصيل الطلب إلى بريدكم، ونراسلكم مرة أخرى عند شحن الطرد.')} ${T('Each piece you take home helps Farah keep painting.','كل قطعة تأخذونها تساعد فرح على مواصلة الرسم.')}</p>
         <img class="cd-sig" src="assets/signature.png" alt="${T('Farah’s signature','توقيع فرح')}" width="180" height="60">
         <div class="cd-acts"><a class="ink" href="shop.html">${T('Back to the shop','العودة إلى المتجر')}</a>${u?`<a class="go" href="profile.html">${T('Your account','حسابكم')}</a>`:''}</div></div>
       <aside class="cd-r" aria-label="${T('Your order','طلبكم')}">
@@ -42,7 +42,7 @@ function render(){const box=$('co'),h=$('co-h');
     <label class="fld">${T('Email','البريد الإلكتروني')}<input id="em" type="email" autocomplete="email" required value="${esc(u?u.email:'')}"></label>
     ${pr?'':`<label class="fld"><span>${T('Your name','الاسم')} <small>${T('(optional)','(اختياري)')}</small></span><input id="nm" autocomplete="name" maxlength="60" value="${esc(u?u.name:'')}"></label>`}
     ${pr?shipFields():''}
-    <label class="chk"><input type="checkbox" id="news"><span>${T('Send me one new painting from Gaza each month.','أرسلوا لي لوحة جديدة من غزة كل شهر.')}</span></label>
+    <label class="chk"><input type="checkbox" id="news"><span>${T('E-mail me when new pieces arrive','أرسلوا لي الأعمال الجديدة على بريدي')}</span></label>
     <p class="fmsg${soon?' ok':''}" role="status">${msg?esc(T(...msg)):''}</p>
     <button class="ink full" type="submit"${pr&&!Object.keys(MG.shipping).length?' disabled':''}>${B.total()===0&&!pr?T('Get the files','احصلوا على الملفات'):MG.cur?T('Pay with PayPal','ادفعوا عبر PayPal'):`${T('Pay','ادفعوا')} <span data-paytotal>${MG.fmtEur(B.total()+(pr&&zone()?zone().fee:0))}</span> ${T('with PayPal','عبر PayPal')}`}</button>
     <p class="co-pay" aria-label="PayPal, Visa, Mastercard"><img src="assets/pay/paypal.svg" alt="PayPal" width="48" height="30"><img src="assets/pay/visa.svg" alt="Visa" width="48" height="30"><img src="assets/pay/mastercard.svg" alt="Mastercard" width="48" height="30"></p>

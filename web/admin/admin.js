@@ -73,8 +73,6 @@
     const [r, me] = await Promise.all([api('GET', '/api/admin/overview?days=' + ovDays), api('GET', '/api/me')]); if (!r.ok) return (view.innerHTML = `<div class="empty">${why(r)}</div>`);
     const o = r.data; o.twofa = !!(me.data.user && me.data.user.twofa); badge('messages', o.unread); badge('requests', o.newRequests || 0); badge('security', o.alerts); badge('orders', o.toShip || 0);
     const delta = (now, prev, money) => { if (!prev && !now) return `<span class="d">${t('لا مبيعات بعد', 'No sales yet')}</span>`; if (!prev) return `<span class="d up">${t('أول مبيعات في هذه الفترة', 'First sales in this period')}</span>`; const p = Math.round(((now - prev) / prev) * 100); return `<span class="d ${p >= 0 ? 'up' : 'down'}">${p >= 0 ? '+' : ''}${p}% ${t('عن الفترة السابقة', 'on the period before')} (${money ? eur(prev) : num(prev)})</span>`; };
-    const max = Math.max(1, ...o.byDay.map((d) => d.revenue)), W = 100 / o.byDay.length;
-    const bars = o.byDay.map((d, i) => { const h = d.revenue ? Math.max(2, (d.revenue / max) * 150) : 1.5; return `<rect class="${d.revenue ? 'b' : 'b0'}" x="${(i * W + W * 0.15).toFixed(2)}%" y="${(160 - h).toFixed(1)}" width="${(W * 0.7).toFixed(2)}%" height="${h.toFixed(1)}" rx="1"><title>${d.date}: ${eur(d.revenue)}, ${d.orders} ${t('طلب', 'orders')}</title></rect>`; }).join('');
     const todo = [
       [o.payments === 'live', t('الدفع', 'Payments'), o.payments === 'live' ? t('PayPal يعمل بأموال حقيقية.', 'PayPal is live.') : o.payments === 'sandbox' ? t('PayPal في وضع التجربة (Sandbox). ضعوا مفاتيح Live عند الإطلاق.', 'PayPal is in sandbox. Put the live keys in before launch.') : t('لم تُضف مفاتيح PayPal بعد، فالطلبات تُسجَّل دون دفع.', 'No PayPal keys yet: orders are recorded but cannot be paid.')],
       ...(o.toShip ? [[false, t('طرود للشحن', 'Parcels to send'), `${num(o.toShip)} ${t('طلب مدفوع ينتظر الطباعة والشحن.', 'paid orders wait to be printed and shipped.')}`, '#orders']] : []),
@@ -86,34 +84,62 @@
       [!o.soon, t('الموقع', 'The site'), o.soon ? t('صفحة «قريبًا» ظاهرة للزوار. أنتم فقط ترون الموقع.', 'Visitors see the coming-soon page. Only you see the site.') : t('الموقع مفتوح للزوار.', 'The site is open to visitors.')],
       [o.google, t('الدخول بحساب Google', 'Google sign-in'), o.google ? t('يعمل.', 'Working.') : t('غير مفعّل (اختياري).', 'Not set up (optional).')],
     ];
+    /* the dashboard (owner, 25 Nov 2026, after the two references): figure cards in the calendar's soft tints, the sales line with
+       a reading under the pointer, best sellers and recent orders with their pictures, top buyers, digital against printed, and
+       where the parcels go; then the before-launch list and the shop's numbers */
+    const pct = (now, prev) => (!prev ? (now ? null : 0) : Math.round(((now - prev) / prev) * 100));
+    const chip = (now, prev) => { const v = pct(now, prev); return v === null ? `<span class="chip up">${t('جديد', 'New')}</span>` : `<span class="chip ${v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v > 0 ? '▲' : v < 0 ? '▼' : '•'} ${Math.abs(v)}%</span>`; };
+    const avg = o.period.orders ? o.period.revenue / o.period.orders : 0, pavg = o.previous.orders ? o.previous.revenue / o.previous.orders : 0;
+    const cards = [
+      ['rose', t('المبيعات', 'Revenue'), eur(o.period.revenue), chip(o.period.revenue, o.previous.revenue), `${t('السابقة', 'Before')} ${eur(o.previous.revenue)}`, '#orders'],
+      ['sage', t('طلبات مدفوعة', 'Paid orders'), num(o.period.orders), chip(o.period.orders, o.previous.orders), `${t('الإجمالي', 'All time')} ${num(o.totals.orders)}`, '#orders'],
+      ['sand', t('متوسط الطلب', 'Average order'), eur(avg), chip(avg, pavg), `${t('السابقة', 'Before')} ${eur(pavg)}`, '#orders'],
+      ['blue', t('عملاء جدد', 'New customers'), num(o.newUsers), '', `${t('الكل', 'In all')} ${num(o.users)}`, '#customers'],
+      ['lilac', t('مشتركو البريد', 'Subscribers'), num(o.subscribers), '', `${num(o.unread)} ${t('رسالة غير مقروءة', 'unread messages')}`, '#subscribers'],
+    ];
+    /* the sales line: revenue (rose, filled) and orders (ink, thin), on one scale each */
+    const D = o.byDay, n = D.length, maxR = Math.max(1, ...D.map((d) => d.revenue)), maxO = Math.max(1, ...D.map((d) => d.orders)), X = (i) => (n === 1 ? 50 : (i / (n - 1)) * 100);
+    const line = (f, mx) => D.map((d, i) => `${i ? 'L' : 'M'}${X(i).toFixed(2)},${(96 - (f(d) / mx) * 86).toFixed(2)}`).join(' ');
+    const rev = line((d) => d.revenue, maxR), ord = line((d) => d.orders, maxO);
+    const thumb = (kind, id) => kind === 'calendar' ? `../assets/${id === 'palestine-2027' ? 't-ps-00' : 't-v2-00'}.webp` : kind === 'book' ? '../assets/book/pg-01.webp' : `../assets/t-${id}.webp`;
+    const pic = (kind, id) => `<span class="pic"><img src="${esc(thumb(kind, id))}" alt="" loading="lazy"></span>`;
+    const sp = o.split || { digital: { n: 0, revenue: 0 }, printed: { n: 0, revenue: 0 } }, spT = sp.digital.n + sp.printed.n, spD = spT ? sp.digital.n / spT : 0;
+    const ring = `<svg viewBox="0 0 42 42" class="ring" aria-hidden="true"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--ring-b)" stroke-width="5"/>${spT ? `<circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--kraft)" stroke-width="5" stroke-dasharray="${(spD * 100).toFixed(1)} ${(100 - spD * 100).toFixed(1)}" stroke-dashoffset="25"/>` : ''}<text x="21" y="23" text-anchor="middle">${spT ? Math.round(spD * 100) + '%' : '—'}</text></svg>`;
+    const maxC = Math.max(1, ...(o.countries || []).map((c) => c.n));
     view.innerHTML = `
-      <section class="today" aria-label="${t('الأرقام', 'Figures')}">
-        <div class="lead"><span class="k">${t('المبيعات في آخر', 'Sales in the last')} ${o.days} ${t('يومًا', 'days')}</span><span class="v">${eur(o.period.revenue)}</span>${delta(o.period.revenue, o.previous.revenue, true)}</div>
-        <div><a href="#orders"><span class="k">${t('طلبات مدفوعة', 'Paid orders')}</span><span class="v">${num(o.period.orders)}</span><span class="d">${t('الإجمالي', 'All time')} ${num(o.totals.orders)}, ${eur(o.totals.revenue)}</span></a></div>
-        <div><a href="#customers"><span class="k">${t('العملاء', 'Customers')}</span><span class="v">${num(o.users)}</span><span class="d">+${num(o.newUsers)} ${t('في الفترة', 'in the period')}</span></a></div>
-        <div><a href="#subscribers"><span class="k">${t('مشتركو البريد', 'Subscribers')}</span><span class="v">${num(o.subscribers)}</span><span class="d">${t('لوحة كل شهر', 'A painting a month')}</span></a></div>
-        <div><a href="#messages"><span class="k">${t('رسائل غير مقروءة', 'Unread messages')}</span><span class="v">${num(o.unread)}</span><span class="d">${t('من', 'of')} ${num(o.messages)}</span></a></div>
-      </section>
-      <div class="cols">
-        <div style="display:grid;gap:24px">
-          <section class="leaf"><div class="hd"><h2>${t('المبيعات يومًا بيوم', 'Sales day by day')}</h2><span class="hint">${t('بالأيام، يورو', 'per day, euro')}</span></div>
-            <div class="chart"><svg viewBox="0 0 100 164" preserveAspectRatio="none" role="img" aria-label="${t('مخطط المبيعات اليومية', 'Daily sales chart')}"><line class="ax" x1="0" x2="100%" y1="160.5" y2="160.5"/>${bars}</svg>
-            <div class="legend"><span class="num">${o.byDay[0].date}</span><span>${t('أعلى يوم', 'Best day')} ${eur(Math.max(...o.byDay.map((d) => d.revenue)))}</span><span class="num">${o.byDay[o.byDay.length - 1].date}</span></div></div></section>
-          <section class="leaf"><div class="hd"><h2>${t('آخر الطلبات', 'Latest orders')}</h2><a class="hint" href="#orders">${t('كل الطلبات', 'All orders')}</a></div>
-            ${o.recent.length ? `<div class="scroll"><table class="rows"><tbody>${o.recent.map((x) => `<tr data-open="${esc(x.id)}"><td class="tight num"><b>${esc(x.id)}</b><small>${when(x.date)}</small></td><td>${esc(x.name || x.email)}<small>${itemsLine(x)}</small></td><td class="tight">${stamp(x.status)}${x.ship ? `<small>${shipWord(x.ship_status)}</small>` : ''}</td><td class="tight end num"><b>${price(x.total)}</b></td></tr>`).join('')}</tbody></table></div>` : `<div class="empty">${t('لا طلبات بعد. ستظهر هنا فور وصول أول طلب.', 'No orders yet. The first one will show here.')}</div>`}</section>
-        </div>
-        <div style="display:grid;gap:24px">
-          <section class="leaf"><div class="hd"><h2>${t('قبل الإطلاق', 'Before launch')}</h2></div><ul class="todo">${todo.map((x) => `<li class="${x[0] ? 'ok' : 'no'}"><span class="m" aria-hidden="true"></span><div><b>${x[1]}</b><span>${x[2]}</span></div>${x[3] && !x[0] ? `<a class="btn sm" href="${x[3]}">${t('افتحوا', 'Open')}</a>` : '<span></span>'}</li>`).join('')}</ul></section>
-          <section class="leaf"><div class="hd"><h2>${t('الأكثر مبيعًا', 'Best sellers')}</h2></div>
-            ${o.top.length ? `<table class="rows"><tbody>${o.top.map((x) => `<tr><td>${esc(AR ? x.title_ar || x.title : x.title || x.id)}<small>${kind(x.kind)}</small></td><td class="tight end num"><b>${num(x.n)}</b><small>${eur(x.revenue)}</small></td></tr>`).join('')}</tbody></table>` : `<div class="empty">${t('تظهر القائمة بعد أول بيع.', 'This fills in after the first sale.')}</div>`}</section>
-          <section class="leaf"><div class="hd"><h2>${t('المتجر الآن', 'The shop now')}</h2></div><table class="rows"><tbody>
+      <p class="hello">${t('أهلًا بكم في دفتر المتجر', 'Welcome back to the shop’s book')}<span>${t('هذا ما جرى في آخر', 'Here is what happened in the last')} ${o.days} ${t('يومًا', 'days')}</span></p>
+      <section class="kcards" aria-label="${t('الأرقام', 'Figures')}">${cards.map(([c, k, v, ch, d, href]) => `<a class="kc ${c}" href="${href}"><span class="k">${k}</span><span class="v num">${v}</span><span class="f">${ch}<small>${d}</small></span></a>`).join('')}</section>
+      <div class="dgrid">
+        <section class="leaf span2"><div class="hd"><h2>${t('المبيعات', 'Sales')}</h2><span class="lg"><i class="r"></i>${t('الإيراد', 'Revenue')}<i class="o"></i>${t('الطلبات', 'Orders')}</span></div>
+          <div class="sline" id="sline"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            ${[0, 1, 2, 3].map((g) => `<line class="g" x1="0" x2="100" y1="${10 + g * 28.7}" y2="${10 + g * 28.7}"/>`).join('')}
+            <path class="ra" d="${rev} L100,100 L0,100 Z"/><path class="rl" d="${rev}"/><path class="ol" d="${ord}"/><line class="cur" id="scur" x1="0" x2="0" y1="0" y2="100"/></svg>
+            <div class="tip" id="stip" hidden></div>
+            <div class="ax"><span class="num">${D[0].date}</span><span class="num">${D[Math.floor((n - 1) / 2)].date}</span><span class="num">${D[n - 1].date}</span></div></div></section>
+        <section class="leaf"><div class="hd"><h2>${t('رقمي أم مطبوع', 'Digital or printed')}</h2></div>
+          <div class="split">${ring}<ul><li><i class="dg"></i><span>${t('رقمي PDF', 'Digital PDF')}</span><b class="num">${num(sp.digital.n)}</b><small>${eur(sp.digital.revenue)}</small></li><li><i class="pr"></i><span>${t('مطبوع ومشحون', 'Printed and shipped')}</span><b class="num">${num(sp.printed.n)}</b><small>${eur(sp.printed.revenue)}</small></li></ul></div></section>
+        <section class="leaf span2"><div class="hd"><h2>${t('آخر الطلبات', 'Recent orders')}</h2><a class="btn sm" href="#orders">${t('كل الطلبات', 'View all')}</a></div>
+          ${o.recent.length ? `<div class="scroll"><table class="rows ro"><thead><tr><th>${t('القطعة', 'Piece')}</th><th>${t('العميل', 'Customer')}</th><th>${t('الطلب', 'Order')}</th><th>${t('التاريخ', 'Date')}</th><th>${t('الحالة', 'Status')}</th><th class="end">${t('المبلغ', 'Amount')}</th></tr></thead><tbody>${o.recent.map((x) => { const i0 = x.items[0] || {}; return `<tr data-open="${esc(x.id)}"><td><span class="pr-c">${pic(i0.kind, i0.k)}<span>${esc(AR ? i0.ta || i0.t : i0.t || '')}${x.items.length > 1 ? ` <small>+${x.items.length - 1}</small>` : ''}<small>${x.ship ? t('مطبوع', 'Printed') : t('رقمي', 'Digital')}</small></span></span></td><td>${esc(x.name || '')}<small dir="ltr">${esc(x.email)}</small></td><td class="num">${esc(x.id)}</td><td class="num">${day(x.date)}</td><td><span class="pill ${x.status === 'paid' && x.ship_status === 'sent' ? 'sent' : x.status}">${x.status === 'paid' && x.ship ? shipWord(x.ship_status) : t(...(STATUS[x.status] || [x.status, x.status]))}</span></td><td class="end num"><b>${price(x.total)}</b></td></tr>`; }).join('')}</tbody></table></div>` : `<div class="empty">${t('لا طلبات بعد. ستظهر هنا فور وصول أول طلب.', 'No orders yet. The first one will show here.')}</div>`}</section>
+        <section class="leaf"><div class="hd"><h2>${t('الأكثر مبيعًا', 'Best sellers')}</h2></div>
+          ${o.top.length ? `<ul class="bs">${o.top.slice(0, 5).map((x) => `<li>${pic(x.kind, x.id)}<span>${esc(AR ? x.title_ar || x.title : x.title || x.id)}<small>${kind(x.kind)}</small></span><b class="num">${num(x.n)}<small>${t('مبيع', 'sold')}</small></b></li>`).join('')}</ul>` : `<div class="empty">${t('تظهر القائمة بعد أول بيع.', 'This fills in after the first sale.')}</div>`}</section>
+        <section class="leaf"><div class="hd"><h2>${t('أكثر العملاء شراءً', 'Top customers')}</h2></div>
+          ${(o.buyers || []).length ? `<ul class="bs">${o.buyers.map((c) => `<li><span class="av">${esc(((c.name || c.email || '?').trim()[0] || '?').toUpperCase())}</span><span>${esc(c.name || c.email)}<small dir="ltr">${esc(c.email)}</small></span><b class="num">${eur(c.revenue)}<small>${num(c.n)} ${t('طلب', 'orders')}</small></b></li>`).join('')}</ul>` : `<div class="empty">${t('يظهر العملاء هنا بعد أول طلب مدفوع.', 'Buyers show here after the first paid order.')}</div>`}</section>
+        <section class="leaf"><div class="hd"><h2>${t('إلى أين تُشحن', 'Where parcels go')}</h2></div>
+          ${(o.countries || []).length ? `<ul class="cbars">${o.countries.map((c) => `<li><span>${esc(cname(c.country))}</span><span class="bar"><i style="width:${Math.round((c.n / maxC) * 100)}%"></i></span><b class="num">${num(c.n)}</b></li>`).join('')}</ul>` : `<div class="empty">${t('تظهر الدول بعد أول طرد مدفوع.', 'Countries show after the first paid parcel.')}</div>`}</section>
+        <section class="leaf"><div class="hd"><h2>${t('قبل الإطلاق', 'Before launch')}</h2></div><ul class="todo">${todo.map((x) => `<li class="${x[0] ? 'ok' : 'no'}"><span class="m" aria-hidden="true"></span><div><b>${x[1]}</b><span>${x[2]}</span></div>${x[3] && !x[0] ? `<a class="btn sm" href="${x[3]}">${t('افتحوا', 'Open')}</a>` : '<span></span>'}</li>`).join('')}</ul></section>
+        <section class="leaf"><div class="hd"><h2>${t('المتجر الآن', 'The shop now')}</h2></div><table class="rows"><tbody>
             <tr><td>${t('قطع معروضة', 'Pieces on sale')}</td><td class="end num"><b>${num(o.products - o.hidden)}</b></td></tr>
-            <tr><td>${t('قطع مخفية', 'Hidden pieces')}</td><td class="end num"><b>${num(o.hidden)}</b></td></tr>
             <tr><td>${t('ملفات مرفوعة', 'Files uploaded')}</td><td class="end num"><b>${num(o.files)}</b> <small>${size(o.fileBytes)}</small></td></tr>
-            <tr><td>${t('طلبات بانتظار الدفع (7 أيام)', 'Awaiting payment (7 days)')}</td><td class="end num"><b>${num(o.pending)}</b></td></tr>
-            <tr><td>${t('تنزيلات مجانية في الفترة', 'Free downloads in the period')}</td><td class="end num"><b>${num(o.freeDownloads || 0)}</b></td></tr></tbody></table></section>
-        </div>
+            <tr><td>${t('طرود للشحن', 'Parcels to send')}</td><td class="end num"><b>${num(o.toShip || 0)}</b></td></tr>
+            <tr><td>${t('بانتظار الدفع (7 أيام)', 'Awaiting payment (7 days)')}</td><td class="end num"><b>${num(o.pending)}</b></td></tr>
+            <tr><td>${t('الإجمالي منذ البداية', 'All time')}</td><td class="end num"><b>${eur(o.totals.revenue)}</b></td></tr></tbody></table></section>
       </div>`;
+    /* the reading under the pointer: that day's revenue and orders */
+    const sl = $('#sline'), tip = $('#stip'), cur = $('#scur');
+    sl.addEventListener('pointermove', (e) => { const r = sl.getBoundingClientRect(), f = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), i = Math.round(f * (n - 1)), d = D[i], x = X(i);
+      cur.setAttribute('x1', x); cur.setAttribute('x2', x); cur.style.opacity = 1; tip.hidden = false; tip.innerHTML = `<b class="num">${eur(d.revenue)}</b><span>${num(d.orders)} ${t('طلب', 'orders')}</span><small class="num">${d.date}</small>`;
+      tip.style.left = Math.min(r.width - 120, Math.max(0, (x / 100) * r.width - 60)) + 'px'; });
+    sl.addEventListener('pointerleave', () => { tip.hidden = true; cur.style.opacity = 0; });
     $('#ovd').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { ovDays = +b.dataset.d; overview(); } });
     view.addEventListener('click', openOrderRow);
   }
@@ -390,7 +416,7 @@
   }
   async function subscribers() {
     head(t('مشتركو البريد', 'Subscribers'), '', `<button type="button" class="btn" id="sCsv">${t('تنزيل CSV', 'Download CSV')}</button>`); loading();
-    const r = await api('GET', '/api/admin/subscribers'); if (!r.ok) return; const L = r.data.subscribers; $('#sub').textContent = `${num(L.length)} ${t('مشترك في «لوحة كل شهر»', 'signed up for a painting a month')}`;
+    const r = await api('GET', '/api/admin/subscribers'); if (!r.ok) return; const L = r.data.subscribers; $('#sub').textContent = `${num(L.length)} ${t('مشترك في رسائل الأعمال الجديدة', 'signed up for new pieces by e-mail')}`;
     const SRC = { footer: ['أسفل الموقع', 'Footer form'], soon: ['صفحة «قريبًا»', 'Coming-soon page'], checkout: ['عند الشراء', 'At checkout'] };
     view.innerHTML = `<section class="leaf">${L.length ? `<div class="scroll"><table class="rows"><thead><tr><th>${t('البريد', 'E-mail')}</th><th>${t('من أين', 'Where from')}</th><th>${t('متى', 'When')}</th><th></th></tr></thead><tbody>${L.map((s) => `<tr><td dir="ltr" style="text-align:start"><b>${esc(s.email)}</b></td><td>${t(...(SRC[s.source] || [s.source, s.source]))}</td><td class="tight">${day(s.date)}</td><td class="tight end"><button type="button" class="btn sm warn" data-del="${esc(s.email)}">${t('إزالة', 'Remove')}</button></td></tr>`).join('')}</tbody></table></div>` : `<div class="empty">${t('لا مشتركين بعد.', 'No subscribers yet.')}</div>`}</section>`;
     view.onclick = async (e) => { const b = e.target.closest('[data-del]'); if (b && sure(t('إزالة هذا البريد من القائمة؟', 'Remove this address from the list?'))) { done(await api('DELETE', '/api/admin/subscribers?email=' + encodeURIComponent(b.dataset.del)), t('أُزيل.', 'Removed.')); subscribers(); } };

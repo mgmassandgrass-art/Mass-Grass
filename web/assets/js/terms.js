@@ -13,7 +13,7 @@ const D=[['licence','Licence','الرخصة',[
   ['Printed pieces','القطع المطبوعة','If a print arrives damaged or wrong, send us a photo within 14 days and we print it again or refund you. Shipping fees are refunded only when the mistake is ours.','إن وصلت القطعة المطبوعة تالفة أو غير ما طلبتم، أرسلوا لنا صورة خلال 14 يومًا فنطبعها من جديد أو نردّ المبلغ. لا تُردّ أجرة الشحن إلا إذا كان الخطأ منّا.']]],
  ['privacy','Privacy','الخصوصية',[
   ['What we keep','ما نحفظه','Your name, email and orders. If you sign in with Google, Google sends us your name, email and photo.','اسمكم وبريدكم وطلباتكم. وعند الدخول عبر Google يرسل لنا Google اسمكم وبريدكم وصورتكم.'],
-  ['What we do with it','ما نفعله بها','We deliver your files, run your account and, if you agree, send the monthly painting email. We never sell your data.','نوصل ملفاتكم وندير حسابكم، ونرسل رسالة اللوحة الشهرية إن وافقتم. ولا نبيع بياناتكم أبدًا.'],
+  ['What we do with it','ما نفعله بها','We deliver your files, run your account and, if you agree, e-mail you about new pieces. We never sell your data.','نوصل ملفاتكم وندير حسابكم، ونرسل رسائل الأعمال الجديدة إن وافقتم. ولا نبيع بياناتكم أبدًا.'],
   ['Your rights','حقوقكم','Download a copy of your data or delete your account at any time from your account page, or write to info@massandgrass.com.','يمكنكم تحميل نسخة من بياناتكم أو حذف حسابكم في أي وقت من صفحة الحساب، أو مراسلتنا على info@massandgrass.com.']]]];
 const body=x=>Array.isArray(x)?`<ul>${x.map(i=>`<li>${i}</li>`).join('')}</ul>`:`<p>${x}</p>`;
 function render(){$('toc').innerHTML=D.map(d=>`<a href="#${d[0]}">${T(d[1],d[2])}</a>`).join('');

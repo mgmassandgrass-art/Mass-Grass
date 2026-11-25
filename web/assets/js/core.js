@@ -262,7 +262,7 @@
       if (!(v.validity.valid && v.value)) { ok.textContent = t('Please enter a valid email, like name@mail.com', 'اكتبوا بريدًا إلكترونيًا صحيحًا، مثل name@mail.com'); return; }
       ok.textContent = t('Sending…', 'جارٍ الإرسال…');
       const r = await api('POST', '/api/subscribe', { email: v.value, source: 'footer' });
-      ok.textContent = r.ok ? t('Thank you. Your first postcard is on its way.', 'شكرًا لكم. أول بطاقة في الطريق.') : bad; if (r.ok) v.value = '';
+      ok.textContent = r.ok ? t('Thank you. New pieces will reach your inbox.', 'شكرًا لكم. ستصلكم الأعمال الجديدة على بريدكم.') : bad; if (r.ok) v.value = '';
     });
     /* any [data-add="calendar"] puts the calendar in the bag; [data-add-kind][data-add-id] toggles one piece */
     doc.addEventListener('click', (e) => {

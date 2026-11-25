@@ -290,9 +290,15 @@ export async function admin(env, req, url, p) {
     const alerts = await one("SELECT count(*) n FROM audit_log WHERE level='alert' AND at>=?", now - 7 * DAY);
     const toShip = await one("SELECT count(*) n FROM orders WHERE status='paid' AND ship_status='to_print'");
     const free = await one("SELECT count(*) n FROM orders WHERE status='paid' AND total_cents=0 AND paid_at>=?", from);
+    // for the dashboard: where parcels go, who buys most, and digital against printed in the period
+    const countries = await all("SELECT json_extract(ship,'$.country') c, count(*) n, sum(total_cents) cents FROM orders WHERE status='paid' AND ship IS NOT NULL AND paid_at>=? GROUP BY c ORDER BY n DESC LIMIT 8", from);
+    const buyers = await all("SELECT lower(email) e, max(name) name, count(*) n, sum(total_cents) cents, max(paid_at) last FROM orders WHERE status='paid' AND total_cents>0 GROUP BY e ORDER BY cents DESC LIMIT 5");
+    const split = await one("SELECT coalesce(sum(ship IS NULL),0) dn, coalesce(sum(CASE WHEN ship IS NULL THEN total_cents END),0) dc, coalesce(sum(ship IS NOT NULL),0) pn, coalesce(sum(CASE WHEN ship IS NOT NULL THEN total_cents END),0) pc FROM orders WHERE status='paid' AND total_cents>0 AND paid_at>=?", from);
     return json({ days, totals: { orders: tot.n, revenue: tot.c / 100 }, period: { orders: per.n, revenue: per.c / 100 }, previous: { orders: prev.n, revenue: prev.c / 100 },
       pending: pend.n, users: users.n, newUsers: newUsers.n, subscribers: subs.n, messages: msgs.n, unread: msgs.unread, products: prods.n, hidden: hidden.n,
-      files: files.n, fileBytes: files.bytes, freeDownloads: free.n, toShip: toShip.n, byDay, top: top.map((t) => ({ kind: t.pkind, id: t.pid, title: t.title, title_ar: t.title_ar, n: t.n, revenue: (t.c || 0) / 100 })), kinds: kinds.map((k) => ({ kind: k.pkind, n: k.n, revenue: (k.c || 0) / 100 })),
+      files: files.n, fileBytes: files.bytes, freeDownloads: free.n, toShip: toShip.n, countries: countries.map((r) => ({ country: r.c, n: r.n, revenue: (r.cents || 0) / 100 })),
+      buyers: buyers.map((r) => ({ email: r.e, name: r.name, n: r.n, revenue: (r.cents || 0) / 100, last: r.last ? new Date(r.last).toISOString() : null })),
+      split: { digital: { n: split.dn, revenue: split.dc / 100 }, printed: { n: split.pn, revenue: split.pc / 100 } }, byDay, top: top.map((t) => ({ kind: t.pkind, id: t.pid, title: t.title, title_ar: t.title_ar, n: t.n, revenue: (t.c || 0) / 100 })), kinds: kinds.map((k) => ({ kind: k.pkind, n: k.n, revenue: (k.c || 0) / 100 })),
       recent: recent.map(orderOut), noFile, calendarFile: calF.n > 0, bookFile: bookF.n > 0, requests: reqs.n, newRequests: reqs.open, alerts: alerts.n,
       payments: env.PAYPAL_CLIENT_ID ? (env.PAYPAL_ENV === 'live' ? 'live' : 'sandbox') : 'off', mail: !!env.RESEND_API_KEY, google: !!env.GOOGLE_CLIENT_ID, soon: env.SOON === '1' });
   }
