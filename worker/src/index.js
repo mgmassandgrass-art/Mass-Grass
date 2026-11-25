@@ -4,6 +4,7 @@ import { filesAdmin, download } from './files.js';
 import { sendMail, layout, contactEmail, p as mp, pAr, small, btn as mbtn, MONO, C } from './mail.js';
 import { visitorCurrency } from './fx.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
+import { track } from './visits.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin, sweepPending, trackOrder } from './shop.js';
 import { migrate } from './migrate.js';
 import { commissionPost, commissionsAdmin } from './commission.js';
@@ -583,7 +584,8 @@ async function sharePage(env, url, p) {
 }
 
 export default {
-  async fetch(req, env0) {
+  async fetch(req, env1, ctx) {
+    const env0 = { ...env1, CTX: ctx };
     try { await migrate(env0); } catch (e) { console.error('migrate', e); return secure(new Response('The shop is being updated. Please try again in a minute.', { status: 503, headers: { 'retry-after': '60', 'content-type': 'text/plain; charset=utf-8' } })); }
     return secure(await handle(req, env0));
   },
@@ -655,7 +657,7 @@ async function handle(req, env0) {
         const row = await env.DB.prepare('SELECT published FROM site_files WHERE path=?').bind(fp).first();
         if (row && row.published != null) {
           const ext = fp.split('.').pop(), res = new Response(row.published, { headers: { 'content-type': TYPES[ext], 'cache-control': 'no-cache' } });
-          return ext === 'html' ? withCatalog(env, res, fp) : res;
+          return ext === 'html' ? track(env, req, url, fp, await withCatalog(env, res, fp), isAdmin(env, await currentUser(env, req))) : res;
         }
       }
       const img = p.match(/^\/assets\/(u-[a-z0-9-]{2,37})\.webp$/);
@@ -667,7 +669,8 @@ async function handle(req, env0) {
       const h0 = new Headers(req.headers); if (!isFile) { h0.delete('if-none-match'); h0.delete('if-modified-since'); }
       const r = await env.ASSETS.fetch(isFile ? req : new Request(req.url, { method: req.method, headers: h0 }));
       if (r.status === 404) return notFound();
-      return await withCatalog(env, r, fp);
+      const page = await withCatalog(env, r, fp);
+      return (page.headers.get('content-type') || '').includes('text/html') ? track(env, req, url, fp, page, isAdmin(env, await currentUser(env, req))) : page;
     } catch (e) {
       console.error(e);
       return p.startsWith('/api/') ? fail('server_error', 500) : new Response('Server error', { status: 500 });

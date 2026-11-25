@@ -147,8 +147,8 @@ export async function createOrder(env, req, user) {
   const id = 'MG-' + crypto.randomUUID().slice(0, 8).toUpperCase();
   // The order secret: only the buyer's browser (and later their email) gets it; downloads need it.
   const access = [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, '0')).join('');
-  await env.DB.prepare('INSERT INTO orders(id,user_id,email,name,items,total_cents,news,created_at,access,ship,ship_cents,ship_status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
-    .bind(id, user ? user.id : null, email, clean(b.name, 60) || (ship ? ship.name : ''), JSON.stringify(items), total, b.news ? 1 : 0, Date.now(), access, ship ? JSON.stringify(ship) : null, shipCents, ship ? 'to_print' : null).run();
+  await env.DB.prepare('INSERT INTO orders(id,user_id,email,name,items,total_cents,news,created_at,access,ship,ship_cents,ship_status,country) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
+    .bind(id, user ? user.id : null, email, clean(b.name, 60) || (ship ? ship.name : ''), JSON.stringify(items), total, b.news ? 1 : 0, Date.now(), access, ship ? JSON.stringify(ship) : null, shipCents, ship ? 'to_print' : null, env.VISITOR || '').run();
   if (b.news) await env.DB.prepare('INSERT OR IGNORE INTO subscribers(email,source,created_at) VALUES(?,?,?)').bind(email, 'checkout', Date.now()).run();
   if (total === 0) {
     const o = await env.DB.prepare('SELECT * FROM orders WHERE id=?').bind(id).first();
@@ -294,7 +294,25 @@ export async function admin(env, req, url, p) {
     const countries = await all("SELECT json_extract(ship,'$.country') c, count(*) n, sum(total_cents) cents FROM orders WHERE status='paid' AND ship IS NOT NULL AND paid_at>=? GROUP BY c ORDER BY n DESC LIMIT 8", from);
     const buyers = await all("SELECT lower(email) e, max(name) name, count(*) n, sum(total_cents) cents, max(paid_at) last FROM orders WHERE status='paid' AND total_cents>0 GROUP BY e ORDER BY cents DESC LIMIT 5");
     const split = await one("SELECT coalesce(sum(ship IS NULL),0) dn, coalesce(sum(CASE WHEN ship IS NULL THEN total_cents END),0) dc, coalesce(sum(ship IS NOT NULL),0) pn, coalesce(sum(CASE WHEN ship IS NOT NULL THEN total_cents END),0) pc FROM orders WHERE status='paid' AND total_cents>0 AND paid_at>=?", from);
-    return json({ days, totals: { orders: tot.n, revenue: tot.c / 100 }, period: { orders: per.n, revenue: per.c / 100 }, previous: { orders: prev.n, revenue: prev.c / 100 },
+    // the map, visits and the path from a visit to a sale (counts only; see visits.js)
+    const dFrom = new Date(from).toISOString().slice(0, 10), dPrev = new Date(from - days * DAY).toISOString().slice(0, 10);
+    const where = await all("SELECT coalesce(nullif(json_extract(ship,'$.country'),''), nullif(country,''), '') c, count(*) n, sum(total_cents) cents FROM orders WHERE status='paid' AND paid_at>=? GROUP BY c ORDER BY n DESC", from);
+    const vTot = await one('SELECT coalesce(sum(visits),0) v, coalesce(sum(views),0) pv FROM visits WHERE day>?', dFrom);
+    const vPrev = await one('SELECT coalesce(sum(visits),0) v, coalesce(sum(views),0) pv FROM visits WHERE day>? AND day<=?', dPrev, dFrom);
+    const vC = await all("SELECT country c, sum(visits) v, sum(views) pv FROM visits WHERE day>? GROUP BY c ORDER BY v DESC", dFrom);
+    const vDay = await all('SELECT day, sum(visits) v, sum(views) pv FROM visits WHERE day>? GROUP BY day', dFrom);
+    const vPages = await all("SELECT path, sum(views) pv, sum(visits) v FROM visits WHERE day>? GROUP BY path ORDER BY pv DESC LIMIT 8", dFrom);
+    const vStats = await all('SELECT k, v, sum(n) n FROM visit_stats WHERE day>? GROUP BY k, v ORDER BY n DESC', dFrom);
+    const started = await one('SELECT count(*) n FROM orders WHERE created_at>=? AND total_cents>0', from);
+    const vd = Object.fromEntries(vDay.map((r) => [r.day, r]));
+    for (const b of byDay) { const r = vd[b.date]; b.visits = r ? r.v : 0; b.views = r ? r.pv : 0; }
+    const pageViews = (x) => (vPages.find((r) => r.path === x) || {}).pv || 0;
+    return json({ days, map: where.map((r) => ({ country: r.c, n: r.n, revenue: (r.cents || 0) / 100 })),
+      visits: { period: vTot.v, views: vTot.pv, previous: vPrev.v, previousViews: vPrev.pv, countries: vC.map((r) => ({ country: r.c, n: r.v, views: r.pv })),
+        pages: vPages.map((r) => ({ path: r.path, views: r.pv, visits: r.v })), sources: vStats.filter((r) => r.k === 'src').slice(0, 8).map((r) => ({ name: r.v, n: r.n })),
+        devices: vStats.filter((r) => r.k === 'dev').map((r) => ({ name: r.v, n: r.n })) },
+      funnel: { visits: vTot.v, calendar: pageViews('calendar'), checkout: pageViews('checkout'), started: started.n, paid: per.n },
+      totals: { orders: tot.n, revenue: tot.c / 100 }, period: { orders: per.n, revenue: per.c / 100 }, previous: { orders: prev.n, revenue: prev.c / 100 },
       pending: pend.n, users: users.n, newUsers: newUsers.n, subscribers: subs.n, messages: msgs.n, unread: msgs.unread, products: prods.n, hidden: hidden.n,
       files: files.n, fileBytes: files.bytes, freeDownloads: free.n, toShip: toShip.n, countries: countries.map((r) => ({ country: r.c, n: r.n, revenue: (r.cents || 0) / 100 })),
       buyers: buyers.map((r) => ({ email: r.e, name: r.name, n: r.n, revenue: (r.cents || 0) / 100, last: r.last ? new Date(r.last).toISOString() : null })),

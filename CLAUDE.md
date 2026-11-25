@@ -563,3 +563,11 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   `/track` (order number + e-mail → `POST /api/track`, 20 an hour per address; steps, tracking number, 17TRACK link), linked
   from the footer, the thank-you page, the profile and the "on its way" e-mail. Admin password: only the owner knows it
   (reset by "Forgot password" at /account). A one-time upload key that bypasses the admin login was refused: never add one.
+- 25 Nov 2026, dashboard round 2 (not deployed until the owner says «انشر»): image-library thumbnails were hidden because the
+  parcel dot reused the class `.pc` (now `.pst`); the order sheet's buttons sit in three groups (`.ftg`). Visits are counted by
+  the Worker (`worker/src/visits.js`, migration 0016: `visits` per day/country/page, `visit_stats` source and device per visit,
+  `orders.country` from Cloudflare; counts only, no address or id; bots, prefetches and the admin are skipped; a visit = the first
+  page of a browser session, marked by the `__Host-mgv` session cookie). The overview adds Visits and Conversion cards, a visits
+  line, a world map (`web/admin/world.svg`, Natural Earth 110m, one path per country with `data-c` = ISO code, made with
+  world-atlas + d3-geo) tinted by buyers or visitors, the visit-to-sale funnel, sources and devices, most viewed pages.
+  e2e must run on a fresh database (after `npm test` the prices differ).

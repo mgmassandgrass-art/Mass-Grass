@@ -9,6 +9,7 @@ import M0012 from '../migrations/0012_calendar_launch.sql';
 import M0013 from '../migrations/0013_gcc_shipping.sql';
 import M0014 from '../migrations/0014_emirates_post_zones.sql';
 import M0015 from '../migrations/0015_orders_control.sql';
+import M0016 from '../migrations/0016_visits.sql';
 
 const STEPS = [
   { name: '0008_security_catalog.sql', sql: M0008, done: "SELECT 1 FROM sqlite_master WHERE type='table' AND name='audit_log'" },
@@ -19,6 +20,7 @@ const STEPS = [
   { name: '0013_gcc_shipping.sql', sql: M0013, done: "SELECT 1 FROM settings WHERE k='launch_0013'" },
   { name: '0014_emirates_post_zones.sql', sql: M0014, done: "SELECT 1 FROM settings WHERE k='launch_0014'" },
   { name: '0015_orders_control.sql', sql: M0015, done: "SELECT 1 FROM pragma_table_info('orders') WHERE name='note'" },
+  { name: '0016_visits.sql', sql: M0016, done: "SELECT 1 FROM sqlite_master WHERE type='table' AND name='visit_stats'" },
 ];
 const statements = (sql) => sql.split('\n').filter((l) => !/^\s*--/.test(l)).join('\n').split(/;\s*\n/).map((x) => x.trim().replace(/;$/, '')).filter(Boolean);
 let ready = null;

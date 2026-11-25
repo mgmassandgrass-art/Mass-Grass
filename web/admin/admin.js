@@ -89,59 +89,103 @@
        where the parcels go; then the before-launch list and the shop's numbers */
     const pct = (now, prev) => (!prev ? (now ? null : 0) : Math.round(((now - prev) / prev) * 100));
     const chip = (now, prev) => { const v = pct(now, prev); return v === null ? `<span class="chip up">${t('جديد', 'New')}</span>` : `<span class="chip ${v > 0 ? 'up' : v < 0 ? 'down' : ''}">${v > 0 ? '▲' : v < 0 ? '▼' : '•'} ${Math.abs(v)}%</span>`; };
+    const V = o.visits || { period: 0, views: 0, previous: 0, countries: [], pages: [], sources: [], devices: [] };
+    const conv = (a, b) => (b ? (Math.round((a / b) * 1000) / 10).toLocaleString('en') + '%' : '—');
     const avg = o.period.orders ? o.period.revenue / o.period.orders : 0, pavg = o.previous.orders ? o.previous.revenue / o.previous.orders : 0;
     const cards = [
       ['rose', t('المبيعات', 'Revenue'), eur(o.period.revenue), chip(o.period.revenue, o.previous.revenue), `${t('السابقة', 'Before')} ${eur(o.previous.revenue)}`, '#orders'],
       ['sage', t('طلبات مدفوعة', 'Paid orders'), num(o.period.orders), chip(o.period.orders, o.previous.orders), `${t('الإجمالي', 'All time')} ${num(o.totals.orders)}`, '#orders'],
       ['sand', t('متوسط الطلب', 'Average order'), eur(avg), chip(avg, pavg), `${t('السابقة', 'Before')} ${eur(pavg)}`, '#orders'],
-      ['blue', t('عملاء جدد', 'New customers'), num(o.newUsers), '', `${t('الكل', 'In all')} ${num(o.users)}`, '#customers'],
-      ['lilac', t('مشتركو البريد', 'Subscribers'), num(o.subscribers), '', `${num(o.unread)} ${t('رسالة غير مقروءة', 'unread messages')}`, '#subscribers'],
+      ['blue', t('الزيارات', 'Visits'), num(V.period), chip(V.period, V.previous), `${num(V.views)} ${t('صفحة شوهدت', 'pages seen')}`, '#overview'],
+      ['lilac', t('نسبة الشراء', 'Conversion'), conv(o.period.orders, V.period), chip(V.period ? o.period.orders / V.period : 0, V.previous ? o.previous.orders / V.previous : 0), t('طلبات مدفوعة من كل 100 زيارة', 'paid orders per 100 visits'), '#overview'],
+      ['sand2', t('عملاء جدد', 'New customers'), num(o.newUsers), '', `${t('الكل', 'In all')} ${num(o.users)}`, '#customers'],
     ];
     /* the sales line: revenue (rose, filled) and orders (ink, thin), on one scale each */
     const D = o.byDay, n = D.length, maxR = Math.max(1, ...D.map((d) => d.revenue)), maxO = Math.max(1, ...D.map((d) => d.orders)), X = (i) => (n === 1 ? 50 : (i / (n - 1)) * 100);
     const line = (f, mx) => D.map((d, i) => `${i ? 'L' : 'M'}${X(i).toFixed(2)},${(96 - (f(d) / mx) * 86).toFixed(2)}`).join(' ');
-    const rev = line((d) => d.revenue, maxR), ord = line((d) => d.orders, maxO);
+    const rev = line((d) => d.revenue, maxR), ord = line((d) => d.orders, maxO), maxV = Math.max(1, ...D.map((d) => d.visits || 0)), vis = line((d) => d.visits || 0, maxV);
     const thumb = (kind, id) => kind === 'calendar' ? `../assets/${id === 'palestine-2027' ? 't-ps-00' : 't-v2-00'}.webp` : kind === 'book' ? '../assets/book/pg-01.webp' : `../assets/t-${id}.webp`;
     const pic = (kind, id) => `<span class="pic"><img src="${esc(thumb(kind, id))}" alt="" loading="lazy"></span>`;
     const sp = o.split || { digital: { n: 0, revenue: 0 }, printed: { n: 0, revenue: 0 } }, spT = sp.digital.n + sp.printed.n, spD = spT ? sp.digital.n / spT : 0;
     const ring = `<svg viewBox="0 0 42 42" class="ring" aria-hidden="true"><circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--ring-b)" stroke-width="5"/>${spT ? `<circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--kraft)" stroke-width="5" stroke-dasharray="${(spD * 100).toFixed(1)} ${(100 - spD * 100).toFixed(1)}" stroke-dashoffset="25"/>` : ''}<text x="21" y="23" text-anchor="middle">${spT ? Math.round(spD * 100) + '%' : '—'}</text></svg>`;
-    const maxC = Math.max(1, ...(o.countries || []).map((c) => c.n));
+    const F = o.funnel || { visits: 0, calendar: 0, checkout: 0, started: 0, paid: 0 };
+    const funnel = [[t('زيارات', 'Visits'), F.visits], [t('فتحوا صفحة الدفع', 'Opened checkout'), F.checkout], [t('بدأوا طلبًا', 'Started an order'), F.started], [t('دفعوا', 'Paid'), F.paid]];
+    const fMax = Math.max(1, ...funnel.map((x) => x[1])), devT = V.devices.reduce((a, x) => a + x.n, 0);
     view.innerHTML = `
       <p class="hello">${t('أهلًا بكم في دفتر المتجر', 'Welcome back to the shop’s book')}<span>${t('هذا ما جرى في آخر', 'Here is what happened in the last')} ${o.days} ${t('يومًا', 'days')}</span></p>
       <section class="kcards" aria-label="${t('الأرقام', 'Figures')}">${cards.map(([c, k, v, ch, d, href]) => `<a class="kc ${c}" href="${href}"><span class="k">${k}</span><span class="v num">${v}</span><span class="f">${ch}<small>${d}</small></span></a>`).join('')}</section>
       <div class="dgrid">
-        <section class="leaf span2"><div class="hd"><h2>${t('المبيعات', 'Sales')}</h2><span class="lg"><i class="r"></i>${t('الإيراد', 'Revenue')}<i class="o"></i>${t('الطلبات', 'Orders')}</span></div>
+        <section class="leaf span2"><div class="hd"><h2>${t('المبيعات', 'Sales')}</h2><span class="lg"><i class="r"></i>${t('الإيراد', 'Revenue')}<i class="o"></i>${t('الطلبات', 'Orders')}<i class="v"></i>${t('الزيارات', 'Visits')}</span></div>
           <div class="sline" id="sline"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             ${[0, 1, 2, 3].map((g) => `<line class="g" x1="0" x2="100" y1="${10 + g * 28.7}" y2="${10 + g * 28.7}"/>`).join('')}
-            <path class="ra" d="${rev} L100,100 L0,100 Z"/><path class="rl" d="${rev}"/><path class="ol" d="${ord}"/><line class="cur" id="scur" x1="0" x2="0" y1="0" y2="100"/></svg>
+            <path class="ra" d="${rev} L100,100 L0,100 Z"/><path class="rl" d="${rev}"/><path class="vl" d="${vis}"/><path class="ol" d="${ord}"/><line class="cur" id="scur" x1="0" x2="0" y1="0" y2="100"/></svg>
             <div class="tip" id="stip" hidden></div>
             <div class="ax"><span class="num">${D[0].date}</span><span class="num">${D[Math.floor((n - 1) / 2)].date}</span><span class="num">${D[n - 1].date}</span></div></div></section>
         <section class="leaf"><div class="hd"><h2>${t('رقمي أم مطبوع', 'Digital or printed')}</h2></div>
           <div class="split">${ring}<ul><li><i class="dg"></i><span>${t('رقمي PDF', 'Digital PDF')}</span><b class="num">${num(sp.digital.n)}</b><small>${eur(sp.digital.revenue)}</small></li><li><i class="pr"></i><span>${t('مطبوع ومشحون', 'Printed and shipped')}</span><b class="num">${num(sp.printed.n)}</b><small>${eur(sp.printed.revenue)}</small></li></ul></div></section>
+        <section class="leaf span3 wmap"><div class="hd"><h2>${t('من أين يشترون ويزورون', 'Where buyers and visitors are')}</h2>
+          <div class="seg" id="mapSeg">${[['orders', 'المشترون', 'Buyers'], ['visits', 'الزوار', 'Visitors']].map(([k, a, e]) => `<button type="button" data-m="${k}" aria-pressed="${k === mapBy}">${t(a, e)}</button>`).join('')}</div></div>
+          <div class="wm"><div class="wm-map" id="wmMap"><div class="wm-tip" id="wmTip" hidden></div></div><div class="wm-side"><div class="wm-sum" id="wmSum"></div><ul class="cbars" id="wmList"></ul>
+          <p class="wm-key"><span>${t('أقل', 'Fewer')}</span><i></i><i></i><i></i><i></i><i></i><span>${t('أكثر', 'More')}</span></p></div></div></section>
+        <section class="leaf"><div class="hd"><h2>${t('من الزيارة إلى الشراء', 'From a visit to a sale')}</h2></div>
+          <ol class="fun">${funnel.map(([k, v], i) => `<li><span>${k}</span><span class="bar"><i style="width:${Math.max(v ? 2 : 0, Math.round((v / fMax) * 100))}%"></i></span><b class="num">${num(v)}</b><small class="num">${i ? conv(v, funnel[0][1]) : ''}</small></li>`).join('')}</ol>
+          <p class="note">${t('الزيارة أول صفحة يفتحها الزائر. لا نحفظ عنوانًا ولا اسمًا، أرقامًا فقط.', 'A visit is the first page a visitor opens. Only counts are kept, no address or name.')}</p></section>
+        <section class="leaf"><div class="hd"><h2>${t('من أين يأتون', 'Where visits come from')}</h2></div>
+          ${V.sources.length ? `<ul class="cbars">${V.sources.map((x) => `<li><span>${esc(srcName(x.name))}</span><span class="bar"><i style="width:${Math.round((x.n / V.sources[0].n) * 100)}%"></i></span><b class="num">${num(x.n)}</b></li>`).join('')}</ul>` : `<div class="empty">${t('تظهر المصادر بعد أول زيارة.', 'Sources show after the first visit.')}</div>`}
+          ${V.devices.length ? `<p class="devs">${V.devices.map((x) => `<span><b class="num">${conv(x.n, devT)}</b>${t(...({ mobile: ['هاتف', 'Phone'], desktop: ['حاسوب', 'Computer'], tablet: ['لوحي', 'Tablet'] }[x.name] || [x.name, x.name]))}</span>`).join('')}</p>` : ''}</section>
+        <section class="leaf"><div class="hd"><h2>${t('أكثر الصفحات زيارة', 'Most viewed pages')}</h2></div>
+          ${V.pages.length ? `<ul class="cbars">${V.pages.map((x) => `<li><span>${esc(pageName(x.path))}</span><span class="bar"><i style="width:${Math.round((x.views / V.pages[0].views) * 100)}%"></i></span><b class="num">${num(x.views)}</b></li>`).join('')}</ul>` : `<div class="empty">${t('تظهر الصفحات بعد أول زيارة.', 'Pages show after the first visit.')}</div>`}</section>
         <section class="leaf span2"><div class="hd"><h2>${t('آخر الطلبات', 'Recent orders')}</h2><a class="btn sm" href="#orders">${t('كل الطلبات', 'View all')}</a></div>
           ${o.recent.length ? `<div class="scroll"><table class="rows ro"><thead><tr><th>${t('القطعة', 'Piece')}</th><th>${t('العميل', 'Customer')}</th><th>${t('الطلب', 'Order')}</th><th>${t('التاريخ', 'Date')}</th><th>${t('الحالة', 'Status')}</th><th class="end">${t('المبلغ', 'Amount')}</th></tr></thead><tbody>${o.recent.map((x) => { const i0 = x.items[0] || {}; return `<tr data-open="${esc(x.id)}"><td><span class="pr-c">${pic(i0.kind, i0.k)}<span>${esc(AR ? i0.ta || i0.t : i0.t || '')}${x.items.length > 1 ? ` <small>+${x.items.length - 1}</small>` : ''}<small>${x.ship ? t('مطبوع', 'Printed') : t('رقمي', 'Digital')}</small></span></span></td><td>${esc(x.name || '')}<small dir="ltr">${esc(x.email)}</small></td><td class="num">${esc(x.id)}</td><td class="num">${day(x.date)}</td><td><span class="pill ${x.status === 'paid' && x.ship_status === 'sent' ? 'sent' : x.status}">${x.status === 'paid' && x.ship ? shipWord(x.ship_status) : t(...(STATUS[x.status] || [x.status, x.status]))}</span></td><td class="end num"><b>${price(x.total)}</b></td></tr>`; }).join('')}</tbody></table></div>` : `<div class="empty">${t('لا طلبات بعد. ستظهر هنا فور وصول أول طلب.', 'No orders yet. The first one will show here.')}</div>`}</section>
         <section class="leaf"><div class="hd"><h2>${t('الأكثر مبيعًا', 'Best sellers')}</h2></div>
           ${o.top.length ? `<ul class="bs">${o.top.slice(0, 5).map((x) => `<li>${pic(x.kind, x.id)}<span>${esc(AR ? x.title_ar || x.title : x.title || x.id)}<small>${kind(x.kind)}</small></span><b class="num">${num(x.n)}<small>${t('مبيع', 'sold')}</small></b></li>`).join('')}</ul>` : `<div class="empty">${t('تظهر القائمة بعد أول بيع.', 'This fills in after the first sale.')}</div>`}</section>
         <section class="leaf"><div class="hd"><h2>${t('أكثر العملاء شراءً', 'Top customers')}</h2></div>
           ${(o.buyers || []).length ? `<ul class="bs">${o.buyers.map((c) => `<li><span class="av">${esc(((c.name || c.email || '?').trim()[0] || '?').toUpperCase())}</span><span>${esc(c.name || c.email)}<small dir="ltr">${esc(c.email)}</small></span><b class="num">${eur(c.revenue)}<small>${num(c.n)} ${t('طلب', 'orders')}</small></b></li>`).join('')}</ul>` : `<div class="empty">${t('يظهر العملاء هنا بعد أول طلب مدفوع.', 'Buyers show here after the first paid order.')}</div>`}</section>
-        <section class="leaf"><div class="hd"><h2>${t('إلى أين تُشحن', 'Where parcels go')}</h2></div>
-          ${(o.countries || []).length ? `<ul class="cbars">${o.countries.map((c) => `<li><span>${esc(cname(c.country))}</span><span class="bar"><i style="width:${Math.round((c.n / maxC) * 100)}%"></i></span><b class="num">${num(c.n)}</b></li>`).join('')}</ul>` : `<div class="empty">${t('تظهر الدول بعد أول طرد مدفوع.', 'Countries show after the first paid parcel.')}</div>`}</section>
         <section class="leaf"><div class="hd"><h2>${t('قبل الإطلاق', 'Before launch')}</h2></div><ul class="todo">${todo.map((x) => `<li class="${x[0] ? 'ok' : 'no'}"><span class="m" aria-hidden="true"></span><div><b>${x[1]}</b><span>${x[2]}</span></div>${x[3] && !x[0] ? `<a class="btn sm" href="${x[3]}">${t('افتحوا', 'Open')}</a>` : '<span></span>'}</li>`).join('')}</ul></section>
         <section class="leaf"><div class="hd"><h2>${t('المتجر الآن', 'The shop now')}</h2></div><table class="rows"><tbody>
             <tr><td>${t('قطع معروضة', 'Pieces on sale')}</td><td class="end num"><b>${num(o.products - o.hidden)}</b></td></tr>
             <tr><td>${t('ملفات مرفوعة', 'Files uploaded')}</td><td class="end num"><b>${num(o.files)}</b> <small>${size(o.fileBytes)}</small></td></tr>
             <tr><td>${t('طرود للشحن', 'Parcels to send')}</td><td class="end num"><b>${num(o.toShip || 0)}</b></td></tr>
             <tr><td>${t('بانتظار الدفع (7 أيام)', 'Awaiting payment (7 days)')}</td><td class="end num"><b>${num(o.pending)}</b></td></tr>
+            <tr><td>${t('مشتركو البريد', 'Subscribers')}</td><td class="end num"><b>${num(o.subscribers)}</b></td></tr>
+            <tr><td>${t('رسائل غير مقروءة', 'Unread messages')}</td><td class="end num"><b>${num(o.unread)}</b></td></tr>
             <tr><td>${t('الإجمالي منذ البداية', 'All time')}</td><td class="end num"><b>${eur(o.totals.revenue)}</b></td></tr></tbody></table></section>
       </div>`;
     /* the reading under the pointer: that day's revenue and orders */
     const sl = $('#sline'), tip = $('#stip'), cur = $('#scur');
     sl.addEventListener('pointermove', (e) => { const r = sl.getBoundingClientRect(), f = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), i = Math.round(f * (n - 1)), d = D[i], x = X(i);
-      cur.setAttribute('x1', x); cur.setAttribute('x2', x); cur.style.opacity = 1; tip.hidden = false; tip.innerHTML = `<b class="num">${eur(d.revenue)}</b><span>${num(d.orders)} ${t('طلب', 'orders')}</span><small class="num">${d.date}</small>`;
+      cur.setAttribute('x1', x); cur.setAttribute('x2', x); cur.style.opacity = 1; tip.hidden = false; tip.innerHTML = `<b class="num">${eur(d.revenue)}</b><span>${num(d.orders)} ${t('طلب', 'orders')}</span><span>${num(d.visits || 0)} ${t('زيارة', 'visits')}</span><small class="num">${d.date}</small>`;
       tip.style.left = Math.min(r.width - 120, Math.max(0, (x / 100) * r.width - 60)) + 'px'; });
     sl.addEventListener('pointerleave', () => { tip.hidden = true; cur.style.opacity = 0; });
     $('#ovd').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { ovDays = +b.dataset.d; overview(); } });
+    drawMap(o, V);
+    $('#mapSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; mapBy = b.dataset.m; $$('#mapSeg button').forEach((x) => x.setAttribute('aria-pressed', x === b)); drawMap(o, V); });
     view.addEventListener('click', openOrderRow);
+  }
+  /* the world map: countries tinted by how many bought (or visited) from them in the period; the list beside it, the reading under
+     the pointer. The map is Natural Earth's outline (world.svg, one path per country with its ISO code), loaded once. */
+  let mapBy = 'orders', WORLD = null;
+  const SRCN = { direct: ['مباشرة أو رابط محفوظ', 'Direct or a saved link'] };
+  const srcName = (n) => t(...(SRCN[n] || [n, n]));
+  const pageName = (p) => ({ index: t('الرئيسية', 'Home'), calendar: t('التقويم', 'Calendar'), checkout: t('الدفع', 'Checkout'), account: t('الحساب', 'Account'), profile: t('الملف الشخصي', 'Profile'), track: t('تتبع الطلب', 'Track order'), later: t('قريبًا', 'Opening soon'), help: t('المساعدة', 'Help'), terms: t('الشروط', 'Terms'), palestine: t('تقويم فلسطين', 'Palestine calendar') }[p] || p);
+  async function drawMap(o, V) {
+    const box = $('#wmMap'); if (!box) return;
+    if (!WORLD) { try { const r = await fetch('world.svg', { credentials: 'same-origin' }); WORLD = r.ok ? await r.text() : ''; } catch (e) { WORLD = ''; } }
+    if (!$('#wmMap')) return;
+    const rows = (mapBy === 'orders' ? (o.map || []) : V.countries).filter((x) => x.country), byC = Object.fromEntries(rows.map((x) => [x.country, x]));
+    const total = rows.reduce((a, x) => a + x.n, 0), unknown = (mapBy === 'orders' ? (o.map || []) : V.countries).filter((x) => !x.country).reduce((a, x) => a + x.n, 0), mx = Math.max(1, ...rows.map((x) => x.n));
+    let svg = box.querySelector('svg');
+    if (!svg && WORLD) { box.insertAdjacentHTML('afterbegin', WORLD); svg = box.querySelector('svg'); if (svg) { svg.setAttribute('aria-hidden', 'true'); svg.querySelectorAll('title').forEach((x) => x.remove()); } }
+    if (svg) svg.querySelectorAll('path').forEach((pth) => { const c = pth.dataset.c, r = c && byC[c]; pth.removeAttribute('class'); if (r) pth.setAttribute('class', 'l' + Math.min(5, Math.max(1, Math.ceil((Math.sqrt(r.n) / Math.sqrt(mx)) * 5)))); });
+    const tip = $('#wmTip');
+    if (svg && !svg.dataset.wired) { svg.dataset.wired = 1;
+      svg.addEventListener('pointermove', (e) => { const pth = e.target.closest('path[data-c]'); if (!pth) { tip.hidden = true; return; } const c = pth.dataset.c, r = (mapBy === 'orders' ? (o.map || []) : V.countries).find((x) => x.country === c), bx = box.getBoundingClientRect();
+        tip.hidden = false; tip.innerHTML = `<b>${esc(cname(c))}</b><span class="num">${r ? (mapBy === 'orders' ? `${num(r.n)} ${t('طلب', 'orders')}, ${eur(r.revenue)}` : `${num(r.n)} ${t('زيارة', 'visits')}`) : t('لا شيء بعد', 'Nothing yet')}</span>`;
+        tip.style.left = Math.min(bx.width - 170, Math.max(0, e.clientX - bx.left + 12)) + 'px'; tip.style.top = Math.max(0, e.clientY - bx.top - 50) + 'px'; });
+      svg.addEventListener('pointerleave', () => { tip.hidden = true; }); }
+    $('#wmSum').innerHTML = `<b class="num">${num(total + unknown)}</b><span>${mapBy === 'orders' ? t('طلب مدفوع', 'paid orders') : t('زيارة', 'visits')} ${t('من', 'from')} <b class="num">${num(rows.length)}</b> ${t('بلد', 'countries')}</span>${unknown ? `<small>${num(unknown)} ${t('بلا بلد معروف', 'with no known country')}</small>` : ''}`;
+    $('#wmList').innerHTML = rows.length ? rows.slice(0, 8).map((x) => `<li><span>${esc(cname(x.country))}</span><span class="bar"><i style="width:${Math.round((x.n / mx) * 100)}%"></i></span><b class="num">${num(x.n)}${mapBy === 'orders' ? `<small>${eur(x.revenue)}</small>` : ''}</b></li>`).join('')
+      : `<li class="none">${mapBy === 'orders' ? t('تظهر البلدان بعد أول طلب مدفوع.', 'Countries show after the first paid order.') : t('تظهر البلدان بعد أول زيارة.', 'Countries show after the first visit.')}</li>`;
   }
   function openOrderRow(e) { const tr = e.target.closest('tr[data-open]'); if (tr && /^MG-/.test(tr.dataset.open)) orderSheet(tr.dataset.open); }
 
@@ -157,7 +201,7 @@
   /* what an order is: printed and shipped (it has an address), digital only, or both in one order */
   const otype = (o) => { const pr = o.items.some((i) => i.fmt === 'print'), dg = o.items.some((i) => i.fmt !== 'print'); return pr && dg ? 'both' : pr ? 'ship' : 'digital'; };
   const typeTag = (o) => { const k = otype(o); return `<span class="tag ${k === 'digital' ? '' : 'on'}">${k === 'digital' ? t('رقمي', 'Digital') : k === 'ship' ? t('شحن', 'Shipped') : t('شحن + رقمي', 'Shipped + digital')}</span>${o.ship ? `<small>${esc(cname(o.ship.country))}</small>` : ''}`; };
-  const parcel = (o) => o.ship ? `<span class="pc ${o.ship_status || ''}">${o.status === 'paid' ? shipWord(o.ship_status) : t('بعد الدفع', 'After payment')}</span>${o.tracking ? `<small dir="ltr">${esc(o.tracking)}</small>` : ''}` : `<span class="hint">${t('يُنزَّل فورًا', 'Downloaded at once')}</span>`;
+  const parcel = (o) => o.ship ? `<span class="pst ${o.ship_status || ''}">${o.status === 'paid' ? shipWord(o.ship_status) : t('بعد الدفع', 'After payment')}</span>${o.tracking ? `<small dir="ltr">${esc(o.tracking)}</small>` : ''}` : `<span class="hint">${t('يُنزَّل فورًا', 'Downloaded at once')}</span>`;
   async function orders() {
     head(t('الطلبات', 'Orders'), '', `<button type="button" class="btn" id="ordCsv">${t('تنزيل CSV', 'Download CSV')}</button>`); loading();
     const r = await api('GET', '/api/admin/orders'); if (!r.ok) return; ORD = r.data.orders;
@@ -215,7 +259,10 @@
         <div class="two"><label class="f">${t('الرمز البريدي', 'Postal code')}<input name="postal" value="${esc(o.ship.postal || '')}" maxlength="16" dir="ltr"></label><label class="f">${t('رمز البلد', 'Country code')}<input name="country" value="${esc(o.ship.country || '')}" maxlength="2" dir="ltr"></label></div>
         <div><button class="btn">${t('حفظ العنوان', 'Save the address')}</button></div></form></section>` : ''}
       <section class="leaf"><h2>${t('الملفات التي يستلمها', 'Files the buyer gets')}</h2>${o.status !== 'paid' ? `<div class="empty">${t('تُتاح الملفات بعد الدفع.', 'Files open once the order is paid.')}</div>` : o.files.length ? `<ul class="files" style="border:0">${o.files.map((f) => `<li><span>${esc(f.name)}</span><span class="hint num">${size(f.size)}</span></li>`).join('')}</ul>` : `<div class="empty">${t('لا ملفات مرفوعة لهذه القطع بعد. ارفعوها من صفحة المنتجات.', 'No files uploaded for these pieces yet. Upload them from Products.')}</div>`}</section>`,
-      `<a class="btn" href="mailto:${esc(o.email)}?subject=${encodeURIComponent('Mass & Grass · ' + o.id)}">${t('راسلوا العميل', 'E-mail the customer')}</a>${o.status === 'paid' ? `<button type="button" class="btn" data-resend>${t('أعيدوا إرسال رسالة الطلب', 'Resend the order e-mail')}</button>` : ''}<button type="button" class="btn warn" data-del-order>${t('احذفوا الطلب', 'Delete the order')}</button><span class="bar">${o.status === 'pending' && o.paypal_id ? `<button type="button" class="btn" data-check>${t('اسألوا PayPal عن الدفع', 'Ask PayPal about the payment')}</button>` : ''}${['paid', 'refunded', 'cancelled'].filter((s) => s !== o.status).map((s) => `<button type="button" class="btn ${s === 'paid' ? 'go' : s === 'cancelled' ? 'warn' : ''}" data-st="${s}">${t(...{ paid: ['سجّلوه مدفوعًا', 'Mark paid'], refunded: ['سجّلوه مُستردًّا', 'Mark refunded'], cancelled: ['ألغوا الطلب', 'Cancel order'] }[s])}</button>`).join('')}</span>`);
+      /* the sheet's foot in three plain groups: talk to the customer, change the order's state, and (apart, at the end) delete it */
+      `<div class="ftg"><small>${t('العميل', 'Customer')}</small><div><a class="btn sm" href="mailto:${esc(o.email)}?subject=${encodeURIComponent('Mass & Grass · ' + o.id)}">${t('راسلوه', 'E-mail them')}</a>${o.status === 'paid' ? `<button type="button" class="btn sm" data-resend>${t('أعيدوا رسالة الطلب', 'Resend order e-mail')}</button>` : ''}</div></div>
+       <div class="ftg"><small>${t('حالة الطلب', 'Order state')}</small><div>${o.status === 'pending' && o.paypal_id ? `<button type="button" class="btn sm" data-check>${t('اسألوا PayPal', 'Ask PayPal')}</button>` : ''}${['paid', 'refunded', 'cancelled'].filter((s) => s !== o.status).map((s) => `<button type="button" class="btn sm ${s === 'paid' ? 'go' : ''}" data-st="${s}">${t(...{ paid: ['مدفوع', 'Paid'], refunded: ['مُستردّ', 'Refunded'], cancelled: ['ملغى', 'Cancelled'] }[s])}</button>`).join('')}</div></div>
+       <div class="ftg end"><small>&nbsp;</small><div><button type="button" class="btn sm warn" data-del-order>${t('احذفوا الطلب', 'Delete order')}</button></div></div>`);
     $('#noteF').addEventListener('submit', async (e) => { e.preventDefault(); done(await api('PUT', '/api/admin/orders/note', { id: o.id, note: e.target.note.value }), t('حُفظت الملاحظة.', 'Note saved.')); });
     const af = $('#addrF'); if (af) af.addEventListener('submit', async (e) => { e.preventDefault(); const g = (k) => af[k].value.trim();
       done(await api('PUT', '/api/admin/orders/address', { id: o.id, ship: { name: g('name'), phone: g('phone'), line1: g('line1'), line2: g('line2'), city: g('city'), region: g('region'), postal: g('postal'), country: g('country').toUpperCase() } }), t('حُفظ العنوان.', 'Address saved.')); });
