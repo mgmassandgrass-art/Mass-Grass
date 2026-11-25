@@ -572,3 +572,9 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   world-atlas + d3-geo) tinted by buyers or visitors, the visit-to-sale funnel, sources and devices, most viewed pages.
   e2e must run on a fresh database (after `npm test` the prices differ). The map zooms (wheel, + / − / reset, drag, pinch); Palestine
   is one shape (Israel merged into it, `tools/world_map.mjs`) and visitors or orders Cloudflare marks IL are counted as PS.
+- Deployed 25 Nov 2026: dashboard round 2 and the zoomable map (everything on `claude/clever-ride-0z7fc2` is live).
+- Next (owner, 25 Nov 2026): a scroll-driven calendar film for the calendar page. The owner makes an AI image-to-video of the V2
+  desk calendar (white tent stand, silver rings) floating in the air on pure white, flipping two pages over the rings, then
+  landing on the white floor with its shadow (end frame = the owner's July desk mockup photo, static camera, 8s, no sound).
+  When the owner sends the video: turn it into frames (or an all-intra video) scrubbed by scroll on the calendar page so the
+  pages turn as you scroll and the calendar settles on the site's white; replace garbled AI month pages with the real ones if needed.
