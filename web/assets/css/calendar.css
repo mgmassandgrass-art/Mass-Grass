@@ -447,3 +447,12 @@ html[data-hand] body .cdesk .cdesk-ship{margin:0;font-family:var(--mono2)!import
 .ol-c .ol-im,.ps26 .ol-c .ol-im{aspect-ratio:1/1}
 .ol-c .ol-im img,.ps26 .ol-c .ol-im img{object-fit:contain;padding:4%}
 .ol-c .ol-im img+img{object-fit:cover;padding:0}
+/* the other calendar as a cell of the site's product grid (owner, 26 Nov 2026), like the postcards and paintings */
+.ol-ac{list-style:none;padding:0}
+.ol-ac .ol-ac-a{display:flex;flex-direction:column;color:inherit;text-decoration:none;height:100%}
+.ol-ac .ac-im img{max-width:none}
+.ol-ac .ol-one{position:absolute;inset:6%;width:88%;height:88%;max-width:none;object-fit:contain;mix-blend-mode:multiply;transition:opacity .25s;opacity:1;transform:none;filter:none}
+.ol-ac .mk{display:grid;place-items:center;background:#EDEBE6}
+.ol-ac .mk img{position:absolute;inset:4%;width:92%;height:92%;max-width:none;object-fit:contain;mix-blend-mode:multiply;opacity:1;transform:none}
+.ol-ac .ac-cell:hover .ol-one{opacity:0}
+.ol-ac .ac-ft h3{margin:0;font-size:clamp(22px,2vw,28px);font-weight:400;line-height:1.15;color:#9C4F52}

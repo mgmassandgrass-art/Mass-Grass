@@ -69,7 +69,7 @@
     const hs = $('#hship'), pr0 = MG.printOf('calendar', C.id); if (hs) hs.textContent = pr0 ? shipLine(pr0) : '';
     if (why === 'bag' || why === 'user') return;
     /* calendars from earlier years: one card each, each with its own page */
-    const og = $('#olgrid'); if (og) og.innerHTML = OLD.map((c) => `<li><a class="ol-c" href="${c.page}"><span class="ol-im"><img src="${c.img[0]}" alt="" loading="lazy"><img src="${c.img[1]}" alt="" loading="lazy"></span><span class="ol-y">${esc(L(c.when))}</span><span class="ol-n">${esc(L(c.short))}</span><span class="ol-p"><b>${MG.fmt(MG.price('calendar'))}</b><span class="go">${t('Open the calendar', 'افتحوا التقويم')}</span></span></a></li>`).join('');
+    const og = $('#olgrid'); if (og) og.innerHTML = OLD.map((c, i) => `<li class="ac-cell"><a class="ol-ac-a" href="${c.page}"><span class="ac-hd"><b class="no">${pad(i + 1)}</b><span class="lb">${esc(L(c.when))}</span></span><span class="ac-im"><img class="ol-one" src="${c.img[0]}" alt="" loading="lazy"><span class="mk"><img src="${c.img[1]}" alt="" loading="lazy"></span></span><span class="ac-ft"><h3 class="hand">${esc(L(c.short))}</h3><span class="pr">${MG.fmt(MG.price('calendar'))}</span></span></a></li>`).join('');
     bts.forEach((b, i) => { b.setAttribute('aria-label', name(MS[i])); b.querySelector('.btn-n').textContent = name(MS[i]); });
     $$('[data-alt-ar]').forEach((e) => { if (e.dataset.altEn == null) e.dataset.altEn = e.alt; e.alt = MG.ar ? e.dataset.altAr : e.dataset.altEn; });
     show(sel);
