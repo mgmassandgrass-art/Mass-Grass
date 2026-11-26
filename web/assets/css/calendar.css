@@ -459,3 +459,13 @@ html[data-hand] body .cdesk .cdesk-ship{margin:0;font-family:var(--mono2)!import
 /* white, like the rest of the page (owner, 26 Nov 2026): only the grid's layout is taken, not its grey */
 .ol-ac .ac-cell,.ol-ac .ac-im,.ol-ac .mk{background:#fff}
 .older .ol-ac{margin-top:0}
+/* (owner, 26 Nov 2026) no big section titles on the calendar pages: the head row names each section; the line beside the
+   bottles keeps to the end of the row */
+.btl-hd{justify-content:flex-end}
+.btl-hd:has(h2.sr){display:flex;margin-bottom:clamp(8px,2vh,20px)}
+/* the calendars' grid: two big cells a row (one on phones) */
+.ac-grid.ol-ac{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ac-grid.ol-ac>.ac-cell:nth-child(n){border-inline-end:1px solid var(--line-2)}
+.ac-grid.ol-ac>.ac-cell:nth-child(2n){border-inline-end:0}
+.ol-ac .ac-ft h3{font-size:clamp(24px,2.4vw,34px)}
+@media(max-width:700px){.ac-grid.ol-ac{grid-template-columns:minmax(0,1fr)}.ac-grid.ol-ac>.ac-cell:nth-child(n){border-inline-end:0}}
