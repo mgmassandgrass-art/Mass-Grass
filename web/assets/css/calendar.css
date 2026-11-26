@@ -456,3 +456,6 @@ html[data-hand] body .cdesk .cdesk-ship{margin:0;font-family:var(--mono2)!import
 .ol-ac .mk img{position:absolute;inset:4%;width:92%;height:92%;max-width:none;object-fit:contain;mix-blend-mode:multiply;opacity:1;transform:none}
 .ol-ac .ac-cell:hover .ol-one{opacity:0}
 .ol-ac .ac-ft h3{margin:0;font-size:clamp(22px,2vw,28px);font-weight:400;line-height:1.15;color:#9C4F52}
+/* white, like the rest of the page (owner, 26 Nov 2026): only the grid's layout is taken, not its grey */
+.ol-ac .ac-cell,.ol-ac .ac-im,.ol-ac .mk{background:#fff}
+.older .ol-ac{margin-top:0}
