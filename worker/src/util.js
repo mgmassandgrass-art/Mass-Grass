@@ -14,6 +14,7 @@ export const clean = (s, n) => String(s ?? '').replace(/[\u0000-\u001f<>]/g, '')
 export const CALS = {
   'calendar-2027': ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027', 'current'],
   'palestine-2027': ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027', 'palestine-2027'],
+  'gaza-2027': ['Places in Gaza, 2027', 'أماكن من غزة، 2027', 'gaza-2027'],
 };
 export const calFile = (k) => (CALS[k] || CALS['calendar-2027'])[2];
 // The book: one piece, one PDF, priced by prices.book; its id is also its file key. The admin's Book panel stores its

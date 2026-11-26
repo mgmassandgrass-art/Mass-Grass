@@ -30,7 +30,7 @@
   /* ---------- catalog ---------- */
   const DEF = window.MG_DEFAULT || { prices: {}, products: [] };
   /* the calendars on sale: the 2027 one, and earlier ones set for 2027 (a bag line's k is the calendar's id) */
-  const CALS = [DEF.calendar, DEF.palestine].filter(Boolean);
+  const CALS = [DEF.calendar, DEF.palestine, DEF.gaza].filter(Boolean);
   const calOf = (id) => CALS.find((c) => c.id === id) || DEF.calendar;
   let server = null;
   try { const el = doc.getElementById('mg-cat'); if (el) server = JSON.parse(el.textContent); } catch (e) {}
@@ -305,7 +305,7 @@
     const text = kind === 'book' ? t(`${name}, a book with drawings by Farah Al-Helou`, `${name}، كتاب برسوم فرح الحلو`) : kind === 'calendar' ? t(`${name}, a calendar by Farah Al-Helou from Gaza`, `${name}، تقويم لفرح الحلو من غزة`) : t(`${name}, a watercolour by Farah Al-Helou from Gaza`, `${name}، لوحة مائية لفرح الحلو من غزة`);
     if (navigator.share && matchMedia('(pointer:coarse)').matches) { try { await navigator.share({ title: 'Mass & Grass', text, url }); } catch (e) {} return; }
     if (shrm && shrm._for === btn) return closeShare(); closeShare();
-    const u = encodeURIComponent(url), tx = encodeURIComponent(text), image = encodeURIComponent('https://www.massandgrass.com/' + (kind === 'calendar' ? (id === 'palestine-2027' ? 'assets/pm-1.webp' : 'assets/v2-00.webp') : kind === 'book' ? BOOK.cover : img(id, product(kind, id))));
+    const u = encodeURIComponent(url), tx = encodeURIComponent(text), image = encodeURIComponent('https://www.massandgrass.com/' + (kind === 'calendar' ? (id === 'palestine-2027' ? 'assets/pm-1.webp' : id === 'gaza-2027' ? 'assets/gzm-2.webp' : 'assets/v2-00.webp') : kind === 'book' ? BOOK.cover : img(id, product(kind, id))));
     const rows = [['whatsapp', 'WhatsApp', `https://wa.me/?text=${tx}%20${u}`], ['facebook', 'Facebook', `https://www.facebook.com/sharer/sharer.php?u=${u}`], ['x', 'X', `https://twitter.com/intent/tweet?text=${tx}&url=${u}`],
       ['pinterest', 'Pinterest', `https://pinterest.com/pin/create/button/?url=${u}&media=${image}&description=${tx}`], ['telegram', 'Telegram', `https://t.me/share/url?url=${u}&text=${tx}`]];
     shrm = doc.createElement('div'); shrm.className = 'shrm'; shrm._for = btn; shrm.setAttribute('role', 'menu'); shrm.dir = AR ? 'rtl' : 'ltr';
@@ -354,7 +354,7 @@
     return `<li class="pr-it"><a class="lk" href="${href}"${cal ? '' : ` data-peek="${p.kind}:${esc(p.id)}"`}><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
       <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? c.id : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${shareBtn(p.kind, cal ? c.id : p.id)}</div></li>`;
   }
-  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, shipZone, shipHere, fmtEur, cur: CUR, countryName, get visitor() { return visitor(); }, countries, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, calOf, calendars: CALS, book: BOOK };
+  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, shipZone, shipHere, fmtEur, cur: CUR, countryName, get visitor() { return visitor(); }, countries, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, gaza: DEF.gaza, calOf, calendars: CALS, book: BOOK };
 
   function boot() { applyLang(); shell(); ready = true; rerender('init'); user.sync(); }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', boot) : boot();

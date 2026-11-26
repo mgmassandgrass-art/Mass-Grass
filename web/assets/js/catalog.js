@@ -130,5 +130,24 @@ window.MG_DEFAULT = {
       { k: 'ps-11', m: 11, n: ["The stone staircase", "الدرج الحجري"], q: ["The stone staircase", "الدرج الحجري"], d: ["An organic ascent connecting the levels of the earth through walls of light and shadow, celebrating the passage of time.", "صعود يصل طبقات الأرض بين جدران من ضوء وظل، احتفاءً بمرور الزمن."] },
       { k: 'ps-12', m: 12, n: ["The hanging lantern", "القنديل المعلّق"], q: ["The hanging lantern", "القنديل المعلّق"], d: ["A geometric glow breaking the stone's silence, where warm light meets ancient mass to turn the void into a living scene.", "وهج هندسي يكسر صمت الحجر، يلتقي فيه الضوء الدافئ بالكتلة القديمة فيحوّل الفراغ إلى مشهد حيّ."] }
     ]
+  },
+  gaza: {
+    id: 'gaza-2027', title: ['Places in Gaza, 2027', 'أماكن من غزة، 2027'],
+    short: ['Places in Gaza', 'أماكن من غزة'], img: 'assets/t-gz-00.webp', cover: 'assets/t-gz-00.webp', page: 'gaza.html', first: 2025,
+    pages: [
+      { k: 'gz-00', m: 0, n: ["The cover", "الغلاف"], q: ["We can always choose the beginning, but the ending is never in our hands.", "نستطيع دائمًا أن نختار البداية، أما النهاية فليست في أيدينا أبدًا."], d: ['', ''] },
+      { k: 'gz-01', m: 1, n: ["Road to Deir al-Balah", "الطريق إلى دير البلح"], q: ["Even the hardest paths can lead to a brighter horizon.", "أصعب الطرق قد تقود إلى أفق أكثر إشراقًا."], d: ['', ''] },
+      { k: 'gz-02', m: 2, n: ["Fire House", "بيت النار"], q: ["This oven witnessed so much of our lives.", "شهد هذا الفرن الكثير من حياتنا."], d: ['', ''] },
+      { k: 'gz-03', m: 3, n: ["Nakheel Street", "شارع النخيل"], q: ["Flowers are replaced by fragile structures that hold stories of loss, resilience and hope.", "حلّت مكان الأزهار بنايات هشّة تحمل حكايات الفقد والصمود والأمل."], d: ['', ''] },
+      { k: 'gz-04', m: 4, n: ["Maghazi Camp", "مخيم المغازي"], q: ["The weight of nostalgia in every corner.", "ثِقل الحنين في كل زاوية."], d: ['', ''] },
+      { k: 'gz-05', m: 5, n: ["Village House", "بيت القرية"], q: ["We share everything: fear, hunger, and also hope.", "نتشارك في كل شيء: الخوف والجوع، والأمل أيضًا."], d: ['', ''] },
+      { k: 'gz-06', m: 6, n: ["Zawayda Entry", "مدخل الزوايدة"], q: ["The last moments before the tents appear.", "اللحظات الأخيرة قبل أن تظهر الخيام."], d: ['', ''] },
+      { k: 'gz-07', m: 7, n: ["Sea Hill with displacement tents on a summer day", "تلّة البحر وخيام النزوح في يوم صيفي"], q: ["What does a displaced soul carry in their bag?", "ماذا تحمل الروح النازحة في حقيبتها؟"], d: ['', ''] },
+      { k: 'gz-08', m: 8, n: ["Maghazi Camp", "مخيم المغازي"], q: ["There's nothing sweeter than moments like this.", "لا شيء أحلى من لحظات كهذه."], d: ['', ''] },
+      { k: 'gz-09', m: 9, n: ["Road of the Shelter", "طريق المأوى"], q: ["The yearning for what once was remained a flame that refused to be extinguished.", "ظل الحنين إلى ما كان شعلةً أبت أن تنطفئ."], d: ['', ''] },
+      { k: 'gz-10', m: 10, n: ["Purple Tree", "الشجرة البنفسجية"], q: ["The violet tree itself was a symbol of hope.", "كانت الشجرة البنفسجية نفسها رمزًا للأمل."], d: ['', ''] },
+      { k: 'gz-11', m: 11, n: ["Umm al-Masakin Mosque", "مسجد أم المساكين"], q: ["A landmark that helps the displaced find their way.", "معلم يساعد النازحين على إيجاد طريقهم."], d: ['', ''] },
+      { k: 'gz-12', m: 12, n: ["Old House", "البيت القديم"], q: ["The area is now a border zone and no longer safe.", "المنطقة اليوم منطقة حدودية ولم تعد آمنة."], d: ['', ''] }
+    ]
   }
 };

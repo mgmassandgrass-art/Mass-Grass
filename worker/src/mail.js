@@ -41,7 +41,7 @@ a{color:${C.rose}}@media(max-width:620px){.pad{padding:28px 4px!important}}</sty
 // a ruled list of label / value rows (the receipt)
 const rows = (list) => `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid ${C.ink};margin:0 0 32px">${list.map(([k, v]) =>
   `<tr><td style="padding:12px 0;border-bottom:1px solid ${C.line};${cap}">${k}</td><td align="right" style="padding:12px 0;border-bottom:1px solid ${C.line};font:500 13px/1.4 ${MONO};color:${C.ink}">${v}</td></tr>`).join('')}</table>`;
-const thumbOf = (it) => `${ORIGIN}/assets/${it.kind === 'calendar' ? (it.k === 'palestine-2027' ? 't-ps-00' : 't-v2-00') : it.kind === 'book' ? 'book/pg-01' : it.kind === 'design' ? it.k : 't-' + (it.kind === 'pack' ? (it.pack || [])[0] : it.k)}.webp`;
+const thumbOf = (it) => `${ORIGIN}/assets/${it.kind === 'calendar' ? (it.k === 'palestine-2027' ? 't-ps-00' : it.k === 'gaza-2027' ? 't-gz-00' : 't-v2-00') : it.kind === 'book' ? 'book/pg-01' : it.kind === 'design' ? it.k : 't-' + (it.kind === 'pack' ? (it.pack || [])[0] : it.k)}.webp`;
 const KIND = { painting: 'Painting', postcard: 'Postcard', sticker: 'Sticker', pack: 'Sticker pack', calendar: 'Calendar', design: 'Design', book: 'Book' };
 const filesOf = (it, files) => it.kind === 'pack' ? files.filter((f) => f.kind === 'sticker' && (it.pack || []).includes(f.product_id))
   : it.kind === 'calendar' ? files.filter((f) => f.kind === 'calendar' && f.product_id === calFile(it.k)) : files.filter((f) => f.kind === it.kind && f.product_id === it.k);

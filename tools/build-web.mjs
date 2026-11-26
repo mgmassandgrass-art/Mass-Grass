@@ -26,6 +26,9 @@ for (const f of readdirSync(join(web, '_src/pages')).filter((x) => x.endsWith('.
   let out = layout.replaceAll('{{title}}', title.replace(/&/g, '&amp;')).replaceAll('{{desc}}', meta.desc.replace(/&/g, '&amp;').replace(/"/g, '&quot;'))
     .replaceAll('{{canon}}', f === 'index.html' ? '' : f.replace(/\.html$/, '')).replace('{{robots}}', meta.noindex ? '\n<meta name="robots" content="noindex">' : '')
     .replaceAll('{{v}}', v).replace('{{css}}', css).replace('{{js}}', js).replace('{{main}}', main);
+  // a hidden page (noindex) carries no canonical / og:url; a page served at a deeper address (/g/07) takes <base href="/"> so its relative links still work
+  if (meta.noindex) out = out.replace(/<link rel="canonical"[^>]*>\n/, '').replace(/<meta property="og:url"[^>]*>\n/, '');
+  if (meta.base) out = out.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<base href="/">');
   if (meta.home) out = out.replace('<html lang="en">', '<html lang="en" data-page="home" data-hand>');
   else if (meta.hand) out = out.replace('<html lang="en">', '<html lang="en" data-hand>');
   // each page carries its name, for its own colour (hand.css: one colour per page, from the calendar's months)

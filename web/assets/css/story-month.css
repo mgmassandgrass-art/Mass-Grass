@@ -1,0 +1,25 @@
+/* The story behind one page of the Places in Gaza calendar (hidden page, reached by the QR codes): white, the hand for the title,
+   Geist Mono for the small labels. */
+.sm{background:#fff}
+.smx>.wrap{display:grid;gap:clamp(16px,2vw,28px);justify-items:start;padding-block:clamp(40px,6vw,96px)}
+.sm-m,.sm-d{margin:0;font:500 11px/1.6 var(--mono2);letter-spacing:.15em;text-transform:uppercase;color:rgba(var(--ink-rgb),.6)}
+.sm-d{letter-spacing:.06em}
+.sm-m:empty,.sm-d:empty,.sm-tx:empty,.sm-ph:empty{display:none}
+html[data-hand] body main.sm .sm-t{margin:0;font-size:clamp(44px,5.2vw,84px)!important;line-height:1.02;color:var(--cal-rose,#9C4F52);max-width:16ch}
+.ar-on .sm-t{font-family:var(--handar,'Aref Ruqaa',serif);line-height:1.35;max-width:none}
+.sm-tx{max-width:60ch;display:grid;gap:1.2em;margin-top:clamp(8px,1.5vw,20px)}
+.sm-tx p{margin:0;white-space:normal;font:400 16px/1.9 var(--mono2);color:var(--ink)}
+.ar-on .sm-tx p{font:400 18px/2 var(--fa)}
+.sm-ph{list-style:none;margin:clamp(16px,3vw,40px) 0 0;padding:0;display:flex;flex-wrap:wrap;gap:clamp(12px,1.6vw,24px);align-items:flex-start;width:100%}
+.sm-ph li{margin:0;line-height:0;max-width:100%}
+.sm-ph img{display:block;width:auto;height:min(58vh,480px);max-width:100%;object-fit:contain;background:#f4f3ef}
+.sm-pg{margin:clamp(16px,3vw,40px) 0 0;display:grid;gap:12px;justify-items:start}
+.sm-pg[hidden]{display:none}
+.sm-pg img{display:block;width:min(100%,280px);height:auto;background:#fff;box-shadow:0 1px 2px rgba(40,30,20,.14),0 18px 36px -14px rgba(40,30,20,.3)}
+.sm-pg figcaption{font:500 11px/1.6 var(--mono2);letter-spacing:.1em;text-transform:uppercase;color:rgba(var(--ink-rgb),.6)}
+.ar-on .sm-m,.ar-on .sm-d,.ar-on .sm-pg figcaption{font:500 13px/1.6 var(--fa);letter-spacing:0;text-transform:none}
+.sm-end{margin:clamp(24px,4vw,56px) 0 0;font:500 11px/1.6 var(--mono2);letter-spacing:.15em;text-transform:uppercase}
+.sm-end a{color:rgba(var(--ink-rgb),.6);text-decoration:underline;text-underline-offset:4px}
+.sm-end a:hover,.sm-end a:focus-visible{color:var(--ink)}
+.ar-on .sm-end{font:500 14px/1.6 var(--fa);letter-spacing:0;text-transform:none}
+@media(max-width:600px){.sm-ph img{height:auto;width:100%;max-height:none}.sm-ph li{width:100%}}

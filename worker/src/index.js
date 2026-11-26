@@ -569,6 +569,7 @@ async function sharePage(env, url, p) {
   const h = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   let title = 'Things kept in bottles, the calendar', image = 'assets/v2-00.webp', to = `${o}/calendar`;
   if (kind === 'calendar' && id === 'palestine-2027') { title = CALS[id][0]; image = 'assets/pm-1.webp'; to = `${o}/palestine`; }
+  if (kind === 'calendar' && id === 'gaza-2027') { title = CALS[id][0]; image = 'assets/gzm-2.webp'; to = `${o}/gaza`; }
   if (kind === 'book') { const cat = await catalog(env); title = (cat.book && cat.book.title[0]) || 'Zero Waste & Our Palestinian Ancestors'; image = (cat.book && cat.book.imgs[0]) || 'assets/book/pg-01.webp'; to = `${o}/book`; }
   else if (kind !== 'calendar') {
     const cat = await catalog(env), pr = cat.products.find((x) => x.kind === kind && x.id === id);
@@ -609,8 +610,21 @@ async function handle(req, env0) {
     const p = path.replace(/\/+$/, '') || '/';
     try {
       if (p.startsWith('/api/')) return await api(req, env, url, p);
-      if (p.startsWith('/s/') && env.ONLY === 'calendar' && !/^\/s\/calendar(\/(calendar|palestine)-2027)?\/?$/.test(p)) return Response.redirect(`${url.origin}/calendar`, 302);
+      if (p.startsWith('/s/') && env.ONLY === 'calendar' && !/^\/s\/calendar(\/(calendar|palestine|gaza)-2027)?\/?$/.test(p)) return Response.redirect(`${url.origin}/calendar`, 302);
       if (p.startsWith('/s/')) return await sharePage(env, url, p);
+      // The Places in Gaza calendar's QR codes: /g/00 (cover) .. /g/12 serve ONE hidden story page (web/story-month.html, which reads the
+      // number from the address). It is served in the calendar-only mode too, is noindex, and is in no menu, link or sitemap; the page's own
+      // address (/story-month) is not reachable. Before launch (SOON=1) the coming-soon page below still wins.
+      if (/^\/story-month(\.html)?$/.test(p) && (req.method === 'GET' || req.method === 'HEAD')) {
+        const nf = await env.ASSETS.fetch(new Request(`${url.origin}/404.html`));
+        return withCatalog(env, new Response(nf.body, { status: 404, headers: nf.headers }), '404.html');
+      }
+      if (/^\/g\/(0\d|1[0-2])$/.test(p) && (req.method === 'GET' || req.method === 'HEAD') && env.SOON !== '1') {
+        const r = await env.ASSETS.fetch(new Request(`${url.origin}/story-month`));
+        const res = await withCatalog(env, new Response(r.body, { status: 200, headers: r.headers }), 'story-month.html');
+        const h = new Headers(res.headers); h.set('x-robots-tag', 'noindex'); h.set('cache-control', 'no-store');
+        return new Response(res.body, { status: 200, headers: h });
+      }
       // Clean addresses (owner, 24 Nov 2026): no page shows ".html" in the address bar; /calendar.html goes to /calendar, /index.html to /.
       if ((req.method === 'GET' || req.method === 'HEAD') && /\.html$/.test(p) && PAGES.includes(p.slice(1))) {
         const to = p === '/index.html' ? '/' : p.slice(0, -5);

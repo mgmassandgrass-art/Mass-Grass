@@ -469,3 +469,20 @@ html[data-hand] body .cdesk .cdesk-ship{margin:0;font-family:var(--mono2)!import
 .ac-grid.ol-ac>.ac-cell:nth-child(2n){border-inline-end:0}
 .ol-ac .ac-ft h3{font-size:clamp(24px,2.4vw,34px)}
 @media(max-width:700px){.ac-grid.ol-ac{grid-template-columns:minmax(0,1fr)}.ac-grid.ol-ac>.ac-cell:nth-child(n){border-inline-end:0}}
+
+/* ---------- Places in Gaza (2025 calendar set for 2027): the Palestine page's layout, with whole pages and photographs ---------- */
+.gz27 .cdesk>img{aspect-ratio:2000/1335;width:min(100%,calc((100svh - 49px - 190px) * 2000 / 1335),1500px)}
+.gz27 .btshow .bts-im.gz-im{aspect-ratio:226/397;width:min(100%,calc(78vh * 226 / 397),440px);margin:0;justify-self:center;background:#fff!important;-webkit-mask-image:none;mask-image:none;box-shadow:0 1px 2px rgba(40,30,20,.14),0 18px 36px -14px rgba(40,30,20,.3)}
+@media(max-width:900px){.gz27 .btshow .bts-im.gz-im{width:min(100%,320px)}}
+.gz27 .gz-pgs{position:absolute;inset:0}
+.gz27 .btshow .gz-pgs img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:contain;opacity:0;transition:opacity .22s ease}
+.gz27 .btshow .gz-pgs img.on{opacity:1}
+.gz27 .psb img{aspect-ratio:226/397}
+.gz27 .cfl-pages{width:min(100%,calc((100svh - 49px - 10vh) * 226 / 397 * 2 + 56px),1100px)}
+.gz27 .cfl-pages img{aspect-ratio:226/397;background:#fff}
+.gz27 .cfl-pages .cfl-cover{width:calc((100% - clamp(20px,2.4vw,40px))/2)}
+.gz27 .gz-ph{list-style:none;margin:0;padding:0;display:grid;gap:clamp(16px,2vw,32px)}
+.gz27 .gz-ph li{margin:0;line-height:0}
+.gz27 .gz-ph img{display:block;width:100%;height:auto}
+main>section.gzph{padding-block:0}
+main>section.gzph>.wrap{padding-block:var(--sec)}
