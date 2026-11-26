@@ -6,7 +6,7 @@ chk() { if [ "$2" = "$3" ]; then echo "ok   $1"; else echo "FAIL $1 (got $3, wan
 code() { curl -s -o /dev/null -w "%{http_code}" -m 20 "$@"; }
 h=$(code "$S/"); [ "$h" = 302 ] && h=200  # calendar-only opening (ONLY=calendar): the home page goes to the calendar
 chk "home answers" 200 "$h"
-chk "coming-soon page" 200 "$(code "$S/soon")"
+chk "coming-soon page has no address of its own" 404 "$(code "$S/soon")"
 chk "admin sends visitors to sign-in" 302 "$(code "$S/admin/")"
 chk "admin API hidden" 404 "$(code "$S/api/admin/overview")"
 chk "catalog API" 200 "$(code "$S/api/catalog")"
