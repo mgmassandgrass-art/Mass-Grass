@@ -6,14 +6,19 @@
 <title>{{title}}</title>
 <meta name="description" content="{{desc}}">
 <meta name="theme-color" content="#F3F2EE">
-<link rel="canonical" href="https://www.massandgrass.com/{{canon}}">
+<link rel="canonical" href="{{canon}}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Mass &amp; Grass">
 <meta property="og:title" content="{{title}}">
 <meta property="og:description" content="{{desc}}">
-<meta property="og:url" content="https://www.massandgrass.com/{{canon}}">
-<meta property="og:image" content="https://www.massandgrass.com/assets/hero.webp">
-<meta name="twitter:card" content="summary_large_image">{{robots}}
+<meta property="og:url" content="{{canon}}">
+<meta property="og:image" content="{{image}}">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{title}}">
+<meta name="twitter:description" content="{{desc}}">
+<meta name="twitter:image" content="{{image}}">{{robots}}{{ld}}
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="preload" href="fonts/quicksand-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/patrick-hand-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -80,6 +85,7 @@
   <div class="ft-z"><small data-ar="© 2026 ماس آند غراس، غزة، فلسطين">© 2026 Mass &amp; Grass, Gaza, Palestine</small><span class="payi" role="img" aria-label="PayPal, Visa, Mastercard" data-label-ar="PayPal، فيزا، ماستركارد"><img src="assets/pay/paypal.svg" alt="" width="38" height="24"><img src="assets/pay/visa.svg" alt="" width="38" height="24"><img src="assets/pay/mastercard.svg" alt="" width="38" height="24"></span><div class="soc" id="soc"></div></div>
 </footer>
 
+<script src="assets/js/routes.js?v={{v}}" defer></script>
 <script src="assets/js/catalog.js?v={{v}}" defer></script>
 <script src="assets/js/art.js?v={{v}}" defer></script>
 <script src="assets/js/core.js?v={{v}}" defer></script>
