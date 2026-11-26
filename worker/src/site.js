@@ -2,6 +2,7 @@
 import MANIFEST from './manifest.json';
 import { json, fail, readJson, clean, sniff, bytes } from './util.js';
 import { getSetting, dropCache } from './shop.js';
+import { FILE_PATH, pathOf } from './routes.js';
 
 export const PAGES = MANIFEST.files.filter((f) => f.path.endsWith('.html')).map((f) => f.path);
 const SYSTEM_PAGES = ['index.html', 'checkout.html', 'account.html', 'profile.html', '404.html', 'soon.html']; // never hidden
@@ -82,7 +83,7 @@ const titleOf = (html) => unHtml((html.match(/<title>([^<]*)/) || [, ''])[1]);
 // ---------- what the Worker adds to every page: hidden pages' links and hidden sections ----------
 export async function pageRules(env) { return getSetting(env, 'pages', { hidden: [], sections: {} }); }
 export function hideCss(rules, path) {
-  const links = (rules.hidden || []).flatMap((p) => { const s = p.replace(/\.html$/, ''); return [`a[href="${p}"]`, `a[href="/${p}"]`, `a[href="/${s}"]`, `a[href^="${p}?"]`, `a[href^="${p}#"]`].map((x) => `html body ${x}`); });
+  const links = (rules.hidden || []).flatMap((p) => { const s = p.replace(/\.html$/, ''), r = FILE_PATH[p]; return [`a[href="${p}"]`, `a[href="/${p}"]`, `a[href="/${s}"]`, `a[href^="${p}?"]`, `a[href^="${p}#"]`, ...(r && r !== '/' ? [`a[href="${r}"]`, `a[href^="${r}?"]`, `a[href^="${r}#"]`] : [])].map((x) => `html body ${x}`); });
   const secs = ((rules.sections || {})[path] || []).map((id) => `html body #${id}`);
   const all = [...links, ...secs];
   return all.length ? `<style>${all.join(',')}{display:none!important}</style>` : '';
@@ -126,7 +127,7 @@ export async function siteAdmin(env, req, url, p) {
     const rules = await pageRules(env), edited = await publishedPaths(env), out = [];
     for (const path of PAGES) {
       const h = (await current(env, origin, path)) || '';
-      out.push({ path, title: titleOf(h), url: '/' + (path === 'index.html' ? '' : path.replace(/\.html$/, '')), hidden: (rules.hidden || []).includes(path),
+      out.push({ path, title: titleOf(h), url: pathOf(path), hidden: (rules.hidden || []).includes(path),
         system: SYSTEM_PAGES.includes(path), edited: edited.has(path) || (JS_OF[path] || []).some((j) => edited.has(j)), sections: sections(h).map((id) => ({ id, hidden: ((rules.sections || {})[path] || []).includes(id) })), texts: texts(h, await scriptsOf(env, origin, path)).length });
     }
     return json({ pages: out });

@@ -37,12 +37,12 @@ let bad = 0; const ok = (n, c, extra) => { if (!c) { bad++; console.log('FAIL', 
     await p.goto(B + '/shop', { waitUntil: 'load' }); await p.click('#shgrid .add >> nth=0'); await p.waitForTimeout(200);
     ok('bag counts one', (await p.textContent('[data-bagn]')) === '1');
     ok('button says in your bag', /In your bag/.test(await p.textContent('#shgrid .add >> nth=0')));
-    await p.goto(B + '/paintings#dovegirl', { waitUntil: 'load' }); await p.waitForSelector('dialog#view[open]'); await p.click('#vadd'); await p.waitForTimeout(200);
+    await p.goto(B + '/shop/paintings#dovegirl', { waitUntil: 'load' }); await p.waitForSelector('dialog#view[open]'); await p.click('#vadd'); await p.waitForTimeout(200);
     ok('painting added from its sheet', (await p.textContent('[data-bagn]')) === '2');
-    await p.goto(B + '/stickers', { waitUntil: 'load' }); for (let i = 0; i < 6; i++) await p.click(`#grid .sc >> nth=${i}`);
+    await p.goto(B + '/shop/stickers', { waitUntil: 'load' }); for (let i = 0; i < 6; i++) await p.click(`#grid .sc >> nth=${i}`);
     await p.click('#pbAdd'); await p.waitForTimeout(300);
     ok('six stickers go in as one pack', (await p.textContent('[data-bagn]')) === '3');
-    await p.goto(B + '/calendar', { waitUntil: 'load' }); await p.click('.cdesk [data-add=calendar]'); await p.waitForTimeout(200);
+    await p.goto(B + '/calendars/things-kept-in-bottles-2027', { waitUntil: 'load' }); await p.click('.cdesk [data-add=calendar]'); await p.waitForTimeout(200);
     await p.click('#bagb'); await p.waitForSelector('dialog.bagd[open]');
     ok('bag sheet totals 12+12+3+10', /€37/.test(await p.textContent('.bagd .tt')));
     await p.click('.bagd a.ink'); await p.waitForURL('**/checkout**'); await p.waitForSelector('#f');
@@ -64,7 +64,7 @@ let bad = 0; const ok = (n, c, extra) => { if (!c) { bad++; console.log('FAIL', 
     await c.close(); }
   // 3b · the book turns, sells, and the request form reaches the server
   { const { c, p, errs } = await ctx(1440, 900, false);
-    await p.goto(B + '/book', { waitUntil: 'load' }); await p.waitForSelector('.bk-leaf');
+    await p.goto(B + '/shop/more-designs/zero-waste-and-our-palestinian-ancestors', { waitUntil: 'load' }); await p.waitForSelector('.bk-leaf');
     ok('the book shows two pages side by side', await p.evaluate(() => document.querySelector('.bk-book').classList.contains('two')));
     ok('it opens on the cover', /^01 \//.test(await p.textContent('.bk-n')));
     await p.click('.bk [data-go="1"]'); await p.waitForTimeout(150); ok('the next button turns a leaf', /^02–03/.test(await p.textContent('.bk-n')), await p.textContent('.bk-n'));
@@ -75,15 +75,15 @@ let bad = 0; const ok = (n, c, extra) => { if (!c) { bad++; console.log('FAIL', 
     await p.mouse.move(box.x + box.width * 0.62, box.y + box.height / 2); await p.mouse.down(); await p.mouse.move(box.x + box.width * 0.3, box.y + box.height / 2, { steps: 8 }); await p.mouse.up(); await p.waitForTimeout(150);
     ok('a drag turns a leaf', /^02–03/.test(await p.textContent('.bk-n')), await p.textContent('.bk-n'));
     await p.click('.bk-txt [data-buy-book]'); await p.waitForTimeout(200); ok('buy puts the book in the bag', (await p.textContent('[data-bagn]')) === '1');
-    await p.goto(B + '/designs', { waitUntil: 'load' }); await p.waitForSelector('.bk-leaf');
+    await p.goto(B + '/shop/more-designs', { waitUntil: 'load' }); await p.waitForSelector('.bk-leaf');
     ok('the designs page holds the book and its credit', /Najla Abdellatif/.test(await p.textContent('.bk-txt')));
-    await p.goto(B + '/commission', { waitUntil: 'load' });
+    await p.goto(B + '/request-a-design', { waitUntil: 'load' });
     await p.click('text=A design'); await p.fill('#cm-body', 'A small logo for our bakery, in watercolour.'); await p.fill('#cm-name', 'E2E'); await p.fill('#cm-email', 'e2e-req@example.com');
     await p.click('#cmf [type=submit]'); await p.waitForTimeout(800); ok('the request is sent and thanked', /Thank you/.test(await p.textContent('#cmf')));
     ok('book and request had no errors', !errs.length, errs.join(' | '));
     await c.close(); }
   { const { c, p, errs } = await ctx(390, 844, true);
-    await p.goto(B + '/book', { waitUntil: 'load' }); await p.waitForSelector('.bk-leaf');
+    await p.goto(B + '/shop/more-designs/zero-waste-and-our-palestinian-ancestors', { waitUntil: 'load' }); await p.waitForSelector('.bk-leaf');
     ok('on a phone the book shows one page', !(await p.evaluate(() => document.querySelector('.bk-book').classList.contains('two'))));
     await p.click('.bk [data-go="1"]'); await p.waitForTimeout(150); ok('and turns one page', /^02 \//.test(await p.textContent('.bk-n')));
     ok('phone book had no errors', !errs.length, errs.join(' | ')); await c.close(); }

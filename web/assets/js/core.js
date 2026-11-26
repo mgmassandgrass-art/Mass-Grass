@@ -219,10 +219,17 @@
   function run(fn, why) { try { fn(why); } catch (e) { console.error(e); } }
   /* on the live shop the addresses carry no ".html" (the server sends /x.html to /x): links are written clean so no click
      waits for that hop; the static preview has no server, so its links stay as they are */
-  const cleanLinks = () => { if (!server) return; $$('a[href*=".html"]').forEach((a) => { const h = a.getAttribute('href'); if (/^[a-z]+:|^\/\//i.test(h)) return;
-    a.setAttribute('href', h.replace(/^(\/?)index\.html(?=$|[?#])/, '$1./').replace(/([\w-]+)\.html(?=$|[?#])/, '$1')); }); };
+  /* MG_ROUTES (assets/js/routes.js, written by tools/build-web.mjs from web/routes.json) maps a page file to its public address */
+  const R = window.MG_ROUTES || {};
+  const pathOf = (file) => R[file] || '/' + file.replace(/\.html$/, '');
+  const cleanLinks = () => { if (!server) return;
+    /* the Worker serves pages with <base href="/">, so a bare "#x" link would point at the home page: keep it on this page */
+    const based = !!doc.querySelector('base[href]');
+    $$('a[href*=".html"]').forEach((a) => { const h = a.getAttribute('href'); if (/^[a-z]+:|^\/\//i.test(h)) return;
+      a.setAttribute('href', h.replace(/^\/?([\w-]+\.html)(?=$|[?#])/, (m, f) => pathOf(f))); });
+    if (based) $$('a[href^="#"]').forEach((a) => { const h = a.getAttribute('href'); if (h.length > 1) a.setAttribute('href', location.pathname + location.search + h); }); };
   /* links drawn later (the account link, cards) are made clean the moment they are pressed */
-  if (server) ['pointerdown', 'click', 'focusin'].forEach((ev) => doc.addEventListener(ev, (e) => { if (e.target.closest && e.target.closest('a[href*=".html"]')) cleanLinks(); }, true));
+  if (server) ['pointerdown', 'click', 'focusin'].forEach((ev) => doc.addEventListener(ev, (e) => { if (e.target.closest && e.target.closest('a[href*=".html"], a[href^="#"]')) cleanLinks(); }, true));
   function rerender(why) { if (!ready) return; pages.forEach((fn) => run(fn, why || 'init')); $$('[data-price]').forEach((e) => (e.textContent = fmt(price(e.dataset.price)))); paintAcct(); paintBag(); tear(); cleanLinks(); }
 
   /* ---------- header, menu, newsletter ---------- */
@@ -236,8 +243,9 @@
     $$('.bagb').forEach((b) => b.addEventListener('click', openBag));
     const sb = $('#shopb'), sd = $('#shopdd');
     if (sb && sd) {
-      const here = (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '');
-      if (['shop', 'paintings', 'postcards', 'stickers', 'calendar', 'designs', 'book'].includes(here)) { sb.classList.add('cur'); const a = sd.querySelector(`a[href="${here}.html"]`); if (a) a.setAttribute('aria-current', 'page'); }
+      const cur = location.pathname.replace(/\/+$/, '') || '/';
+      const here = (Object.keys(R).find((f) => R[f] === cur) || location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '');
+      if (['shop', 'paintings', 'postcards', 'stickers', 'calendar', 'designs', 'book'].includes(here)) { sb.classList.add('cur'); const a = sd.querySelector(`a[href="${here}.html"], a[href="${pathOf(here + '.html')}"]`); if (a) a.setAttribute('aria-current', 'page'); }
       const open = (on) => { sd.hidden = !on; sb.setAttribute('aria-expanded', on); };
       sb.addEventListener('click', (e) => { e.stopPropagation(); open(sd.hidden); });
       /* with a mouse the list opens on hover, as on the reference, and closes a moment after the pointer leaves */

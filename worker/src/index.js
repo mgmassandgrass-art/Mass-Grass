@@ -3,6 +3,7 @@ import { json, fail, readJson, clean, sniff, bytes, CALS } from './util.js';
 import { filesAdmin, download } from './files.js';
 import { sendMail, layout, contactEmail, p as mp, pAr, small, btn as mbtn, MONO, C } from './mail.js';
 import { visitorCurrency } from './fx.js';
+import { FILE_PATH, PATH_FILE, INTERNAL, LEGACY, cleanHref } from './routes.js';
 import { siteAdmin, publishedPaths, current, pageRules, hideCss, imageOverrides, serveImageFile, PAGES, TYPES } from './site.js';
 import { track } from './visits.js';
 import { catalog, createOrder, captureOrder, myOrders, serveImage, admin, sweepPending, trackOrder } from './shop.js';
@@ -460,7 +461,15 @@ async function withCatalog(env, res, path) {
   const data = JSON.stringify({ products: cat.products, prices: cat.prices, links: cat.links, shipping: cat.shipping, book: cat.book, only: env.ONLY || '', visitor: env.VISITOR || '', cur: await visitorCurrency(env, cat) }).replace(/</g, '\\u003c');
   const js = data;
   const css = hideCss(cat.pages || {}, path || '');
-  const out = new HTMLRewriter().on('head', { element(e) { e.append(`<script type="application/json" id="mg-cat">${js}</script>${css}`, { html: true }); } }).transform(res);
+  // Pages are served at deeper addresses (/shop/paintings), so the Worker puts <base href="/"> right after <head>: the pages' relative
+  // assets/ and fonts/ links keep working (the files in web/ have no base tag, they are also previewed from a flat folder).
+  // A bare "#x" link would then point at the home page, so it is kept on this page, and "x.html" links are written as their public path.
+  const here = env.PATHNAME || '/', hasBase = path === 'story-month.html'; // that page carries its own base tag
+  const out = new HTMLRewriter()
+    .on('head', { element(e) { if (!hasBase) e.prepend('<base href="/">', { html: true }); e.append(`<script type="application/json" id="mg-cat">${js}</script>${css}`, { html: true }); } })
+    .on('a[href]', { element(e) { const h = e.getAttribute('href'); if (!h || /^[a-z][a-z0-9+.-]*:|^\/\//i.test(h)) return;
+      if (h.length > 1 && h[0] === '#') e.setAttribute('href', here + h); else if (/\.html(?=$|[?#])/.test(h)) e.setAttribute('href', cleanHref(h)); } })
+    .transform(res);
   const h = new Headers(out.headers); h.set('cache-control', 'no-cache'); h.delete('etag'); h.delete('last-modified');
   return new Response(out.body, { status: out.status, headers: h });
 }
@@ -562,19 +571,19 @@ function secure(res) {
 
 // A shared link, /s/<kind>/<id>: a small page whose title and picture are the piece's own (what WhatsApp, Facebook and X show),
 // which then takes the visitor to the piece on its page. Names come from the catalog; anything unknown goes to the shop.
-const SHARE_PAGE = { painting: 'paintings', postcard: 'postcards', sticker: 'stickers', calendar: 'calendar', design: 'designs', book: 'book' };
+const SHARE_PAGE = { painting: 'paintings.html', postcard: 'postcards.html', sticker: 'stickers.html', calendar: 'calendar.html', design: 'designs.html', book: 'book.html' };
 async function sharePage(env, url, p) {
   const [, , kind, id = ''] = p.split('/'), page = SHARE_PAGE[kind], o = url.origin;
-  if (!page) return Response.redirect(`${o}/shop`, 302);
+  if (!page) return Response.redirect(`${o}${FILE_PATH['shop.html']}`, 302);
   const h = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  let title = 'Things kept in bottles, the calendar', image = 'assets/v2-00.webp', to = `${o}/calendar`;
-  if (kind === 'calendar' && id === 'palestine-2027') { title = CALS[id][0]; image = 'assets/pm-1.webp'; to = `${o}/palestine`; }
-  if (kind === 'calendar' && id === 'gaza-2027') { title = CALS[id][0]; image = 'assets/gzm-2.webp'; to = `${o}/gaza`; }
-  if (kind === 'book') { const cat = await catalog(env); title = (cat.book && cat.book.title[0]) || 'Zero Waste & Our Palestinian Ancestors'; image = (cat.book && cat.book.imgs[0]) || 'assets/book/pg-01.webp'; to = `${o}/book`; }
+  let title = 'Things kept in bottles, the calendar', image = 'assets/v2-00.webp', to = `${o}${FILE_PATH['calendar.html']}`;
+  if (kind === 'calendar' && id === 'palestine-2027') { title = CALS[id][0]; image = 'assets/pm-1.webp'; to = `${o}${FILE_PATH['palestine.html']}`; }
+  if (kind === 'calendar' && id === 'gaza-2027') { title = CALS[id][0]; image = 'assets/gzm-2.webp'; to = `${o}${FILE_PATH['gaza.html']}`; }
+  if (kind === 'book') { const cat = await catalog(env); title = (cat.book && cat.book.title[0]) || 'Zero Waste & Our Palestinian Ancestors'; image = (cat.book && cat.book.imgs[0]) || 'assets/book/pg-01.webp'; to = `${o}${FILE_PATH['book.html']}`; }
   else if (kind !== 'calendar') {
     const cat = await catalog(env), pr = cat.products.find((x) => x.kind === kind && x.id === id);
-    if (!pr) return Response.redirect(`${o}/${page}`, 302);
-    title = pr.title_en; image = (pr.extra && pr.extra.img) || `assets/${pr.id}.webp`; to = `${o}/${page}#${encodeURIComponent(pr.id)}`;
+    if (!pr) return Response.redirect(`${o}${FILE_PATH[page]}`, 302);
+    title = pr.title_en; image = (pr.extra && pr.extra.img) || `assets/${pr.id}.webp`; to = `${o}${FILE_PATH[page]}#${encodeURIComponent(pr.id)}`;
   }
   const desc = 'A watercolour by Farah Al-Helou from Gaza, on Mass & Grass.', img = /^https?:/.test(image) ? image : `${o}/${image.replace(/^\//, '')}`;
   return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${h(title)} · Mass &amp; Grass</title>
@@ -608,9 +617,10 @@ async function handle(req, env0) {
     try { path = decodeURIComponent(path); } catch {} // '/%61dmin/' must meet the same checks as '/admin/' (the asset server decodes it)
     path = path.replace(/\/{2,}/g, '/'); // '//admin/' must not slip past the admin gate either
     const p = path.replace(/\/+$/, '') || '/';
+    env.PATHNAME = p === '/' ? '/' : p;
     try {
       if (p.startsWith('/api/')) return await api(req, env, url, p);
-      if (p.startsWith('/s/') && env.ONLY === 'calendar' && !/^\/s\/calendar(\/(calendar|palestine|gaza)-2027)?\/?$/.test(p)) return Response.redirect(`${url.origin}/calendar`, 302);
+      if (p.startsWith('/s/') && env.ONLY === 'calendar' && !/^\/s\/calendar(\/(calendar|palestine|gaza)-2027)?\/?$/.test(p)) return Response.redirect(`${url.origin}${FILE_PATH['calendar.html']}`, 302);
       if (p.startsWith('/s/')) return await sharePage(env, url, p);
       // The Places in Gaza calendar's QR codes: /g/00 (cover) .. /g/12 serve ONE hidden story page (web/story-month.html, which reads the
       // number from the address). It is served in the calendar-only mode too, is noindex, and is in no menu, link or sitemap; the page's own
@@ -625,10 +635,20 @@ async function handle(req, env0) {
         const h = new Headers(res.headers); h.set('x-robots-tag', 'noindex'); h.set('cache-control', 'no-store');
         return new Response(res.body, { status: 200, headers: h });
       }
-      // Clean addresses (owner, 24 Nov 2026): no page shows ".html" in the address bar; /calendar.html goes to /calendar, /index.html to /.
-      if ((req.method === 'GET' || req.method === 'HEAD') && /\.html$/.test(p) && PAGES.includes(p.slice(1))) {
-        const to = p === '/index.html' ? '/' : p.slice(0, -5);
-        return new Response(null, { status: 301, headers: { location: `${url.origin}${to}${url.search}`, 'cache-control': 'no-store' } });
+      // Addresses (owner, 26 Nov 2026): every page has one public path from web/routes.json (/shop/paintings, /farahs-story ...). The older
+      // addresses (/calendar, /calendar.html, /story, /designs ...) are sent to it with a 301; the query string is kept.
+      if ((req.method === 'GET' || req.method === 'HEAD') && Object.hasOwn(LEGACY, p)) {
+        return new Response(null, { status: 301, headers: { location: `${url.origin}${LEGACY[p]}${url.search}`, 'cache-control': 'no-store' } });
+      }
+      // pages with no public path of their own (later, soon, 404): only the signed-in admin can open them (from the page list)
+      const internal = [...INTERNAL].find((f) => p === '/' + f || p === '/' + f.replace(/\.html$/, ''));
+      if (internal && (req.method === 'GET' || req.method === 'HEAD')) {
+        if (!isAdmin(env, await currentUser(env, req))) {
+          const nf = await env.ASSETS.fetch(new Request(`${url.origin}/404.html`));
+          return withCatalog(env, new Response(nf.body, { status: 404, headers: nf.headers }), '404.html');
+        }
+        const r = await env.ASSETS.fetch(new Request(`${url.origin}/${internal.replace(/\.html$/, '')}`));
+        return withCatalog(env, new Response(r.body, { status: r.status, headers: r.headers }), internal);
       }
       if (p === '/admin' || p.startsWith('/admin/')) {
         const u = await currentUser(env, req);
@@ -652,11 +672,11 @@ async function handle(req, env0) {
       // Calendar-only opening (ONLY=calendar): the home page goes to the calendar, the other shop pages say they open soon.
       // The signed-in admin still sees everything.
       if (env.ONLY === 'calendar') {
-        const pg = p.replace(/^\//, '').replace(/\.html$/, '');
-        const closed = ['shop', 'paintings', 'postcards', 'stickers', 'designs', 'book', 'commission'].includes(pg);
-        const home = p === '/' || pg === 'index';
+        const file = PATH_FILE[p];
+        const closed = ['shop.html', 'paintings.html', 'postcards.html', 'stickers.html', 'designs.html', 'book.html', 'commission.html'].includes(file);
+        const home = file === 'index.html';
         if ((closed || home) && !isAdmin(env, await currentUser(env, req))) {
-          if (home) return new Response(null, { status: 302, headers: { location: `${url.origin}/calendar${url.search}`, 'cache-control': 'no-store' } });
+          if (home) return new Response(null, { status: 302, headers: { location: `${url.origin}${FILE_PATH['calendar.html']}${url.search}`, 'cache-control': 'no-store' } });
           const r = await env.ASSETS.fetch(new Request(`${url.origin}/later`));
           return withCatalog(env, new Response(r.body, { status: 200, headers: r.headers }), 'later.html');
         }
@@ -666,7 +686,7 @@ async function handle(req, env0) {
         return withCatalog(env, new Response(nf.body, { status: 404, headers: nf.headers }), '404.html');
       };
       // Which site file this is: '/', '/shop', '/shop.html' → index.html, shop.html; scripts by their path.
-      const fp = p === '/' ? 'index.html' : /\.(js|css)$/.test(p) ? p.slice(1) : p.slice(1).replace(/\.html$/, '') + '.html';
+      const fp = PATH_FILE[p] || (/\.(js|css)$/.test(p) ? p.slice(1) : p.slice(1).replace(/\.html$/, '') + '.html');
       if (PAGES.includes(fp) && (((await catalog(env)).pages || {}).hidden || []).includes(fp)) return notFound();
       if ((await publishedPaths(env)).has(fp)) {
         const row = await env.DB.prepare('SELECT published FROM site_files WHERE path=?').bind(fp).first();
@@ -682,7 +702,9 @@ async function handle(req, env0) {
       // Pages carry live data, so never answer them with "not modified" from the static file's ETag.
       const isFile = /\.(webp|jpg|png|svg|ico|woff2|js|css|json|txt|xml)$/.test(p);
       const h0 = new Headers(req.headers); if (!isFile) { h0.delete('if-none-match'); h0.delete('if-modified-since'); }
-      const r = await env.ASSETS.fetch(isFile ? req : new Request(req.url, { method: req.method, headers: h0 }));
+      // a page's file is fetched by its own name, whatever its public path is
+      const pageUrl = PATH_FILE[p] ? `${url.origin}${fp === 'index.html' ? '/' : '/' + fp.replace(/\.html$/, '')}` : req.url;
+      const r = await env.ASSETS.fetch(isFile ? req : new Request(pageUrl, { method: req.method, headers: h0 }));
       if (r.status === 404) return notFound();
       const page = await withCatalog(env, r, fp);
       return (page.headers.get('content-type') || '').includes('text/html') ? track(env, req, url, fp, page, isAdmin(env, await currentUser(env, req))) : page;

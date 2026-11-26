@@ -4,7 +4,7 @@ import fs from 'fs';
 const root = new URL('../../web/', import.meta.url);
 const files = fs.readdirSync(root).filter((f) => f.endsWith('.html')).sort().map((p) => {
   const s = fs.readFileSync(new URL(p, root), 'utf8');
-  const js = [...s.matchAll(/<script src="(assets\/js\/[\w-]+\.js)/g)].map((m) => m[1]).filter((f) => !/\/(boot|catalog|art)\.js$/.test(f));
+  const js = [...s.matchAll(/<script src="(assets\/js\/[\w-]+\.js)/g)].map((m) => m[1]).filter((f) => !/\/(boot|catalog|art|routes)\.js$/.test(f));
   return { path: p, bytes: s.length, js };
 });
 const imgs = fs.readdirSync(new URL('assets/', root)).filter((f) => /\.(webp|jpg|png|svg)$/.test(f)).sort();

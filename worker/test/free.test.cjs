@@ -27,7 +27,7 @@ const api = async (m, p, body, raw, noCookie) => { const r = await fetch(B + p, 
   await p.fill('#em', 'visitor@example.com'); await p.click('#f [type=submit]'); await p.waitForSelector('.cd', { timeout: 8000 }).catch(() => {});
   ok('the files are on the page', (await p.locator('.cd .cd-files a').count()) === 1);
   ok('the bag is empty after', (await p.textContent('[data-bagn]')) === '0');
-  await p.goto(B + '/paintings#hill', { waitUntil: 'load' }); await p.waitForSelector('dialog#view[open]');
+  await p.goto(B + '/shop/paintings#hill', { waitUntil: 'load' }); await p.waitForSelector('dialog#view[open]');
   ok('the painting sheet says free download', /Free download/.test(await p.textContent('#vadd')));
   ok('no page errors', !errs.length, errs.join('|')); await b.close();
   // limits and figures

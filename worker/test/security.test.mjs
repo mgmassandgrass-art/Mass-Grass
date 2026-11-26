@@ -17,9 +17,9 @@ let r;
 r = await fetch(B + '/'); const csp = r.headers.get('content-security-policy') || '', html = await r.text();
 ok('CSP has no unsafe-inline for scripts', /script-src 'self'[^;]*;/.test(csp) && !/script-src[^;]*unsafe-inline/.test(csp));
 ok('HSTS, nosniff, frame deny', /max-age=\d{8}/.test(r.headers.get('strict-transport-security')) && r.headers.get('x-content-type-options') === 'nosniff' && r.headers.get('x-frame-options') === 'DENY');
-ok('page has no inline script', !/<script(?![^>]*\bsrc=)(?![^>]*type="application\/json")[^>]*>/.test(html));
+ok('page has no inline script', !/<script(?![^>]*\bsrc=)(?![^>]*type="application\/(ld\+)?json")[^>]*>/.test(html));
 ok('catalog travels as JSON data', /<script type="application\/json" id="mg-cat">/.test(html));
-for (const p of ['/shop', '/paintings', '/postcards', '/stickers', '/calendar', '/story', '/account', '/checkout', '/profile', '/help', '/terms']) { r = await fetch(B + p); ok('page ' + p, r.status === 200); }
+for (const p of ['/shop', '/shop/paintings', '/shop/postcards', '/shop/stickers', '/calendars/things-kept-in-bottles-2027', '/farahs-story', '/account', '/checkout', '/profile', '/help', '/terms']) { r = await fetch(B + p); ok('page ' + p, r.status === 200); }
 r = await fetch(B + '/nope'); ok('unknown page is a 404', r.status === 404);
 
 // the admin area is closed to everyone else

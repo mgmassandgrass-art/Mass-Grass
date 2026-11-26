@@ -21,6 +21,21 @@ const cookieOf = (r) => (r.headers.get('set-cookie') || '').split(';')[0];
   // curl -sI http://www.massandgrass.com/shop → 301 https://...). Here: the local host is not redirected.
   ok('localhost is not redirected (http → https only on real hosts)', r.status === 200 || r.status === 301); }
 
+// addresses: one public path per page (web/routes.json); every older address is a 301 to it, the query is kept, /g/NN stays, pages carry <base href="/">
+{ const R = JSON.parse((await import('node:fs')).readFileSync(new URL('../../web/routes.json', import.meta.url), 'utf8'));
+  for (const [file, path] of Object.entries(R)) { if (path === '/') continue;
+    const base = '/' + file.replace(/\.html$/, '');
+    const r = await fetch(B + path, { redirect: 'manual' }); ok('public path serves ' + path, r.status === 200 && r.headers.get('content-type').includes('text/html'), r.status);
+    for (const old of base === path ? [path + '.html'] : [base, base + '.html']) { const o = await fetch(B + old + '?a=1', { redirect: 'manual' });
+      ok(`${old} → ${path} (301, query kept)`, o.status === 301 && o.headers.get('location') === `${B}${path}?a=1`, `${o.status} ${o.headers.get('location')}`); } }
+  const c = await fetch(B + '/calendars', { redirect: 'manual' }); ok('/calendars → the 2027 calendar', c.status === 301 && c.headers.get('location') === B + R['calendar.html']);
+  const g = await fetch(B + '/g/07'); ok('/g/07 stays', g.status === 200);
+  const t = await (await fetch(B + R['story.html'])).text();
+  ok('pages served at a deep path carry <base href="/"> and their own canonical', /<head><base href="\/">/.test(t) && t.includes(`rel="canonical" href="https://www.massandgrass.com${R['story.html']}"`));
+  ok('the files of web/ have no base tag', !(await (await fetch(B + '/assets/js/routes.js')).text()).includes('<base'));
+  ok('routes.json is not served', (await fetch(B + '/routes.json')).status === 404);
+  for (const f of ['later', 'soon', '404']) ok(`/${f} is not a public page`, (await fetch(B + '/' + f)).status === 404); }
+
 // 13 · CORS: no wildcard; 16 · CSRF: a state change from another origin is refused
 { const r = await fetch(B + '/api/catalog', { headers: { origin: 'https://evil.example' } });
   ok('no CORS allow-origin for other sites', !r.headers.get('access-control-allow-origin'));

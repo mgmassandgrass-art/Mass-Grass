@@ -48,7 +48,7 @@ const AE = { country: 'AE', name: 'Test Buyer', phone: '+971 50 123 4567', line1
   r = await api('PUT', '/api/admin/orders/ship', { id, status: 'lost' }); ok('an unknown parcel state is refused', r.s === 400);
   // the visitor's side
   const b = await chromium.launch(), c = await b.newContext(), p = await c.newPage(), errs = []; p.on('pageerror', (x) => errs.push(x.message));
-  await p.goto(B + '/paintings#waves', { waitUntil: 'load' }); await p.waitForSelector('dialog#view[open]');
+  await p.goto(B + '/shop/paintings#waves', { waitUntil: 'load' }); await p.waitForSelector('dialog#view[open]');
   ok('the painting sheet offers the printed copy', (await p.locator('#vprint .pbtn').count()) === 1 && /30 × 40/.test(await p.textContent('#vprint')));
   await p.click('#vprint .pbtn'); await p.keyboard.press('Escape');
   await p.goto(B + '/checkout', { waitUntil: 'load' }); await p.waitForSelector('#f');

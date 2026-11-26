@@ -76,11 +76,11 @@ const good = { what: 'portrait', size: 'A3 for a wall', body: 'A portrait of my 
   const put = await req('PUT', '/api/admin/book', { body: { title_en: 'Zero Waste & Our Palestinian Ancestors', title_ar: 'صفر نفايات', credit_en: 'Text: Najla Abdellatif, drawings: Farah Al-Helou', credit_ar: 'النص: نجلاء', pages: 112, ratio: 0.71, dir: 'ltr', imgs: ['assets/u-book-pg-01.webp?v=1', 'assets/u-book-pg-02.webp?v=1'] } });
   ok('the manifest is saved', put.status === 200, put.status);
   await new Promise((r) => setTimeout(r, 50));
-  const html = await (await req('GET', '/designs', { cookie: '' })).text();
+  const html = await (await req('GET', '/shop/more-designs', { cookie: '' })).text();
   ok('pages carry the book from the server', /"book":\{"id":"zero-waste".*"pages":112.*u-book-pg-01/.test(html));
   ok('the designs page is served', /More designs/.test(html));
-  ok('the book page is served', (await req('GET', '/book', { cookie: '' })).status === 200);
-  ok('the request page is served', (await req('GET', '/commission', { cookie: '' })).status === 200);
+  ok('the book page is served', (await req('GET', '/shop/more-designs/zero-waste-and-our-palestinian-ancestors', { cookie: '' })).status === 200);
+  ok('the request page is served', (await req('GET', '/request-a-design', { cookie: '' })).status === 200);
   // tidy: the shared local database goes back to no manifest, and the test design leaves the shop
   ok('the only design can be deleted (the designs page is fine empty)', (await req('DELETE', '/api/admin/products?id=u-dsgn-test&kind=design')).status === 200);
   ok('the manifest can be taken down (back to the placeholders)', (await req('DELETE', '/api/admin/book')).status === 200 && (await js(await req('GET', '/api/catalog'))).book === null);
