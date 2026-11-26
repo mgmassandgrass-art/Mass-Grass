@@ -10,7 +10,7 @@
   const name = (p) => (p.m ? (MG.ar ? C.monthsAr[p.m - 1] : C.months[p.m - 1]) : t('The cover', 'الغلاف'));
   const pad = (n) => String(n).padStart(2, '0');
   /* calendars from earlier years, set for 2027 (each has its own page; add more here) */
-  const OLD = [Object.assign({}, MG.palestine, { when: ['From 2026, set for 2027', 'من 2026، بتواريخ 2027'], img: ['assets/pm-3.webp', 'assets/pm-4.webp'] })];
+  const OLD = [Object.assign({}, MG.palestine, { when: ['From 2026, set for 2027', 'من 2026، بتواريخ 2027'], img: ['assets/pdm-base.webp', 'assets/pm-3.webp'] })];
 
   /* ---------- 1 · (no film on the page for now; the film's files are in drafts/video) the owner's film of the desk calendar (assets/cal-desk.*);
      it plays muted and looped only while on screen; with reduced motion it stays on its first frame.

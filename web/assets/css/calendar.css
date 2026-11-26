@@ -442,3 +442,8 @@ html body .cdesk .cbuy2>.ink,html body .cdesk .cbuy2 .cbuy-pr .ghost{height:54px
 html[data-hand] body .cdesk .cdesk-ship{margin:0;font-family:var(--mono2)!important;font-size:12px!important;line-height:1.6;letter-spacing:.04em;color:#6E5640!important;max-width:none}
 .cdesk .cdesk-ship:empty{display:none}
 .ar-on .cdesk .cdesk-ship{font-size:14px!important;letter-spacing:0}
+
+/* the other calendar's card (owner, 26 Nov 2026): square, like every product tile on the site; the photograph whole on white */
+.ol-c .ol-im,.ps26 .ol-c .ol-im{aspect-ratio:1/1}
+.ol-c .ol-im img,.ps26 .ol-c .ol-im img{object-fit:contain;padding:4%}
+.ol-c .ol-im img+img{object-fit:cover;padding:0}

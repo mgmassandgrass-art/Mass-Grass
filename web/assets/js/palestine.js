@@ -46,7 +46,7 @@
     if (why === 'bag' || why === 'user') return;
     bts.forEach((b, i) => { b.setAttribute('aria-label', mon(MS[i])); b.querySelector('.btn-n').textContent = MG.ar ? mon(MS[i]) : mon(MS[i]).slice(0, 3); });
     $('#pspages').innerHTML = P.map((p) => `<li${p.m ? '' : ' class="cfl-cover"'}><img src="assets/ps-${pad(p.m)}.webp" alt="${esc(p.m ? mon(p) + ' 2027, ' + L(p.n) : t('The cover: a clay jug on a tiled plate', 'الغلاف: جرّة فخار على صحن من البلاط'))}" loading="lazy" decoding="async"></li>`).join('');
-    $('#olgrid').innerHTML = `<li><a class="ol-c" href="calendar.html"><span class="ol-im"><img src="assets/cal-hero-m.webp" alt="" loading="lazy"></span><span class="ol-y">${t('New for 2027', 'جديد لعام 2027')}</span><span class="ol-n">${esc(t('Things kept in bottles', 'أشياء نحفظها في قوارير'))}</span><span class="ol-p"><b>${MG.fmt(MG.price('calendar'))}</b><span class="go">${t('Open the calendar', 'افتحوا التقويم')}</span></span></a></li>`;
+    $('#olgrid').innerHTML = `<li><a class="ol-c" href="calendar.html"><span class="ol-im"><img src="assets/cdm-base.webp" alt="" loading="lazy"></span><span class="ol-y">${t('New for 2027', 'جديد لعام 2027')}</span><span class="ol-n">${esc(t('Things kept in bottles', 'أشياء نحفظها في قوارير'))}</span><span class="ol-p"><b>${MG.fmt(MG.price('calendar'))}</b><span class="go">${t('Open the calendar', 'افتحوا التقويم')}</span></span></a></li>`;
     $$('[data-alt-ar]').forEach((e) => { if (e.dataset.altEn == null) e.dataset.altEn = e.alt; e.alt = MG.ar ? e.dataset.altAr : e.dataset.altEn; });
     show(sel);
   });
