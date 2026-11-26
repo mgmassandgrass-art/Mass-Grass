@@ -587,7 +587,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   files). Nothing is deployed until the owner says «انشر»; then everything goes live at once.
 - Save tokens: hand light, mechanical tasks to cheaper subagents (Agent tool, model sonnet/haiku); keep design thinking and
   image work for the main model.
-- Deployed 26 Nov 2026 (alone, from 1864e24 + the fix): the Worker fix for the false "The shop is being updated" page (`migrate.js`: one combined check,
+- Deployed 26 Nov 2026: the Palestine calendar is open in the calendar-only mode (page, section under the 2027 calendar, orders for any id in CALS). Also deployed 26 Nov (alone, from 1864e24 + the fix): the Worker fix for the false "The shop is being updated" page (`migrate.js`: one combined check,
   retried once; 503 only when a real migration fails). On 26 Nov a D1 hiccup showed that page on /admin.
 - Postcards page (in progress, owner's plan): (1) hero = envelopes-and-eggs photo with our cards (`pcm-env`), (2) the hands
   photo with our cards (`pcm-hands`), (3) every postcard for sale shown as front + back side by side, in the site's style.
