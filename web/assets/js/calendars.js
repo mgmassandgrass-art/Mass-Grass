@@ -16,9 +16,11 @@
 
     function render() {
     /* the opening: only the photographs, still, the 2027 pair first and the others a little apart (c.hero, else its mock) */
-    $('#castage').innerHTML = CS.map((c) => { const h = c.hero || c.mock;
-      return `<span class="ca-im edge" style="--ar:${h.w}/${h.h};--s:${h.s || 1};--foot:${h.foot || 1}"><img class="ca-base" src="${h.src || h.base}" alt="${esc(L(c.title))}" width="${h.w}" height="${h.h}" draggable="false"></span>`; }).join('');
-    $('#cpgrid').innerHTML = CS.map((c) => `<li class="cp-card">
+    /* the opening: one photo studio, the 2027 pair near, the others further back; each with Buy (its card below) and Browse (its page) */
+    $('#castage').innerHTML = CS.map((c, i) => { const h = c.hero || Object.assign({}, c.mock, c.mock.studio ? { base: c.mock.studio } : {});
+      return `<figure class="ca-g ${i ? 'far' : 'near'}"><span class="ca-im" style="--ar:${h.w}/${h.h}"><img class="ca-base" src="${h.src || h.base}" alt="${esc(L(c.title))}" width="${h.w}" height="${h.h}" draggable="false"${c.hero ? '' : ' data-white'}></span>
+        <figcaption class="ca-act"><a class="ink" href="#cp-${esc(c.id)}">${t('Buy', 'اشتروا')}</a><a class="ghost" href="${c.page}">${t('Browse', 'تصفّحوا')}</a></figcaption></figure>`; }).join('');
+    $('#cpgrid').innerHTML = CS.map((c) => `<li class="cp-card" id="cp-${esc(c.id)}">
       <a class="cp-ph" href="${c.page}" tabindex="-1" aria-hidden="true">${fig(c, false)}</a>
       <div class="cp-tx">
         <h3 class="hand"><a href="${c.page}">${esc(L(c.short || c.title))}</a></h3>

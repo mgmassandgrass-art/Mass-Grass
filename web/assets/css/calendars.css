@@ -4,7 +4,7 @@
 .ca-act{display:flex;gap:12px;justify-content:center;margin-top:clamp(8px,2vh,24px)}
 .ca-act>a{min-width:160px;text-align:center;justify-content:center}
 .ca-one{display:grid;justify-items:center;gap:clamp(4px,1vh,12px);text-decoration:none;color:inherit;flex:0 1 auto;--hh:min(62svh,40vw)}
-.ca-im{position:relative;display:block;aspect-ratio:var(--ar);max-width:none;transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.ca-im{position:relative;display:block;aspect-ratio:var(--ar);max-width:none}
 .ca-stage .ca-im{height:calc(var(--hh) * var(--s));margin-bottom:calc(var(--hh) * var(--s) * (var(--foot) - 1))}
 .ca-im img{position:absolute;max-width:none;padding:0}
 .ca-im .ca-base{inset:0;width:100%;height:100%}
@@ -40,3 +40,31 @@
   .ca-n b{font-size:18px}
 }
 @media(prefers-reduced-motion:reduce){.ca-pg img,.ca-im{transition:none}}
+
+/* round 3 (owner, 26 Nov 2026): the opening fills the screen as one photo studio; the 2027 pair stands near the camera,
+   the other calendars further back (higher on the floor, smaller, a little softer); each has its own Buy and Browse */
+.caall.studio{position:relative;display:block;min-height:calc(100svh - var(--head,49px));padding:0;overflow:hidden;
+  background:linear-gradient(180deg,#e9e8e5 0%,#efeeeb 38%,#f3f2ef 50%,#f7f6f4 62%,#fbfbfa 100%)}
+.studio::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(70% 55% at 50% 42%,rgba(255,255,255,.75),rgba(255,255,255,0) 70%),radial-gradient(120% 60% at 50% 110%,rgba(255,255,255,.9),rgba(255,255,255,0) 60%)}
+.studio .ca-stage{position:absolute;inset:0;display:block;max-width:none;gap:0}
+.studio .ca-g{position:absolute;margin:0;display:grid;justify-items:center;gap:clamp(10px,2vh,22px)}
+.studio .ca-im{height:var(--h);width:auto;-webkit-mask-image:none;mask-image:none}
+.studio .ca-im img[data-white]{mix-blend-mode:multiply}
+.studio .ca-im,.studio .ca-g{isolation:auto}
+.studio .ca-g.near{left:3vw;bottom:5vh;--h:min(58svh,30vw)}
+.studio .ca-g.far{right:6vw;bottom:23vh;--h:min(46svh,25vw)}
+.studio .ca-g.far .ca-im img{opacity:.97}
+.studio .ca-act{display:flex;gap:10px;margin:0}
+.studio .ca-act>a{min-width:140px;text-align:center;justify-content:center}
+.studio .ca-g.near .ca-act{margin-top:calc(var(--h) * -.02)}
+@media(max-width:900px){
+  .caall.studio{min-height:0;padding:24px 16px 32px}
+  .studio::before{display:none}
+  .studio .ca-stage{position:static;display:grid;gap:32px}
+  .studio .ca-g{position:static}
+  .studio .ca-g.near{--h:min(46vw,300px)}
+  .studio .ca-g.far{--h:min(64vw,340px)}
+  .studio .ca-g.far .ca-im img{filter:none}
+  .studio .ca-act>a{min-width:0;flex:1}
+}
