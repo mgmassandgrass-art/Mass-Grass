@@ -578,3 +578,18 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   landing on the white floor with its shadow (end frame = the owner's July desk mockup photo, static camera, 8s, no sound).
   When the owner sends the video: turn it into frames (or an all-intra video) scrubbed by scroll on the calendar page so the
   pages turn as you scroll and the calendar settles on the site's white; replace garbled AI month pages with the real ones if needed.
+
+## Working mode (owner, 26 Nov 2026)
+
+- Changes are made one by one and shown in the whole-site artifact https://claude.ai/artifact/PU8N7aF3464uGooDynzsu2
+  (publish `web/index.html` with root `web` and every other file of `web/` except `_src/`, `admin/`, `README.md`,
+  `.assetsignore` as `files`; about 480 files, so two publishes of at most 250 each; later updates send only the changed
+  files). Nothing is deployed until the owner says «انشر»; then everything goes live at once.
+- Save tokens: hand light, mechanical tasks to cheaper subagents (Agent tool, model sonnet/haiku); keep design thinking and
+  image work for the main model.
+- Not deployed yet: the Worker fix for the false "The shop is being updated" page (`migrate.js`: one combined check,
+  retried once; 503 only when a real migration fails). On 26 Nov a D1 hiccup showed that page on /admin.
+- Postcards page (in progress, owner's plan): (1) hero = envelopes-and-eggs photo with our cards (`pcm-env`), (2) the hands
+  photo with our cards (`pcm-hands`), (3) every postcard for sale shown as front + back side by side, in the site's style.
+  `tools/postcard_mockups.py` makes the photos from the blanks in `drafts/mockups/postcards/`. The hands and the front/back
+  reference come from Pepe Saya's branding: ask the owner where they come from before they go live.
