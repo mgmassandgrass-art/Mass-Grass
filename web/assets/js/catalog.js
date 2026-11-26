@@ -79,6 +79,10 @@ window.MG_DEFAULT = {
   /* the 2027 calendar, "Things kept in bottles": the cover and all twelve months (assets c27-MM*, rendered from the owner's calendar artifact) */
   calendar: {
     id: 'calendar-2027', title: ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027'], cover: 'assets/t-v2-00.webp', page: 'calendar.html',
+    short: ['Things kept in bottles', 'أشياء نحفظها في قوارير'], year: 2027,
+    line: ['A watercolour bottle for every month, on your desk all year.', 'قارورة بالألوان المائية لكل شهر، على مكتبكم طوال العام.'],
+    /* the calendars page shows it in this photograph: each month is a whole render (cdp-MM), the base shows January */
+    mock: { base: 'assets/cdm-base.webp', w: 1100, h: 1187, page: 'assets/cdp-{m}.webp', whole: true, s: 1, foot: .872 },
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     monthsAr: ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'],
     pages: [
@@ -114,7 +118,9 @@ window.MG_DEFAULT = {
      their details in watercolour), its dates, holidays and year redrawn for 2027 by tools/redate_2026.py (assets ps-MM, pd-MM) */
   palestine: {
     id: 'palestine-2027', title: ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027'],
-    short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', cover: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026,
+    short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', cover: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026, year: 2027,
+    line: ['A Palestinian house for every month: doors, windows, stairs and tiles.', 'بيت فلسطيني لكل شهر: أبواب ونوافذ وأدراج وبلاط.'],
+    mock: { base: 'assets/pdm-base.webp', w: 1100, h: 1100, page: 'assets/pdp-{m}.webp', pg: [17.5455, 9.0909, 65.2727, 80.0909], s: .94, foot: .914, edge: true },
     pages: [
       { k: 'ps-00', m: 0, n: ['The cover', 'الغلاف'], q: ['Palestine, a journey through time and space.', 'فلسطين، رحلة عبر الزمان والمكان.'], d: ['A clay jug on a tiled plate, and the calendar\'s name.', 'جرّة فخار على صحن من البلاط، واسم التقويم.'] },
       { k: 'ps-01', m: 1, n: ["Taboon", "الطابون"], q: ["Taboon", "الطابون"], d: ["Hand-sculpted from golden clay and ancient grit, the taboon is a thermal masterpiece: a living monument where the earth's warmth meets the scent of belonging.", "الطابون مصنوع باليد من الطين الذهبي والحصى القديم، تحفة تحفظ الحرارة: نصب حيّ يلتقي فيه دفء الأرض برائحة الانتماء."] },
