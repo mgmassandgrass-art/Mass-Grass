@@ -568,3 +568,12 @@ footer .ft-z .payi img{width:38px;height:24px;display:block}
 footer .ft-z{gap:12px 24px}
 .co-pay{display:flex;justify-content:center;gap:8px;margin:12px 0 0}
 .co-pay img{width:48px;height:30px;display:block}
+/* (owner, 26 Nov 2026) the head row's rule runs the whole column, line to line, and a grid sits right under it */
+main>section>.wrap>.sx-hd{width:calc(100% + 2 * var(--colpad));flex-basis:calc(100% + 2 * var(--colpad));max-width:none;box-sizing:border-box}
+main>section>.wrap:has(>.ac-grid)>.sx-hd{margin-bottom:0}
+/* no big titles left: their rows go too (an empty title row is hidden; one holding only a link keeps the link, without a rule),
+   and a framed block (.cw / .cl / .st) starts right on the head row's line */
+.sech:has(>h2.sr:only-child),.btl-hd:has(>h2.sr:only-child),.cp-hd:has(>h2.sr:only-child){display:none}
+.sech:has(>h2.sr){justify-content:flex-end;padding-bottom:0;border-bottom:0;margin-bottom:clamp(12px,2vh,20px)}
+main>section>.wrap:has(>:is(.cw,.cl,.st))>.sx-hd{margin-bottom:0}
+main>section>.wrap>.sx-hd~:is(.cw,.cl,.st){border-top:0;margin-top:0}
