@@ -28,13 +28,20 @@ export function migrate(env) {
   if (!ready) ready = run(env).catch((e) => { ready = null; throw e; });
   return ready;
 }
+// one query tells whether every step is already in (the usual case); a passing hiccup in D1 is retried once
+const ALL = 'SELECT ' + STEPS.map((s) => `EXISTS(${s.done})`).join('+') + ' AS n';
+async function count(env) {
+  try { return (await env.DB.prepare(ALL).first()).n; }
+  catch (e) { await new Promise((r) => setTimeout(r, 300)); return (await env.DB.prepare(ALL).first()).n; }
+}
 async function run(env) {
+  if ((await count(env)) === STEPS.length) return;
   for (const s of STEPS) {
     if (await env.DB.prepare(s.done).first()) continue;
     const log = await env.DB.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='d1_migrations'").first();
     const batch = statements(s.sql).map((q) => env.DB.prepare(q));
     if (log) batch.push(env.DB.prepare('INSERT INTO d1_migrations(name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name=?)').bind(s.name, s.name));
     try { await env.DB.batch(batch); console.log('migrated', s.name, batch.length, 'statements'); }
-    catch (e) { if (!(await env.DB.prepare(s.done).first())) throw e; } // another request applied it at the same moment
+    catch (e) { if (!(await env.DB.prepare(s.done).first())) { e.pending = s.name; throw e; } } // another request applied it at the same moment
   }
 }

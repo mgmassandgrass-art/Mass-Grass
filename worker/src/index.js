@@ -586,7 +586,8 @@ async function sharePage(env, url, p) {
 export default {
   async fetch(req, env1, ctx) {
     const env0 = { ...env1, CTX: ctx };
-    try { await migrate(env0); } catch (e) { console.error('migrate', e); return secure(new Response('The shop is being updated. Please try again in a minute.', { status: 503, headers: { 'retry-after': '60', 'content-type': 'text/plain; charset=utf-8' } })); }
+    try { await migrate(env0); } catch (e) { console.error('migrate', e); if (e.pending) return secure(new Response('The shop is being updated. Please try again in a minute.', { status: 503, headers: { 'retry-after': '60', 'content-type': 'text/plain; charset=utf-8' } })); }
+    // a check that failed for a moment (D1 busy) never blocks the shop: every step is already in the database
     return secure(await handle(req, env0));
   },
   // cron (wrangler.toml [triggers]): payments that were approved but never brought back to the site
