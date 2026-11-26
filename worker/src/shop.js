@@ -116,7 +116,7 @@ export async function createOrder(env, req, user) {
   let printed = false;
   for (const it of b.items) {
     // calendar-only opening: nothing else can be bought yet
-    if (env.ONLY === 'calendar' && (!it || it.kind !== 'calendar' || it.k !== 'calendar-2027' || it.pack)) return fail('item_unavailable', 400, { k: it && it.k });
+    if (env.ONLY === 'calendar' && (!it || it.kind !== 'calendar' || !CALS[it.k] || it.pack)) return fail('item_unavailable', 400, { k: it && it.k });
     const one = linePrice(cat, it || {});
     if (one == null) return fail('item_unavailable', 400, { k: it && it.k });
     const fmt = it.fmt === 'print' ? 'print' : undefined, q = fmt ? Math.max(1, Math.min(10, parseInt(it.q) || 1)) : 1, c = one * q;

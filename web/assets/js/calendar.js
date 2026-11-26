@@ -6,8 +6,6 @@
    (The film of the cover being turned, assets/cal-flip.*, waits for later.) */
 (function () {
   'use strict';
-  /* calendar-only opening: the earlier calendars wait too, so their section is taken off the page */
-  if (MG.cat.only === 'calendar') { const ol = document.getElementById('earlier'); if (ol) ol.remove(); }
   const { $, $$, esc, t, L } = MG, C = MG.calendar, P = C.pages;
   const name = (p) => (p.m ? (MG.ar ? C.monthsAr[p.m - 1] : C.months[p.m - 1]) : t('The cover', 'الغلاف'));
   const pad = (n) => String(n).padStart(2, '0');

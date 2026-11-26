@@ -609,7 +609,7 @@ async function handle(req, env0) {
     const p = path.replace(/\/+$/, '') || '/';
     try {
       if (p.startsWith('/api/')) return await api(req, env, url, p);
-      if (p.startsWith('/s/') && env.ONLY === 'calendar' && !/^\/s\/calendar(\/calendar-2027)?\/?$/.test(p)) return Response.redirect(`${url.origin}/calendar`, 302);
+      if (p.startsWith('/s/') && env.ONLY === 'calendar' && !/^\/s\/calendar(\/(calendar|palestine)-2027)?\/?$/.test(p)) return Response.redirect(`${url.origin}/calendar`, 302);
       if (p.startsWith('/s/')) return await sharePage(env, url, p);
       // Clean addresses (owner, 24 Nov 2026): no page shows ".html" in the address bar; /calendar.html goes to /calendar, /index.html to /.
       if ((req.method === 'GET' || req.method === 'HEAD') && /\.html$/.test(p) && PAGES.includes(p.slice(1))) {
@@ -639,7 +639,7 @@ async function handle(req, env0) {
       // The signed-in admin still sees everything.
       if (env.ONLY === 'calendar') {
         const pg = p.replace(/^\//, '').replace(/\.html$/, '');
-        const closed = ['shop', 'paintings', 'postcards', 'stickers', 'designs', 'book', 'commission', 'palestine'].includes(pg);
+        const closed = ['shop', 'paintings', 'postcards', 'stickers', 'designs', 'book', 'commission'].includes(pg);
         const home = p === '/' || pg === 'index';
         if ((closed || home) && !isAdmin(env, await currentUser(env, req))) {
           if (home) return new Response(null, { status: 302, headers: { location: `${url.origin}/calendar${url.search}`, 'cache-control': 'no-store' } });
