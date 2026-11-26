@@ -596,3 +596,16 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   photo with our cards (`pcm-hands`), (3) every postcard for sale shown as front + back side by side, in the site's style.
   `tools/postcard_mockups.py` makes the photos from the blanks in `drafts/mockups/postcards/`. The hands and the front/back
   reference come from Pepe Saya's branding: ask the owner where they come from before they go live.
+
+## Places in Gaza (deployed 26 Nov 2026)
+
+- Farah's 2025 calendar re-dated for 2027 (`tools/redate_2025.py`, vector edits in the Canva PDF): id `gaza-2027`, page `/gaza`,
+  sold like Palestine. Every page carries a QR code (`segno`, drawn as vector, each page's own ink) to a hidden story page
+  `/g/00`..`/g/12` (Worker route, noindex, in no menu or sitemap; `story-month.html` + `assets/gaza/stories.json`, stories and
+  photos from the owner's `drafts/calendar-2025/codes.pdf`, translated to Arabic). Sale PDF: `drafts/calendar-2025/Places-in-Gaza-2027.pdf`
+  (not in git; the owner uploads it in admin Products > Calendar, third box). Independence Day, the flag and the old QR were taken off.
+- Mockups: `tools/mockup_swap_pages.py` swaps changed blocks of the old pages into the owner's photos; the wooden-stands photo
+  (`src-16`) could not be fixed (see-through page, older draft) and is not used. The page opens on `gzm-3w` (cover + months on
+  white, rendered from the PDF at 5000px).
+- The 2023 calendar re-dated too (`tools/redate_2023.py`, JPEG pages; Abril Fatface for the cover's 7): PDF given to the owner,
+  not on the site yet.
