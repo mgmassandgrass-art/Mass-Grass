@@ -82,7 +82,6 @@ window.MG_DEFAULT = {
     short: ['Things kept in bottles', 'أشياء نحفظها في قوارير'], year: 2027,
     line: ['A watercolour bottle for every month, on your desk all year.', 'قارورة بالألوان المائية لكل شهر، على مكتبكم طوال العام.'],
     /* the calendars page shows it in this photograph: each month is a whole render (cdp-MM), the base shows January */
-    hero: { src: 'assets/cal-pair.webp', w: 1190, h: 589, s: .766, foot: .978 },
     mock: { base: 'assets/cdm-base.webp', w: 1100, h: 1187, page: 'assets/cdp-{m}.webp', whole: true, s: 1, foot: .872 },
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     monthsAr: ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'],

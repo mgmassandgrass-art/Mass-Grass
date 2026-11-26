@@ -1,5 +1,5 @@
 /* The calendars page: every calendar on sale (MG.calendars, each with a `mock`), so a new year added to the catalog appears here by itself.
-   1 · the calendars' photographs side by side on one white floor, still, with Buy and Browse leading to the choice below;
+   1 · the calendars side by side on one white floor, turning their months together;
    2 · choose one: its photograph, name, line, buy (PDF or printed) and a link to its own page. */
 (function () {
   'use strict';
@@ -14,10 +14,9 @@
     return `<span class="ca-im${k.whole ? ' whole' : ''}${k.edge ? ' edge' : ''}" style="--ar:${k.w}/${k.h};--s:${k.s || 1};--foot:${k.foot || 1}"><img class="ca-base" src="${k.base}" alt="" width="${k.w}" height="${k.h}" draggable="false"><span class="ca-pg" style="${pos}">${pages}</span></span>`;
   };
 
-    function render() {
-    /* the opening: only the photographs, still, the 2027 pair first and the others a little apart (c.hero, else its mock) */
-    $('#castage').innerHTML = CS.map((c) => { const h = c.hero || c.mock;
-      return `<span class="ca-im edge" style="--ar:${h.w}/${h.h};--s:${h.s || 1};--foot:${h.foot || 1}"><img class="ca-base" src="${h.src || h.base}" alt="${esc(L(c.title))}" width="${h.w}" height="${h.h}" draggable="false"></span>`; }).join('');
+  let cur = 0, timer = 0;
+  function render() {
+    $('#castage').innerHTML = CS.map((c) => `<a class="ca-one" href="${c.page}" aria-label="${esc(L(c.title))}">${fig(c, true)}<span class="ca-n"><b class="hand">${esc(L(c.short || c.title))}</b><i>${c.year || 2027}</i></span></a>`).join('');
     $('#cpgrid').innerHTML = CS.map((c) => `<li class="cp-card">
       <a class="cp-ph" href="${c.page}" tabindex="-1" aria-hidden="true">${fig(c, false)}</a>
       <div class="cp-tx">
@@ -27,7 +26,16 @@
         <div class="cp-buy"><button class="ink" type="button" data-add="calendar" data-cal="${esc(c.id)}">${t('Digital PDF', 'رقمي PDF')}, ${MG.fmt(MG.price('calendar'))}</button>${MG.printBtn ? MG.printBtn('calendar', c.id, 'ghost') : ''}</div>
         <a class="go" href="${c.page}">${t('See every month', 'تصفّحوا الأشهر')}</a>
       </div></li>`).join('');
+    show(cur);
   }
 
-  MG.page(render);
+  /* the months turn together; the month's name sits under the calendars */
+  function show(i) {
+    cur = (i + 12) % 12;
+    $$('.ca-stage .ca-pg').forEach((pg) => [...pg.children].forEach((im, j) => im.classList.toggle('on', j === cur)));
+    $('#camon').textContent = (MG.ar ? M.monthsAr[cur] : M.months[cur]) + ' 2027';
+  }
+  function loop() { clearInterval(timer); if (!MG.still) timer = setInterval(() => { if (!document.hidden) show(cur + 1); }, 3200); }
+
+  MG.page(function (why) { render(); if (why !== 'bag' && why !== 'user') loop(); });
 })();
