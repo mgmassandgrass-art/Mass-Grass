@@ -121,7 +121,7 @@ window.MG_DEFAULT = {
     id: 'palestine-2027', title: ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027'],
     short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', cover: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026, year: 2027,
     line: ['A Palestinian house for every month: doors, windows, stairs and tiles.', 'بيت فلسطيني لكل شهر: أبواب ونوافذ وأدراج وبلاط.'],
-    mock: { base: 'assets/pdm-base.webp', studio: 'assets/pdm-studio.webp', w: 1100, h: 1100, page: 'assets/pdp-{m}.webp', pg: [17.5455, 9.0909, 65.2727, 80.0909], s: .94, foot: .914, edge: true },
+    mock: { base: 'assets/pdm-base.webp', w: 1100, h: 1100, page: 'assets/pdp-{m}.webp', pg: [17.5455, 9.0909, 65.2727, 80.0909], s: .94, foot: .914, edge: true },
     pages: [
       { k: 'ps-00', m: 0, n: ['The cover', 'الغلاف'], q: ['Palestine, a journey through time and space.', 'فلسطين، رحلة عبر الزمان والمكان.'], d: ['A clay jug on a tiled plate, and the calendar\'s name.', 'جرّة فخار على صحن من البلاط، واسم التقويم.'] },
       { k: 'ps-01', m: 1, n: ["Taboon", "الطابون"], q: ["Taboon", "الطابون"], d: ["Hand-sculpted from golden clay and ancient grit, the taboon is a thermal masterpiece: a living monument where the earth's warmth meets the scent of belonging.", "الطابون مصنوع باليد من الطين الذهبي والحصى القديم، تحفة تحفظ الحرارة: نصب حيّ يلتقي فيه دفء الأرض برائحة الانتماء."] },
