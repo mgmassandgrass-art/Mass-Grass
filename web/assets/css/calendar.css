@@ -486,3 +486,8 @@ html[data-hand] body .cdesk .cdesk-ship{margin:0;font-family:var(--mono2)!import
 .gz27 .gz-ph img{display:block;width:100%;height:auto}
 main>section.gzph{padding-block:0}
 main>section.gzph>.wrap{padding-block:var(--sec)}
+/* Places in Gaza, round 2 (owner, 26 Nov 2026): the cover and twelve months side by side on white open the page, full width;
+   further down every painting stands on its own, one under the other */
+.gz27 .cdesk>img{aspect-ratio:2000/851;width:100%;max-width:none;height:auto}
+.gz27 .cflat .cfl-pages{grid-template-columns:minmax(0,1fr);gap:clamp(40px,8vh,96px);width:100%;max-width:none}
+.gz27 .cflat .cfl-pages>li,.gz27 .cflat .cfl-pages .cfl-cover{grid-column:auto;justify-self:center;width:min(100%,calc((100svh - 140px) * 226 / 397),560px)}
