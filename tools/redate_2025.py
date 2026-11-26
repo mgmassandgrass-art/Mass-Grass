@@ -20,10 +20,10 @@ NOIMG = fitz.PDF_REDACT_IMAGE_NONE
 
 # 2025 circle day -> 2027 day, per month (page = month). Moves: Arafat + Eid al-Adha leave June for May, the Prophet's birthday
 # leaves September for August.
-HOL = {1: [(1, 5)], 3: [(21, 21)], 5: [(1, 1)], 6: [(26, 6)], 11: [(15, 15)], 12: [(25, 25)]}
+HOL = {1: [(1, 5)], 3: [(21, 21)], 5: [(1, 1)], 6: [(26, 6)], 12: [(25, 25)]}
 ADD = {5: [(15, 6, 0), (16, 6, 1)], 8: [(14, 9, 0)]}   # month: [(2027 day, source page, source legend line index)]
-DROP = {6: [0, 1], 9: [0]}                             # month: legend lines (index from the top) that leave the page
-DROPC = {6: [5, 6], 9: [4]}                            # month: 2025 circle days whose holiday leaves the month
+DROP = {6: [0, 1], 9: [0], 11: [0]}                             # month: legend lines (index from the top) that leave the page
+DROPC = {6: [5, 6], 9: [4], 11: [15]}   # (the owner, 26 Nov 2026: no Independence Day, no flag)                            # month: 2025 circle days whose holiday leaves the month
 
 def spans(p):
     for b in p.get_text('dict')['blocks']:
@@ -111,6 +111,12 @@ for m in range(1, 13):
     # the old circles, the year's outline and the dots that leave sit on the page's white: white covers them
     wipe = [r + (-.8, -.8, .8, .8) for _, r, _ in circ] + [fitz.Rect(d['rect']) + (-2.5, -2.5, 2.5, 2.5) for d in ypath] + [ybox + (-2, -2, 2, 2)]
     wipe += [r + (-.8, -.8, .8, .8) for r, _, _ in dropped + (kept if dropped else [])]
+    # the QR code at the foot (a white tile of vector squares, or a small image) goes too (owner, 26 Nov 2026)
+    qr = [fitz.Rect(d['rect']) for d in p.get_drawings() if d['type'] == 'f' and d.get('fill') == (1.0, 1.0, 1.0)
+          and 18 < d['rect'].width < 40 and abs(d['rect'].width - d['rect'].height) < 2 and d['rect'].y0 > 330]
+    qr += [r for im in p.get_images(full=True) for r in p.get_image_rects(im[0]) if 25 < r.width < 40 and r.y0 > 330 and r.x0 > 150]
+    wipe += [r + (-1.5, -1.5, 1.5, 1.5) for r in qr]
+    if m == 11: wipe.append(fitz.Rect(138, 309, 224, 331))     # Independence Day's line and its flag
     for r in wipe: p.draw_rect(r, color=None, fill=(1, 1, 1), overlay=True)
 
     # ---- set again
@@ -146,16 +152,33 @@ for m in range(1, 13):
             p.draw_oval(fitz.Rect(cx - 6.1, cy - 6.1, cx + 6.1, cy + 6.1), color=None, fill=col, overlay=True)
             s = str(d27); w = font.text_length(s, fs)
             for ox, oy in ((0, 0), (dx, dy)): p.insert_text((cx - w / 2 + ox, cy + fs * .33 + oy), s, fontname='cs', fontsize=fs, color=(0, 0, 0))
-    # the year: "202" as it was (fill + outline), then the 7 as one marker stroke where the 5 stood
+    # the year: each of "2", "0", "2" set again at its own place (the original is tracked wider than the font), then the 7 where
+    # the 5 stood, drawn as one marker stroke as tall, wide and heavy as the 2 beside it (measured off the original page)
     bw = 2.04
-    p.insert_text(yorg, '202', fontname='lj', fontsize=yfs, color=ycol, fill=ycol, render_mode=2, border_width=bw / yfs)
-    f5 = char5 or fitz.Rect(ybox.x1 - ybox.width / 4, ybox.y0, ybox.x1, ybox.y1)
-    lf = fitz.Font(fontbuffer=lj); x0 = yorg[0] + lf.text_length('202', yfs) + yfs * .035
-    top_y = yorg[1] - yfs * .70; bot_y = yorg[1] - yfs * .02; wid = f5.width * .86
-    stem = yfs * .135 + bw
+    vis = [t for t in src[m].get_texttrace() if 'LJStudios' in t['font'] and t['opacity'] > 0 and ''.join(chr(c[0]) for c in t['chars']).strip() == '2025']
+    chars = [c for c in vis[0]['chars'] if chr(c[0]).strip()]
+    for c in chars[:3]:
+        p.insert_text(c[2], chr(c[0]), fontname='lj', fontsize=yfs, color=ycol, fill=ycol, render_mode=2, border_width=bw / yfs)
+    Z = 10; c2 = fitz.Rect(chars[0][3]); c5 = fitz.Rect(chars[3][3])
+    pix = src[m].get_pixmap(matrix=fitz.Matrix(Z, Z), clip=c2)
+    import numpy as np
+    a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width, pix.n)[..., :3].astype(int)
+    ink = np.abs(a - 255).sum(2) > 120; ys = np.where(ink.any(1))[0]; xs = np.where(ink.any(0))[0]
+    top = c2.y0 + ys[0] / Z; bot = c2.y0 + ys[-1] / Z; wid = (xs[-1] - xs[0]) / Z
+    runs = []
+    for row in ink[ys[0]:ys[-1] + 1]:
+        r = 0
+        for v in row:
+            if v: r += 1
+            elif r: runs.append(r); r = 0
+    stem = float(np.median(runs)) / Z
+    pix5 = src[m].get_pixmap(matrix=fitz.Matrix(Z, Z), clip=c5)
+    a5 = np.frombuffer(pix5.samples, np.uint8).reshape(pix5.height, pix5.width, pix5.n)[..., :3].astype(int)
+    x0 = c5.x0 + np.where((np.abs(a5 - 255).sum(2) > 120).any(0))[0][0] / Z
+    h = stem / 2
     sh = p.new_shape()
-    sh.draw_polyline([(x0 + wid * .12, top_y + yfs * .03), (x0 + wid * .55, top_y - yfs * .005), (x0 + wid * .95, top_y)])
-    sh.draw_polyline([(x0 + wid * .95, top_y), (x0 + wid * .62, top_y + yfs * .30), (x0 + wid * .42, bot_y - stem * .5)])
+    sh.draw_polyline([(x0 + h, top + h + wid * .03), (x0 + wid * .55, top + h - wid * .01), (x0 + wid - h, top + h)])
+    sh.draw_polyline([(x0 + wid - h, top + h), (x0 + wid * .62, top + (bot - top) * .42), (x0 + wid * .40, bot - h)])
     sh.finish(color=ycol, width=stem, lineCap=1, lineJoin=1, closePath=False)
     sh.commit()
     print('month', m, 'rows', len(rows), 'circles', [c[0] for c in circ if c[0]], 'moved in', [a[0] for a in ADD.get(m, [])])
@@ -178,8 +201,13 @@ bg = max(p.get_images(full=True), key=lambda i: i[2] * i[3])[0]; ir = p.get_imag
 pm = fitz.Pixmap(doc, bg); im = Image.frombytes('RGB' if pm.n < 4 else 'RGBA', (pm.width, pm.height), pm.samples).convert('RGB')
 R = fitz.Rect(ybox.x0 - 3, ybox.y0 + 6, ybox.x1 + 3, org[1] + 1.2)
 sx, sy = pm.width / ir.width, pm.height / ir.height
-crop = im.crop((round((R.x0 - ir.x0) * sx), round((R.y0 - ir.y0) * sy), round((R.x1 - ir.x0) * sx), round((R.y1 - ir.y0) * sy)))
-buf = io.BytesIO(); crop.save(buf, 'JPEG', quality=95); p.insert_image(R, stream=buf.getvalue(), overlay=True)
+def patch(R):
+    crop = im.crop((round((R.x0 - ir.x0) * sx), round((R.y0 - ir.y0) * sy), round((R.x1 - ir.x0) * sx), round((R.y1 - ir.y0) * sy)))
+    buf = io.BytesIO(); crop.save(buf, 'JPEG', quality=95); p.insert_image(R, stream=buf.getvalue(), overlay=True)
+patch(R)
+for i in p.get_images(full=True):           # the cover's QR code (owner, 26 Nov 2026)
+    for r in p.get_image_rects(i[0]):
+        if 15 < r.width < 40 and r.y0 > 300: patch(r + (-1.5, -1.5, 1.5, 1.5))
 p.insert_font(fontname='cs', fontbuffer=cs)
 p.insert_text(org, '2027', fontname='cs', fontsize=fs, color=(1, 1, 1), fill=(1, 1, 1), render_mode=2, border_width=1.2165 / fs)
 doc.save(OUT, garbage=3, deflate=True)

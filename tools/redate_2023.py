@@ -16,7 +16,11 @@ from scipy import ndimage
 SRC, OUT, ABRIL = sys.argv[1], sys.argv[2], sys.argv[3]
 page = lambda m: f'{SRC}/page{m + 1:02d}_1.jpg'
 # 2023 circle day -> 2027 day (same month)
-HOL = {3: [(8, 8), (30, 30)], 5: [(1, 1)], 11: [(15, 15)]}
+HOL = {3: [(8, 8), (30, 30)], 5: [(1, 1)]}
+# taken off at the owner's request (26 Nov 2026): Independence Day (its circle and legend) and the flag beside Earth Day
+GONE = [(11, 15)]
+WIPE_EXTRA = {3: [(3125, 3196, 628, 736)]}
+LEG_X = {11: .3}                    # November's legend sits at the left (the drawing on the right has round shapes too)
 # holidays that change month: (2023 month, 2023 day) -> (2027 month, 2027 day)
 MOVE = {(2, 18): (1, 5), (4, 21): (3, 9), (6, 29): (5, 16), (9, 27): (8, 14)}
 WRAP = {10}                         # October: 31 goes into the first row's empty Sunday (no room for a sixth row)
@@ -110,6 +114,7 @@ def legend_near(rgb, circ_col, gbox, m):
         y0, y1, x0, x1, _ = d; band = ink_any(rgb[y0:y1, x1 + 10:x1 + 120])
         return band.mean() > .02
     ds = [d for d in ds if words(d)] or ds
+    if m in LEG_X: ds = [d for d in ds if d[2] < rgb.shape[1] * LEG_X[m]] or ds
     y0, y1, x0, x1, _ = min(ds, key=lambda d: np.abs(d[4] - circ_col).sum())
     row = ink_any(rgb[y0 - 10:y1 + 10, x0:]); xs = np.where(row.any(0))[0]
     end = xs[0]
@@ -176,6 +181,12 @@ for m in range(1, 13):
         col, c, r, box = circle_of(orig[m], g['numboxes'][d23], m)
         nb = g['numboxes'][d23]; circles[m].append((d27, col, r, (c[0] - nb[2], c[1] - (nb[0] + nb[1]) / 2)))
         wipe[m].append(box)
+    for m23, d23 in GONE:
+        if m23 != m: continue
+        col, c, r, box = circle_of(orig[m], g['numboxes'][d23], m); wipe[m].append(box)
+        lg = legend_near(orig[m], col, g['gbox'], m)
+        if lg: wipe[m].append(lg)
+    wipe[m] += WIPE_EXTRA.get(m, [])
     for (m23, d23), (m27, d27) in MOVE.items():
         if m23 != m: continue
         col, c, r, box = circle_of(orig[m], g['numboxes'][d23], m); wipe[m].append(box)
