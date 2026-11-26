@@ -13,6 +13,35 @@ import sys, calendar, io
 import pymupdf as fitz
 
 SRC, OUT = sys.argv[1], sys.argv[2]
+QR_BASE = sys.argv[3] if len(sys.argv) > 3 else ''   # e.g. https://www.massandgrass.com/g/ : each page gets a QR to <base>MM
+
+def qr_code(p, r, url, col):
+    """a QR code drawn as vector squares on a white tile, filling the rect where the old one stood"""
+    import segno
+    q = segno.make(url, error='m', micro=False); mx = [list(row) for row in q.matrix]; n = len(mx); quiet = 1
+    p.draw_rect(r, color=None, fill=(1, 1, 1), overlay=True)
+    u = r.width / (n + 2 * quiet); sh = p.new_shape()
+    for y, row in enumerate(mx):
+        x = 0
+        while x < n:
+            if row[x]:
+                x1 = x
+                while x1 < n and row[x1]: x1 += 1
+                sh.draw_rect(fitz.Rect(r.x0 + (quiet + x) * u, r.y0 + (quiet + y) * u, r.x0 + (quiet + x1) * u + .02, r.y0 + (quiet + y + 1) * u + .02))
+                x = x1
+            else: x += 1
+    sh.finish(color=None, fill=col, closePath=False); sh.commit()
+
+def qr_colour(pno, r):
+    """the old code's ink, read off the original page (the darkest third of its non-white pixels), kept dark enough to scan"""
+    pix = src[pno].get_pixmap(matrix=fitz.Matrix(6, 6), clip=r)
+    import numpy as np
+    a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width, pix.n)[..., :3].reshape(-1, 3).astype(float)
+    ink = a[a.mean(1) < 200]
+    if not len(ink): return (.3, .3, .3)
+    c = np.median(ink[ink.mean(1) <= np.percentile(ink.mean(1), 35)], 0) / 255
+    k = min(1, .42 / max(c.mean(), .01)) if c.mean() > .42 else 1      # never lighter than 42%: phones must read it
+    return tuple(float(v * k) for v in c)
 Y = 2027
 src = fitz.open(SRC); doc = fitz.open(SRC)
 COVERED = fitz.PDF_REDACT_LINE_ART_REMOVE_IF_COVERED
@@ -116,6 +145,7 @@ for m in range(1, 13):
           and 18 < d['rect'].width < 40 and abs(d['rect'].width - d['rect'].height) < 2 and d['rect'].y0 > 330]
     qr += [r for im in p.get_images(full=True) for r in p.get_image_rects(im[0]) if 25 < r.width < 40 and r.y0 > 330 and r.x0 > 150]
     wipe += [r + (-1.5, -1.5, 1.5, 1.5) for r in qr]
+    qr_at = (qr[0], qr_colour(m, qr[0])) if qr else None
     if m == 11: wipe.append(fitz.Rect(138, 309, 224, 331))     # Independence Day's line and its flag
     for r in wipe: p.draw_rect(r, color=None, fill=(1, 1, 1), overlay=True)
 
@@ -181,6 +211,7 @@ for m in range(1, 13):
     sh.draw_polyline([(x0 + wid - h, top + h), (x0 + wid * .62, top + (bot - top) * .42), (x0 + wid * .40, bot - h)])
     sh.finish(color=ycol, width=stem, lineCap=1, lineJoin=1, closePath=False)
     sh.commit()
+    if QR_BASE and qr_at: qr_code(p, qr_at[0], f'{QR_BASE}{m:02d}', qr_at[1])
     print('month', m, 'rows', len(rows), 'circles', [c[0] for c in circ if c[0]], 'moved in', [a[0] for a in ADD.get(m, [])])
 
 # the cover: CALENDAR 2025 -> 2027
@@ -207,7 +238,9 @@ def patch(R):
 patch(R)
 for i in p.get_images(full=True):           # the cover's QR code (owner, 26 Nov 2026)
     for r in p.get_image_rects(i[0]):
-        if 15 < r.width < 40 and r.y0 > 300: patch(r + (-1.5, -1.5, 1.5, 1.5))
+        if 15 < r.width < 40 and r.y0 > 300:
+            patch(r + (-1.5, -1.5, 1.5, 1.5))
+            if QR_BASE: qr_code(p, r, f'{QR_BASE}00', qr_colour(0, r))
 p.insert_font(fontname='cs', fontbuffer=cs)
 p.insert_text(org, '2027', fontname='cs', fontsize=fs, color=(1, 1, 1), fill=(1, 1, 1), render_mode=2, border_width=1.2165 / fs)
 doc.save(OUT, garbage=3, deflate=True)
