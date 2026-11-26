@@ -6,3 +6,9 @@ worker/.dryrun/
 worker/.state/
 .claude/worktrees/
 drafts/upload/
+
+# the 2023 / 2025 calendars re-dated for 2027: sources and outputs stay out of git (large; the PDFs go to the owner)
+drafts/calendar-2023/src/
+drafts/calendar-2023/2027/
+drafts/calendar-2023/*.pdf
+drafts/calendar-2025/*.pdf
