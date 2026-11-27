@@ -11,7 +11,7 @@
   const pad = (n) => String(n).padStart(2, '0');
   /* calendars from earlier years, set for 2027 (each has its own page; add more here) */
   const OLD = [Object.assign({}, MG.palestine, { when: ['From 2026, set for 2027', 'من 2026، بتواريخ 2027'], img: ['assets/pdm-base.webp', 'assets/pm-3.webp'] }),
-    Object.assign({}, MG.gaza, { when: ['From 2025, set for 2027', 'من 2025، بتواريخ 2027'], img: ['assets/gzm-1.webp', 'assets/gzm-1.webp'] })];
+    Object.assign({}, MG.gaza, { when: ['From 2025, set for 2027', 'من 2025، بتواريخ 2027'], img: ['assets/gz-hero-m.webp', 'assets/gz-hero-m.webp'] })];
 
   /* ---------- 1 · (no film on the page for now; the film's files are in drafts/video) the owner's film of the desk calendar (assets/cal-desk.*);
      it plays muted and looped only while on screen; with reduced motion it stays on its first frame.
