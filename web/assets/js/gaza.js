@@ -50,8 +50,8 @@
     bts.forEach((b, i) => { b.setAttribute('aria-label', mon(MS[i])); b.querySelector('.btn-n').textContent = MG.ar ? mon(MS[i]) : mon(MS[i]).slice(0, 3); });
     $('#gzpages').innerHTML = P.map((p) => `<li${p.m ? '' : ' class="cfl-cover"'}><img src="assets/gz-${pad(p.m)}.webp" alt="${esc(p.m ? mon(p) + ' 2027, ' + L(p.n) : t('The cover: Gaza Sea Hill', 'الغلاف: تلّة بحر غزة'))}" loading="lazy" decoding="async"></li>`).join('');
     const pa = MG.palestine;
-    $('#olgrid').innerHTML = cell('01', 'calendar.html', t('New for 2027', 'جديد لعام 2027'), 'assets/cdm-base.webp', 'assets/cal-hero-m.webp', t('Things kept in bottles', 'أشياء نحفظها في قوارير'))
-      + cell('02', pa.page, t('From 2026, set for 2027', 'من 2026، بتواريخ 2027'), 'assets/pdm-base.webp', 'assets/pm-3.webp', L(pa.short));
+    $('#olgrid').innerHTML = cell('01', 'calendar.html', t('New for 2027', 'جديد لعام 2027'), 'assets/olc-cal-a.webp', 'assets/olc-cal-b.webp', t('Things kept in bottles', 'أشياء نحفظها في قوارير'))
+      + cell('02', pa.page, t('From 2026, set for 2027', 'من 2026، بتواريخ 2027'), 'assets/olc-ps-a.webp', 'assets/olc-ps-b.webp', L(pa.short));
     $$('[data-alt-ar]').forEach((e) => { if (e.dataset.altEn == null) e.dataset.altEn = e.alt; e.alt = MG.ar ? e.dataset.altAr : e.dataset.altEn; });
     show(sel);
   });

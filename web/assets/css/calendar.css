@@ -544,3 +544,6 @@ main>section.cspec>.wrap{padding-bottom:0}
 .where{display:none!important}
 .ol-ac .ac-hd .no{display:none}
 .ol-ac .ac-hd{justify-content:flex-end}
+/* (owner, 27 Nov 2026) the calendars' grid: each photo on pure white with its whole shadow (tools/calendar_cells.py), another photo under the pointer */
+.ol-ac .ac-im{aspect-ratio:4/3}
+.ol-ac .ol-one,.ol-ac .mk img{inset:0!important;width:100%!important;height:100%!important;object-fit:contain;mix-blend-mode:normal}
