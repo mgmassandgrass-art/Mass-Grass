@@ -471,7 +471,7 @@ html[data-hand] body .cdesk .cdesk-ship{margin:0;font-family:var(--mono2)!import
 @media(max-width:700px){.ac-grid.ol-ac{grid-template-columns:minmax(0,1fr)}.ac-grid.ol-ac>.ac-cell:nth-child(n){border-inline-end:0}}
 
 /* ---------- Places in Gaza (2025 calendar set for 2027): the Palestine page's layout, with whole pages and photographs ---------- */
-.gz27 .cdesk>img{aspect-ratio:2000/1335;width:min(100%,calc((100svh - 49px - 190px) * 2000 / 1335),1500px)}
+.gz27 .cdesk>img{aspect-ratio:1403/1031;width:min(100%,calc((100svh - 49px - 190px) * 1403 / 1031),1400px)}
 .gz27 .btshow .bts-im.gz-im{aspect-ratio:226/397;width:min(100%,calc(78vh * 226 / 397),440px);margin:0;justify-self:center;background:#fff!important;-webkit-mask-image:none;mask-image:none;box-shadow:0 1px 2px rgba(40,30,20,.14),0 18px 36px -14px rgba(40,30,20,.3)}
 @media(max-width:900px){.gz27 .btshow .bts-im.gz-im{width:min(100%,320px)}}
 .gz27 .gz-pgs{position:absolute;inset:0}
@@ -489,3 +489,46 @@ main>section.gzph>.wrap{padding-block:var(--sec)}
 /* Places in Gaza, round 2 (owner, 26 Nov 2026): the cover and twelve months side by side on white open the page, full width
    (rendered from the calendar's own pages, tools in the commit); every painting is laid out like the other calendars' pages */
 .gz27 .cdesk>img{aspect-ratio:5000/2127;width:100%;max-width:none;height:auto}
+
+/* ---------- Places in Gaza, round 3 (owner, 27 Nov 2026): the owner's stand photographs; the month is laid on the August stand ---------- */
+.gz27 .btshow .bts-pg{left:17.2888%;top:5.6974%;width:61.0020%;height:79.5678%}
+
+/* ---------- the QR codes: every page opens its place's story ---------- */
+.gzqr .qr-in{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center}
+.gzqr .qr-im{position:relative;margin:0;background:#fff;box-shadow:0 1px 2px rgba(40,30,20,.12),0 18px 36px -16px rgba(40,30,20,.28);line-height:0}
+.gzqr .qr-im img{display:block;width:100%;height:auto}
+.gzqr .qr-aim{position:absolute;left:77.6%;top:42%;width:17.6%;height:42.6%;pointer-events:none;
+  --c:#9C4F52;background:linear-gradient(var(--c),var(--c)) 0 0/18% 2px,linear-gradient(var(--c),var(--c)) 0 0/2px 18%,linear-gradient(var(--c),var(--c)) 100% 0/18% 2px,linear-gradient(var(--c),var(--c)) 100% 0/2px 18%,
+  linear-gradient(var(--c),var(--c)) 0 100%/18% 2px,linear-gradient(var(--c),var(--c)) 0 100%/2px 18%,linear-gradient(var(--c),var(--c)) 100% 100%/18% 2px,linear-gradient(var(--c),var(--c)) 100% 100%/2px 18%;background-repeat:no-repeat;
+  animation:qrAim 2.4s cubic-bezier(.22,1,.36,1) infinite}
+.gzqr .qr-aim::after{content:"";position:absolute;left:6%;right:6%;top:8%;height:2px;background:rgba(156,79,82,.55);animation:qrScan 2.4s ease-in-out infinite}
+@keyframes qrAim{0%,100%{transform:scale(1.16)}50%{transform:scale(1)}}
+@keyframes qrScan{0%,100%{top:8%}50%{top:90%}}
+@media(prefers-reduced-motion:reduce){.gzqr .qr-aim,.gzqr .qr-aim::after{animation:none}.gzqr .qr-aim::after{display:none}}
+.gzqr .qr-tx>p{margin:0 0 16px;max-width:46ch}
+.gzqr .qr-t{font-size:clamp(28px,2.8vw,40px)!important;line-height:1.15;margin-bottom:16px!important}
+.gzqr .qr-steps{list-style:none;margin:8px 0 20px;padding:0;border-top:1px solid var(--line-2)}
+.gzqr .qr-steps li{display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line-2);margin:0}
+.gzqr .qr-steps b{font:500 11px/1 var(--mono2);letter-spacing:.12em;color:#9C4F52}
+.gzqr .qr-n{font:500 11px/1.5 var(--mono2)!important;letter-spacing:.15em!important;text-transform:uppercase;color:var(--cal-grey,#6B675E)!important}
+.ar-on .gzqr .qr-n,.ar-on .gzqr .qr-steps b{font-family:var(--fa)!important;letter-spacing:0!important}
+@media(max-width:900px){.gzqr .qr-in{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- size and printing, the same block on every calendar (MG.calSpec) ---------- */
+.csp-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0;border-top:1px solid var(--line-2)}
+.csp-c{padding:20px clamp(12px,1.6vw,24px) 22px 0;border-bottom:1px solid var(--line-2);min-width:0}
+.csp-c+.csp-c{padding-inline-start:clamp(12px,1.6vw,24px);border-inline-start:1px solid var(--line-2)}
+.csp-c dt{font:500 11px/1.5 var(--mono2);letter-spacing:.15em;text-transform:uppercase;color:#6B675E;margin:0 0 10px}
+.csp-c dd{margin:0;font:400 22px/1.25 var(--cal-t,var(--hand));color:#2B2F2C}
+.csp-ws{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.csp-w{padding:28px clamp(12px,2vw,32px) 8px 0;min-width:0}
+.csp-w+.csp-w{padding-inline-start:clamp(12px,2vw,32px);border-inline-start:1px solid var(--line-2)}
+.csp-w h3{margin:0 0 12px;font-size:clamp(24px,2.2vw,30px)!important}
+.csp-w p{margin:0 0 12px;max-width:48ch}
+.csp-w .fig{display:inline-block;margin-top:4px}
+.ar-on .csp-c dt{font:500 13px/1.5 var(--fa);letter-spacing:0}
+.ar-on .csp-c dd{font:400 20px/1.5 var(--fa)}
+@media(max-width:900px){.csp-g{grid-template-columns:repeat(2,minmax(0,1fr))}.csp-c:nth-child(odd){padding-inline-start:0;border-inline-start:0}.csp-ws{grid-template-columns:minmax(0,1fr)}.csp-w+.csp-w{padding-inline-start:0;border-inline-start:0;border-top:1px solid var(--line-2)}}
+main>section.cspec,main>section.gzqr{padding-block:0}
+html[data-hand]:not(.ar-on) body main .csp-c dd{font:400 21px/1.3 var(--cal-t)!important;color:#2B2F2C}
+html[data-hand]:not(.ar-on) body main .btshow .bts-n{font-size:clamp(30px,3vw,44px)!important;line-height:1.1}

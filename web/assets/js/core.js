@@ -58,7 +58,7 @@
   }
   /* a printed copy, shipped: the admin switches it on per piece (extra.print = {on, price, size}); the calendar's is prices.calendarPrint */
   function printOf(kind, id) {
-    if (kind === 'calendar') { const e = cat.prices.calendarPrint; return e > 0 ? { price: e, size: ['A5, portrait', 'A5 طولي'] } : null; }
+    if (kind === 'calendar') { const e = cat.prices.calendarPrint; return e > 0 ? { price: e, size: calOf(id).size || ['A5, portrait', 'A5 طولي'] } : null; }
     const p = id && product(kind, id), pr = p && p.extra && p.extra.print;
     return pr && pr.on && Number(pr.price) > 0 ? { price: Number(pr.price), size: pr.size ? [pr.size, pr.size_ar || pr.size] : null } : null;
   }
@@ -345,6 +345,14 @@
   /* an add-to-bag button for one piece (kept in step by rerender) */
   const addBtn = (kind, id, cls) => { const on = bag.has(kind, id); return `<button type="button" class="${cls || 'add'}" data-add="${kind}" data-id="${esc(id)}" aria-pressed="${on}">${on ? t('In your bag', 'في السلة') : isFree(kind, id) ? t('Free download', 'حمّلوها مجانًا') : t('Add to bag', 'أضيفوها إلى السلة')}</button>`; };
 
+  /* a calendar's size and printing, the same block on every calendar's page (#cspec): the facts in ruled cells, then the two ways to have it */
+  const calSpec = (id) => {
+    const c = calOf(id), pr = printOf('calendar', c.id), rows = [[['Size', 'المقاس'], c.size]].concat(c.spec || []);
+    const cells = rows.filter((r) => r[1]).map(([k, v]) => `<div class="csp-c"><dt>${esc(L(k))}</dt><dd>${esc(L(v))}</dd></div>`).join('');
+    const pdf = `<div class="csp-w"><h3 class="hand">${t('The PDF', 'ملف PDF')}</h3><p>${t('A high-resolution file, ready to print. It comes by e-mail and on your order page as soon as you pay.', 'ملف عالي الدقة جاهز للطباعة، يصلكم بالبريد الإلكتروني وفي صفحة الطلب فور الدفع.')}</p><p>${t(`Print it at home or at a print shop at actual size (100%), on thick matte card of 250 to 300 gsm, then cut along the page's edge.`, 'اطبعوه في البيت أو عند مطبعة بالمقاس الفعلي (100%)، على كرتون مطفأ سميك بين 250 و300 غرام، ثم قصّوه على حافة الصفحة.')}</p><b class="fig" data-price="calendar">${fmt(price('calendar'))}</b></div>`;
+    const prt = pr ? `<div class="csp-w"><h3 class="hand">${t('Printed for you', 'مطبوعًا لكم')}</h3><p>${t(`We print it in colour at ${L(c.size).split(',')[0]} and send it by post from the UAE, with a tracking number.`, `نطبعه بالألوان بمقاس ${L(c.size).split('،')[0]} ونرسله بالبريد من الإمارات، مع رقم للتتبّع.`)}</p><b class="fig">${fmt(pr.price)}</b></div>` : '';
+    return `<dl class="csp-g">${cells}</dl><div class="csp-ws">${pdf}${prt}</div>`;
+  };
   const printBtn = (kind, id, cls) => { const pr = printOf(kind, id); if (!pr) return ''; if (kind === 'calendar') id = calOf(id).id; const on = bag.has(kind, id, 'print');
     /* the price where the visitor is: the piece and the shipping to their country, added up */
     const sh = shipHere(), tot = pr.price + (sh ? sh.fee : 0);
@@ -362,7 +370,7 @@
     return `<li class="pr-it"><a class="lk" href="${href}"${cal ? '' : ` data-peek="${p.kind}:${esc(p.id)}"`}><div class="bed paper ${cls}"><span class="fill"></span><img src="${esc(src)}" alt="${esc(p.title_en)}, by Farah Al-Helou" loading="lazy"></div></a>
       <div class="meta"><h3>${esc(title(p))}</h3><span class="pr">${fmt(price(p.kind, p.id))}</span></div><span class="kd">${esc(kindLabel(p.kind))}</span>${printOf(p.kind, cal ? c.id : p.id) ? `<span class="kd pt">${t('Also printed and shipped', 'متوفرة مطبوعة أيضًا')}</span>` : ''}<div class="acts">${btn}${shareBtn(p.kind, cal ? c.id : p.id)}</div></li>`;
   }
-  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, shipZone, shipHere, fmtEur, cur: CUR, countryName, get visitor() { return visitor(); }, countries, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, gaza: DEF.gaza, calOf, calendars: CALS, book: BOOK };
+  window.MG = { $, $$, esc, t, L, still, store, get ar() { return AR; }, setLang, cat, products, product, title, img, thumb, price, isFree, printOf, shipping, shipZone, shipHere, fmtEur, cur: CUR, countryName, get visitor() { return visitor(); }, countries, fmt, kindLabel, bag, openBag, api, user, toast, tear, page, rerender, addBtn, printBtn, calSpec, shareBtn, tile, PAGE, calendar: DEF.calendar, palestine: DEF.palestine, gaza: DEF.gaza, calOf, calendars: CALS, book: BOOK };
 
   function boot() { applyLang(); shell(); ready = true; rerender('init'); user.sync(); }
   doc.readyState === 'loading' ? doc.addEventListener('DOMContentLoaded', boot) : boot();

@@ -66,6 +66,7 @@
   }
   MG.page(function (why) {
     const cp = $('#cprint'); if (cp) cp.innerHTML = printBlock();
+    $('#cspec').innerHTML = MG.calSpec(C.id);
     const hp = $('#hprint'); if (hp) hp.innerHTML = MG.printBtn('calendar', C.id, 'ghost');
     const hs = $('#hship'), pr0 = MG.printOf('calendar', C.id); if (hs) hs.textContent = pr0 ? shipLine(pr0) : '';
     if (why === 'bag' || why === 'user') return;

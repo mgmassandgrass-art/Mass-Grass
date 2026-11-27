@@ -5,10 +5,11 @@
   <img src="assets/ps-hero.webp" srcset="assets/ps-hero-m.webp 1100w, assets/ps-hero.webp 1364w" sizes="100vw" width="1364" height="928" alt="Two desk calendars on acrylic stands, open on February and May 2027" data-alt-ar="تقويمان مكتبيان على حاملين من الأكريليك، مفتوحان على شباط وأيار 2027" fetchpriority="high">
   <div class="cdesk-t">
     <p class="cdesk-l" data-ar="بيت فلسطيني لكل شهر، على مكتبكم طوال العام">A Palestinian house for every month, on your desk all year</p>
-    <div class="cbuy-row">
-      <button class="ink" type="button" data-add="calendar" data-cal="palestine-2027" data-ar="اشتروا الآن">Buy now</button>
-      <b class="fig" data-price="calendar">€10</b>
+    <div class="cbuy2">
+      <button class="ink" type="button" data-add="calendar" data-cal="palestine-2027"><span data-ar="رقمي PDF،">Digital PDF,</span> <span data-price="calendar">€10</span></button>
+      <span class="cbuy-pr" id="hprint"></span>
     </div>
+    <p class="cdesk-ship" id="hship" aria-live="polite"></p>
   </div>
 </section>
 
@@ -34,6 +35,13 @@
   <div class="wrap">
     <h2 class="sr" id="pg-h" data-ar="صفحات التقويم">Every page</h2>
     <ol class="cfl-pages" id="pspages"></ol>
+  </div>
+</section>
+
+<section class="cspec" id="spec" aria-labelledby="sp-h" data-meta="As a PDF or printed" data-meta-ar="ملف PDF أو مطبوعًا" data-where="Size and printing" data-where-ar="المقاس والطباعة">
+  <div class="wrap">
+    <h2 class="sr" id="sp-h" data-ar="المقاس والطباعة">Size and printing</h2>
+    <div class="csp" id="cspec" data-cal="palestine-2027"></div>
   </div>
 </section>
 

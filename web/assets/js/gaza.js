@@ -1,27 +1,29 @@
 /* Places in Gaza: Farah's 2025 calendar set for 2027, laid out like the Palestine calendar's page:
    1 · the photograph of two calendars on wooden stands, and buy;
-   2 · the twelve months in a row; a click shows that month's whole page (gz-MM) with its place and its line;
-   3 · three more photographs of the calendar;
+   2 · the twelve months in a row; a click lays that month on the calendar on its wooden stand (gzs-base + gzs-MM, from
+       tools/gaza/month_on_stand.py), with its place and its line;
+   3 · the QR codes: every page opens its place's story (/g/MM);
    4 · every page: the cover, then the months two by two;
-   5 · the other 2027 calendars. */
+   5 · size and printing (MG.calSpec); 6 · the other 2027 calendars. */
 (function () {
   'use strict';
   const { $, $$, esc, t, L } = MG, C = MG.gaza, P = C.pages, M = MG.calendar;
   const pad = (n) => String(n).padStart(2, '0');
   const mon = (p) => (p.m ? (MG.ar ? M.monthsAr[p.m - 1] : M.months[p.m - 1]) : t('The cover', 'الغلاف'));
-  const MS = P.filter((p) => p.m > 0), row = $('#btrow'), pg = $('#gzpgs');
+  const MS = P.filter((p) => p.m > 0), row = $('#btrow'), pg = $('#btspg');
   let sel = 0;
   /* the row of months: each page small, its month under it */
   row.innerHTML = MS.map((p, i) => `<li><button type="button" class="btb psb" data-i="${i}" aria-pressed="${!i}"><img src="assets/t-gz-${pad(p.m)}.webp" alt="" draggable="false" loading="lazy"><span class="btn-n"></span></button></li>`).join('');
   const bts = $$('.btb', row);
-  /* the page whole: all twelve are stacked and fetched once the section comes near, so a click changes the page at once */
-  pg.innerHTML = MS.map((p, i) => `<img src="assets/gz-${pad(p.m)}.webp" alt="" ${i ? 'loading="lazy" ' : ''}decoding="async" draggable="false"${i ? '' : ' class="on"'}>`).join('');
+  /* the calendar on its stand: one photograph, and only its page changes; all twelve are fetched once the section comes near */
+  pg.innerHTML = MS.map((p, i) => `<img src="assets/gzs-${pad(p.m)}.webp" alt="" ${i ? 'loading="lazy" ' : ''}decoding="async" draggable="false"${i ? '' : ' class="on"'}>`).join('');
   const pgs = $$('img', pg);
   new IntersectionObserver((es, o) => es.forEach((en) => { if (en.isIntersecting) { pgs.forEach((im) => { im.loading = 'eager'; }); o.disconnect(); } }), { rootMargin: '600px' }).observe(pg);
   function show(i, scroll) {
     sel = (i + MS.length) % MS.length; const p = MS[sel];
     bts.forEach((b, k) => b.setAttribute('aria-pressed', String(k === sel)));
-    pgs.forEach((im, k) => { im.classList.toggle('on', k === sel); im.alt = k === sel ? `${mon(p)} 2027, ${L(p.n)}` : ''; });
+    pgs.forEach((im, k) => im.classList.toggle('on', k === sel));
+    $('.bts-base').alt = `${mon(p)} 2027, ${L(p.n)}, ${t('on the calendar on its stand', 'على التقويم فوق حامله')}`;
     $('#btss').textContent = mon(p) + ' 2027'; $('#btsn').textContent = L(p.n); $('#btsq').textContent = L(p.q);
     if (scroll) { const r = $('#btshow').getBoundingClientRect(); if (r.top > innerHeight * .7 || r.bottom < 0) $('#btshow').scrollIntoView({ behavior: MG.still ? 'auto' : 'smooth', block: 'center' }); }
   }
@@ -41,6 +43,9 @@
   const cell = (n, href, lb, im, mk, name) => `<li class="ac-cell"><a class="ol-ac-a" href="${href}"><span class="ac-hd"><b class="no">${n}</b><span class="lb">${esc(lb)}</span></span><span class="ac-im"><img class="ol-one" src="${im}" alt="" loading="lazy"><span class="mk"><img src="${mk}" alt="" loading="lazy"></span></span><span class="ac-ft"><h3 class="hand">${esc(name)}</h3><span class="pr">${MG.fmt(MG.price('calendar'))}</span></span></a></li>`;
   MG.page(function (why) {
     $('#gzprint').innerHTML = printBlock();
+    const hp = $('#hprint'), pr0 = MG.printOf('calendar', C.id); if (hp) hp.innerHTML = MG.printBtn('calendar', C.id, 'ghost');
+    const hs = $('#hship'); if (hs) hs.textContent = pr0 ? shipLine(pr0) : '';
+    $('#cspec').innerHTML = MG.calSpec(C.id);
     if (why === 'bag' || why === 'user') return;
     bts.forEach((b, i) => { b.setAttribute('aria-label', mon(MS[i])); b.querySelector('.btn-n').textContent = MG.ar ? mon(MS[i]) : mon(MS[i]).slice(0, 3); });
     $('#gzpages').innerHTML = P.map((p) => `<li${p.m ? '' : ' class="cfl-cover"'}><img src="assets/gz-${pad(p.m)}.webp" alt="${esc(p.m ? mon(p) + ' 2027, ' + L(p.n) : t('The cover: Gaza Sea Hill', 'الغلاف: تلّة بحر غزة'))}" loading="lazy" decoding="async"></li>`).join('');

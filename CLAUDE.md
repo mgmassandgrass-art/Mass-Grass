@@ -609,3 +609,16 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   white, rendered from the PDF at 5000px).
 - The 2023 calendar re-dated too (`tools/redate_2023.py`, JPEG pages; Abril Fatface for the cover's 7): PDF given to the owner,
   not on the site yet.
+
+## Calendars, round 4 (owner, 27 Nov 2026; not deployed until «انشر»)
+
+- Places in Gaza: the owner's wooden-stand photographs (`drafts/calendar-2025/mockups/stand-pair.webp`, `stand-aug.webp`,
+  transparent backgrounds). Hero `gz-hero{,-m}` (cover + October); the months section lays each month on the August stand
+  (`gzs-base` + `gzs-MM`, `tools/gaza/month_on_stand.py`, the stand in front kept); `gzm-3w` is no longer on the page.
+  New section `#qr` ("Every page hides a story": the foot of August with its QR, `gz-qr.webp`, an animated aim, three steps).
+- Every calendar page has `#spec` (size and printing), built by `MG.calSpec(id)` in core.js from `size` and `spec` on each
+  calendar in catalog.js. Sizes: Things kept in bottles and Palestine A5 (14.8 × 21 cm); Places in Gaza 8 × 14 cm (its PDF's
+  size). Paper weight, finish and whether a stand comes with the printed copy are not known yet: ask the owner.
+  `printOf('calendar', id).size` now follows the calendar. All three heroes use the two buttons (PDF / printed) and `#hship`.
+- Type: Farah's voice stays Patrick Hand, now in capitals spaced .1em (end of `hand.css`), after the owner's sample
+  "EMBRACE THE IMPERFECTIONS AND CELEBRATE THEM."; the story's long narration stays in lower case.

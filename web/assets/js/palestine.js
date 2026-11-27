@@ -42,6 +42,9 @@
       : `<p class="pnote">${t('Printed copies, shipped to the UAE and Denmark, open soon.', 'النسخ المطبوعة، بالشحن إلى الإمارات والدنمارك، قريبًا.')}</p>`;
   }
   MG.page(function (why) {
+    const hp = $('#hprint'), pr0 = MG.printOf('calendar', C.id); if (hp) hp.innerHTML = MG.printBtn('calendar', C.id, 'ghost');
+    const hs = $('#hship'); if (hs) hs.textContent = pr0 ? shipLine(pr0) : '';
+    $('#cspec').innerHTML = MG.calSpec(C.id);
     $('#psprint').innerHTML = printBlock();
     if (why === 'bag' || why === 'user') return;
     bts.forEach((b, i) => { b.setAttribute('aria-label', mon(MS[i])); b.querySelector('.btn-n').textContent = MG.ar ? mon(MS[i]) : mon(MS[i]).slice(0, 3); });

@@ -115,3 +115,10 @@ html[data-pg]{--pg-a:#FFFFFF;--pg-m:#FFFFFF;--pg-b:#FFFFFF;--pg-r:#9C4F52;--line
 html[data-pg] :is(header,.mmenu){background:rgba(255,255,255,.94)}
 html[data-pg] .where{background:rgba(255,255,255,.88)}
 html[data-pg]:not([data-pg="calendar"]):not([data-pg="palestine"]):not([data-pg="soon"]){--line:rgba(17,17,20,.12);--line-2:rgba(17,17,20,.24)}
+
+/* Farah's voice in spaced capitals (owner, 27 Nov 2026, from their sample "EMBRACE THE IMPERFECTIONS AND CELEBRATE THEM."):
+   Patrick Hand stays the face; titles, names, leads, lines and the head rows are set in capitals spaced .1em, a little
+   smaller so they keep their measure. The story's long narration stays in lower case. Arabic keeps its own faces. */
+html[data-hand]:not(.ar-on) :is(body :is(main,dialog) :is(h1,h2,h3):not(.sr),.sh h1,.pghd h1,body :is(main,dialog) :is(.lead,.pghd p,.hand,.ol-n,.btb .btn-n,.all span,.csp-c dd),body :is(main,dialog) section.pgx :is(summary,details>b,.q),.sx-side .now,footer h2,footer .ft-l,.sx-hd i,.where-in .nm){
+  text-transform:uppercase!important;letter-spacing:.1em!important;font-size-adjust:none}
+html[data-hand]:not(.ar-on) body :is(main,dialog) :is(h1,h2,h3):not(.sr){line-height:1.2}
