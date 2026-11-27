@@ -26,7 +26,8 @@
       t('The link stays on your order page, to download it again whenever you need', 'يبقى الرابط في صفحة الطلب، لتحمّلوه من جديد متى احتجتم')].map(li).join('');
     const s = ship();
     return [
-      t(`The calendar printed in colour, ${sz()}`, `التقويم مطبوعًا بالألوان، بمقاس ${sz()}`),
+      t(`The calendar printed in colour, ${sz()}, on 300 gsm matte card`, `التقويم مطبوعًا بالألوان، بمقاس ${sz()}، على كرتون مطفأ 300 غرام`),
+      t('Its stand, to set it on your desk', 'حامله، ليقف على مكتبكم'),
       pages ? t(`${pages}${weeks ? '; weeks ' + weeks.charAt(0).toLowerCase() + weeks.slice(1) : ''}`, `${pages}${weeks ? '، والأسبوع ' + weeks : ''}`) : '',
       t('Posted from the UAE with a tracking number, which we e-mail you when it leaves', 'يُرسل بالبريد من الإمارات مع رقم للتتبّع، نرسله إليكم بالبريد الإلكتروني عند خروجه'),
       s && s.days ? t(`Delivery in ${s.days}`, `يصل خلال ${s.days}`) : ''].filter(Boolean).map(li).join('');
@@ -49,7 +50,7 @@
         <a class="by-ab" href="${esc(C.page)}">${t('About this calendar', 'عن هذا التقويم')}</a>
         <fieldset class="by-fmt"><legend>${t('Format', 'الشكل')}</legend>
           ${opt('pdf', t('Digital PDF', 'ملف PDF رقمي'), t('Download right after payment', 'تحمّلونه فور الدفع'), MG.fmt(MG.price('calendar')))}
-          ${pr ? opt('print', t('Printed and shipped', 'مطبوع ومشحون'), t('Posted from the UAE, tracked', 'بالبريد من الإمارات، مع التتبّع'), MG.fmt(pr.price)) : ''}
+          ${pr ? opt('print', t('Printed and shipped', 'مطبوع ومشحون'), t('With its stand, posted from the UAE, tracked', 'مع حامله، بالبريد من الإمارات، مع التتبّع'), MG.fmt(pr.price)) : ''}
         </fieldset>
         ${fmt === 'print' ? `<div class="by-row"><span class="by-l">${t('Quantity', 'الكمية')}</span><span class="qty"><button type="button" data-d="-1" aria-label="${t('One less', 'نسخة أقل')}"${qty <= 1 ? ' disabled' : ''}>−</button><b aria-live="polite">${qty}</b><button type="button" data-d="1" aria-label="${t('One more', 'نسخة أخرى')}"${qty >= 10 ? ' disabled' : ''}>+</button></span></div>
         <div class="by-row by-ship"><label class="by-l" for="bycc">${t('Shipping to', 'الشحن إلى')}</label><select id="bycc"><option value="">${t('Choose a country', 'اختاروا الدولة')}</option>${MG.countries().map(([c, n]) => `<option value="${c}"${c === cc ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select><span class="by-fee">${fee}</span></div>` : ''}

@@ -553,3 +553,5 @@ main>section.cspec>.wrap{padding-bottom:0}
 .gz27 .cdesk>img{aspect-ratio:1627/1255;width:min(100%,calc((100svh - 49px - 170px) * 1627 / 1255),1500px)}
 /* the printed button on the calendar pages is now a link to this page */
 a.pbtn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;box-sizing:border-box}
+.csp-g{grid-template-columns:repeat(var(--n,4),minmax(0,1fr))}
+@media(max-width:900px){.csp-g{grid-template-columns:repeat(2,minmax(0,1fr))}}

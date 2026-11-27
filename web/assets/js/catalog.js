@@ -79,7 +79,7 @@ window.MG_DEFAULT = {
   /* the 2027 calendar, "Things kept in bottles": the cover and all twelve months (assets c27-MM*, rendered from the owner's calendar artifact) */
   calendar: {
     id: 'calendar-2027', title: ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027'], short: ['Things kept in bottles', 'أشياء نحفظها في قوارير'], cover: 'assets/t-v2-00.webp', page: 'calendar.html', mock: 'assets/olt-cal.webp', gallery: ['assets/olc-cal-a.webp', 'assets/olc-cal-b.webp'], pg: 'assets/v2-', size: ['A5 (14.8 × 21 cm), portrait', 'A5 (14.8 × 21 سم)، طولي'],
-    spec: [[['Pages', 'الصفحات'], ['The cover and twelve months', 'الغلاف واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Saturday', 'يبدأ يوم السبت']], [['Paper', 'الورق'], ['Recycled', 'معاد تدويره']]],
+    spec: [[['Pages', 'الصفحات'], ['The cover and twelve months', 'الغلاف واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Saturday', 'يبدأ يوم السبت']], [['Printed on', 'الطباعة على'], ['300 gsm matte card, recycled', 'كرتون مطفأ 300 غرام، معاد تدويره']]],
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     monthsAr: ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'],
     pages: [
@@ -116,7 +116,7 @@ window.MG_DEFAULT = {
   palestine: {
     id: 'palestine-2027', title: ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027'],
     short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', cover: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026, mock: 'assets/olt-ps.webp', gallery: ['assets/olc-ps-a.webp', 'assets/olc-ps-b.webp'], pg: 'assets/ps-', pgIn: 'assets/ps-in.webp', size: ['A5 (14.8 × 21 cm), portrait', 'A5 (14.8 × 21 سم)، طولي'],
-    spec: [[['Pages', 'الصفحات'], ['The cover, an opening page and twelve months', 'الغلاف وصفحة افتتاحية واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Monday', 'يبدأ يوم الاثنين']], [['Holidays', 'المناسبات'], ['Marked on their days', 'معلَّمة في أيامها']]],
+    spec: [[['Pages', 'الصفحات'], ['The cover, an opening page and twelve months', 'الغلاف وصفحة افتتاحية واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Monday', 'يبدأ يوم الاثنين']], [['Holidays', 'المناسبات'], ['Marked on their days', 'معلَّمة في أيامها']], [['Printed on', 'الطباعة على'], ['300 gsm matte card', 'كرتون مطفأ 300 غرام']]],
     pages: [
       { k: 'ps-00', m: 0, n: ['The cover', 'الغلاف'], q: ['Palestine, a journey through time and space.', 'فلسطين، رحلة عبر الزمان والمكان.'], d: ['A clay jug on a tiled plate, and the calendar\'s name.', 'جرّة فخار على صحن من البلاط، واسم التقويم.'] },
       { k: 'ps-01', m: 1, n: ["Taboon", "الطابون"], q: ["Taboon", "الطابون"], d: ["Hand-sculpted from golden clay and ancient grit, the taboon is a thermal masterpiece: a living monument where the earth's warmth meets the scent of belonging.", "الطابون مصنوع باليد من الطين الذهبي والحصى القديم، تحفة تحفظ الحرارة: نصب حيّ يلتقي فيه دفء الأرض برائحة الانتماء."] },
@@ -136,7 +136,7 @@ window.MG_DEFAULT = {
   gaza: {
     id: 'gaza-2027', title: ['Places in Gaza, 2027', 'أماكن من غزة، 2027'],
     short: ['Places in Gaza', 'أماكن من غزة'], img: 'assets/t-gz-00.webp', cover: 'assets/t-gz-00.webp', page: 'gaza.html', first: 2025, mock: 'assets/olt-gz.webp', gallery: ['assets/olc-gz-a.webp', 'assets/olc-gz-b.webp'], pg: 'assets/gz-', size: ['8 × 14 cm, portrait', '8 × 14 سم، طولي'],
-    spec: [[['Pages', 'الصفحات'], ['The cover and twelve months', 'الغلاف واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Sunday', 'يبدأ يوم الأحد']], [['On every page', 'في كل صفحة'], ['A QR code to the place\'s story', 'رمز QR يفتح حكاية المكان']]],
+    spec: [[['Pages', 'الصفحات'], ['The cover and twelve months', 'الغلاف واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Sunday', 'يبدأ يوم الأحد']], [['On every page', 'في كل صفحة'], ['A QR code to the place\'s story', 'رمز QR يفتح حكاية المكان']], [['Printed on', 'الطباعة على'], ['300 gsm matte card', 'كرتون مطفأ 300 غرام']]],
     pages: [
       { k: 'gz-00', m: 0, n: ["The cover", "الغلاف"], q: ["We can always choose the beginning, but the ending is never in our hands.", "نستطيع دائمًا أن نختار البداية، أما النهاية فليست في أيدينا أبدًا."], d: ['', ''] },
       { k: 'gz-01', m: 1, n: ["Road to Deir al-Balah", "الطريق إلى دير البلح"], q: ["Even the hardest paths can lead to a brighter horizon.", "أصعب الطرق قد تقود إلى أفق أكثر إشراقًا."], d: ['', ''] },

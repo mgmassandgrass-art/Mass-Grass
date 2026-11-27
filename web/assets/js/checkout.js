@@ -8,7 +8,7 @@ const KIND={painting:['Painting, PDF and PNG','لوحة، PDF وPNG'],postcard:[
 /* a calendar line says what arrives and how: the size, then the file by e-mail or the parcel by post (owner, 27 Nov 2026) */
 const SZ=k=>{const c=MG.calOf(k),z=c.size||['A5','A5'];return (AR?z[1].split('،')[0]:z[0].split(',')[0])};
 const WHAT=x=>x.kind!=='calendar'?(x.fmt==='print'?T('Printed and shipped','مطبوعة وتُشحن'):T(...(KIND[x.kind]||['Digital file','ملف رقمي']))):
-  x.fmt==='print'?T(`Printed calendar, ${SZ(x.k)}. Posted from the UAE with a tracking number.`,`تقويم مطبوع، ${SZ(x.k)}. يُرسل بالبريد من الإمارات مع رقم للتتبّع.`)
+  x.fmt==='print'?T(`Printed calendar, ${SZ(x.k)}, 300 gsm matte, with its stand. Posted from the UAE with a tracking number.`,`تقويم مطبوع، ${SZ(x.k)}، كرتون مطفأ 300 غرام، مع حامله. يُرسل بالبريد من الإمارات مع رقم للتتبّع.`)
   :T(`Digital PDF, ${SZ(x.k)}, ready to print. The download link comes by e-mail right after payment.`,`ملف PDF رقمي، ${SZ(x.k)}، جاهز للطباعة. يصلكم رابط التحميل بالبريد الإلكتروني فور الدفع.`);
 const PIC=x=>x.kind==='calendar'?(MG.calOf(x.k).mock||x.img):(x.img||S.img(x.k));
 const ERR={email_invalid:['Please enter a valid email, like name@mail.com. Your files go there.','اكتبوا بريدًا إلكترونيًا صحيحًا، مثل name@mail.com. ستصل الملفات إليه.'],

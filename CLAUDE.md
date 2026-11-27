@@ -618,7 +618,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   New section `#qr` ("Every page hides a story": the foot of August with its QR, `gz-qr.webp`, an animated aim, three steps).
 - Every calendar page has `#spec` (size and printing), built by `MG.calSpec(id)` in core.js from `size` and `spec` on each
   calendar in catalog.js. Sizes: Things kept in bottles and Palestine A5 (14.8 × 21 cm); Places in Gaza 8 × 14 cm (its PDF's
-  size). Paper weight, finish and whether a stand comes with the printed copy are not known yet: ask the owner.
+  size). Printed copies: 300 gsm matte card, sent with their stand (owner, 27 Nov); Places in Gaza prints at 8 × 14 cm.
   `printOf('calendar', id).size` now follows the calendar. All three heroes use the two buttons (PDF / printed) and `#hship`.
 - Type: Farah's voice stays Patrick Hand, now in capitals spaced .1em (end of `hand.css`), after the owner's sample
   "EMBRACE THE IMPERFECTIONS AND CELEBRATE THEM."; the story's long narration stays in lower case.
