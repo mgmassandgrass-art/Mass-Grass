@@ -5,6 +5,12 @@ let AR=MG.ar;
 const S={esc:MG.esc,fmt:MG.fmt,toast:MG.toast,img:k=>'assets/'+k+'.webp',BAG:MG.bag,USER:{get:()=>MG.user.get(),set:u=>MG.user.set(u),api:MG.api,sync:()=>MG.user.sync(),out:()=>MG.user.out()}},B=S.BAG,U=S.USER,T=(en,ar)=>AR?ar:en,esc=S.esc,$=id=>document.getElementById(id);
 const Q=new URLSearchParams(location.search);
 const KIND={painting:['Painting, PDF and PNG','لوحة، PDF وPNG'],postcard:['Postcard, PDF and PNG','بطاقة بريدية، PDF وPNG'],sticker:['Sticker, PNG','ملصق، PNG'],pack:['Sticker pack, PNG','مجموعة ملصقات، PNG'],calendar:['Calendar 2027, PDF in A5','تقويم 2027، PDF بمقاس A5']};
+/* a calendar line says what arrives and how: the size, then the file by e-mail or the parcel by post (owner, 27 Nov 2026) */
+const SZ=k=>{const c=MG.calOf(k),z=c.size||['A5','A5'];return (AR?z[1].split('،')[0]:z[0].split(',')[0])};
+const WHAT=x=>x.kind!=='calendar'?(x.fmt==='print'?T('Printed and shipped','مطبوعة وتُشحن'):T(...(KIND[x.kind]||['Digital file','ملف رقمي']))):
+  x.fmt==='print'?T(`Printed calendar, ${SZ(x.k)}. Posted from the UAE with a tracking number.`,`تقويم مطبوع، ${SZ(x.k)}. يُرسل بالبريد من الإمارات مع رقم للتتبّع.`)
+  :T(`Digital PDF, ${SZ(x.k)}, ready to print. The download link comes by e-mail right after payment.`,`ملف PDF رقمي، ${SZ(x.k)}، جاهز للطباعة. يصلكم رابط التحميل بالبريد الإلكتروني فور الدفع.`);
+const PIC=x=>x.kind==='calendar'?(MG.calOf(x.k).mock||x.img):(x.img||S.img(x.k));
 const ERR={email_invalid:['Please enter a valid email, like name@mail.com. Your files go there.','اكتبوا بريدًا إلكترونيًا صحيحًا، مثل name@mail.com. ستصل الملفات إليه.'],
   item_unavailable:['One piece in your bag is no longer for sale. Remove it and try again.','إحدى القطع في السلة لم تعد متاحة. أزيلوها وحاولوا مرة أخرى.'],
   rate_limited:['Too many tries. Please wait a little and try again.','محاولات كثيرة. انتظروا قليلًا ثم حاولوا مرة أخرى.'],
@@ -20,7 +26,7 @@ function render(){const box=$('co'),h=$('co-h');
   if(state==='held'){h.textContent=T('Thank you','شكرًا لكم');box.innerHTML=`<div class="co-empty"><p class="fmsg ok" role="status">${T(`PayPal received your payment for order ${esc(order.id)} and is checking it. Your files reach your email as soon as it clears, usually within a few hours.`,`استلم PayPal دفعتكم للطلب ${esc(order.id)} ويراجعها الآن. تصل ملفاتكم إلى بريدكم فور اعتمادها، عادةً خلال ساعات.`)}</p><a class="go" href="paintings.html">${T('Back to the paintings','العودة إلى اللوحات')}</a></div>`;return}
   if(state==='done'){h.textContent=T('Thank you','شكرًا لكم');const f=order.files||[],its=(order.items||[]).filter(i=>!i.gift),dig=its.some(i=>i.fmt!=='print'),u=U.get();
     const when=new Date(order.date||Date.now()).toLocaleDateString(AR?'ar-u-nu-latn':'en-GB',{day:'numeric',month:'long',year:'numeric'});
-    const th=i=>i.kind==='calendar'?(MG.calOf(i.k).cover||'assets/t-v2-00.webp'):'assets/'+(i.kind==='pack'?(i.pack||[])[0]:i.k)+'.webp';
+    const th=i=>i.kind==='calendar'?(MG.calOf(i.k).mock||MG.calOf(i.k).cover||'assets/t-v2-00.webp'):'assets/'+(i.kind==='pack'?(i.pack||[])[0]:i.k)+'.webp';
     box.innerHTML=`<div class="cd">
       <div class="cd-l"><p class="hand cd-say">${T('Sealed in Gaza, sent to you.','خُتمت في غزة وأُرسلت إليكم.')}</p>
         <ul class="cd-its">${its.map(i=>`<li><span class="cd-pr"><img src="${esc(th(i))}" alt=""></span><span class="cd-nm">${esc(AR?(i.ta||i.t):i.t)}</span><small>${i.fmt==='print'?T('Printed','مطبوعة')+(i.q>1?' ×'+i.q:''):esc(T(...(KIND[i.kind]||['Digital file','ملف رقمي'])))}</small></li>`).join('')}</ul>
@@ -35,7 +41,7 @@ function render(){const box=$('co'),h=$('co-h');
       </aside></div>`;return}
   h.textContent=T('Checkout','إتمام الشراء');const a=B.get(),u=U.get(),pr=B.printed();
   if(!a.length){box.innerHTML=`<div class="co-empty">${msg?`<p class="fmsg" role="status">${T(...msg)}</p>`:''}<p>${T('Your bag is empty.','السلة فارغة.')}</p><a class="ink" href="paintings.html">${T('See the paintings','شاهدوا اللوحات')}</a></div>`;return}
-  box.innerHTML=`<div class="co-grid"><div><ul class="co-ls">${a.map((x,i)=>`<li><span class="th"><img src="${esc(x.img||S.img(x.k))}" alt=""></span><div><b>${esc(AR?(x.ta||x.t):x.t)}</b><small>${x.fmt==='print'?T('Printed and shipped','مطبوعة وتُشحن'):esc(T(...(KIND[x.kind]||['Digital file','ملف رقمي'])))}</small>${x.fmt==='print'?`<span class="qty"><button type="button" data-q="${i}" data-d="-1" aria-label="${T('One less','نسخة أقل')}"${(x.q||1)<=1?' disabled':''}>−</button><b>${x.q||1}</b><button type="button" data-q="${i}" data-d="1" aria-label="${T('One more','نسخة أخرى')}"${(x.q||1)>=10?' disabled':''}>+</button></span>`:''}</div><div class="pr">${S.fmt((+x.p||0)*(x.q||1))}<button type="button" class="rm" data-rm="${i}">${T('Remove','إزالة')}</button></div></li>`).join('')}</ul>
+  box.innerHTML=`<div class="co-grid"><div><ul class="co-ls">${a.map((x,i)=>`<li><span class="th"><img src="${esc(PIC(x))}" alt=""></span><div><b>${esc(AR?(x.ta||x.t):x.t)}</b><small>${esc(WHAT(x))}</small>${x.fmt==='print'?`<span class="qty"><button type="button" data-q="${i}" data-d="-1" aria-label="${T('One less','نسخة أقل')}"${(x.q||1)<=1?' disabled':''}>−</button><b>${x.q||1}</b><button type="button" data-q="${i}" data-d="1" aria-label="${T('One more','نسخة أخرى')}"${(x.q||1)>=10?' disabled':''}>+</button></span>`:''}</div><div class="pr">${S.fmt((+x.p||0)*(x.q||1))}<button type="button" class="rm" data-rm="${i}">${T('Remove','إزالة')}</button></div></li>`).join('')}</ul>
     ${pr?`<p class="co-sub"><span>${T('Shipping','الشحن')}</span><span id="shipFee">${feeTx(zone())}</span></p>`:''}
     <p class="co-tt"><span>${T('Total','المجموع')}</span><b id="coTotal">${S.fmt(B.total()+(pr&&zone()?zone().fee:0))}</b></p></div>
    <form class="sheet paper" data-tear="6" id="f" novalidate><span class="fill"></span><h2>${pr?T('Contact and delivery','التواصل والتوصيل'):T('Where should we send the files?','إلى أين نرسل الملفات؟')}</h2>

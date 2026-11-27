@@ -16,5 +16,6 @@
   "track.html": "/track",
   "account.html": "/account",
   "profile.html": "/profile",
-  "checkout.html": "/checkout"
+  "checkout.html": "/checkout",
+  "buy.html": "/calendars/order"
 }

@@ -105,7 +105,7 @@
       const fmt = (extra && extra.fmt) || '', a = this.get();
       if (kind !== 'pack' && a.some((x) => x.kind === kind && x.k === id && (x.fmt || '') === fmt)) return false;
       const p = product(kind, id), c = calOf(id);
-      const line = kind === 'calendar' ? { k: c.id, kind, t: c.title[0], ta: c.title[1], p: price('calendar'), img: c.img || 'assets/t-v2-00.webp' }
+      const line = kind === 'calendar' ? { k: c.id, kind, t: c.title[0], ta: c.title[1], p: price('calendar'), img: c.mock || c.img || 'assets/t-v2-00.webp' }
         : kind === 'book' ? { k: BOOK.id, kind, t: BOOK.title[0], ta: BOOK.title[1], p: price('book'), img: BOOK.cover }
         : { k: id, kind, t: p ? p.title_en : id, ta: p ? p.title_ar || p.title_en : id, p: price(kind, id), img: thumb(id, p) };
       if (fmt === 'print') { const pr = printOf(kind, id); if (!pr) return false; line.p = pr.price; line.fmt = 'print'; line.q = 1; }
@@ -356,6 +356,8 @@
   const printBtn = (kind, id, cls) => { const pr = printOf(kind, id); if (!pr) return ''; if (kind === 'calendar') id = calOf(id).id; const on = bag.has(kind, id, 'print');
     /* the price where the visitor is: the piece and the shipping to their country, added up */
     const sh = shipHere(), tot = pr.price + (sh ? sh.fee : 0);
+    /* a calendar's printed copy opens its order page (format, quantity, shipping), as the big shops do (owner, 27 Nov 2026) */
+    if (kind === 'calendar') return `<a class="${cls || 'add'} pbtn" href="buy.html?cal=${encodeURIComponent(id)}&amp;fmt=print">${sh ? t(`Printed and shipped, ${fmt(tot)}`, `مطبوع ومشحون، ${fmt(tot)}`) : t(`Printed, ${fmt(pr.price)} + shipping`, `مطبوع، ${fmt(pr.price)} + الشحن`)}</a>`;
     return `<button type="button" class="${cls || 'add'} pbtn" data-add="${kind}" data-id="${esc(id)}"${kind === 'calendar' ? ` data-cal="${esc(id)}"` : ''} data-fmt="print" aria-pressed="${on}">${on ? t('Printed copy in your bag', 'النسخة المطبوعة في السلة') : sh ? t(`Printed and shipped, ${fmt(tot)}`, `مطبوع ومشحون، ${fmt(tot)}`) : t(`Printed, ${fmt(pr.price)} + shipping`, `مطبوع، ${fmt(pr.price)} + الشحن`)}</button>`; };
   /* one product as a tile (tiles.css): the piece on a coloured sheet, linked to its own page */
   function tile(p) {

@@ -88,3 +88,9 @@ html[data-hand]:not(.ar-on) .cd-h{font-size:clamp(30px,2.6vw,40px)}
 .ar-on .cd-nm{font-family:var(--fa);font-weight:600}
 .ar-on .cd-its small,.ar-on .cd-rc dt,.ar-on .cd-files small{color:var(--soft);font-size:var(--fs-caption)}
 .ar-on .cd-say{font-size:clamp(30px,2.8vw,42px);line-height:1.4;color:var(--blue)}
+/* (owner, 27 Nov 2026) each line shows the piece in its photograph, on white, no frame */
+.co-ls .th,.co-ls li:nth-child(even) .th{width:120px;height:90px;rotate:0deg;background:#fff;box-shadow:none}
+.co-ls .th img{max-width:100%;max-height:100%;box-shadow:none}
+.co-ls li{grid-template-columns:120px minmax(0,1fr) auto}
+.co-ls small{line-height:1.6}
+@media(max-width:860px){.co-ls .th,.co-ls li:nth-child(even) .th{width:88px;height:66px}.co-ls li{grid-template-columns:88px minmax(0,1fr) auto}}

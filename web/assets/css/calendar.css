@@ -547,3 +547,9 @@ main>section.cspec>.wrap{padding-bottom:0}
 /* (owner, 27 Nov 2026) the calendars' grid: each photo on pure white with its whole shadow (tools/calendar_cells.py), another photo under the pointer */
 .ol-ac .ac-im{aspect-ratio:4/3}
 .ol-ac .ol-one,.ol-ac .mk img{inset:0!important;width:100%!important;height:100%!important;object-fit:contain;mix-blend-mode:normal}
+/* (owner, 27 Nov 2026) the opening photographs with their edges faded (tools/hero_fade.py): a little more room, the same size of calendar */
+.cdesk>img{aspect-ratio:1538/801;width:min(100%,calc((100svh - 49px - 170px) * 1538 / 801),1700px)}
+.ps26 .cdesk>img{aspect-ratio:1582/1146;width:min(100%,calc((100svh - 49px - 170px) * 1582 / 1146),1500px)}
+.gz27 .cdesk>img{aspect-ratio:1627/1255;width:min(100%,calc((100svh - 49px - 170px) * 1627 / 1255),1500px)}
+/* the printed button on the calendar pages is now a link to this page */
+a.pbtn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;box-sizing:border-box}

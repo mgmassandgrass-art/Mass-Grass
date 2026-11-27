@@ -125,3 +125,5 @@ html[data-hand]:not(.ar-on) body :is(main,dialog) :is(h1,h2,h3):not(.sr){line-he
 /* (owner, 27 Nov 2026) the head rows name the section only: no number and no rule before it */
 .sx-hd b{display:none!important}
 .sx-hd i::before{content:none!important}
+/* (owner, 27 Nov 2026) the column lines run down to the footer rule: no gap above the footer */
+footer{margin-top:0!important}

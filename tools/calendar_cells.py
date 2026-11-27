@@ -9,11 +9,11 @@ def load(p):
     if CUTOUT:
         bg = Image.new('RGB', im.size, (255, 255, 255)); bg.paste(im, mask=im.convert('RGBA').split()[3]); im = bg
     return np.asarray(im.convert('RGB')).astype(np.float32)
-def cell(src, name, W=1200, ratio=4 / 3):
+def cell(src, name, W=1200, ratio=4 / 3, thr=8):
     a = load(src); H0, W0 = a.shape[:2]
     # the paper white of the photo -> 255 (the brightest 2% of pixels)
     wpt = np.percentile(a.reshape(-1, 3), 98, axis=0); a = np.clip(a * (255 / np.maximum(wpt, 1)), 0, 255)
-    ink = (255 - a.min(2)) > 8; ys, xs = np.where(ink)
+    ink = (255 - a.min(2)) > thr; ys, xs = np.where(ink)
     x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max(); cw, ch = x1 - x0, y1 - y0
     # a canvas of the cell's shape round the content, 10% room on every side, pure white outside the photo
     w = max(cw * 1.2, ch * 1.2 * ratio); h = w / ratio
@@ -30,5 +30,9 @@ def cell(src, name, W=1200, ratio=4 / 3):
     im = Image.fromarray(out.round().astype(np.uint8)); im = im.resize((W, round(W / ratio)), Image.LANCZOS)
     im.save(A + f'olc-{name}.webp', quality=88, method=6); print(name, im.size)
 cell(A + 'cdm-base.webp', 'cal-a'); cell(A + 'cal-hero.webp', 'cal-b')
-cell(A + 'ps-hero.webp', 'ps-a'); cell(R + 'drafts/calendar-2026/mockups/pm-4.jpg', 'ps-b')
+cell(A + 'ps-hero.webp', 'ps-a'); cell(R + 'drafts/calendar-2026/mockups/pm-2.jpg', 'ps-b', thr=40)
 cell(D + 'stand-aug.webp', 'gz-a'); cell(D + 'stand-pair.webp', 'gz-b')
+
+# small ones for the bag and checkout
+for n in ('cal-a', 'ps-a', 'gz-a'):
+    im = Image.open(A + f'olc-{n}.webp'); im.resize((400, 300), Image.LANCZOS).save(A + f'olt-{n[:-2]}.webp', quality=86, method=6)
