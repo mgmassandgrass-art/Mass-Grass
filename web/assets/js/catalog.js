@@ -115,7 +115,7 @@ window.MG_DEFAULT = {
      their details in watercolour), its dates, holidays and year redrawn for 2027 by tools/redate_2026.py (assets ps-MM, pd-MM) */
   palestine: {
     id: 'palestine-2027', title: ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027'],
-    short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', cover: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026, mock: 'assets/olt-ps.webp', gallery: ['assets/olc-ps-a.webp', 'assets/olc-ps-b.webp'], pg: 'assets/ps-', size: ['A5 (14.8 × 21 cm), portrait', 'A5 (14.8 × 21 سم)، طولي'],
+    short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', cover: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026, mock: 'assets/olt-ps.webp', gallery: ['assets/olc-ps-a.webp', 'assets/olc-ps-b.webp'], pg: 'assets/ps-', pgIn: 'assets/ps-in.webp', size: ['A5 (14.8 × 21 cm), portrait', 'A5 (14.8 × 21 سم)، طولي'],
     spec: [[['Pages', 'الصفحات'], ['The cover, an opening page and twelve months', 'الغلاف وصفحة افتتاحية واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Monday', 'يبدأ يوم الاثنين']], [['Holidays', 'المناسبات'], ['Marked on their days', 'معلَّمة في أيامها']]],
     pages: [
       { k: 'ps-00', m: 0, n: ['The cover', 'الغلاف'], q: ['Palestine, a journey through time and space.', 'فلسطين، رحلة عبر الزمان والمكان.'], d: ['A clay jug on a tiled plate, and the calendar\'s name.', 'جرّة فخار على صحن من البلاط، واسم التقويم.'] },

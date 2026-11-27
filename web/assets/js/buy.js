@@ -6,8 +6,11 @@
   const { $, $$, esc, t, L } = MG, Q = new URLSearchParams(location.search);
   const C = MG.calOf(Q.get('cal') || '');
   /* the photographs first, then every page of the calendar: the cover and the twelve months */
-  const G = (C.gallery || []).concat(C.pg ? [...Array(13)].map((_, i) => `${C.pg}${String(i).padStart(2, '0')}.webp`) : [C.cover]);
-  const capOf = (i) => { const n = (C.gallery || []).length, m = i - n; return m < 0 ? '' : m === 0 ? t('Cover', 'الغلاف') : (MG.ar ? MG.calendar.monthsAr : MG.calendar.months)[m - 1]; };
+  const PG = C.pg ? [...Array(13)].map((_, i) => [`${C.pg}${String(i).padStart(2, '0')}.webp`, i]) : [[C.cover, 0]];
+  if (C.pgIn) PG.splice(1, 0, [C.pgIn, -1]);   /* the Palestine calendar's opening page, after its cover */
+  const G = (C.gallery || []).concat(PG.map((x) => x[0]));
+  const capOf = (i) => { const n = (C.gallery || []).length; if (i < n) return ''; const m = PG[i - n][1];
+    return m === -1 ? t('Opening', 'افتتاحية') : m === 0 ? t('Cover', 'الغلاف') : (MG.ar ? MG.calendar.monthsAr : MG.calendar.months)[m - 1]; };
   let fmt = Q.get('fmt') === 'print' && MG.printOf('calendar', C.id) ? 'print' : 'pdf', qty = 1, pic = 0, cc = MG.visitor || '';
   const sz = () => (C.size ? L(C.size).split(/[,،]/)[0] : 'A5');
   const specOf = (k) => { const r = (C.spec || []).find((x) => x[0][0] === k); return r ? L(r[1]) : ''; };
@@ -39,7 +42,7 @@
     const fee = !cc ? '' : s ? (s.fee ? MG.fmt(s.fee) : t('Free', 'مجانًا')) + (s.days ? `<small>${esc(s.days)}</small>` : '') : `<small>${t('We will write to you about shipping there', 'سنراسلكم بشأن الشحن إلى هناك')}</small>`;
     $('#buy').innerHTML = `<div class="by-grid">
       <div class="by-gal"><div class="by-main"><img id="bymain" src="${esc(G[pic])}" alt="${esc(name)}"></div>
-        <ul class="by-th">${G.map((g, i) => `<li><button type="button" data-pic="${i}" aria-pressed="${i === pic}" aria-label="${esc(capOf(i) || t('Photograph', 'صورة') + ' ' + (i + 1))}"><img src="${esc(g)}" alt="" loading="lazy"></button><span>${capOf(i) ? esc(capOf(i).slice(0, MG.ar ? 20 : 3)) : t('Photo', 'صورة')}</span></li>`).join('')}</ul></div>
+        <ul class="by-th">${G.map((g, i) => `<li><button type="button" data-pic="${i}" aria-pressed="${i === pic}" aria-label="${esc(capOf(i) || t('Photograph', 'صورة') + ' ' + (i + 1))}"><img src="${esc(g)}" alt="" loading="lazy"></button><span>${!capOf(i) ? t('Photo', 'صورة') : esc(MG.ar || i - (C.gallery || []).length < (C.pgIn ? 2 : 1) ? capOf(i) : capOf(i).slice(0, 3))}</span></li>`).join('')}</ul></div>
       <div class="by-pan">
         <p class="by-k">${t('Calendar 2027', 'تقويم 2027')}</p>
         <p class="hand by-n">${esc(name)}</p>
