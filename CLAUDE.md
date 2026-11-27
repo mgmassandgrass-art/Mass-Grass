@@ -610,7 +610,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
 - The 2023 calendar re-dated too (`tools/redate_2023.py`, JPEG pages; Abril Fatface for the cover's 7): PDF given to the owner,
   not on the site yet.
 
-## Calendars, round 4 (owner, 27 Nov 2026; not deployed until «انشر»)
+## Calendars, round 4 (owner, 27 Nov 2026; deployed 27 Nov 2026)
 
 - Places in Gaza: the owner's wooden-stand photographs (`drafts/calendar-2025/mockups/stand-pair.webp`, `stand-aug.webp`,
   transparent backgrounds). Hero `gz-hero{,-m}` (cover + October); the months section lays each month on the August stand
