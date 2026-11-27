@@ -622,3 +622,7 @@ hides the page once it passes behind; `angleFor(screenY)` maps drag to angle. Ne
   `printOf('calendar', id).size` now follows the calendar. All three heroes use the two buttons (PDF / printed) and `#hship`.
 - Type: Farah's voice stays Patrick Hand, now in capitals spaced .1em (end of `hand.css`), after the owner's sample
   "EMBRACE THE IMPERFECTIONS AND CELEBRATE THEM."; the story's long narration stays in lower case.
+- Order page (27 Nov): `buy.html` → `/calendars/order?cal=<id>&fmt=pdf|print` (noindex): gallery (`gallery` per calendar in catalog.js),
+  format cards, quantity and shipping country (print), total, Buy now / Add to bag, "What you receive", trust rows, then `#spec`.
+  `printBtn` for calendars is now a link to it. Checkout lines show `mock` (`olt-*`) and say what arrives (`WHAT()` in checkout.js).
+  Grid photos `olc-*` (`tools/calendar_cells.py`), opening photos `*-hero-f` (`tools/hero_fade.py`), footer has no top margin.
