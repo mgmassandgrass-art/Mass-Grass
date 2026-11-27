@@ -122,3 +122,6 @@ html[data-pg]:not([data-pg="calendar"]):not([data-pg="palestine"]):not([data-pg=
 html[data-hand]:not(.ar-on) :is(body :is(main,dialog) :is(h1,h2,h3):not(.sr),.sh h1,.pghd h1,body :is(main,dialog) :is(.lead,.pghd p,.hand,.ol-n,.btb .btn-n,.all span,.csp-c dd),body :is(main,dialog) section.pgx :is(summary,details>b,.q),.sx-side .now,footer h2,footer .ft-l,.sx-hd i,.where-in .nm){
   text-transform:uppercase!important;letter-spacing:.1em!important;font-size-adjust:none}
 html[data-hand]:not(.ar-on) body :is(main,dialog) :is(h1,h2,h3):not(.sr){line-height:1.2}
+/* (owner, 27 Nov 2026) the head rows name the section only: no number and no rule before it */
+.sx-hd b{display:none!important}
+.sx-hd i::before{content:none!important}
