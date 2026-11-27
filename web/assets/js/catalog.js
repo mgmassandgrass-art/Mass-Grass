@@ -78,7 +78,7 @@ window.MG_DEFAULT = {
   },
   /* the 2027 calendar, "Things kept in bottles": the cover and all twelve months (assets c27-MM*, rendered from the owner's calendar artifact) */
   calendar: {
-    id: 'calendar-2027', title: ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027'], short: ['Things kept in bottles', 'أشياء نحفظها في قوارير'], cover: 'assets/t-v2-00.webp', page: 'calendar.html', mock: 'assets/olt-cal.webp', gallery: ['assets/olc-cal-a.webp', 'assets/olc-cal-b.webp', 'assets/v2-00.webp', 'assets/v2-03.webp'], size: ['A5 (14.8 × 21 cm), portrait', 'A5 (14.8 × 21 سم)، طولي'],
+    id: 'calendar-2027', title: ['Things kept in bottles, 2027', 'أشياء نحفظها في قوارير، 2027'], short: ['Things kept in bottles', 'أشياء نحفظها في قوارير'], cover: 'assets/t-v2-00.webp', page: 'calendar.html', mock: 'assets/olt-cal.webp', gallery: ['assets/olc-cal-a.webp', 'assets/olc-cal-b.webp'], pg: 'assets/v2-', size: ['A5 (14.8 × 21 cm), portrait', 'A5 (14.8 × 21 سم)، طولي'],
     spec: [[['Pages', 'الصفحات'], ['The cover and twelve months', 'الغلاف واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Saturday', 'يبدأ يوم السبت']], [['Paper', 'الورق'], ['Recycled', 'معاد تدويره']]],
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     monthsAr: ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'],
@@ -115,7 +115,7 @@ window.MG_DEFAULT = {
      their details in watercolour), its dates, holidays and year redrawn for 2027 by tools/redate_2026.py (assets ps-MM, pd-MM) */
   palestine: {
     id: 'palestine-2027', title: ['Palestine, a journey through time and space, 2027', 'فلسطين، رحلة عبر الزمان والمكان، 2027'],
-    short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', cover: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026, mock: 'assets/olt-ps.webp', gallery: ['assets/olc-ps-a.webp', 'assets/olc-ps-b.webp', 'assets/ps-00.webp', 'assets/ps-06.webp'], size: ['A5 (14.8 × 21 cm), portrait', 'A5 (14.8 × 21 سم)، طولي'],
+    short: ['Palestine, a journey through time and space', 'فلسطين، رحلة عبر الزمان والمكان'], img: 'assets/t-ps-00.webp', cover: 'assets/t-ps-00.webp', page: 'palestine.html', first: 2026, mock: 'assets/olt-ps.webp', gallery: ['assets/olc-ps-a.webp', 'assets/olc-ps-b.webp'], pg: 'assets/ps-', size: ['A5 (14.8 × 21 cm), portrait', 'A5 (14.8 × 21 سم)، طولي'],
     spec: [[['Pages', 'الصفحات'], ['The cover, an opening page and twelve months', 'الغلاف وصفحة افتتاحية واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Monday', 'يبدأ يوم الاثنين']], [['Holidays', 'المناسبات'], ['Marked on their days', 'معلَّمة في أيامها']]],
     pages: [
       { k: 'ps-00', m: 0, n: ['The cover', 'الغلاف'], q: ['Palestine, a journey through time and space.', 'فلسطين، رحلة عبر الزمان والمكان.'], d: ['A clay jug on a tiled plate, and the calendar\'s name.', 'جرّة فخار على صحن من البلاط، واسم التقويم.'] },
@@ -135,7 +135,7 @@ window.MG_DEFAULT = {
   },
   gaza: {
     id: 'gaza-2027', title: ['Places in Gaza, 2027', 'أماكن من غزة، 2027'],
-    short: ['Places in Gaza', 'أماكن من غزة'], img: 'assets/t-gz-00.webp', cover: 'assets/t-gz-00.webp', page: 'gaza.html', first: 2025, mock: 'assets/olt-gz.webp', gallery: ['assets/olc-gz-a.webp', 'assets/olc-gz-b.webp', 'assets/gz-00.webp', 'assets/gz-08.webp'], size: ['8 × 14 cm, portrait', '8 × 14 سم، طولي'],
+    short: ['Places in Gaza', 'أماكن من غزة'], img: 'assets/t-gz-00.webp', cover: 'assets/t-gz-00.webp', page: 'gaza.html', first: 2025, mock: 'assets/olt-gz.webp', gallery: ['assets/olc-gz-a.webp', 'assets/olc-gz-b.webp'], pg: 'assets/gz-', size: ['8 × 14 cm, portrait', '8 × 14 سم، طولي'],
     spec: [[['Pages', 'الصفحات'], ['The cover and twelve months', 'الغلاف واثنا عشر شهرًا']], [['Weeks', 'الأسبوع'], ['Start on Sunday', 'يبدأ يوم الأحد']], [['On every page', 'في كل صفحة'], ['A QR code to the place\'s story', 'رمز QR يفتح حكاية المكان']]],
     pages: [
       { k: 'gz-00', m: 0, n: ["The cover", "الغلاف"], q: ["We can always choose the beginning, but the ending is never in our hands.", "نستطيع دائمًا أن نختار البداية، أما النهاية فليست في أيدينا أبدًا."], d: ['', ''] },
