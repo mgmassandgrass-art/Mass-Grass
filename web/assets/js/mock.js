@@ -150,7 +150,7 @@
   function rail() {
     const secs = $$('main > section').map((s) => { const h = s.querySelector('h1,h2'); return h ? { s, h } : null; }).filter(Boolean);
     /* the ruler is on every page (owner, Nov 2026); the glass strip and the margin's list need sections to name */
-    if (secs.length >= 2) where(secs);
+    /* the glass strip under the menu was removed site-wide (owner, 27 Nov 2026); where() is kept for later */
     if (secs.length) frame(secs);
     const el = doc.createElement('aside'); el.className = 'rail'; el.setAttribute('aria-hidden', 'true');
     el.innerHTML = `<div class="rl-sc"><div class="rl-k">${[...Array(101)].map((_, i) => `<i class="${i % 5 ? '' : 'b'}" style="top:${i}%">${i % 5 ? '' : `<b>${i}</b>`}</i>`).join('')}</div>

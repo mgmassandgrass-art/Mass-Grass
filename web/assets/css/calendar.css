@@ -532,3 +532,15 @@ main>section.gzph>.wrap{padding-block:var(--sec)}
 main>section.cspec,main>section.gzqr{padding-block:0}
 html[data-hand]:not(.ar-on) body main .csp-c dd{font:400 21px/1.3 var(--cal-t)!important;color:#2B2F2C}
 html[data-hand]:not(.ar-on) body main .btshow .bts-n{font-size:clamp(30px,3vw,44px)!important;line-height:1.1}
+
+/* (owner, 27 Nov 2026) the spec block's lines reach the column's frame on every side; the calendars' grid has no numbers */
+.wrap:has(>.csp)>.sx-hd{margin-bottom:0}
+main>section.cspec>.wrap{padding-bottom:0}
+.csp{margin-inline:calc(-1 * var(--colpad))}
+.csp .csp-g{border-top:0}
+.csp .csp-c,.csp .csp-c+.csp-c{padding:20px var(--colpad) 22px}
+.csp .csp-w,.csp .csp-w+.csp-w{padding:28px var(--colpad) var(--sec)}
+@media(max-width:900px){.csp .csp-c:nth-child(odd){border-inline-start:0}.csp .csp-c:nth-child(even){border-inline-start:1px solid var(--line-2)}.csp .csp-w{padding-bottom:40px}}
+.where{display:none!important}
+.ol-ac .ac-hd .no{display:none}
+.ol-ac .ac-hd{justify-content:flex-end}
